@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-11 — research-phase (Faz 1): Gelen Kutusu'na iki satır (global-error tek-kaynak ihlali, apex MX yok), Bilinçli Tercihler'e Vercel Hobby riski eklendi.
+**Son Güncelleme:** 2026-09-11 — TASK-1.01: Gelen Kutusu'na bir satır (repoda `npm run lint` 25 hatayla kırık, CI öncesi temizlik borcu).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -38,6 +38,7 @@
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px; referans alınan rakip de benzer uzunlukta. Kısaltılsın mı? Karar kullanıcıda — tek başına içerik atılmadı (bkz. `modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
 - [PHASE-1] `src/app/global-error.tsx:72` WhatsApp adresini elle yazıyor, `CONTACT.whatsapp.href` yerine — tek-kaynak ihlali (M1 F1.1); numara değişirse burası kaçar
 - [PHASE-1] `alpfitplus.com` apex'te MX kaydı yok (iki çözümleyiciyle ölçüldü) — `destek@alpfitplus.com` (yasal metinlerde KVKK başvuru adresi, `CONTACT.support`) ve `demo@alpfitplus.com` posta alamıyor olabilir; DNS Squarespace'te, kullanıcı doğrular
+- [TASK-1.01] `npm run lint` repoda kırık: 25 hata + 5 uyarı, hepsi `src/components/sections/*.tsx` ve `src/app/*` içinde (çoğu `react/no-unescaped-entities`, bir de kullanılmayan değişken) — CI kurulmadan (M6 F6.3) temizlenmeli, yoksa kapı ilk günden kırmızı doğar
 
 ## Açık Bulgular
 

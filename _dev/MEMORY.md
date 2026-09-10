@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-11 — kickoff-verify: native memory'deki tasarım tercihi `memory/kivanc-tasarim-tercihleri.md`'ye taşındı; diğer native içerik zaten OVERVIEW/CLAIMS/CLAUDE.md'de yaşıyordu.
+**Son Güncelleme:** 2026-09-11 — TASK-1.01: Ortam & Araç Notları'na saf fonksiyon testi yolu eklendi (repoda test koşucusu yok, Node tip soyması kullanılıyor).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -29,7 +29,7 @@
 
 <!-- Environment, tooling, CI/CD, kalıcı operasyonel veri (VPS IP, repo path, folder yapısı) -->
 
-- [Henüz yok]
+- [Saf fonksiyon testi — repoda koşucu yok](memory/saf-fonksiyon-testi-node-tip-soyma.md) — Jest/Vitest/tsx yok; saf fonksiyon scratchpad'deki `.mjs` betiğiyle konteynere kopyalanıp `node` ile doğrudan koşturulur (Node tip soyması `.ts` import eder)
 
 ## Çapraz Öğrenimler
 

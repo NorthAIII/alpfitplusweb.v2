@@ -1,5 +1,14 @@
 import type { NextConfig } from "next";
 
+import { deriveDeployStage } from "./src/lib/stage";
+
+/**
+ * Asama tek yerde turetilir ve derlemeye gomulur; gerekcesi ve kurali
+ * `src/lib/stage.ts` dosya yorumunda. Ayni sabit `headers()` icinde noindex
+ * kararini besleyecek (TASK-1.02) — iki ayri yerde iki kosul drift'tir.
+ */
+const deployStage = deriveDeployStage(process.env);
+
 /**
  * Guvenlik basliklari v1 denetiminin D-14 bulgusudur: o kurulumda vercel.json
  * yoktu ve platformun HSTS'i disinda hicbir baslik gitmiyordu. Burada baslıklar
@@ -25,6 +34,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  env: {
+    NEXT_PUBLIC_DEPLOY_STAGE: deployStage,
+  },
   reactStrictMode: true,
   poweredByHeader: false,
   images: {

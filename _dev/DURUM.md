@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — verify-plan: 10 task temiz bağlamla doğrulandı; 1 mekanik düzeltme (TASK-1.08 yüzey sözlüğü) + 3 onaylı hizalama (TASK-1.05 kriteri, TASK-1.04 `.env.example`, M3 kabul kriterleri); sıradaki adım run-task.
+**Son Güncelleme:** 2026-09-11 — TASK-1.01 tamamlandı: aşama türetimi `src/lib/stage.ts`'te, değer `next.config.ts` üzerinden `NEXT_PUBLIC_DEPLOY_STAGE` olarak gömülü; beş senaryo + üç derleme ölçümü geçti; sıradaki task TASK-1.02.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 0/10 task tamamlandı
+**İlerleme:** 1/10 task tamamlandı
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,9 +33,9 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.01 — Aşama türetimi ve `deployStage` tek kaynağı
+**Task:** TASK-1.02 — noindex üç katman tek kaynaktan
 **Durum:** ⬜ Bekliyor
-**İlerleme:** Plan review tamamlandı, çalıştırmaya hazır
+**İlerleme:** TASK-1.01 kapandı, `deployStage` kaynağı hazır
 
 ---
 
@@ -43,7 +43,7 @@
 
 | # | Task | Durum |
 |---|------|-------|
-| 1.01 | Aşama türetimi ve `deployStage` tek kaynağı | ⬜ Bekliyor |
+| 1.01 | Aşama türetimi ve `deployStage` tek kaynağı | ✅ Tamamlandı |
 | 1.02 | noindex üç katman tek kaynaktan | ⬜ Bekliyor |
 | 1.03 | Vercel'de ayrı proje, env iskeleti ve başlık ölçümü | ⬜ Bekliyor |
 | 1.04 | Google Sheet lead alıcısı — Apps Script web app | ⬜ Bekliyor |
@@ -62,7 +62,14 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-Henüz task çalıştırılmadı.
+### TASK-1.01 — Aşama türetimi ve `deployStage` tek kaynağı (2026-09-11)
+
+**Özet:**
+- `src/lib/stage.ts` doğdu: saf `deriveDeployStage(env)` + `DEPLOY_STAGE` okuma sabiti; türetim üretim **alan adının** gerçekliğinden okunuyor, `VERCEL_ENV`'den değil.
+- `next.config.ts` değeri hesaplayıp `NEXT_PUBLIC_DEPLOY_STAGE` olarak derlemeye gömüyor; TASK-1.02 aynı sabitten noindex verecek.
+- Alan adı tanımsızsa `preview` dönülüyor (fail-safe) — eksik bilgide noindex açık kalsın diye.
+
+**Test:** Saf fonksiyon 5/5 PASS; `npm run build` hatasız, 23 rota; geçici sonda rotasıyla üç derleme — gömülü değer sırasıyla `local` / `preview` / `production`, sonda silindi.
 
 ---
 
@@ -86,7 +93,7 @@ Henüz task çalıştırılmadı.
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.01.md`
+**Aktif Task:** `tasks/TASK-1.02.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
