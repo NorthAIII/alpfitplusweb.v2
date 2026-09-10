@@ -13,6 +13,7 @@ const charset = new Set(await readFile('/work/FONT-KARAKTER-KUMESI.txt', 'utf8')
 const BASE = process.env.BASE || 'http://localhost:3100';
 const PAGES = ['/', '/ozellikler', '/fiyat', '/segmentler', '/segmentler/pilates-reformer',
   '/segmentler/boks-dovus', '/segmentler/crossfit', '/segmentler/cok-subeli-zincir',
+  '/gecis', '/yazilim-secerken',
   '/demo', '/destek', '/kvkk', '/gizlilik', '/kullanim-kosullari', '/olmayan-sayfa'];
 
 const b = await chromium.launch();

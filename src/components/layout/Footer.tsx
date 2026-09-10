@@ -13,6 +13,8 @@ const COLS = [
     links: [
       { label: "Özellikler", href: "/ozellikler" },
       { label: "Fiyat", href: "/fiyat" },
+      { label: "Geçiş ve veri aktarımı", href: "/gecis" },
+      { label: "Yazılım seçerken", href: "/yazilim-secerken" },
       { label: "Demo İste", href: "/demo" },
       { label: "Destek", href: "/destek" },
     ],

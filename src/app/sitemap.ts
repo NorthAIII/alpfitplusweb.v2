@@ -16,6 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/fiyat", 0.9, "monthly"),
     page("/segmentler", 0.8, "monthly"),
     ...SEGMENTS.map((s) => page(`/segmentler/${s.slug}`, 0.8, "monthly")),
+    page("/yazilim-secerken", 0.8, "monthly"),
+    page("/gecis", 0.8, "monthly"),
     page("/demo", 0.9, "monthly"),
     page("/destek", 0.5, "yearly"),
     page("/kvkk", 0.3, "yearly"),

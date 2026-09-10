@@ -1,6 +1,6 @@
 /** Mobil denetimi: yatay tasma, kucuk dokunma hedefi, tasan metin, bolum boylari. */
 import { chromium } from 'playwright';
-const PAGES = ['/', '/ozellikler', '/fiyat', '/segmentler', '/segmentler/pilates-reformer', '/demo', '/destek'];
+const PAGES = ['/', '/ozellikler', '/fiyat', '/segmentler', '/segmentler/pilates-reformer', '/gecis', '/yazilim-secerken', '/demo', '/destek'];
 const b = await chromium.launch();
 let total = 0;
 for (const path of PAGES) {

@@ -32,7 +32,7 @@ export const NAV = [
   { label: "Özellikler", href: "/ozellikler" },
   { label: "Segmentler", href: "/segmentler" },
   { label: "Fiyat", href: "/fiyat" },
-  { label: "Destek", href: "/destek" },
+  { label: "Geçiş", href: "/gecis" },
 ] as const;
 
 /**
