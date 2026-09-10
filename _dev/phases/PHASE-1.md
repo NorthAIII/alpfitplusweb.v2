@@ -115,13 +115,22 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 
 ## Task Listesi
 
-> Bu bölüm `/devflow:plan-phase` oturumunda doldurulur.
+> Bu bölüm `/devflow:plan-phase` oturumunda dolduruldu (2026-09-11). Sıra bağımlılık sırasıdır: aşama türetimi → noindex → Vercel → lead hattı → analitik → yasal metin.
 
 <!-- KURAL: Task Listesi yalnızca özet tablodur (#, Task, Durum, kısa açıklama). Task'ın icra detayı / oturum kaydı / çalışma notu buraya değil `tasks/TASK-N.md`'ye yazılır — bu bölüme sızan detay şişmedir, temizlenir (bölme değil). -->
 
 | # | Task | Durum | Açıklama |
 |---|------|-------|----------|
-| 1.01 | TASK-1.01 | ⬜ Bekliyor | [kısa açıklama] |
+| 1.01 | TASK-1.01 | ⬜ Bekliyor | Aşama türetimi (`local/preview/production`) ve `deployStage` tek kaynağı |
+| 1.02 | TASK-1.02 | ⬜ Bekliyor | noindex üç katman (başlık + robots.txt + metadata), aynı aşama değerinden |
+| 1.03 | TASK-1.03 | ⬜ Bekliyor | Vercel'de ayrı proje, env iskeleti, başlık ölçümü, GIT-STRATEJI güncellemesi |
+| 1.04 | TASK-1.04 | ⬜ Bekliyor | Google Sheet lead alıcısı — sertleştirilmiş Apps Script web app |
+| 1.05 | TASK-1.05 | ⬜ Bekliyor | Demo ucunu sertleştir: JSON `ok` doğrulaması + lead `env` alanı |
+| 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattı doğrulaması ve uçtan uca gerçek lead testi |
+| 1.07 | TASK-1.07 | ⬜ Bekliyor | Umami Cloud kurulumu ve tracker bağlantısı (`data-tag=deployStage`) |
+| 1.08 | TASK-1.08 | ⬜ Bekliyor | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
+| 1.09 | TASK-1.09 | ⬜ Bekliyor | Global tıklama dinleyicisi, `data-surface` çapaları, analitik yükü ölçümü |
+| 1.10 | TASK-1.10 | ⬜ Bekliyor | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
