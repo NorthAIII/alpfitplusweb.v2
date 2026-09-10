@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+# Rakip analizi / gorsel regresyon konteyneri: Playwright + Chromium.
+# playwright /opt/pw altina kurulur, /node_modules oraya symlink edilir —
+# /work bind-mount ile gelse bile Node cozumlemesi yukari yuruyup bulur.
+FROM node:24-bookworm-slim AS research
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+WORKDIR /opt/pw
+RUN npm init -y >/dev/null \
+ && npm i playwright@latest sharp \
+ && npx playwright install --with-deps chromium \
+ && ln -s /opt/pw/node_modules /node_modules \
+ && rm -rf /var/lib/apt/lists/*
+WORKDIR /work
+CMD ["bash"]

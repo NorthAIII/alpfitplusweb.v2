@@ -1,26 +1,253 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────────────────────────
+   FONTLAR — self-host, TR karakter (ş/ğ/ı/ç/ö/ü) latin-ext subset
+   ───────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-ext-400.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-400.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-ext-500.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-500.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-ext-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Sora";
+  src: url("/fonts/sora-latin-ext-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Sora";
+  src: url("/fonts/sora-latin-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Sora";
+  src: url("/fonts/sora-latin-ext-700.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Sora";
+  src: url("/fonts/sora-latin-700.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Sora";
+  src: url("/fonts/sora-latin-ext-800.woff2") format("woff2");
+  font-weight: 800; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Sora";
+  src: url("/fonts/sora-latin-800.woff2") format("woff2");
+  font-weight: 800; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─────────────────────────────────────────────────────────────
+   TASARIM TOKENLARI — acik tema, sage aksan
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  /* Sora'da ₺ (U+20BA) YOK — olcduk: glif genisligi monospace yedegiyle birebir
+     aynı cikiyor. Inter'i araya koyunca eksik glifler sistem fontuna degil
+     govde fontuna duser ve fiyat rakamlari tek dilde kalir. */
+  --font-display: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* yuzeyler */
+  --color-canvas: #fbfbf9;
+  --color-canvas-soft: #f4f5f1;
+  --color-surface: #ffffff;
+  --color-surface-2: #f7f8f4;
+  --color-ink-deep: #0e100c;
+  --color-ink: #171a15;
+  --color-muted: #545b4d;
+  --color-faint: #6d7565;
+  --color-line: #e5e7df;
+  --color-line-2: #d3d7ca;
+
+  /* marka — sage */
+  --color-sage: #74b36f;
+  --color-sage-br: #94d08e;
+  --color-sage-deep: #3e6b3c;
+  --color-sage-ink: #2f5a2e;
+  --color-sage-wash: #eef5ed;
+  --color-sage-wash-2: #dfeddd;
+
+  /* durum */
+  --color-amber: #b07617;
+  --color-amber-wash: #fdf4e3;
+  --color-neg: #c0483c;
+  --color-neg-wash: #fceeec;
+
+  /* olcek */
+  --radius-card: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-sm: 0 1px 2px rgb(23 26 21 / 0.05), 0 1px 3px rgb(23 26 21 / 0.04);
+  --shadow-md: 0 4px 12px rgb(23 26 21 / 0.06), 0 2px 4px rgb(23 26 21 / 0.04);
+  --shadow-lg: 0 12px 32px rgb(23 26 21 / 0.08), 0 4px 8px rgb(23 26 21 / 0.04);
+  --shadow-xl: 0 24px 64px rgb(23 26 21 / 0.12), 0 8px 16px rgb(23 26 21 / 0.05);
+  --shadow-sage: 0 8px 24px rgb(116 179 111 / 0.28);
+
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.6s ease-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(.85); opacity: .55; }
+  70%  { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TEMEL
+   ───────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5.5rem;
+  }
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  ::selection {
+    background: var(--color-sage-wash-2);
+    color: var(--color-sage-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-sage-deep);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .tabnum { font-variant-numeric: tabular-nums; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   YARDIMCILAR — gorsel doku
+   ───────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* ince nokta izgara */
+  .bg-dotgrid {
+    background-image: radial-gradient(circle at 1px 1px, var(--color-line-2) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  /* cizgi izgara */
+  .bg-linegrid {
+    background-image:
+      linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  /* sage isik lekesi */
+  .bg-glow-sage {
+    background-image:
+      radial-gradient(60% 55% at 18% 0%, rgb(148 208 142 / 0.30) 0%, transparent 62%),
+      radial-gradient(50% 50% at 88% 12%, rgb(116 179 111 / 0.20) 0%, transparent 60%);
+  }
+  .bg-glow-soft {
+    background-image:
+      radial-gradient(70% 60% at 50% 0%, rgb(148 208 142 / 0.18) 0%, transparent 65%);
+  }
+  /* kenarlarda erime */
+  .mask-fade-y {
+    mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+  }
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  }
+  /* metin gradyani */
+  .text-gradient-sage {
+    background-image: linear-gradient(135deg, var(--color-sage-deep) 0%, var(--color-sage) 55%, var(--color-sage-br) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* kart parlamasi */
+  .ring-card {
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-md);
+  }
+  .ring-card-lg {
+    box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-lg);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─────────────────────────────────────────────────────────────
+   SCROLL REVEAL — JS yoksa icerik gorunur kalir (progressive)
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }

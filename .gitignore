@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# arastirma ciktilari — buyuk ikili dosyalar, uretilebilir
+/research/out/
+/research/product-out/

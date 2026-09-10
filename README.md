@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Alpfit Plus — Web Sitesi (v2)
 
-## Getting Started
+`alpfitplus.com` tanıtım sitesi. Ürün kod tabanından (`../Alpfit.v1`) ve eski
+siteden (`../Alpfitplus-website.v1`) **bağımsız** bir projedir. Bu repo canlı
+siteye dokunmaz.
 
-First, run the development server:
+## Yığın
+
+| Katman | Seçim |
+|---|---|
+| Çatı | Next.js 16 (App Router, Turbopack) |
+| Dil | TypeScript |
+| Stil | Tailwind CSS 4 (CSS-first `@theme`) |
+| İkon | lucide-react (çizgi set) |
+| Font | Sora + Inter, self-host, TR latin-ext subset |
+| Çalışma ortamı | Docker Compose |
+
+Site tek dillidir (Türkçe). Hedef kitle Türkiye'deki butik spor kulüpleri.
+
+## Çalıştırma
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up -d web          # http://localhost:3000
+docker compose logs -f web
+docker compose exec web npm run build
+docker compose --profile prod up -d web-prod   # http://localhost:3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> **Yeni bir rota klasörü eklediğinizde** `docker compose restart web` gerekir.
+> Bind-mount üzerinde Turbopack yeni dizinleri sıcak yakalamıyor.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Araştırma ve görsel üretim konteyneri
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Playwright + Chromium + sharp taşıyan ayrı bir imaj. Rakip analizi, kendi
+sitemizin görsel denetimi ve ürün ekran görüntüsü üretimi burada koşar.
 
-## Learn More
+```bash
+# rakip siteleri yakala
+docker compose --profile research run --rm research node scripts/capture.mjs
 
-To learn more about Next.js, take a look at the following resources:
+# kendi sitemizi ekran ekran gez (konsol hatası da raporlar)
+docker compose --profile research run --rm research node scripts/scan.mjs / home 1440 900
+docker compose --profile research run --rm research node scripts/scan.mjs / home-mobil 390 844
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# ürün ekran görüntülerini yeniden üret
+docker run --rm \
+  -v "$PWD/research:/work" \
+  -v "/home/kivanc/projects/Alpfit.v1/demo:/demo:ro" \
+  -w /work alpfitplus-web-research node scripts/render-product.mjs
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Ürün görselleri neden bir hattan geçiyor
 
-## Deploy on Vercel
+`public/product/*.webp` elle konmaz, `research/scripts/render-product.mjs`
+üretir. Hat `../Alpfitplus-website.v1/scripts/lib/screen-cleanup.mjs`
+tablosundan devralındı ve dört iş yapar:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Marka düzeltmesi** — kaynak demoda eski ad "Weekend Plus" geçiyor.
+2. **Kişi ve yer temizliği** — kaynakta gerçek sporcu ve semt adları var; nötr
+   adlarla değiştirilir, avatar baş harfleri senkron tutulur.
+3. **Düğüm düşürme** — ürünün bugün karşılamadığı iddiaları taşıyan kartlar
+   DOM'dan kaldırılır (örneğin antrenör ekranındaki finansal ciro kalemleri).
+4. **Denetim** — gerçek bir ad veya eski marka sızarsa **üretim durur**.
+   Sessiz "temiz" yoktur.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`churn.html` ve `kampanya.html` bilinçle kapsam dışıdır: karşılıkları v1.5'te,
+bugünkü ürünün parçası değiller.
+
+## İçerik ve iddia sınırı
+
+Metinlerin kaynağı `../alpfit-plus-satis/` altındaki satış ve rekabet
+dosyalarıdır. Sitede tutulan sınırlar:
+
+- Diyetisyen modülü **söylenebilir** — 18 rakip üründe görülmedi.
+- Antrenör uygulaması "sadece bizde" **denmez** — iki rakipte de var.
+- Türkçe arayüz ve KVKK **fark sayılmaz** — yerli rakiplerin hepsinde var.
+- Ürün durumu: **bir stüdyoda pilot olarak test ediliyor.** "Sahada/canlı" denmez.
+- ROI, müşteri sayısı ve yüzde iyileşme iddiası **yok** — pilot sonucu çıkmadı.
+- Rakip fiyat karşılaştırmaları rakibin **yayınlanmış liste fiyatından bizim
+  hesabımızdır**, erişim tarihiyle birlikte yazılır.
+
+Fiyat tek kaynaktan gelir: `src/content/pricing.ts`.
+
+## Demo talep ucu
+
+`src/app/api/demo/route.ts`. Önce dayanıklı kayıt (`LEAD_WEBHOOK_URL` veya
+`LEAD_FILE_PATH`), sonra e-posta (`RESEND_API_KEY`). Hiçbir hedef yapılandırılmamışsa
+uç **başarılı dönmez**; form kullanıcıyı WhatsApp'a yönlendirir. Bal küpü alanı ve
+IP başına 10 dakikada 5 istek sınırı vardır. Ayarlar için `.env.example`.
+
+## Klasörler
+
+```
+src/app/         rotalar
+src/components/  ui/ · layout/ · sections/
+src/content/     tüm metin, fiyat, segment, SSS ve yasal içerik
+public/product/  üretilen ürün ekran görüntüleri
+research/        Playwright betikleri + temizlik tabloları
+```
