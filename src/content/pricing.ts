@@ -52,15 +52,21 @@ export function trySavingsPct(branches: number): number {
 }
 
 /**
- * Rakip kiyasi — SADECE rakiplerin KENDI SAYFALARINDA YAYINLADIGI fiyatlardan
- * bizim aritmetigimiz. "Size su fiyati verirler" DENMEZ.
- * Kaynak: rekabet/yerli-oyuncular.md (erisim 2026-07-10).
+ * Cok subede piyasa kiyasi.
+ *
+ * URUN ADI GECMEZ. Turkiye'de karsilastirmali reklam mevzuati rakibi adiyla
+ * anmayi siki kosullara bagliyor; ayrica rekabet dosyasinin kendi kurali
+ * "rakip iddialarini kendi davranisimiza cevir" diyor. Bu yuzden yalnizca
+ * YONTEM ve RAKAM yayinlaniyor: mobil uygulamanin ayri paket oldugu bir
+ * kurulumun yayinlanmis liste fiyatlarindan bizim aritmetigimiz.
+ *
+ * Kaynak (ic referans, sitede yayinlanmaz): rekabet/yerli-oyuncular.md,
+ * erisim 2026-07-10.
  */
 export const RIVAL_MULTI_BRANCH = {
   note:
-    "Aşağıdaki rakam OxyFitClub'ın kendi paketler sayfasında yayınladığı liste fiyatlarından yaptığımız hesaptır, onların verdiği bir teklif değildir. Erişim tarihi 10 Temmuz 2026.",
-  source: "https://oxyfitclub.com/paketler",
-  /** App Start 3.999 + ek sube 1.199 (KDV haric). */
+    "Karşılaştırma, mobil uygulamanın ayrı paket olarak fiyatlandığı bir kurulumun Temmuz 2026'da yayınlanmış liste fiyatlarından bizim yaptığımız hesaptır. Ürün adı yazmıyoruz ve bu, herhangi bir firmanın size vereceği teklif değildir.",
+  /** Ilk sube 3.999 + ek sube 1.199 (KDV haric), yayinlanmis liste fiyati. */
   appStartFirst: 3999,
   appStartExtra: 1199,
   rows: [

@@ -137,7 +137,8 @@ export function PriceCalculator({ compact = false }: { compact?: boolean }) {
             <p className="text-sm leading-relaxed text-ink">
               <strong className="font-semibold">{branches} şubede</strong> aylık{" "}
               <strong className="font-semibold tabnum">{tl(monthly)} ₺</strong> ödersiniz.
-              OxyFitClub'ın yayınlanmış App Start liste fiyatlarıyla aynı kurulum{" "}
+              Mobil uygulamanın ayrı paket olduğu bir kurulumda, yayınlanmış liste
+              fiyatlarıyla aynı yapı{" "}
               <strong className="font-semibold tabnum">{tl(rival)} ₺</strong> ederdi, yani{" "}
               <strong className="font-semibold text-sage-ink">%{cheaperPct} daha ucuz</strong>.
             </p>

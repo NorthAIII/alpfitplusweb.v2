@@ -174,15 +174,15 @@ export default function PricingPage() {
               Çok şubede aradaki fark
             </h3>
             <p className="mt-2 max-w-3xl text-[0.9375rem] leading-relaxed text-muted">
-              Mobil uygulamalı çözümlerde şube sayısı arttıkça aylık tutar hızla büyüyor.
-              Aşağıdaki karşılaştırma, rakibin kendi paketler sayfasında yayınladığı liste
-              fiyatlarından bizim yaptığımız hesaptır.
+              Mobil uygulamanın ayrı paket olarak fiyatlandığı çözümlerde şube sayısı
+              arttıkça aylık tutar hızla büyüyor. Aşağıdaki karşılaştırma, böyle bir kurulumun
+              yayınlanmış liste fiyatlarından bizim yaptığımız hesaptır. Ürün adı yazmıyoruz.
             </p>
             <div className="mt-6 overflow-x-auto">
               <table className="w-full min-w-[38rem] border-collapse text-left">
                 <thead>
                   <tr className="border-b border-line">
-                    {["Şube", "Alpfit Plus / ay", "OxyFitClub App Start / ay", "Fark"].map((h) => (
+                    {["Şube", "Alpfit Plus / ay", "Mobil uygulaması ayrı paket olan kurulum / ay", "Fark"].map((h) => (
                       <th
                         key={h}
                         scope="col"
@@ -219,10 +219,7 @@ export default function PricingPage() {
             </div>
             <p className="mt-5 flex items-start gap-2 text-xs leading-relaxed text-faint">
               <Info className="mt-0.5 size-3.5 shrink-0" strokeWidth={2} aria-hidden />
-              <span>
-                {RIVAL_MULTI_BRANCH.note} Bu bir teklif karşılaştırması değildir, rakibin size
-                vereceği fiyatı bilemeyiz. Kaynak: {RIVAL_MULTI_BRANCH.source}
-              </span>
+              <span>{RIVAL_MULTI_BRANCH.note}</span>
             </p>
           </div>
         </Reveal>
