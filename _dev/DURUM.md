@@ -1,6 +1,6 @@
 # DURUM — Alpfit Plus Web Sitesi v2
 
-**Son Güncelleme:** 2026-09-11 — Geçiş ve yazılım seçim rehberi sayfaları eklendi, fiyat sayfasından rakip adı kaldırıldı, DevFlow kuruldu.
+**Son Güncelleme:** 2026-09-11 — Geçiş ve seçim rehberi sayfaları eklendi, rakip adı kaldırıldı, DevFlow kuruldu, devir belgeleri yazıldı. Sıradaki iş: metin tonu (örnek bekleniyor).
 
 > Bu doküman **elle** yazıldı, DevFlow kickoff çalıştırılmadı. Yeni oturumda
 > `/devflow:kickoff` ile tam yapı kurulabilir.
@@ -82,10 +82,23 @@ nasıl çalışır · fiyat + hesaplayıcı · kurucu programı · SSS · kapan�
 1. **Asistan AI'ya bağlanacak.** Karar verildi: önce hazır akış, sonra Claude.
    Arayüz hazır, `src/content/chat.ts` ağacı modelin bilgi tabanı olacak.
    Anahtar ve maliyet netleşmeli.
-2. **Metin dili daha profesyonel istendi** (2026-09-11, kullanıcı). Hangi
-   bölümlerin fazla konuşma dilinde kaldığı netleşmedi; kullanıcıdan örnek
-   alınmalı. Aday yerler: kaos bölümü başlığı, "Neden Alpfit Plus" alt
-   metinleri, SSS cevapları.
+2. **Metin dili daha profesyonel istendi** (2026-09-11, kullanıcı).
+   Kullanıcı bu talebi onayladı ama hangi cümlelerin fazla samimi geldiğini
+   henüz belirtmedi. **İlk iş: örnek iste.**
+
+   Metinler bilinçli olarak konuşma diline yakın yazıldı; hedef kitle kurumsal
+   bir satın alma komitesi değil, salon sahibi. Ton değişecekse bu gerekçe
+   birlikte gözden geçirilmeli.
+
+   Şüpheli görülen üç yer (yeni oturumda kullanıcıya sorulacak):
+   - `Chaos.tsx` başlığı: *"Kulübünüzün asıl rakibi bir yazılım değil, dağınıklık"*
+   - `PricingBlock.tsx` başlığı: *"Paket yok, kademe yok, sürpriz yok"*
+   - `gecis` sayfası girişi: *"Kulüp sahipleri bize genelde 'sistemimiz kötü'
+     demiyor. 'Alıştık' diyor."*
+
+   **Yöntem:** önce TEK sayfada dene ve göster, kullanıcı beğenirse hepsine yay.
+   Ton tek tek dosyalarda değil, `src/content/` altındaki metin dosyalarında
+   değişir — bileşenler metni oradan okuyor.
 3. **Ana sayfa mobilde ~26.000 px.** Referans alınan rakip de benzer uzunlukta.
    Kısaltma kararı kullanıcıya bırakıldı, tek başına içerik atılmadı.
 4. **Sayı sayma animasyonlu istatistik bandı yapılmadı.** Bilinçli: pilot
