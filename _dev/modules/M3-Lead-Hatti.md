@@ -14,7 +14,7 @@
 
 **Kabul Kriterleri:**
 - Bal küpü dolu istek 200 döner ama kayıt yazmaz (bot yanıltılır)
-- Alan uzunluk sınırları (`MAX`) aşılınca 400 döner, mesaj alan adını söyler
+- Alan uzunluk sınırları (`MAX`) aşılınca değer sessizce kırpılır, istek reddedilmez; bozuk JSON gövdesi 400 döner
 - 6. istek 429 döner
 - Hiçbir hedef tanımlı değilse 503 döner; form WhatsApp bağlantısı gösterir, "gönderildi" demez
 - Rıza kutusu işaretsizse istemci göndermez
@@ -33,7 +33,7 @@
 
 **Kabul Kriterleri:**
 - Önizleme ortamından gönderilen gerçek bir demo talebi hedefte (webhook alıcısı veya dosya) görünür
-- Webhook 5xx dönerse uç e-postaya düşmeden önce hatayı loglar ve kullanıcıya WhatsApp yolunu gösterir
+- Webhook düşerse (5xx, zaman aşımı ya da sözleşme dışı yanıt) uç e-postaya geçmeden önce hatayı loglar; kayıt **ve** e-posta birlikte düşerse 503 döner ve form kullanıcıya WhatsApp yolunu gösterir
 - Sır değerleri repoda yok; `.env.example` yalnız anahtar adlarını taşır
 
 **Bağımlılık:** M7 F7.3 (Vercel projesi ve env)

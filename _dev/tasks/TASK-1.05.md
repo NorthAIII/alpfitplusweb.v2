@@ -81,7 +81,7 @@ src/app/api/demo/
 - [ ] `200 + {"ok":false}` dönen uçta `stored` false olur (sözleşme ihlali kayıt sayılmaz)
 - [ ] Gerçek Apps Script URL'siyle gönderilen talep e-tabloya düşer ve `env` sütunu `local` yazar
 - [ ] Bal küpü dolu istek hâlâ 200 döner ve **hiçbir yere yazmaz**
-- [ ] Alan uzunluğu aşımı 400, eksik ad/kulüp 422, rızasız istek 422, 6. istek 429 — regresyon yok
+- [ ] Alan uzunluğu aşımında uç **400 dönmez**, değeri `MAX` sınırına sessizce kırpar (bugünkü `clean()` davranışı); eksik ad/kulüp 422, iletişimsiz istek 422, rızasız istek 422, bozuk JSON 400, 6. istek 429 — regresyon yok
 - [ ] `docker compose exec web npm run build` hatasız geçer
 
 ---

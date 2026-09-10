@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — plan-phase: Faz 1 için 10 task dokümanı yazıldı (aşama türetimi → noindex → Vercel → lead hattı → analitik → yasal metin); sıradaki adım verify-plan.
+**Son Güncelleme:** 2026-09-11 — verify-plan: 10 task temiz bağlamla doğrulandı; 1 mekanik düzeltme (TASK-1.08 yüzey sözlüğü) + 3 onaylı hizalama (TASK-1.05 kriteri, TASK-1.04 `.env.example`, M3 kabul kriterleri); sıradaki adım run-task.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,7 +10,7 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** verify-plan
+**Adım:** task
 **İlerleme:** 0/10 task tamamlandı
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
@@ -35,7 +35,7 @@
 
 **Task:** TASK-1.01 — Aşama türetimi ve `deployStage` tek kaynağı
 **Durum:** ⬜ Bekliyor
-**İlerleme:** verify-plan bekleniyor (plan review'ı öncesinde task çalıştırılmaz)
+**İlerleme:** Plan review tamamlandı, çalıştırmaya hazır
 
 ---
 

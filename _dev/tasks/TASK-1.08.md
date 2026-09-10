@@ -38,7 +38,7 @@ Sarmalayıcı ayrı bir dosya olarak burada doğar çünkü iki tüketicisi var:
 
 - [ ] **1. Olay sözlüğünü yaz**
   - Olay adları sabit: `demo-submit`, `whatsapp-click`, `phone-click` (Umami olay adı sınırı 50 karakter — üçü de rahat)
-  - Yüzey etiketleri sabit listesi: `hero`, `final-cta`, `footer`, `header`, `assistant`, `demo-form`, `demo`, `destek`, `404`, artı mevcut bölüm id'leri (`segmentler`, `sss`, `neden`, `roller`, `fiyat`, `moduller`, `fayda`)
+  - Yüzey etiketleri sabit listesi: `hero`, `final-cta`, `footer`, `header`, `assistant`, `demo-form`, `demo`, `destek`, `404`, artı mevcut bölüm id'leri — `<Section id=…>` verenler (`segmentler`, `sss`, `neden`, `roller`, `fiyat`, `moduller`, `fayda`) **ve ham `<section id=…>` verenler** (`sorun` → `Chaos.tsx`, `nasil-calisir` → `HowItWorks.tsx`, `cozum` → `Solution.tsx`); dinleyicinin `section[id]` yedeği ikisini de yakalar, bugün bu üçünde bağlantı yok ama ileride eklenirse etiket sözlükte hazır olur
   - Tip düzeyinde daraltma (yüzey adı serbest string olmasın) — panelde dağınık ad çıkmasını kod engellesin
   - Dosya: `src/lib/analytics.ts` (YENİ)
 

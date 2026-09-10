@@ -62,7 +62,7 @@ Yedek rota (web app pratikte güvenilmez çıkarsa): Sheets API + servis hesabı
 - [ ] **4. `.env.example` güncelle**
   - `LEAD_WEBHOOK_URL` açıklaması token'lı biçimi anlatır (`https://script.google.com/macros/s/…/exec?token=…`)
   - `LEAD_FILE_PATH` yorumuna "Vercel'de kalıcı disk yok — yalnız yerel Docker" notu
-  - Değer yazılmaz
+  - Değer yazılmaz — **bugün dolu duran `DEMO_TO` ve `DEMO_FROM` değerleri de boşaltılır**, gerçek adresler yorum satırına örnek olarak bile taşınmaz (kök talimat: `.env.example` yalnız anahtar adlarını taşır)
   - Dosya: `.env.example`
 
 ---
