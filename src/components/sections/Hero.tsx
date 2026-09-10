@@ -115,7 +115,9 @@ export function Hero() {
             />
 
             {/* telefon etiketi */}
-            <span className="absolute -bottom-10 hidden items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-[0.6875rem] font-medium text-muted shadow-md ring-1 ring-line sm:inline-flex sm:-left-4 lg:-bottom-11 lg:-left-12">
+            <span // Telefonun SAGINDA duruyor: telefon sm'de -left-8 + w-36 (112px sagina kadar),
+            // lg'de -left-16 + w-[10.5rem] (104px). 7.75rem = 124px ikisini de gecer.
+            className="absolute -bottom-9 left-[7.75rem] hidden items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-[0.6875rem] font-medium text-muted shadow-md ring-1 ring-line sm:inline-flex lg:-bottom-10">
               <Smartphone className="size-3.5 text-sage-ink" strokeWidth={2} aria-hidden />
               Üye uygulaması
             </span>
