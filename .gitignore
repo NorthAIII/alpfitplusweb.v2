@@ -43,3 +43,6 @@ next-env.d.ts
 # arastirma ciktilari — buyuk ikili dosyalar, uretilebilir
 /research/out/
 /research/product-out/
+
+# DevFlow komutları repoda tutulur, yerel ayarlar tutulmaz
+.claude/settings.local.json
