@@ -89,7 +89,7 @@ export default async function SegmentPage({
       <Section tone="soft">
         <SectionHead
           label="Günlük dert"
-          title={`${seg.name.split(" ")[0]} tarafında ne aksıyor`}
+          title={`${seg.shortName} tarafında ne aksıyor`}
           lead="Solda bugünün hâli, sağda Alpfit Plus'ın karşılığı. Dört madde, süsleme yok."
         />
         <div className="mt-12 flex flex-col gap-4">
@@ -161,7 +161,7 @@ export default async function SegmentPage({
         items={seg.faq}
         tone="canvas"
         label="Segment SSS"
-        title={`${seg.name.split(" ")[0]} tarafında sık sorulanlar`}
+        title={`${seg.shortName} tarafında sık sorulanlar`}
       />
 
       {/* diger segmentler */}

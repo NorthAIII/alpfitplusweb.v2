@@ -20,11 +20,20 @@ export type Segment = {
   /** Segment ozel sorular. */
   faq: { q: string; a: string }[];
   accent: string;
+  /** Kart ve baglantilarda kullanilan kisa ad. Adin ilk kelimesi yeterli degil
+   *  ("Cok Subeli Zincirler" → "Cok"). */
+  shortName: string;
+  /**
+   * Baglam fotografi. Kaynak ve lisans: research/FOTOGRAF-KAYNAKLARI.txt
+   * (Pexels License — ticari kullanim serbest, atif gerekmez).
+   */
+  photo: { src: string; thumb: string; alt: string };
 };
 
 export const SEGMENTS: Segment[] = [
   {
     slug: "pilates-reformer",
+    shortName: "Reformer stüdyoları",
     name: "Reformer ve Pilates Stüdyoları",
     short: "Sabit kapasite, seans paketi, no-show",
     hero: "Reformer stüdyosu için randevu, seans hakkı ve no-show tek akışta",
@@ -82,9 +91,15 @@ export const SEGMENTS: Segment[] = [
       },
     ],
     accent: "sage",
+    photo: {
+      src: "/foto/pilates-reformer.webp",
+      thumb: "/foto/pilates-reformer-sm.webp",
+      alt: "Sıralı reformer yatakları, pencereden gelen doğal ışık",
+    },
   },
   {
     slug: "boks-dovus",
+    shortName: "Dövüş kulüpleri",
     name: "Boks ve Dövüş Sporları",
     short: "Grup dersi, yoklama, aidat ve borç",
     hero: "Boks ve dövüş kulübü için grup programı, yoklama ve aidat takibi",
@@ -142,9 +157,15 @@ export const SEGMENTS: Segment[] = [
       },
     ],
     accent: "amber",
+    photo: {
+      src: "/foto/boks-dovus.webp",
+      thumb: "/foto/boks-dovus-sm.webp",
+      alt: "Boş bir boks salonunda asılı kum torbaları",
+    },
   },
   {
     slug: "crossfit",
+    shortName: "CrossFit box’ları",
     name: "CrossFit ve Fonksiyonel Antrenman",
     short: "Seans kapasitesi, yoklama, koç performansı",
     hero: "CrossFit box'ı için kapasiteli seans, yoklama ve üyelik takibi",
@@ -202,9 +223,15 @@ export const SEGMENTS: Segment[] = [
       },
     ],
     accent: "neg",
+    photo: {
+      src: "/foto/crossfit.webp",
+      thumb: "/foto/crossfit-sm.webp",
+      alt: "Halter çekişi, loş ışıklı bir CrossFit salonu",
+    },
   },
   {
     slug: "cok-subeli-zincir",
+    shortName: "Zincirler",
     name: "Çok Şubeli Zincirler",
     short: "Tek cockpit, şube kırılımı, yetki",
     hero: "Büyüyen zincir için tek cockpit, şube kırılımı ve yetki kontrolü",
@@ -262,6 +289,11 @@ export const SEGMENTS: Segment[] = [
       },
     ],
     accent: "sage",
+    photo: {
+      src: "/foto/cok-subeli-zincir.webp",
+      thumb: "/foto/cok-subeli-zincir-sm.webp",
+      alt: "Sade ve aydınlık bir stüdyo iç mekânı",
+    },
   },
 ];
 

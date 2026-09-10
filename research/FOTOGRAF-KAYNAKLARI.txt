@@ -1,0 +1,45 @@
+FOTOGRAF KAYNAKLARI
+
+Kaynak: Pexels (https://www.pexels.com)
+Lisans: Pexels License — ticari kullanim serbest, atif gerekmez.
+Not: Unsplash bot korumasi (HTTP 401) nedeniyle kaynak Pexels secildi.
+Indirme tarihi: 2026-09-10
+
+Secim olcutu: ucuncu taraf marka/logo gorunmeyecek, yuz on planda
+olmayacak, ton marka paletiyle kavga etmeyecek.
+
+pilates-reformer
+  Pexels id : 11036671
+  Sayfa     : https://www.pexels.com/photo/11036671/
+  Aciklama  : Sirali reformer yataklari, pencereden gelen sicak isik. Kisi yok, marka yok.
+  Uretilen  : pilates-reformer.webp 1600×1067 173KB · pilates-reformer-sm.webp 800×534 56KB
+
+boks-dovus
+  Pexels id : 5750886
+  Sayfa     : https://www.pexels.com/photo/5750886/
+  Aciklama  : Bos boks salonu, asili kirmizi kum torbalari. Kisi yok, marka yok.
+  Uretilen  : boks-dovus.webp 1600×1067 50KB · boks-dovus-sm.webp 800×534 19KB
+
+crossfit
+  Pexels id : 2261477
+  Sayfa     : https://www.pexels.com/photo/2261477/
+  Aciklama  : Halter cekisi, kirpilmis ve loş. Yuz yok, marka yok.
+  Uretilen  : crossfit.webp 1600×1067 162KB · crossfit-sm.webp 800×534 43KB
+
+cok-subeli-zincir
+  Pexels id : 36833354
+  Sayfa     : https://www.pexels.com/photo/36833354/
+  Aciklama  : Sade ve aydinlik studyo ic mekani. Kisi yok, marka yok.
+  Uretilen  : cok-subeli-zincir.webp 1600×1067 51KB · cok-subeli-zincir-sm.webp 800×534 20KB
+
+grup-dersi
+  Pexels id : 6339386
+  Sayfa     : https://www.pexels.com/photo/6339386/
+  Aciklama  : Daire seklinde grup dersi, sicak ahsap duvar.
+  Uretilen  : grup-dersi.webp 1600×1067 82KB · grup-dersi-sm.webp 800×534 27KB
+
+salon-genis
+  Pexels id : 7031705
+  Sayfa     : https://www.pexels.com/photo/7031705/
+  Aciklama  : Genis modern salon, buyuk pencereler. Tam genislik bant icin.
+  Uretilen  : salon-genis-wide.webp 2000×760 196KB

@@ -1,4 +1,4 @@
-import { ArrowRight, Check, MessageCircle, Smartphone, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Check, MessageCircle, Smartphone, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { BrowserFrame, PhoneFrame } from "@/components/ui/Frames";
@@ -26,12 +26,7 @@ export function Hero() {
         <div className="grid items-center gap-16 sm:gap-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10 lg:items-center xl:gap-14">
           {/* ── metin ── */}
           <div className="max-w-xl">
-            <span className="inline-flex items-center gap-2 rounded-full bg-surface px-3.5 py-1.5 text-xs font-medium text-sage-ink shadow-sm ring-1 ring-sage/25">
-              <Sparkles className="size-3.5" strokeWidth={2} aria-hidden />
-              Spor kulübü yönetim yazılımı
-            </span>
-
-            <h1 className="mt-6 text-[2.5rem] leading-[1.06] font-extrabold sm:text-5xl lg:text-[3.5rem]">
+            <h1 className="text-[2.5rem] leading-[1.06] font-extrabold sm:text-5xl lg:text-[3.5rem]">
               Kulübünüzün tüm işi{" "}
               <span className="text-gradient-sage">tek platformda</span>
             </h1>

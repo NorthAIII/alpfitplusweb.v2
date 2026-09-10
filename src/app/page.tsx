@@ -1,6 +1,6 @@
 import { Hero } from "@/components/sections/Hero";
 import { Marquee } from "@/components/sections/Marquee";
-import { Problem } from "@/components/sections/Problem";
+import { Chaos } from "@/components/sections/Chaos";
 import { Solution } from "@/components/sections/Solution";
 import { Roles } from "@/components/sections/Roles";
 import { Modules } from "@/components/sections/Modules";
@@ -8,6 +8,7 @@ import { ProductTour } from "@/components/sections/ProductTour";
 import { Benefits } from "@/components/sections/Benefits";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { SegmentsGrid } from "@/components/sections/SegmentsGrid";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { PricingBlock } from "@/components/sections/PricingBlock";
 import { FounderProgram } from "@/components/sections/FounderProgram";
 import { Faq } from "@/components/sections/Faq";
@@ -19,7 +20,7 @@ export default function HomePage() {
     <>
       <Hero />
       <Marquee />
-      <Problem />
+      <Chaos />
       <Solution />
       <Roles />
       <Modules />
@@ -27,6 +28,7 @@ export default function HomePage() {
       <Benefits />
       <WhyUs />
       <SegmentsGrid />
+      <HowItWorks />
       <PricingBlock />
       <FounderProgram />
       <Faq items={FAQ_HOME} tone="soft" lead="Kulüp sahiplerinin en çok sorduğu on soru ve dürüst cevapları." />
