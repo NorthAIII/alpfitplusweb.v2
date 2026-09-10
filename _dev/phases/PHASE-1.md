@@ -68,20 +68,48 @@
 
 ## Araştırma Bulguları
 
-> Bu bölüm `/devflow:research-phase` oturumunda doldurulur.
+> Bu bölüm `/devflow:research-phase` oturumunda dolduruldu (2026-09-11). Dört karar noktası kullanıcıya sunuldu ve seçildi; gerekçeler "Teknik Kararlar"da.
+>
+> **Bölme çocukları:** `PHASE-1-ARASTIRMA.md` — yaklaşım karşılaştırması (elenenler dâhil) ve ölçülmüş tuzakların tam listesi (araştırma-detayı).
 
-### Değerlendirilen Yaklaşımlar
-- [Yaklaşım 1]: [Açıklama, artılar, eksiler]
-- **Seçilen:** [Hangisi ve neden]
+### Değerlendirilen Yaklaşımlar (özet)
+
+Tam karşılaştırma (elenen seçenekler, artı/eksi) → `PHASE-1-ARASTIRMA.md`. Seçilenler:
+
+- **Lead alıcısı:** Google Apps Script web app, sertleştirilmiş (token URL sorgusunda, betik JSON `{ok:true}` döner ve route bunu doğrular, `LockService`, betik kaynağı repoda). Yedek rota: Sheets API + servis hesabı.
+- **Analitik:** Umami Cloud ücretsiz katman — çerezsiz, script 4,7 KB (2,3 KB gzip), `data-tag` ile ortam ayrımı. Vercel Web Analytics Hobby'de özel olay saymadığı için elendi; Plausible ücretsiz plan yok.
+- **Olay bağlama:** layout'ta tek global tıklama dinleyicisi (`wa.me` / `tel:`) + bölümlere `data-surface`; demo gönderimi `DemoForm` başarı anında `track`. Kodda 15 WhatsApp + 5 telefon bağlantısı (12 dosya) olduğu için tek tek öznitelik elendi.
+- **Ortam modeli:** `main` = production kalır; aşama (`local | preview | production`) `VERCEL_ENV` + `VERCEL_PROJECT_PRODUCTION_URL`'den türetilir — discuss'taki `VERCEL_ENV !== "production"` varsayımı ölçümde çürüdü (detay çocukta).
+- **noindex:** üç katman aynı aşama değerinden — `X-Robots-Tag` başlığı, `robots.ts` disallow, `metadata.robots`.
 
 ### Kullanılacak Araçlar/Kütüphaneler
-- [Araç 1]: [Versiyon, ne için]
 
-### Dikkat Edilecekler
-- [Tuzak/Risk 1]: [Nasıl kaçınılacak]
+- **Umami Cloud tracker** — `https://cloud.umami.is/script.js`, `next/script` ile `strategy="afterInteractive"`; öznitelikler `data-website-id` (yeni env `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, sır değil), `data-tag={deployStage}`. `data-domains` **kullanılmaz** (önizlemede saymalı). Yeni npm bağımlılığı yok.
+- **Google Apps Script web app** — "Execute as: me", "Who has access: Anyone"; `LockService.getScriptLock()`; `ContentService` JSON yanıtı. Betik kaynağı repoda `research/lead-sheet.gs` (yeni; Google tarafındaki kopyayla eşit tutulur). Kota: 30 eşzamanlı çalıştırma/kullanıcı, 6 dk/çalıştırma — bu trafik için sınır uzak.
+- **Resend HTTP API** — mevcut `fetch` kullanımı korunur, SDK yok; alan `reply_to` doğru (API böyle). `Idempotency-Key` başlığı isteğe bağlı (tekrar gönderimde çift e-posta önler; 24 saat, ≤256 karakter) — `lead.at + club` türevi kullanılabilir.
+- **Vercel sistem env'leri** — `VERCEL`, `VERCEL_ENV`, `VERCEL_PROJECT_PRODUCTION_URL` (üçü de derleme ve çalışma anında; projede "Enable access to System Environment Variables" kutusu açık olmalı — F7.3'te teyit).
+- **Next.js 16 `next.config.ts` → `env`** — aşama tek yerde hesaplanır ve `NEXT_PUBLIC_DEPLOY_STAGE` olarak koda gömülür; `src/lib/stage.ts` (yeni) yalnız okur. Aynı değer `headers()` içinde noindex'i belirler.
+
+### Dikkat Edilecekler (özet)
+
+Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Plan-phase'i doğrudan etkileyenler:
+
+- `VERCEL_ENV` tek başına önizlemeyi ayırmaz (main push = production); `env` alanı ve etiket `deployStage`'den yazılır.
+- Resend DNS kayıtları (DKIM, `send` MX+SPF eu-west-1, DMARC katı) alan adında **zaten var**; kullanıcı yalnız panelde "Verified" teyit eder. `DEMO_FROM` tam `@alpfitplus.com` olmalı.
+- Apex MX yok → `destek@`/`demo@alpfitplus.com` posta alamayabilir (Gelen Kutusu; faz dışı). `DEMO_TO` Google MX'li, etkilenmez.
+- Apps Script: başlık okunamaz (token sorguda), betik hatası 200+HTML döner (route JSON `ok` doğrular), sürüm güncellemesi aynı URL'de yapılır, `LockService` zorunlu.
+- Umami yoksa `window.umami?.track` sessiz geçer; kişisel veri olaya girmez; yük `perf.mjs` ile ölçülür (başlangıç 144/133 KB).
+- `legal.ts` Aktarım + Çerezler maddeleri güncellenir (e-tablo tedarikçisi, çerezsiz ölçüm); B-008 açık kalır.
+- Vercel Hobby ticari kullanıma kapalı — bilinçli tercih (BULGULAR), F7.5'te yeniden.
 
 ### Teknik Kararlar
-- [Karar 1]: [Gerekçe]
+
+- **Aşama türetimi tek yerde:** `next.config.ts` `deployStage`'i hesaplar (`local | preview | production`), `env.NEXT_PUBLIC_DEPLOY_STAGE` ile gömer ve aynı değerle `headers()`'da noindex'i verir; `src/lib/stage.ts` yalnız okur. Gerekçe: iki ayrı yerde iki koşul drift'tir; `VERCEL_ENV` tek başına yanlış (yukarıda ölçüldü). Kayıt `docs/DECISIONS.md` (2026-09-11).
+- **Lead alıcısı Apps Script, sertleştirilmiş:** token sorguda, JSON `ok` doğrulanır, `LockService`, betik kaynağı repoda. Gerekçe: bakım kolaylığı (tek URL, sır yok) + kalıcılık (sessiz kayıp yolları kapatıldı). Yedek rota: Sheets API + servis hesabı.
+- **Analitik Umami Cloud + global dinleyici:** olay adları `demo-submit` / `whatsapp-click` / `phone-click`, tek özellik `surface`, etiket `data-tag=deployStage`; kişisel veri girmez. Kayıt `docs/DECISIONS.md` (2026-09-11).
+- **noindex üç katman aynı kaynaktan:** başlık + robots.txt + metadata; F7.5'te alan adı bağlanınca üçü birden açılır, elle adım yok.
+- **`.env.example` anahtar seti:** `LEAD_WEBHOOK_URL` (token'lı), `LEAD_FILE_PATH` (yalnız yerel), `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (yeni). Değer yok.
+- **Milestone cümlesi değişmedi:** cümle mekanizma adı anmıyor (`VERCEL_ENV` yalnız kapsam kararındaydı); not satırı gerekmedi.
 
 ---
 

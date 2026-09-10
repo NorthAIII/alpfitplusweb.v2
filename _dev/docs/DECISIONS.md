@@ -13,6 +13,42 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-11 — Vercel ortam modeli: `main` = production, aşama `VERCEL_PROJECT_PRODUCTION_URL`'den türetilir
+
+**Bağlam:** Kapsam tartışması önizlemede noindex'i `VERCEL_ENV !== "production"` koşuluna bağlamıştı. Araştırmada ölçüldü: Git bağlantılı projede `main` push'u `<proje>.vercel.app` adresine **production** dağıtımıdır (`VERCEL_ENV=production`) ve Vercel bu adrese otomatik noindex eklemez. Koşul olduğu gibi yazılsaydı önizleme indekslenir, test talepleri "production" etiketi alırdı.
+
+**Seçenekler:**
+1. `main` üretim dalı kalır; aşama türetilir: `VERCEL_ENV === "production"` ve üretim adresi `.vercel.app` ile bitmiyorsa `production`, Vercel'de ama değilse `preview`, dışarıda `local`
+2. Vercel'de üretim dalı henüz olmayan bir ada çekilir; `main` push'ları preview olur, Vercel noindex'i kendisi ekler; Vercel Authentication elle kapatılır, F7.5'te üretim dalı elle `main` yapılır
+
+**Karar:** 1 seçildi (kullanıcı). Aşama `next.config.ts`'te tek kez hesaplanır, `NEXT_PUBLIC_DEPLOY_STAGE` ile gömülür; noindex (başlık + robots + metadata), lead kaydındaki `env` alanı ve analitik etiketi bu tek değerden beslenir.
+
+**Gerekçe:** Bakım kolaylığı ve kalıcılık: F7.5'te alan adı eklenince aşama kendiliğinden `production` olur, unutulabilecek yayın günü adımı yok; ek Vercel ayarı ve koruma toggle'ı gerekmez; adres herkese açık (telefon testi). Vercel'in "ilk dağıtım her zaman production" kuralıyla uyumlu.
+
+**İlgili Task/Faz:** Faz 1 (`phases/PHASE-1.md` → Araştırma Bulguları)
+
+---
+
+### 2026-09-11 — Analitik: Umami Cloud (çerezsiz), olaylar tek global dinleyiciyle bağlanır
+
+**Bağlam:** Üç dönüşüm olayı (demo gönderimi, WhatsApp, telefon) yüzey etiketiyle sayılacak; Vercel planı Hobby; KVKK gereği çerezsiz.
+
+**Seçenekler:**
+1. Vercel Web Analytics — Hobby'de özel olay yok (elendi)
+2. Umami Cloud ücretsiz katman — çerezsiz, script 4,7 KB (2,3 KB gzip), `data-tag` ile ortam ayrımı
+3. Plausible Cloud — çerezsiz, ücretsiz plan yok ($9/ay)
+4. Kendi olay ucu → Google Sheet — panel yok, bakım bizde
+
+Bağlama yöntemi: (a) 20 bağlantının her birine `data-umami-event` özniteliği, (b) layout'ta tek tıklama dinleyicisi (`wa.me` / `tel:` hedefli) + bölümlere `data-surface`.
+
+**Karar:** 2 + (b) seçildi (kullanıcı). Olay adları `demo-submit` / `whatsapp-click` / `phone-click`, tek özellik `surface`; etiket `data-tag` = aşama; kişisel veri olaya girmez; `window.umami` yoksa sessiz geçilir.
+
+**Gerekçe:** Ölçülebilirlik ilkesi: yeni eklenen her WhatsApp/telefon bağlantısı otomatik sayılır, işaretlemeyi unutmak sessiz sayım kaybı üretmez. Bakım kolaylığı: ücretsiz, bağımlılıksız, tek script. Sağlayıcı değişirse yalnız sarmalayıcı (`src/lib/analytics.ts`) değişir. Reklam engelleyici kaybı bilinerek kabul (discuss).
+
+**İlgili Task/Faz:** Faz 1 (`phases/PHASE-1.md` → Araştırma Bulguları)
+
+---
+
 ### 2026-09-11 — Lead hedefi: Google Sheet; e-posta ikincil (Resend)
 
 **Bağlam:** `/api/demo` webhook veya dosya hedefine yazıyor ama ikisi de tanımsız; Vercel'de kalıcı disk yok, dosya yolu yayında çalışmaz.

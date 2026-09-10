@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — discuss-phase: Faz 1 = önizleme yayını + lead hattı (Google Sheet, Resend) + çerezsiz analitik; kararlar PHASE-1'de; sıradaki adım research-phase.
+**Son Güncelleme:** 2026-09-11 — research-phase: Faz 1 araştırması bitti (Umami, Apps Script sertleştirme, aşama türetimi — `VERCEL_ENV` varsayımı çürüdü); bulgular PHASE-1'de; sıradaki adım plan-phase.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,7 +10,7 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** research
+**Adım:** plan
 **İlerleme:** 0/0 task tamamlandı
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
@@ -35,7 +35,7 @@
 
 **Task:** Yok — faz henüz planlanmadı
 **Durum:** ⬜ Bekliyor
-**İlerleme:** research-phase bekleniyor
+**İlerleme:** plan-phase bekleniyor
 
 ---
 

@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-11 — kickoff-docs: DURUM'daki açık işler ve kapatılmış yedi hata bulgu formatına taşındı (3 açık, 7 arşiv).
+**Son Güncelleme:** 2026-09-11 — research-phase (Faz 1): Gelen Kutusu'na iki satır (global-error tek-kaynak ihlali, apex MX yok), Bilinçli Tercihler'e Vercel Hobby riski eklendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -36,6 +36,8 @@
      SİLİNİR — bilgi yeni evine taşınmıştır (mezuniyet). Olgun hal: boş kutu. -->
 
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px; referans alınan rakip de benzer uzunlukta. Kısaltılsın mı? Karar kullanıcıda — tek başına içerik atılmadı (bkz. `modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
+- [PHASE-1] `src/app/global-error.tsx:72` WhatsApp adresini elle yazıyor, `CONTACT.whatsapp.href` yerine — tek-kaynak ihlali (M1 F1.1); numara değişirse burası kaçar
+- [PHASE-1] `alpfitplus.com` apex'te MX kaydı yok (iki çözümleyiciyle ölçüldü) — `destek@alpfitplus.com` (yasal metinlerde KVKK başvuru adresi, `CONTACT.support`) ve `demo@alpfitplus.com` posta alamıyor olabilir; DNS Squarespace'te, kullanıcı doğrular
 
 ## Açık Bulgular
 
@@ -86,6 +88,7 @@
 - Ürün görsellerinde `churn.html` ve `kampanya.html` yok — karşılıkları ürünün v1.5'inde, bugünkü ürünün parçası değil (2026-09-10)
 - Hız sınırı bellek içi, örnek başına — tek süreç için yeterli, ölçek büyürse taşınır (2026-09-10)
 - Header'da "Giriş Yap" yok — `app.alpfitplus.com` yayında değil; v1 kararı (footer'a, ürün canlıya çıkınca) devralındı (2026-09-11)
+- Vercel Hobby planı ticari kullanıma kapalı (adil kullanım: ürün/hizmet satışı reklamı ticari sayılır) — risk bilinerek kabul edildi, önizleme Hobby'de kalır; plan kararı alan adı geçişi (F7.5) kapsam tartışmasında yeniden konuşulur (2026-09-11, research-phase)
 
 ---
 
