@@ -2,6 +2,8 @@
  * SSS — kaynak: rekabet/mevcut-duzen.md (degisim maliyeti itirazlari) +
  * fiyat/model.md + SATIS-SPEC.md. Cevaplarda vaat siniri korunur.
  */
+import { PRODUCT_STATUS } from "./site";
+
 export type Faq = { q: string; a: string };
 
 export const FAQ_HOME: Faq[] = [
@@ -31,7 +33,7 @@ export const FAQ_HOME: Faq[] = [
   },
   {
     q: "Kaç şube ve kaç eğitmen ekleyebilirim?",
-    a: "Eğitmen ve üye sayısında limit yoktur. Şube sayısında da limit yoktur, fiyat şube başınadır. İlk şube ₺1.500, ikinci şubeden itibaren her şube ₺1.200'dir. Tüm fiyatlar KDV hariçtir.",
+    a: "Eğitmen ve üye sayısında limit yoktur. Şube sayısında da limit yoktur, fiyat şube başınadır. İlk şube 1.500 ₺, ikinci şubeden itibaren her şube 1.200 ₺'dir. Tüm fiyatlar KDV hariçtir.",
   },
   {
     q: "Online ödeme alabiliyor muyum?",
@@ -43,7 +45,7 @@ export const FAQ_HOME: Faq[] = [
   },
   {
     q: "Ürün hangi aşamada?",
-    a: "v1 hazır ve şu anda bir stüdyoda pilot olarak test ediliyor. Kampanya derinleşmesi, churn paneli ve gelişmiş raporlama yolda. Online ödeme, QR ve turnike girişi ile yapay zekâ destekli analiz yol haritasında.",
+    a: `v1 hazır. ${PRODUCT_STATUS.sentence} Kampanya derinleşmesi, churn paneli ve gelişmiş raporlama yolda. Online ödeme, QR ve turnike girişi ile yapay zekâ destekli analiz yol haritasında.`,
   },
 ];
 
@@ -54,7 +56,7 @@ export const FAQ_PRICING: Faq[] = [
   },
   {
     q: "Kurulum ücretinden nasıl muaf olurum?",
-    a: "Yıllık peşin ödemede şube başına ₺3.000 olan kurulum ücreti alınmaz. Aylık ödemede kurulum 2 ila 3 ay taksitlendirilebilir.",
+    a: "Yıllık peşin ödemede şube başına 3.000 ₺ olan kurulum ücreti alınmaz. Aylık ödemede kurulum 2 ila 3 ay taksitlendirilebilir.",
   },
   {
     q: "Yıllık peşin ödemede ayrıca yüzde indirimi var mı?",

@@ -125,7 +125,7 @@ export function PriceCalculator({ compact = false }: { compact?: boolean }) {
             <p className="mt-1.5 font-display text-lg font-bold tabnum text-sage-ink">
               {tl(annual)} ₺
             </p>
-            <p className="mt-1 text-xs leading-snug text-sage-ink/75">
+            <p className="mt-1 text-xs leading-snug text-sage-ink">
               Kurulum ücreti alınmaz
             </p>
           </div>

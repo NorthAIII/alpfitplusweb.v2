@@ -32,7 +32,7 @@ export function BrowserFrame({
           <span className="size-2.5 rounded-full bg-white/18" />
           <span className="size-2.5 rounded-full bg-white/18" />
         </span>
-        <span className="ml-2 truncate rounded-md bg-white/6 px-2.5 py-1 text-[0.6875rem] text-canvas/45">
+        <span className="ml-2 truncate rounded-md bg-white/6 px-2.5 py-1 text-[0.6875rem] text-canvas/60">
           {label}
         </span>
       </div>

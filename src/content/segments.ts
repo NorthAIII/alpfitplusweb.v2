@@ -243,7 +243,7 @@ export const SEGMENTS: Segment[] = [
       },
       {
         title: "Şube başına şeffaf fiyat",
-        body: "İlk şube ₺1.500, ikinci şubeden itibaren ₺1.200. Mobil uygulama her şubede dâhildir, ayrı prim yoktur.",
+        body: "İlk şube 1.500 ₺, ikinci şubeden itibaren 1.200 ₺. Mobil uygulama her şubede dâhildir, ayrı prim yoktur.",
       },
     ],
     modules: ["cockpit", "finans", "raporlar", "antrenor-perf", "uye360"],
@@ -258,7 +258,7 @@ export const SEGMENTS: Segment[] = [
       },
       {
         q: "Şube sayısı arttıkça fiyat nasıl işliyor?",
-        a: "İlk şube ₺1.500, ikinci şubeden itibaren her şube ₺1.200'dir. Kurulum ücreti şube başınadır ve yıllık peşin ödemede alınmaz.",
+        a: "İlk şube 1.500 ₺, ikinci şubeden itibaren her şube 1.200 ₺'dir. Kurulum ücreti şube başınadır ve yıllık peşin ödemede alınmaz.",
       },
     ],
     accent: "sage",

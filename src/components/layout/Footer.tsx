@@ -106,7 +106,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-5 border-t border-white/10 py-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-canvas/50">
+          <p className="text-sm text-canvas/60">
             © {new Date().getFullYear()} {SITE.name}. Tüm hakları saklıdır.
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
@@ -121,7 +121,7 @@ export function Footer() {
               href={SITE.maker.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-canvas/50 transition-colors hover:text-canvas/80"
+              className="text-sm text-canvas/60 transition-colors hover:text-canvas/80"
             >
               Bir <span className="font-medium text-canvas/70">{SITE.maker.name}</span> ürünüdür
             </a>

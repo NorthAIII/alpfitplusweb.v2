@@ -29,7 +29,7 @@ const AXES = [
     icon: Building2,
     rank: "03",
     title: "Çok şube, butik fiyatına",
-    body: "Cockpit ilk günden var. İkinci şubeden itibaren şube başı ₺1.200 ve mobil uygulama her şubede dâhil.",
+    body: "Cockpit ilk günden var. İkinci şubeden itibaren şube başı 1.200 ₺ ve mobil uygulama her şubede dâhil.",
     proof: "Rakiplerde çok şube ya üst pakette ya da mobil uygulama ayrı fiyatlanıyor.",
     strong: true,
   },

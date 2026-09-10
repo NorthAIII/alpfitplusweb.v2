@@ -37,7 +37,7 @@ export default function DemoPage() {
       />
 
       <Section tone="canvas" size="sm">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14">
           <DemoForm />
 
           <aside className="flex flex-col gap-6">

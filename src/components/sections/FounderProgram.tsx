@@ -64,7 +64,7 @@ export function FounderProgram() {
               ))}
             </div>
 
-            <p className="mt-6 text-sm text-canvas/45">
+            <p className="mt-6 text-sm text-canvas/60">
               Kontenjan gerçektir ve beş kulüple sınırlıdır. Dolduğunda bu koşullar geri
               çekilir, geriye dönük uygulanmaz.
             </p>
@@ -81,7 +81,7 @@ export function FounderProgram() {
                 <StatusRow
                   state="done"
                   title="v1 hazır"
-                  body={`Randevu, grup dersleri, üyelik ve paket, finans ve ciro, çok şube cockpit, raporlar, diyetisyen modülü ve bildirimler. ${PRODUCT_STATUS.label.split(",")[1]?.trim() ?? ""}`}
+                  body={`${PRODUCT_STATUS.modules} ${PRODUCT_STATUS.sentence}`}
                 />
                 <StatusRow
                   state="wip"

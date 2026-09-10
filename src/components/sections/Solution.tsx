@@ -42,7 +42,7 @@ export function Solution() {
           {/* kaynaklar */}
           <Reveal>
             <div className="h-full rounded-card bg-white/4 p-6 ring-1 ring-white/10">
-              <p className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-canvas/45">
+              <p className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-canvas/60">
                 Kulüpte olan
               </p>
               <ul className="mt-4 flex flex-col gap-2.5">

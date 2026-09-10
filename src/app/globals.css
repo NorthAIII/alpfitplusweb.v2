@@ -94,7 +94,10 @@
   --color-ink-deep: #0e100c;
   --color-ink: #171a15;
   --color-muted: #545b4d;
-  --color-faint: #6d7565;
+  /* Kontrast olculdu: eski #6d7565 canvas uzerinde 4.62 ama canvas-soft
+     uzerinde 4.38 idi ve WCAG AA esigini deliyordu (v1 denetimi D-08 ile
+     ayni sinif). #68705e dort zeminde de >= 4.71. */
+  --color-faint: #68705e;
   --color-line: #e5e7df;
   --color-line-2: #d3d7ca;
 
@@ -107,9 +110,11 @@
   --color-sage-wash-2: #dfeddd;
 
   /* durum */
-  --color-amber: #b07617;
+  /* Eski #b07617 kendi zemininde (amber-wash) 3.53 idi. #8f5f10 → 5.04. */
+  --color-amber: #8f5f10;
   --color-amber-wash: #fdf4e3;
-  --color-neg: #c0483c;
+  /* Eski #c0483c neg-wash uzerinde 4.39 idi. #b34236 → 4.96. */
+  --color-neg: #b34236;
   --color-neg-wash: #fceeec;
 
   /* olcek */

@@ -107,7 +107,7 @@ export default async function SegmentPage({
                     </h3>
                     <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">{p.body}</p>
                   </div>
-                  <div className="bg-sage-wash/55 p-6">
+                  <div className="bg-sage-wash p-6">
                     <span className="inline-grid size-8 place-items-center rounded-lg bg-sage-wash-2 text-sage-ink ring-1 ring-sage/25">
                       <Check className="size-4" strokeWidth={2.8} aria-hidden />
                     </span>

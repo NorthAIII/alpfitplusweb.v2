@@ -40,6 +40,7 @@ export const metadata: Metadata = {
     description: SITE.description,
   },
   robots: { index: true, follow: true },
+  manifest: "/site.webmanifest",
 };
 
 export const viewport: Viewport = {

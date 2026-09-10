@@ -35,9 +35,14 @@ export const NAV = [
   { label: "Destek", href: "/destek" },
 ] as const;
 
-/** Urunun bugunku durumu — tek yerde, dururust. */
+/**
+ * Urunun bugunku durumu — TEK kaynak. Sitede pilot iddiasi baska bir cumleyle
+ * yazilmaz. Satis dosyasinin siniri: "canli / sahada kullaniliyor" DENMEZ.
+ */
 export const PRODUCT_STATUS = {
   version: "v1",
-  label: "v1 hazır, bir stüdyoda pilot olarak test ediliyor",
   short: "Pilot aşamada",
+  sentence: "Şu anda bir stüdyoda pilot olarak test ediliyor.",
+  modules:
+    "Randevu, grup dersleri, üyelik ve paket, finans ve ciro, çok şube cockpit, raporlar, diyetisyen modülü ve bildirimler.",
 } as const;
