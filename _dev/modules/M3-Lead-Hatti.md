@@ -27,7 +27,7 @@
 
 ---
 
-### F3.2: Dayanıklı kayıt hedefi → Phase —
+### F3.2: Dayanıklı kayıt hedefi → Phase 1
 
 **Açıklama:** `LEAD_WEBHOOK_URL` (JSON POST) veya `LEAD_FILE_PATH` (JSONL) yayın ortamında tanımlanır ve gerçek bir talep kayda düşer. Bugün ikisi de tanımsız; talep kaydedilmiyor. "Önizleme yayını, lead hattı ve analitik" faz konusunun parçası.
 
@@ -44,7 +44,7 @@
 
 ---
 
-### F3.3: E-posta bildirimi → Phase —
+### F3.3: E-posta bildirimi → Phase 1
 
 **Açıklama:** `RESEND_API_KEY` ile `DEMO_TO`'ya bildirim. İkincil; tek başına yeterli sayılır ama tercih edilmez. Aynı faz konusunda.
 

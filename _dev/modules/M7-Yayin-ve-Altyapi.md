@@ -40,7 +40,7 @@
 
 ---
 
-### F7.3: Vercel'de ayrı proje ve önizleme yayını → Phase —
+### F7.3: Vercel'de ayrı proje ve önizleme yayını → Phase 1
 
 **Açıklama:** vercel.com/new → repoyu içe aktar (kullanıcı eylemi; CLI kurulamadı, gerek de yok). Env değişkenleri (lead hedefi, e-posta, ileride model anahtarı) Vercel'de tanımlanır. "Önizleme yayını, lead hattı ve analitik" faz konusu.
 
@@ -58,7 +58,7 @@
 
 ---
 
-### F7.4: Analitik olay sayımı → Phase —
+### F7.4: Analitik olay sayımı → Phase 1
 
 **Açıklama:** v1'de olay sayımı vardı; v2'de hiçbir izleme yok (kickoff boşluğu). Demo gönderimi, WhatsApp ve telefon tıklaması **yüzey etiketiyle** (hero, fiyat, footer, asistan…) sayılır. Sağlayıcı seçimi (Vercel Analytics, Plausible, Umami…) ve KVKK etkisi discuss'ta karar. Aynı faz konusu.
 

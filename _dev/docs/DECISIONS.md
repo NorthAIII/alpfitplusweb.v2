@@ -13,6 +13,40 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-11 — Lead hedefi: Google Sheet; e-posta ikincil (Resend)
+
+**Bağlam:** `/api/demo` webhook veya dosya hedefine yazıyor ama ikisi de tanımsız; Vercel'de kalıcı disk yok, dosya yolu yayında çalışmaz.
+
+**Seçenekler:**
+1. Google Sheet (Apps Script web app'e JSON POST) — ucuz, telefondan bakılır
+2. Notion veritabanı — takip akışı orada yürür, kurulum daha fazla
+3. Slack/WhatsApp mesajı — anlık ama kalıcı kayıt zayıf
+4. Vercel Marketplace Postgres — en sağlam, tek kişilik ekibe fazla
+
+**Karar:** 1 seçildi (kullanıcı). E-posta Resend ile ikincil kalır; `demo@alpfitplus.com` alan adı doğrulaması aynı fazda yapılır. Lead kaydına ortam alanı eklenir (test/gerçek ayrımı).
+
+**Gerekçe:** ILKELER "gelen talep kaybolmaz": önce dayanıklı kayıt, sonra e-posta. Bakım kolaylığı: e-tablo kurulumu ve bakımı en düşük. KVKK: aktarım maddesine e-tablo tedarikçisi eklenir (B-008 kapsamında).
+
+**İlgili Task/Faz:** Faz 1 (`phases/PHASE-1.md`)
+
+---
+
+### 2026-09-11 — Faz sırası (yeniden): yayın+lead+analitik → görsel/mobil → kalite kapıları → metin tonu → alan adı geçişi → asistan
+
+**Bağlam:** Aynı gün alınan önceki sıra kararı metin tonunu ilk faz yapıyordu. discuss-phase'de metin tonunun ön koşulu (kullanıcının örnek cümleleri) hazır değildi; kullanıcı görsel ve mobil tarafı da geliştirmek istedi.
+
+**Seçenekler:**
+1. Metin tonuyla başla, örnekler gelene kadar bekle
+2. Önce önizleme + lead + analitik; görsel/mobil incelemeyi önizleme adresi üzerinden gerçek telefonda yap; metin tonunu canlıya almadan hemen önceye al
+
+**Karar:** 2 seçildi (kullanıcı). Önceki faz sırası kararı (2026-09-11, "metin tonu → yayın…") bu kararla geçersizdir. Yeni faz konusu "Görsel ve mobil iyileştirme" eklendi.
+
+**Gerekçe:** Metin tonuna bağımlı faz yok; lead hattı ve ölçüm ILKELER'in pazarlıksız maddeleri ve bugün karşılanmıyor. Önizleme adresi telefonda incelemeyi mümkün kılar; görsel faz somut bulgularla açılır. Metin tonu yalnız `src/content/` (ve oraya taşınacak gömülü metin) değiştirir; kalite kapıları o zaman otomatik koşuyor olur.
+
+**İlgili Task/Faz:** Faz 1 (`phases/PHASE-1.md`), `PHASES.md` → Sıradaki Fazlar
+
+---
+
 ### 2026-09-11 — Rakip adı sitede geçmez
 
 **Bağlam:** Fiyat sayfasındaki karşılaştırma bloğu bir rakibin adını yazıyordu.

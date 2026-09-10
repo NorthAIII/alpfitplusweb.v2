@@ -19,7 +19,7 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 
 | Faz | Konu | Milestone | Durum |
 |-----|------|-----------|-------|
-| — | Henüz faza girilmedi | — | — |
+| 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı | 🔄 Devam ediyor |
 
 **Durum simgeleri:**
 - 🔄 **Devam ediyor** — discuss-phase başladı (aktif faz)
@@ -36,9 +36,9 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 
 **v2.0** (alan adı geçişiyle biter):
 
-- **Metin tonu** — Kullanıcıdan fazla samimi bulduğu örnek cümleler alındı (M1 F1.2'deki üç şüpheli yer soruldu); tek sayfada örnek gösterildi ve onaylandı; ton `src/content/` geneline yayıldı; a11y/scan/font-guard yeşil.
-- **Önizleme yayını, lead hattı ve analitik** — v2 **ayrı** Vercel projesinde önizleme adresinde; gerçek bir demo talebi dayanıklı kayda düşüyor **ve** e-postayla geliyor; analitik olay sayımı çalışıyor (demo gönderimi, WhatsApp/telefon tıklaması yüzey etiketiyle). v1 projesine dokunulmadı.
+- **Görsel ve mobil iyileştirme** — Önizleme adresi gerçek telefonda ve en az üç viewport'ta (küçük telefon, 390 px, tablet) bölüm bölüm gözle incelendi; bulgular BULGULAR'a düştü ve triyajı yapıldı; ana sayfa mobil uzunluğu kararı verildi (Gelen Kutusu sorusu); düzeltmeler sonrası beş ölçüm yeşil.
 - **Kalite kapıları otomatik** — Beş ölçüm tek komutla koşuyor; GitHub Actions her push'ta çalışıyor; eşik altı değişiklik (kontrast, yatay kaydırma, font kümesi, iddia sızıntısı) kırmızı.
+- **Metin tonu** — Kullanıcıdan fazla samimi bulduğu örnek cümleler alındı (M1 F1.2'deki üç şüpheli yer soruldu); tek sayfada örnek gösterildi ve onaylandı; ton `src/content/` geneline yayıldı (bileşenlerde gömülü metin de oraya taşındı); a11y/scan/font-guard yeşil. Canlıya almadan hemen önce yapılır.
 - **Alan adı geçişi** — `alpfitplus.com` v2'ye bakıyor; v1'in 20 adresinin (10 TR + 10 `/en/*`) hepsi 301 ile karşılığına gidiyor; v1 Vercel projesi arşivde ama silinmemiş; sitemap ve canonical tutarlı.
 - Teknik borç kapatma (versiyon sonu sabit fazı)
 - Senaryo testi (versiyon sonu sabit fazı) → ardından `/devflow:prd-review`
@@ -73,12 +73,12 @@ Dış aktöre bağlı işler (hukukçu onayı, logo, kurucu programı kontenjan�
 
 | Geçiş | Tarih | Not |
 |--------|-------|-----|
-| — | — | Henüz geçiş yok |
+| → Faz 1 | 2026-09-11 | İlk faza girildi; sıra değişti (DECISIONS 2026-09-11) |
 
 <!-- KURAL: Her geçiş için TEK satır + kısa not. Geçiş gerekçesi/detayı PHASE-N.md retrospektifindedir, burada tekrar edilmez. "Önceki:" prefix veya HTML comment ile detay yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---
 
-**Son Güncelleme:** 2026-09-11 — kickoff-docs: beş faz konusu numarasız Sıradaki Fazlar'a yazıldı; Faz Durumu boş.
+**Son Güncelleme:** 2026-09-11 — discuss-phase: Faz 1 (önizleme + lead + analitik) tabloya girdi; sıra değişti — görsel/mobil yeni konu, metin tonu alan adı geçişinin önüne alındı.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

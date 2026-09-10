@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — kickoff-verify: dokümanlar doğrulandı, GIT-STRATEJI ve DevFlow CLAUDE.md (parent + 4 doktrin çocuğu) oluşturuldu, native memory `_dev/memory/`'ye taşındı; sıradaki adım discuss-phase (metin tonu).
+**Son Güncelleme:** 2026-09-11 — discuss-phase: Faz 1 = önizleme yayını + lead hattı (Google Sheet, Resend) + çerezsiz analitik; kararlar PHASE-1'de; sıradaki adım research-phase.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -8,11 +8,11 @@
 
 ## Aktif Faz
 
-**Faz:** Phase 1 — Metin tonu (numara discuss-phase'de damgalanır; Faz Durumu tablosu boş, max+1 = 1)
-**Milestone:** Kullanıcıdan fazla samimi bulduğu örnek cümleler alındı; tek sayfada örnek gösterildi ve onaylandı; ton `src/content/` geneline yayıldı; a11y/scan/font-guard yeşil.
-**Adım:** discuss
+**Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
+**Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
+**Adım:** research
 **İlerleme:** 0/0 task tamamlandı
-**Faz Dokümanı:** `phases/PHASE-1.md` (henüz yok — discuss-phase'de oluşur)
+**Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
 
@@ -35,7 +35,7 @@
 
 **Task:** Yok — faz henüz planlanmadı
 **Durum:** ⬜ Bekliyor
-**İlerleme:** discuss-phase bekleniyor
+**İlerleme:** research-phase bekleniyor
 
 ---
 
@@ -78,6 +78,6 @@ Henüz task çalıştırılmadı.
 ## Hızlı Erişim
 
 **Aktif Task:** yok
-**Aktif Faz:** `phases/PHASE-1.md` (discuss-phase'de oluşur)
+**Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

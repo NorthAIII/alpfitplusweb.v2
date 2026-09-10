@@ -20,8 +20,8 @@ Alpfit Plus Web Sitesi v2
 │   └── F2.3: Ortak yerleşim ve UI ilkelleri          → Phase —
 ├── M3: Lead Hattı
 │   ├── F3.1: Demo formu ve talep ucu                 → Phase —
-│   ├── F3.2: Dayanıklı kayıt hedefi                  → Phase —
-│   └── F3.3: E-posta bildirimi                       → Phase —
+│   ├── F3.2: Dayanıklı kayıt hedefi                  → Phase 1
+│   └── F3.3: E-posta bildirimi                       → Phase 1
 ├── M4: Site Asistanı
 │   ├── F4.1: Hazır akış asistanı                     → Phase —
 │   ├── F4.2: Claude bağlantısı                       → Phase —
@@ -39,8 +39,8 @@ Alpfit Plus Web Sitesi v2
 └── M7: Yayın ve Altyapı
     ├── F7.1: Docker çalışma ortamı                   → Phase —
     ├── F7.2: Güvenlik başlıkları, sitemap, robots    → Phase —
-    ├── F7.3: Vercel'de ayrı proje ve önizleme yayını → Phase —
-    ├── F7.4: Analitik olay sayımı                    → Phase —
+    ├── F7.3: Vercel'de ayrı proje ve önizleme yayını → Phase 1
+    ├── F7.4: Analitik olay sayımı                    → Phase 1
     └── F7.5: Alan adı geçişi ve 301 haritası         → Phase —
 ```
 
@@ -89,8 +89,8 @@ M6 ═══ hepsini kapılar
 | F2.2: Alt sayfalar | M2 | v2.0 | — | ✅ |
 | F2.3: Ortak yerleşim ve UI ilkelleri | M2 | v2.0 | — | ✅ |
 | F3.1: Demo formu ve talep ucu | M3 | v2.0 | — | ✅ |
-| F3.2: Dayanıklı kayıt hedefi | M3 | v2.0 | — | ⬜ |
-| F3.3: E-posta bildirimi | M3 | v2.0 | — | ⬜ |
+| F3.2: Dayanıklı kayıt hedefi | M3 | v2.0 | 1 | 🔄 |
+| F3.3: E-posta bildirimi | M3 | v2.0 | 1 | 🔄 |
 | F4.1: Hazır akış asistanı | M4 | v2.0 | — | ✅ |
 | F4.2: Claude bağlantısı | M4 | v2.1 | — | ⬜ |
 | F4.3: İddia sınırı test seti | M4 | v2.1 | — | ⬜ |
@@ -104,8 +104,8 @@ M6 ═══ hepsini kapılar
 | F6.4: İddia sızıntı denetimi (metin) | M6 | v2.0 | — | ⬜ |
 | F7.1: Docker çalışma ortamı | M7 | v2.0 | — | ✅ |
 | F7.2: Güvenlik başlıkları, sitemap, robots | M7 | v2.0 | — | ✅ |
-| F7.3: Vercel'de ayrı proje ve önizleme yayını | M7 | v2.0 | — | ⬜ |
-| F7.4: Analitik olay sayımı | M7 | v2.0 | — | ⬜ |
+| F7.3: Vercel'de ayrı proje ve önizleme yayını | M7 | v2.0 | 1 | 🔄 |
+| F7.4: Analitik olay sayımı | M7 | v2.0 | 1 | 🔄 |
 | F7.5: Alan adı geçişi ve 301 haritası | M7 | v2.0 | — | ⬜ |
 
 **Durum simgeleri:**
@@ -114,6 +114,6 @@ M6 ═══ hepsini kapılar
 - 🟡 **Kısmen tamamlandı** — Bazı task'ları bitti ama tamamı değil (bazıları sonraki fazlara kaldı)
 - ✅ **Tamamlandı** — Tüm kabul kriterleri karşılandı, UAT'tan geçti (review-phase'de set edilir)
 
-> ✅ işaretli feature'lar **kickoff öncesi, DevFlow dışında** tamamlandı (2026-09-09 → 09-11); kanıt git log + başlangıç ölçümü (`modules/M6-Kalite-Kapilari.md` → Teknik Notlar). Faz sütunları "—": henüz hiçbir faza girilmedi.
+> ✅ işaretli feature'lar **kickoff öncesi, DevFlow dışında** tamamlandı (2026-09-09 → 09-11); kanıt git log + başlangıç ölçümü (`modules/M6-Kalite-Kapilari.md` → Teknik Notlar). Faz sütunu yalnız girilmiş fazlar için dolu (Faz 1: F3.2, F3.3, F7.3, F7.4).
 > Modül detayları (sorumluluk, feature kabul kriterleri, edge case'ler) → `modules/MX-ModulAdi.md`
 > Versiyon sütunu PRD'den değil, kickoff versiyon planından (v2.0 = alan adı geçişiyle biter; v2.1 = asistan) aktarıldı — `docs/DECISIONS.md` 2026-09-11. Faz sütunu sadece planlanmış fazlar için doldurulur, henüz planlanmamış feature'lar "—" kalır.
