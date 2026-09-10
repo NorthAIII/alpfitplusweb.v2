@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, X } from "lucide-react";
-import { PageHero } from "@/components/sections/PageHero";
+import { ArrowRight, Check, ChevronRight, X } from "lucide-react";
+import { Container } from "@/components/ui/Container";
 import { Section, SectionHead } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
@@ -65,25 +66,63 @@ export default async function SegmentPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <PageHero
-        crumbs={[
-          { label: "Segmentler", href: "/segmentler" },
-          { label: seg.name, href: `/segmentler/${seg.slug}` },
-        ]}
-        label={seg.short}
-        title={seg.hero}
-        lead={seg.intro}
-      >
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href="/demo" size="lg">
-            Demo İste
-            <ArrowRight className="size-4.5" strokeWidth={2.2} aria-hidden />
-          </Button>
-          <Button href="/fiyat" variant="secondary" size="lg">
-            Fiyatı gör
-          </Button>
-        </div>
-      </PageHero>
+      {/* Segment kahraman bolumu: baglam fotografi tam genislikte, metin
+          uzerine biner. Foto kaynagi ve lisansi research/FOTOGRAF-KAYNAKLARI.txt */}
+      <section className="relative isolate overflow-hidden bg-ink-deep">
+        <Image
+          src={seg.photo.src}
+          alt={seg.photo.alt}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-45"
+        />
+        <span
+          className="absolute inset-0 bg-linear-to-br from-ink-deep/92 via-ink-deep/78 to-ink-deep/45"
+          aria-hidden
+        />
+        <Container className="relative py-16 sm:py-20 lg:py-24">
+          <nav aria-label="Konum" className="mb-7">
+            <ol className="flex flex-wrap items-center gap-1 text-sm text-canvas/50">
+              <li>
+                <Link href="/" className="hover:text-sage-br">
+                  Ana sayfa
+                </Link>
+              </li>
+              <li className="flex items-center gap-1">
+                <ChevronRight className="size-3.5" strokeWidth={2} aria-hidden />
+                <Link href="/segmentler" className="hover:text-sage-br">
+                  Segmentler
+                </Link>
+              </li>
+              <li className="flex items-center gap-1">
+                <ChevronRight className="size-3.5" strokeWidth={2} aria-hidden />
+                <span className="text-canvas/75">{seg.name}</span>
+              </li>
+            </ol>
+          </nav>
+
+          <div className="max-w-3xl">
+            <p className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-sage-br">
+              {seg.short}
+            </p>
+            <h1 className="mt-4 text-[2.25rem] font-extrabold leading-[1.1] text-canvas sm:text-5xl">
+              {seg.hero}
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-canvas/72">{seg.intro}</p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button href="/demo" size="lg">
+                Demo İste
+                <ArrowRight className="size-4.5" strokeWidth={2.2} aria-hidden />
+              </Button>
+              <Button href="/fiyat" variant="light" size="lg">
+                Fiyatı gör
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </section>
 
       {/* dert → karsilik */}
       <Section tone="soft">

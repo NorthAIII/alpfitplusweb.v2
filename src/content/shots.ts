@@ -15,7 +15,7 @@ export const SHOTS = {
   takvim: {
     src: "/product/takvim.webp",
     width: 1440,
-    height: 892,
+    height: 760,
     alt: "Alpfit Plus rezervasyon takvimi: antrenör sütunları, saat ızgarası ve bekleme listesi",
   },
   grup: {

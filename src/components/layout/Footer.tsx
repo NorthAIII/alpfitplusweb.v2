@@ -5,6 +5,7 @@ import { Logo } from "./Logo";
 import { Container } from "@/components/ui/Container";
 import { CONTACT, SITE } from "@/content/site";
 import { SEGMENTS } from "@/content/segments";
+import { KiwiBand } from "./KiwiBand";
 
 const COLS = [
   {
@@ -117,17 +118,11 @@ export function Footer() {
               Giriş Yap
               <ArrowUpRight className="size-3.5" strokeWidth={2} aria-hidden />
             </a>
-            <a
-              href={SITE.maker.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-canvas/60 transition-colors hover:text-canvas/80"
-            >
-              Bir <span className="font-medium text-canvas/70">{SITE.maker.name}</span> ürünüdür
-            </a>
           </div>
         </div>
       </Container>
+
+      <KiwiBand />
     </footer>
   );
 }

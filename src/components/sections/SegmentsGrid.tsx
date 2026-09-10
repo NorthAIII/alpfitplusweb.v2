@@ -36,10 +36,13 @@ export function SegmentsGrid() {
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.045]"
                 />
                 <span
-                  className="absolute inset-0 bg-linear-to-t from-ink-deep/80 via-ink-deep/15 to-transparent"
+                  className="absolute inset-0 bg-linear-to-t from-ink-deep/90 via-ink-deep/25 to-transparent"
                   aria-hidden
                 />
-                <p className="absolute bottom-4 left-5 right-5 font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-sage-br">
+                <p
+                  data-over-image
+                  className="absolute bottom-4 left-5 right-5 font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-sage-br"
+                >
                   {s.short}
                 </p>
               </div>

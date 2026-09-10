@@ -4,7 +4,7 @@ import { Chaos } from "@/components/sections/Chaos";
 import { Solution } from "@/components/sections/Solution";
 import { Roles } from "@/components/sections/Roles";
 import { Modules } from "@/components/sections/Modules";
-import { ProductTour } from "@/components/sections/ProductTour";
+import { ProductStory } from "@/components/sections/ProductStory";
 import { Benefits } from "@/components/sections/Benefits";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { SegmentsGrid } from "@/components/sections/SegmentsGrid";
@@ -24,7 +24,7 @@ export default function HomePage() {
       <Solution />
       <Roles />
       <Modules />
-      <ProductTour />
+      <ProductStory />
       <Benefits />
       <WhyUs />
       <SegmentsGrid />

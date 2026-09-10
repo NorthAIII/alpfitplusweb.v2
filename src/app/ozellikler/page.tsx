@@ -6,7 +6,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { IconBox } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { Roles } from "@/components/sections/Roles";
-import { ProductTour } from "@/components/sections/ProductTour";
+import { ProductStory } from "@/components/sections/ProductStory";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { MODULES } from "@/content/product";
 import { PRICING } from "@/content/pricing";
@@ -76,7 +76,7 @@ export default function FeaturesPage() {
         </div>
       </Section>
 
-      <ProductTour />
+      <ProductStory />
 
       <Section tone="soft">
         <SectionHead

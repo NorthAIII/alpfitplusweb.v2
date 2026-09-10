@@ -45,7 +45,7 @@ async function renderScreen(browser, screen) {
   await page.waitForTimeout(1200);
 
   // 1+2+3: temizlik, dusurme, denetim girdisi
-  const { values, drops } = await page.evaluate(
+  const { values, drops, imgs, imgLeaks } = await page.evaluate(
     ({ replacements, initials, avatarSel, dropList }) => {
       // 1) DUGUM DUSURME once kosar. Capa kaynagin HAM sozcugudur, yani
       //    REPLACEMENTS'tan once okunur. Dusurme once oldugu icin denetimin
@@ -80,7 +80,24 @@ async function renderScreen(browser, screen) {
         for (const [from, to] of initials) if (t === from) el.textContent = to;
       }
 
-      return { values, drops };
+      // 4) MARKA TASIYAN GORSELLER. Metin denetimi yalniz metin dugumlerini
+      //    gorur; sol menudeki eski kulup logosu bir <img> oldugu icin uc
+      //    turda da sizmisti. Once temizlenir, sonra kapi kurulur.
+      const imgs = [];
+      for (const el of document.querySelectorAll('img')) {
+        const src = el.getAttribute('src') || '';
+        const alt = el.getAttribute('alt') || '';
+        if (/logo\//i.test(src) || /weekend/i.test(src) || /weekend/i.test(alt)) {
+          el.remove();
+          imgs.push({ src, alt, removed: true });
+        }
+      }
+      // Kalan gorseller icinde marka izi var mi
+      const imgLeaks = [...document.querySelectorAll('img')]
+        .map((el) => `${el.getAttribute('src') || ''} ${el.getAttribute('alt') || ''}`)
+        .filter((v) => /weekend/i.test(v));
+
+      return { values, drops, imgs, imgLeaks };
     },
     {
       replacements: REPLACEMENTS,
@@ -96,6 +113,10 @@ async function renderScreen(browser, screen) {
       `[${screen.id}] düğüm düşürme çapası tam eşleşmedi: ` +
         bad.map((b) => `${b.sel} ~ "${b.anchor}" → ${b.count} eşleşme`).join(' · '),
     );
+  }
+
+  if (imgLeaks.length) {
+    throw new Error(`[${screen.id}] GÖRSEL DENETİMİ BAŞARISIZ — marka izi taşıyan img: ${JSON.stringify(imgLeaks)}`);
   }
 
   const audit = auditTexts(values, screen.id);
@@ -135,7 +156,7 @@ async function renderScreen(browser, screen) {
     clip: { x: clip.x, y: clip.y, width: clip.width, height: clip.height },
   });
   await ctx.close();
-  return { screen, png, clip, drops };
+  return { screen, png, clip, drops, imgs };
 }
 
 const browser = await chromium.launch();
@@ -144,7 +165,7 @@ const manifest = [];
 for (const screen of SCREENS) {
   const res = await renderScreen(browser, screen);
   if (!res) continue;
-  const { png, clip, drops } = res;
+  const { png, clip, drops, imgs } = res;
   const buf = await sharp(png)
     .resize({ width: screen.width })
     .webp({ quality: screen.quality, effort: 5 })
@@ -154,9 +175,10 @@ for (const screen of SCREENS) {
   manifest.push({ out: screen.out, width: meta.width, height: meta.height, kb: Math.round(buf.length / 1024) });
   console.log(
     `✓ ${screen.out.padEnd(18)} ${meta.width}×${meta.height}  ${String(Math.round(buf.length / 1024)).padStart(4)} KB` +
-      (drops.length ? `  · ${drops.length} düğüm düşürüldü` : ''),
+      (drops.length ? `  · ${drops.length} düğüm` : '') +
+      (imgs.length ? `  · ${imgs.length} görsel temizlendi` : ''),
   );
 }
 await writeFile(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2));
 await browser.close();
-console.log('\nDenetim: her ekran ad ve marka sızıntısı için tarandı, sızıntı yok.');
+console.log('\nDenetim: her ekran ad, marka ve GÖRSEL sızıntısı için tarandı, sızıntı yok.');

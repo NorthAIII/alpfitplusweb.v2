@@ -57,11 +57,16 @@ export function Header() {
 
   return (
     <header
+      // Zemin HER ZAMAN opak. Seffaf birakildiginda koyu fotograf kahraman
+      // bolumu tasiyan sayfalarda (segment sayfalari) koyu logo ve koyu nav
+      // metni okunmuyordu. Ana sayfanin kahraman zemini zaten canvas oldugu
+      // icin ustte gorsel bir fark olusmuyor; kaydirinca yalnizca ince ayrac
+      // ve bulaniklik ekleniyor.
       className={cn(
-        "sticky top-0 z-50 transition-all duration-300",
+        "sticky top-0 z-50 transition-shadow duration-300",
         scrolled
-          ? "bg-canvas/85 backdrop-blur-xl shadow-[0_1px_0_var(--color-line)]"
-          : "bg-transparent",
+          ? "bg-canvas/88 backdrop-blur-xl shadow-[0_1px_0_var(--color-line)]"
+          : "bg-canvas",
       )}
     >
       <div className="mx-auto flex h-17 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">

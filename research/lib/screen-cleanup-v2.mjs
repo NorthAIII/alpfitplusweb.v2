@@ -38,7 +38,19 @@ export const INITIALS = [
   ['MV', 'EK'], ['HB', 'NT'], ['CÖ', 'TA'], ['İA', 'BS'], ['GÖ', 'YU'], ['SA', 'CV'],
 ];
 export { AVATAR_SELECTOR, BRAND_LEAK };
-export const DROP_NODES = { ...V1_DROP_NODES };
+export const DROP_NODES = {
+  ...V1_DROP_NODES,
+  /**
+   * takvim.html sag rayindaki bilgi karti "18:00'de SMS + push gider" diyor.
+   * Urunun SMS ucu YOK ve v1 sitesi bu iddiayi zaten fiyat sayfasindan
+   * dusurmustu (TASK-14.04). Kirpma capasi (.calwrap alti) bu karti
+   * kesmiyordu, cunku sag ray takvim izgarasindan asagi tasiyor.
+   * Ayni belge uye-telefon ekranini da uretiyor; orada klip disinda kalsa da
+   * dusurmek denetimin gordugu kutleyi de temizliyor.
+   */
+  takvim: [['.card', 'Otomatik hatırlatma açık.']],
+  'uye-telefon': [['.card', 'Otomatik hatırlatma açık.']],
+};
 
 /**
  * Ortak kabuk etiketleri — her ekranda ayni sol menu ve ust bar var.

@@ -66,6 +66,11 @@ for (const path of PAGES) {
       const cs = getComputedStyle(el);
       if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity < 0.3) continue;
       if (hidden(el)) continue;                       // dekoratif, ekran okuyucudan gizli
+      // Fotografin uzerinde duran metin: zemin bir <img> ve onun ustundeki
+      // gradyan. Ikisi de elemanin ATASI degil KARDESI oldugu icin zemin
+      // rengi hesaplanamaz. Bu dugumler isaretli ve olcum disi; okunabilirlik
+      // gradyanin opakligiyla garanti ediliyor.
+      if (el.closest('[data-over-image]')) { skipped++; continue; }
       const rect = el.getBoundingClientRect();
       if (!rect.width || !rect.height) continue;
 

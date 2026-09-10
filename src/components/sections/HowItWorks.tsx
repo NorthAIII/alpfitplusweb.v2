@@ -45,8 +45,12 @@ const STEPS = [
 ];
 
 export function HowItWorks() {
+  // NOT: bu bolumde overflow-hidden YOK ve olmamali. Bir ust katmandaki
+  // overflow-hidden, position:sticky'yi sessizce oldurur (olculdu: yapiskan
+  // sutun kaydirmada yerinde durmuyordu). Dekoratif katmanlar zaten
+  // absolute inset-0, tasma uretmiyorlar.
   return (
-    <section id="nasil-calisir" className="relative overflow-hidden bg-canvas py-20 sm:py-28">
+    <section id="nasil-calisir" className="relative bg-canvas py-20 sm:py-28">
       <Container size="wide">
         <div className="grid gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
           {/* sol: baslik + foto */}
@@ -72,10 +76,13 @@ export function HowItWorks() {
                 className="h-56 w-full object-cover"
               />
               <span
-                className="absolute inset-0 bg-linear-to-t from-ink-deep/72 to-transparent"
+                className="absolute inset-0 bg-linear-to-t from-ink-deep/92 via-ink-deep/45 to-transparent"
                 aria-hidden
               />
-              <p className="absolute bottom-5 left-6 right-6 font-display text-base font-bold leading-snug text-canvas">
+              <p
+                data-over-image
+                className="absolute bottom-5 left-6 right-6 font-display text-base font-bold leading-snug text-canvas"
+              >
                 İlk hafta yanınızdayız. Sorun çıkarsa WhatsApp'tan yazarsınız.
               </p>
             </div>
