@@ -27,7 +27,7 @@ services:
       target: runner
     container_name: alpfitplus-web-prod
     ports:
-      - "3001:3000"
+      - "3100:3000"
     profiles: ["prod"]
     restart: unless-stopped
 

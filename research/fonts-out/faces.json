@@ -1,0 +1,35 @@
+{
+  "chars": 153,
+  "faces": [
+    {
+      "family": "Inter",
+      "weight": 400,
+      "name": "inter-400-tr.woff2",
+      "kb": 22
+    },
+    {
+      "family": "Inter",
+      "weight": 500,
+      "name": "inter-500-tr.woff2",
+      "kb": 22
+    },
+    {
+      "family": "Inter",
+      "weight": 600,
+      "name": "inter-600-tr.woff2",
+      "kb": 22
+    },
+    {
+      "family": "Sora",
+      "weight": 700,
+      "name": "sora-700-tr.woff2",
+      "kb": 15
+    },
+    {
+      "family": "Sora",
+      "weight": 800,
+      "name": "sora-800-tr.woff2",
+      "kb": 14
+    }
+  ]
+}

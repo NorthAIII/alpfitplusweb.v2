@@ -102,9 +102,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr">
       <head>
-        <link rel="preload" href="/fonts/sora-latin-ext-800.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/sora-latin-800.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/inter-latin-ext-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* Ilk ekranda gorunen iki yuz: govde (Inter 400) ve baslik (Sora 800). */}
+        <link rel="preload" href="/fonts/inter-400-tr.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/sora-800-tr.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
