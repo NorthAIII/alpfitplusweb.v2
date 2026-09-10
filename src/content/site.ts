@@ -1,11 +1,7 @@
 /**
  * Sitenin tek metin/yapilandirma kaynagi.
- * Iddia sinirlari: alpfit-plus-satis/rekabet/ozet.md + fiyat/model.md
- *  - Diyetisyen entegrasyonu: 18 rakip urunde gorulmedi → soylenebilir.
- *  - Antrenor app'i: FitSchedule ve Sportix'te de var → "sadece bizde" DENMEZ.
- *  - TR-odakli/KVKK: yerli rakiplerin hepsinde var → farklilasma DEGIL.
- *  - Urun durumu: bir studyoda PILOT olarak test ediliyor. "Sahada/canli" DENMEZ.
- *  - ROI / musteri sayisi / yuzde iyilesme iddiasi YOK (pilot sonucu cikmadi).
+ * Iddia siniri (ne soylenir, ne soylenmez) TEK evde: _dev/docs/CLAIMS.md
+ * Dayanak: alpfit-plus-satis/rekabet/ozet.md + fiyat/model.md
  */
 
 export const SITE = {

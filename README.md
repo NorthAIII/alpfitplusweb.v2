@@ -69,16 +69,11 @@ bugünkü ürünün parçası değiller.
 ## İçerik ve iddia sınırı
 
 Metinlerin kaynağı `../alpfit-plus-satis/` altındaki satış ve rekabet
-dosyalarıdır. Sitede tutulan sınırlar:
+dosyalarıdır. Ne söylenip söylenemeyeceğinin **tek evi** `_dev/docs/CLAIMS.md`;
+tablo burada tekrarlanmaz. Kısaca: ürün pilot aşamada, rakip adı geçmez,
+ROI/müşteri sayısı yok.
 
-- Diyetisyen modülü **söylenebilir** — 18 rakip üründe görülmedi.
-- Antrenör uygulaması "sadece bizde" **denmez** — iki rakipte de var.
-- Türkçe arayüz ve KVKK **fark sayılmaz** — yerli rakiplerin hepsinde var.
-- Ürün durumu: **bir stüdyoda pilot olarak test ediliyor.** "Sahada/canlı" denmez.
-- ROI, müşteri sayısı ve yüzde iyileşme iddiası **yok** — pilot sonucu çıkmadı.
-- Rakip fiyat karşılaştırmaları rakibin **yayınlanmış liste fiyatından bizim
-  hesabımızdır**, erişim tarihiyle birlikte yazılır.
-
+Pilot iddiası tek kaynaktan gelir: `src/content/site.ts` → `PRODUCT_STATUS`.
 Fiyat tek kaynaktan gelir: `src/content/pricing.ts`.
 
 ## Demo talep ucu

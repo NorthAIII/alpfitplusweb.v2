@@ -1,141 +1,83 @@
-# DURUM — Alpfit Plus Web Sitesi v2
+# DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — Geçiş ve seçim rehberi sayfaları eklendi, rakip adı kaldırıldı, DevFlow kuruldu, devir belgeleri yazıldı. Sıradaki iş: metin tonu (örnek bekleniyor).
+**Son Güncelleme:** 2026-09-11 — kickoff-docs: `_dev/` yapısı ve tüm temel dokümanlar oluşturuldu; sıradaki adım kickoff-verify, sonra discuss-phase (metin tonu).
 
-> Bu doküman **elle** yazıldı, DevFlow kickoff çalıştırılmadı. Yeni oturumda
-> `/devflow:kickoff` ile tam yapı kurulabilir.
-
----
-
-## Proje nedir
-
-`alpfitplus.com` için sıfırdan yazılan yeni tanıtım sitesi. Alpfit Plus, Kiwi AI Lab'ın
-ürünü: spor kulüpleri için B2B yönetim yazılımı. Hedef kitle Türkiye'deki butik
-kulüpler (reformer/pilates, boks/dövüş, CrossFit, çok şubeli zincirler).
-
-Canlı site (v1) `../Alpfitplus-website.v1` klasöründe ve **dokunulmuyor**.
+<!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
 ---
 
-## Yığın
+## Aktif Faz
 
-Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind 4 · lucide-react ·
-Sora + Inter (siteye özel daraltılmış) · Docker Compose · tek dil (Türkçe).
-
----
-
-## Bugün ne var
-
-**16 sayfa:** ana sayfa, özellikler, fiyat, segmentler + 4 segment sayfası,
-geçiş, yazılım seçerken, demo, destek, 3 yasal metin, 404, sitemap, robots.
-
-**Ana sayfa bölümleri (sırayla):** hero · marquee · kaos (sorun) · çözüm ·
-roller · modüller · ürün turu (yapışkan) · faydalar · neden biz · segmentler ·
-nasıl çalışır · fiyat + hesaplayıcı · kurucu programı · SSS · kapanış CTA.
-
-**Öne çıkan parçalar**
-- Şube sayısına göre canlı **fiyat hesaplayıcı**
-- **Yapışkan kaydırmalı ürün turu**, ekran üstünde numaralı işaretler
-- **Site asistanı** — bugün model yok, `src/content/chat.ts` ağacından cevaplıyor.
-  Arayüz sonradan `/api/chat` ucuna bağlanacak şekilde kuruldu.
-- **Kaos bölümü** — WhatsApp, Excel, defter ve takvim nesneleri çizilmiş
-- **Kiwi AI Lab imza bandı** footer'da
+**Faz:** Phase 1 — Metin tonu (numara discuss-phase'de damgalanır; Faz Durumu tablosu boş, max+1 = 1)
+**Milestone:** Kullanıcıdan fazla samimi bulduğu örnek cümleler alındı; tek sayfada örnek gösterildi ve onaylandı; ton `src/content/` geneline yayıldı; a11y/scan/font-guard yeşil.
+**Adım:** discuss
+**İlerleme:** 0/0 task tamamlandı
+**Faz Dokümanı:** `phases/PHASE-1.md` (henüz yok — discuss-phase'de oluşur)
 
 ---
 
-## Ölçülen durum
+## Aktif Versiyon
 
-| Kontrol | Sonuç |
-|---|---|
-| Kontrast ihlali (a11y.mjs) | 0 |
-| Yatay kaydırma, mobil (mobile-audit.mjs) | 0 |
-| Font kapsaması (font-guard.mjs) | 16 sayfa, eksik karakter yok |
-| Konsol hatası | 0 |
-| Üretim derlemesi | 23 rota, geçiyor |
-| Ana sayfa ağırlığı | masaüstü 144 KB · mobil 133 KB |
-| Ana sayfa LCP | 96 ms (üretim konteyneri, yerel) |
-| CLS | 0 – 0,005 |
+**Versiyon:** v2.0
+**Hedef:** Site alan adına geçer — metin tonu, önizleme yayını + lead hattı + analitik, kalite kapıları otomatik, alan adı geçişi (20 adres 301).
+**Versiyon Sonu Durumu:** içerik_fazları
 
----
-
-## 🔴 Açık işler — kullanıcıya bağlı
-
-1. **Vercel bağlantısı yok.** v2 için **ayrı** bir proje açılmalı; v1'in
-   `alpfitplus-website` projesine dokunulmayacak. Yol: vercel.com/new → repoyu
-   içe aktar. CLI kurulamadı (global npm izni yok), gerek de yok.
-2. **Demo formunun hedefi tanımlı değil.** `LEAD_WEBHOOK_URL` veya
-   `LEAD_FILE_PATH` verilmeden talep kaydedilmiyor. Uç bunu gizlemiyor:
-   hiçbir hedef yoksa 503 dönüyor ve form kullanıcıyı WhatsApp'a yönlendiriyor.
-   Ayrıntı `.env.example`.
-3. **Yasal metinler hukukçu onayı bekliyor.** Metinler sitenin gerçek veri
-   akışına göre yazıldı, "örnek metindir" ibaresi **yok** (v1'in D-03 bulgusu).
-4. **Logo geçici.** `src/components/layout/Logo.tsx` içinde üretilmiş bir
-   işaret var; favicon, app ikonu ve OG görseli ondan türetiliyor.
-5. **Kurucu Programı sitede yayında.** Satış dosyalarında bu bir görüşme
-   kaldıracıydı; siteye konması kurucunun onayıyla oldu ama kontenjan sayacı
-   yok, "ilk 5 kulüp" diye geçiyor.
+<!-- Versiyon geçişlerinde güncellenir. discuss-phase versiyon sonu tespitinde bu alanı okur. -->
+<!-- Değerler: içerik_fazları | teknik_borç | senaryo_testi | prd_review_bekliyor -->
+<!-- - içerik_fazları: Normal faz döngüsü devam ediyor -->
+<!-- - teknik_borç: Teknik borç kapatma fazı aktif -->
+<!-- - senaryo_testi: Senaryo testi fazı aktif -->
+<!-- - prd_review_bekliyor: Her iki sabit faz tamamlandı; prd-review bekleniyor / yarım kalmış (prd-save ile bölünmüş) / bilinçli ertelenmiş (teslim DevFlow-dışıysa go-live sonrasına) — üçünde de next prd-review'u önerir, çalıştırmaz -->
 
 ---
 
-## 🟡 Açık işler — teknik
+## Aktif Task
 
-1. **Asistan AI'ya bağlanacak.** Karar verildi: önce hazır akış, sonra Claude.
-   Arayüz hazır, `src/content/chat.ts` ağacı modelin bilgi tabanı olacak.
-   Anahtar ve maliyet netleşmeli.
-2. **Metin dili daha profesyonel istendi** (2026-09-11, kullanıcı).
-   Kullanıcı bu talebi onayladı ama hangi cümlelerin fazla samimi geldiğini
-   henüz belirtmedi. **İlk iş: örnek iste.**
-
-   Metinler bilinçli olarak konuşma diline yakın yazıldı; hedef kitle kurumsal
-   bir satın alma komitesi değil, salon sahibi. Ton değişecekse bu gerekçe
-   birlikte gözden geçirilmeli.
-
-   Şüpheli görülen üç yer (yeni oturumda kullanıcıya sorulacak):
-   - `Chaos.tsx` başlığı: *"Kulübünüzün asıl rakibi bir yazılım değil, dağınıklık"*
-   - `PricingBlock.tsx` başlığı: *"Paket yok, kademe yok, sürpriz yok"*
-   - `gecis` sayfası girişi: *"Kulüp sahipleri bize genelde 'sistemimiz kötü'
-     demiyor. 'Alıştık' diyor."*
-
-   **Yöntem:** önce TEK sayfada dene ve göster, kullanıcı beğenirse hepsine yay.
-   Ton tek tek dosyalarda değil, `src/content/` altındaki metin dosyalarında
-   değişir — bileşenler metni oradan okuyor.
-3. **Ana sayfa mobilde ~26.000 px.** Referans alınan rakip de benzer uzunlukta.
-   Kısaltma kararı kullanıcıya bırakıldı, tek başına içerik atılmadı.
-4. **Sayı sayma animasyonlu istatistik bandı yapılmadı.** Bilinçli: pilot
-   sonucu çıkmadığı için yayınlanacak gerçek rakam yok.
-5. **Web sitesi hizmeti eklenmedi.** Kullanıcı kararı: şimdilik hayır.
+**Task:** Yok — faz henüz planlanmadı
+**Durum:** ⬜ Bekliyor
+**İlerleme:** discuss-phase bekleniyor
 
 ---
 
-## Kararlar (kullanıcı onaylı)
+## Task Durumu (Aktif Faz)
 
-| Konu | Karar | Tarih |
-|---|---|---|
-| Fiyat sunumu | Tek düz fiyat, katmanlı paket yok | 2026-09-10 |
-| Dil | Yalnız Türkçe | 2026-09-10 |
-| Büyüme sayfaları | Önce segment sayfaları; geçiş ve seçim rehberi sonra eklendi | 2026-09-10/11 |
-| Görsel ton | Açık ve ferah, sage vurgulu | 2026-09-10 |
-| Fotoğraf | Seçici ve atmosferik, gerçek salon görselleri | 2026-09-10 |
-| Chatbot | Önce hazır akış, sonra AI | 2026-09-10 |
-| Web sitesi hizmeti | Eklenmeyecek | 2026-09-10 |
-| Kiwi AI Lab imzası | Büyütüldü, footer'da kendi bandı | 2026-09-10 |
-| Rakip adı | Sitede geçmeyecek, fiyat sayfasından da kaldırıldı | 2026-09-11 |
+| # | Task | Durum |
+|---|------|-------|
+| — | Henüz task yok (plan-phase'de yazılır) | — |
+
+**Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
 ---
 
-## Yol boyunca bulunan ve kapatılan gerçek hatalar
+## Son Task Özetleri
 
-Bunlar tekrar etmesin diye yazılı:
+> **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-1. **Eski kulüp logosu 8 ürün ekranının 8'inde de duruyordu.** Metin denetimi
-   göremiyordu çünkü bir `<img>`. Artık görsel denetimi de var.
-2. **Takvim ekranında "SMS + push gider" kartı** vardı; ürünün SMS ucu yok.
-   Düşürüldü.
-3. **Ana sayfa mobilde yatay kayıyordu** (635 px / 390 px). Sebep: ızgara
-   öğesinin `min-width: auto` varsayılanı.
-4. **`position: sticky` iki bölümde de ölüydü**, üst katmandaki
-   `overflow-hidden` yüzünden.
-5. **Sora fontunda ₺ yok.** Ölçüldü, `--font-display` yığınına Inter eklendi.
-6. **Fontlar sayfa ağırlığının %82'siydi** (219 KB). 95 KB'a indi.
-7. **Ekran üstü açıklama etiketleri** tam da gösterdikleri sayıları örtüyordu.
-   Numaralı noktaya çevrildi.
+Henüz task çalıştırılmadı.
+
+---
+
+<!-- KURAL: Sadece son 2 task özeti tutulur, daha eskileri silinir (gerçek silme — HTML comment yasak). -->
+<!-- KURAL: Sadece aktif fazın task'leri gösterilir. Geçmiş fazların bilgileri phases/ klasöründedir. -->
+<!-- KURAL: "Son Tamamlanan Faz", "Son Tamamlanan Sprint" gibi ek özet bölümleri EKLEME — faz durum özeti PHASES.md'de, faz detayları PHASE-N.md'de. DURUM yalnızca aktif durum + son 2 task özeti. -->
+<!-- KURAL: Faz alt-fazlarının (verify-plan/plan/research/discuss) ayrı oturum özetlerini DURUM'a yazma — onlar faz dokümanına ait. -->
+
+## Duraklatma Notu
+
+<!-- Bu bölüm sadece /devflow:pause kullanıldığında doldurulur. Devam edildiğinde veya iş iptal edildiğinde silinir. -->
+
+> ⏸️ **Duraklatma yok** — Aktif çalışma devam ediyor.
+
+<!-- Duraklatma durumunda format:
+> ⏸️ **Duraklatıldı:** [tarih]
+> **Adım:** [task çalıştırma / planlama / review / quick / vb.]
+> **Detay:** [Nerede kalındı, ne yapılacak]
+> **Handoff:** [Task dokümanında mı, QUICK dosyasında mı, burada mı?]
+-->
+
+## Hızlı Erişim
+
+**Aktif Task:** yok
+**Aktif Faz:** `phases/PHASE-1.md` (discuss-phase'de oluşur)
+**Task Sistemi:** `tasks/TASKS-README.md`
+**Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
