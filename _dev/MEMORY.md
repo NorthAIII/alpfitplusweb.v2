@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-11 — kickoff-docs: boş index oluşturuldu; ilk öğrenimde `memory/` açılır.
+**Son Güncelleme:** 2026-09-11 — kickoff-verify: native memory'deki tasarım tercihi `memory/kivanc-tasarim-tercihleri.md`'ye taşındı; diğer native içerik zaten OVERVIEW/CLAIMS/CLAUDE.md'de yaşıyordu.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -23,7 +23,7 @@
 
 <!-- Kullanıcının proje genelinde geçerli tercihleri (test yaklaşımı, kod stili, iletişim vb.) -->
 
-- [Henüz yok]
+- [Tasarım refleksleri — AI klişesi reddi](memory/kivanc-tasarim-tercihleri.md) — parıltı rozet, jenerik ikon kartı, sahte sosyal kanıt yasak; gerçek fotoğraf ve düzen çeşitliliği istiyor (tam liste STYLE-GUIDE)
 
 ## Ortam & Araç Notları
 

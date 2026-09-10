@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — kickoff-docs: `_dev/` yapısı ve tüm temel dokümanlar oluşturuldu; sıradaki adım kickoff-verify, sonra discuss-phase (metin tonu).
+**Son Güncelleme:** 2026-09-11 — kickoff-verify: dokümanlar doğrulandı, GIT-STRATEJI ve DevFlow CLAUDE.md (parent + 4 doktrin çocuğu) oluşturuldu, native memory `_dev/memory/`'ye taşındı; sıradaki adım discuss-phase (metin tonu).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 

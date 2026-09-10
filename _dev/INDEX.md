@@ -19,7 +19,7 @@
 2. **INDEX.md** — Bu dosya (navigasyon haritası)
 3. **DURUM.md** — Dashboard (aktif faz, aktif task, son ilerleme)
 4. **MEMORY.md** — Proje hafızası index'i (öğrenim pointer'ları; detay `memory/<slug>.md` dosyalarında, gerekince lazy-load). `memory/` dosyaları tek tek burada listelenmez — güncel liste MEMORY.md index'indedir.
-5. **GIT-STRATEJI.md** — Dal modeli, çalışma dalı, commit/push, yayın ve acil düzeltme rotası (her oturum commit/push kararı verdiği için okunur). *kickoff-verify'da doğar; henüz yok.*
+5. **GIT-STRATEJI.md** — Dal modeli, çalışma dalı, commit/push, yayın ve acil düzeltme rotası (her oturum commit/push kararı verdiği için okunur)
 
 ### Planlama Dokümanları (Planlama ve Review'da OKU)
 
@@ -71,7 +71,7 @@ Bu projede PRD yok (kullanıcı kararı, kickoff 2026-09-11). Feature davranış
 |---------|--------|
 | `docs/DECISIONS.md` | Karar günlüğü — fiyat sunumu, tek dil, chatbot sırası, fotoğraf, faz sırası, modül yapısı, rakip adsızlığı (tarihli) |
 | `../README.md` (repo kökü) | Yığın, çalıştırma komutları, araştırma konteyneri, ürün görseli hattı — ayrı TECH-STACK yazılmadı |
-| `../CLAUDE.md` (repo kökü) | Ölçüm betikleri tablosu ve geçme şartları, Docker uyarıları, dokunulmayacaklar |
+| `../CLAUDE.md` (repo kökü) | DevFlow parent (doktrin çocukları `claude/` altından `@import` edilir); ölçüm betikleri tablosu ve geçme şartları, Docker uyarıları, dokunulmazlar, kod kuralları |
 
 ---
 
@@ -161,13 +161,18 @@ proje-repo/
 ├── README.md                # yığın, çalıştırma, görsel hattı (TECH-STACK yerine)
 │
 └── _dev/
+    ├── claude/               # kök CLAUDE.md doktrin çocukları (@import ile bağlamda; okuma listesine girmez)
+    │   ├── DOKUMAN-KURALLARI.md
+    │   ├── DOKUMAN-DISIPLINI.md
+    │   ├── CALISMA-PRENSIPLERI.md
+    │   └── COMMIT.md
     ├── OVERVIEW.md ⭐
     ├── ILKELER.md            # proje ilkeleri (karar fazlarında okunur)
     ├── INDEX.md ⭐
     ├── DURUM.md ⭐
     ├── MEMORY.md ⭐           # proje hafızası index'i
-    ├── GIT-STRATEJI.md ⭐     # kickoff-verify'da doğar
-    ├── memory/               # öğrenim dosyaları (ilk öğrenimde oluşur, lazy-load)
+    ├── GIT-STRATEJI.md ⭐
+    ├── memory/               # öğrenim dosyaları (lazy-load; güncel liste MEMORY.md'de)
     ├── BULGULAR.md           # proje sorun kanvası index'i
     ├── bulgular/             # bulgu atomları + archive/
     ├── MODULE-MAP.md
@@ -208,7 +213,7 @@ proje-repo/
 
 ---
 
-**Son Güncelleme:** 2026-09-11 — kickoff-docs: 7 modül dokümanı, CLAIMS, STYLE-GUIDE, DECISIONS, BULGULAR ve iki projeye özgü senaryo eklendi.
+**Son Güncelleme:** 2026-09-11 — kickoff-verify: GIT-STRATEJI doğdu, kök CLAUDE.md DevFlow parent'ı oldu, `claude/` doktrin çocukları hiyerarşiye eklendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 <!-- KURAL: Tamamlanmış fazların task arşiv listesini INDEX'e ekleme — `ls _dev/tasks/archive/` zaten görür. INDEX yalnızca aktif klasör konumlarını gösterir; statik liste dokümanı değildir. -->
