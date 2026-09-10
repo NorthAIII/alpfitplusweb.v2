@@ -58,7 +58,7 @@ export function Logo({
   );
   if (!href) return inner;
   return (
-    <Link href={href} className="rounded-lg" aria-label="Alpfit Plus ana sayfa">
+    <Link href={href} className="inline-block rounded-lg py-1.5" aria-label="Alpfit Plus ana sayfa">
       {inner}
     </Link>
   );

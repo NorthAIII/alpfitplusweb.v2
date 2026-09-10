@@ -34,9 +34,13 @@ export function Roles() {
         lead="Üye ve antrenör kendi telefonundan, diyetisyen ve yönetim web panelinden çalışır. Dördü de aynı veriyi görür."
       />
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-12">
+      {/* min-w-0 SART: izgara ogesinin varsayilani min-width:auto'dur, yani
+            icerigin altina inmeyi reddeder. Icerideki overflow-x-auto sekme
+            seridi bu yuzden sutunu 614px'e sisirip sayfayi yatay kaydiriyordu
+            (390px ekranda olculdu). */}
+        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-12">
         {/* sekmeler */}
-        <div>
+        <div className="min-w-0">
           <div
             role="tablist"
             aria-label="Roller"
@@ -101,7 +105,7 @@ export function Roles() {
         </div>
 
         {/* gorsel */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex min-w-0 items-center justify-center">
           <div
             className="pointer-events-none absolute inset-6 rounded-[3rem] bg-[radial-gradient(60%_60%_at_50%_45%,rgba(116,179,111,.20),transparent_70%)] blur-2xl"
             aria-hidden

@@ -68,17 +68,21 @@ export function Chaos() {
               Izgara binmeyi yapisal olarak imkansiz kiliyor; dagimiklik
               hissi kucuk egim ve dikey kaydirmayla veriliyor.
             */}
-            <div className="mx-auto grid w-full max-w-lg grid-cols-2 gap-x-5 gap-y-7 sm:max-w-xl lg:max-w-none lg:gap-x-7 lg:gap-y-9">
-              <div className="-rotate-[3deg] translate-y-1">
+            {/* En dar ekranda TEK sutun. 390px'te iki sutun her karti ~170px'e
+              dusuruyordu; WhatsApp balonu uc satira sariyor, Excel'in son
+              kolonu kesiliyordu (olculdu). Nesnelerin okunmasi bu bolumun
+              tek isi. */}
+            <div className="mx-auto grid w-full max-w-sm grid-cols-1 gap-x-5 gap-y-7 sm:max-w-xl sm:grid-cols-2 lg:max-w-none lg:gap-x-7 lg:gap-y-9">
+              <div className="-rotate-[1.5deg] sm:-rotate-[3deg] sm:translate-y-1">
                 <Whatsapp />
               </div>
-              <div className="rotate-[2.5deg] -translate-y-2">
+              <div className="rotate-[1.5deg] sm:rotate-[2.5deg] sm:-translate-y-2">
                 <Sheet />
               </div>
-              <div className="rotate-[2deg] self-start">
+              <div className="rotate-[1deg] self-start sm:rotate-[2deg]">
                 <Notebook />
               </div>
-              <div className="-rotate-[3deg] translate-y-2 self-start">
+              <div className="-rotate-[1.5deg] self-start sm:-rotate-[3deg] sm:translate-y-2">
                 <CalendarApp />
               </div>
             </div>

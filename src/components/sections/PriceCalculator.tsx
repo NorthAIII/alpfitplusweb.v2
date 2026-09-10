@@ -43,7 +43,7 @@ export function PriceCalculator({ compact = false }: { compact?: boolean }) {
               onClick={() => setBranches((b) => Math.max(1, b - 1))}
               disabled={branches <= 1}
               aria-label="Şube sayısını azalt"
-              className="grid size-9 place-items-center rounded-lg text-ink transition-colors hover:bg-surface-2 disabled:opacity-35 disabled:hover:bg-transparent"
+              className="grid size-11 place-items-center rounded-lg text-ink transition-colors hover:bg-surface-2 disabled:opacity-35 disabled:hover:bg-transparent"
             >
               <Minus className="size-4" strokeWidth={2.4} aria-hidden />
             </button>
@@ -59,7 +59,7 @@ export function PriceCalculator({ compact = false }: { compact?: boolean }) {
               onClick={() => setBranches((b) => Math.min(30, b + 1))}
               disabled={branches >= 30}
               aria-label="Şube sayısını artır"
-              className="grid size-9 place-items-center rounded-lg text-ink transition-colors hover:bg-surface-2 disabled:opacity-35"
+              className="grid size-11 place-items-center rounded-lg text-ink transition-colors hover:bg-surface-2 disabled:opacity-35"
             >
               <Plus className="size-4" strokeWidth={2.4} aria-hidden />
             </button>
@@ -73,7 +73,7 @@ export function PriceCalculator({ compact = false }: { compact?: boolean }) {
               type="button"
               onClick={() => setBranches(n)}
               className={cn(
-                "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                "rounded-full px-3.5 py-2.5 text-xs font-medium transition-colors",
                 branches === n
                   ? "bg-sage-wash-2 text-sage-ink ring-1 ring-sage/35"
                   : "bg-surface text-muted ring-1 ring-line hover:text-ink",

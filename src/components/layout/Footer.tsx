@@ -50,21 +50,21 @@ export function Footer() {
                 href={CONTACT.whatsapp.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 text-canvas/80 transition-colors hover:text-sage-br"
+                className="-my-1 inline-flex items-center gap-2.5 py-2 text-canvas/80 transition-colors hover:text-sage-br"
               >
                 <MessageCircle className="size-4.5 shrink-0 text-sage-br" strokeWidth={1.7} aria-hidden />
                 {CONTACT.whatsapp.display}
               </a>
               <a
                 href={CONTACT.phone.href}
-                className="inline-flex items-center gap-2.5 text-canvas/80 transition-colors hover:text-sage-br"
+                className="-my-1 inline-flex items-center gap-2.5 py-2 text-canvas/80 transition-colors hover:text-sage-br"
               >
                 <Phone className="size-4.5 shrink-0 text-sage-br" strokeWidth={1.7} aria-hidden />
                 Telefonla arayın
               </a>
               <a
                 href={`mailto:${CONTACT.sales}`}
-                className="inline-flex items-center gap-2.5 text-canvas/80 transition-colors hover:text-sage-br"
+                className="-my-1 inline-flex items-center gap-2.5 py-2 text-canvas/80 transition-colors hover:text-sage-br"
               >
                 <Mail className="size-4.5 shrink-0 text-sage-br" strokeWidth={1.7} aria-hidden />
                 {CONTACT.sales}
@@ -73,7 +73,7 @@ export function Footer() {
                 href={CONTACT.instagram.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 text-canvas/80 transition-colors hover:text-sage-br"
+                className="-my-1 inline-flex items-center gap-2.5 py-2 text-canvas/80 transition-colors hover:text-sage-br"
               >
                 <InstagramIcon className="size-4.5 shrink-0 text-sage-br" />
                 {CONTACT.instagram.handle}
@@ -95,7 +95,7 @@ export function Footer() {
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-[0.9375rem] text-canvas/70 transition-colors hover:text-canvas"
+                      className="-my-1 inline-block py-2 text-[0.9375rem] text-canvas/70 transition-colors hover:text-canvas"
                     >
                       {l.label}
                     </Link>
