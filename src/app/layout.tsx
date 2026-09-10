@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
+import { Assistant } from "@/components/layout/Assistant";
 import { SITE, CONTACT } from "@/content/site";
 import { PRICING } from "@/content/pricing";
 
@@ -120,7 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="icerik">{children}</main>
         <Footer />
-        <WhatsAppFab />
+        <Assistant />
       </body>
     </html>
   );
