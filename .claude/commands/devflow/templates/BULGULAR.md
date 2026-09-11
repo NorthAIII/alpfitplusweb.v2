@@ -43,6 +43,15 @@
      (+ faza/task'a alındıysa satır sonuna ` → Faz N` veya ` → TASK-X.YY`).
      Sıralama = ele alınma önceliği (en üst en öncelikli). Önem işareti zorunlu: 🔴 kritik / 🟡 önemli / 🟢 iyileştirme.
      Kanca ~100 karakteri aşmaz — detay atomdadır, index ince kalır.
+     BU BÖLÜMÜN BİÇİMİ MAKİNE TARAFINDAN OKUNUR ve biçim değişirse ona bağlı HER ev aynı turda
+     düzeltilir. Kaç ev olduğunu SAYMA — ölçüt şudur ve motor deposunda koşturulur:
+     `grep -rn 'Açık Bulgular\|→ Faz N\|bulgular/B-NNN' commands/devflow/`; dönen her satırın
+     gerçekten bu bölümün biçimine baktığını doğrula. Bugün başlıca üç okuma:
+     `/devflow:run-phase`'in BULGULAR kulvarı bu listeyi KUYRUK sayar — sırayı dağıtım sırası,
+     rota işaretini (satır SONUNDA) kulvar-dışı süzgeci, pointer'daki `B-NNN`'i kimlik olarak okur
+     ve kancayı hiç okumaz (alan projeksiyonu alır — kanca diyeti yine de bu bölümün kuralıdır);
+     `/devflow:quick B-NNN` satırın pointer'ından atoma gider; `verify-phase` ve `discuss-phase`
+     rota işaretini yazar ve okur (faz süpürmesi, faza alma, UAT-teyitli mezuniyet).
      YALNIZ açık bulgular listelenir: çözümü teyit edilen bulgunun atomu `bulgular/archive/`e taşınır ve
      satırı SİLİNİR (mezuniyet — iz bırakma); arşiv burada ASLA listelenmez (`ls _dev/bulgular/archive/` zaten görür).
      Faza/task'a alınan bulgu işaretini alır ve çözüm teyidine dek burada bekler (faz erken sonlansa bile kaybolmaz).

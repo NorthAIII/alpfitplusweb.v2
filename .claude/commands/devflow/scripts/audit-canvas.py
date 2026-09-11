@@ -503,8 +503,19 @@ def validate_mirror(path):
     çalıştırılır. Mirror bozuksa SystemExit; aksi halde sqlite3.connect() boş
     bir canvas.db yaratır, import_mirror içindeki guard SystemExit eder ama
     yan-etki olarak diskte boş db kalır → sonraki çağrı rebuild'i atlatır →
-    canvas state sessizce kaybolur."""
-    with open(path, "r", encoding="utf-8") as f:
+    canvas state sessizce kaybolur.
+
+    Ayna OKUNAMIYORSA bu "marker yok" değil ÖLÇÜLEMEDİ'dir ve durulur — ama
+    çıplak traceback ile değil: guard koşulsuz hâle geldiğinde (2026-09-11) o
+    hâl salt-okunur komutlarda da doğar ve ölçümde traceback verdi."""
+    try:
+        f = open(path, "r", encoding="utf-8")
+    except OSError as e:
+        raise SystemExit(
+            "hata: %s okunamadı (%s: %s).\n"
+            "Çakışma işaretçisi denetlenemedi — bu 'işaretçi yok' demek DEĞİLDİR.\n"
+            "Aynayı okunabilir yap (izinler/kilit) ve tekrar dene." % (path, type(e).__name__, e))
+    with f:
         for i, line in enumerate(f, 1):
             if line.startswith(("<<<<<<<", "=======", ">>>>>>>")):
                 raise SystemExit(_CONFLICT_MSG % (path, " (satır %d)" % i))
@@ -698,10 +709,20 @@ def connect(root):
     mp = mirror_path(root)
     rebuilt = not os.path.exists(dbp) and os.path.exists(mp)
     orphan = False
-    if rebuilt:
-        # sqlite3.connect() çağrılmadan önce: hata atılırsa diskte boş db
-        # kalmamalı (kalırsa sonraki çağrıda rebuilt=False → import_mirror
-        # atlanır → veri kaybı).
+    if os.path.exists(mp):
+        # Guard'ın koşulu "rebuild oluyor mu" DEĞİL "ayna var mı"dır.
+        # Ölçüldü (2026-09-11): koşul `rebuilt` iken guard yalnız db'nin YOK ya
+        # da BOŞ olduğu hâlde koşuyordu — yani zaten bozuk kanvasta. Sağlıklı
+        # nüfusta (db var ve dolu; filo taramasında 18/18) hiç koşmuyordu ve
+        # çözülmemiş bir `git merge`/`rebase`/`stash pop` çakışması taşıyan
+        # aynayı yazan komut exit 0 ile eziyordu: marker'lar siliniyor,
+        # `git status` hâlâ `UU` gösteriyor ve sıradaki `git add`+`commit`
+        # çakışmayı sıfır insan müdahalesiyle, yerel db lehine kapatıyordu.
+        # Fail-open'ın ders kitabı hâli: emniyet, korumak için yazıldığı nüfusun
+        # tamamını ıskalıyordu.
+        # Çağrı sqlite3.connect() ÖNCESİNDE kalır: rebuild yolunda hata atılırsa
+        # diskte boş db kalmamalı (kalırsa sonraki çağrıda rebuilt=False →
+        # import_mirror atlanır → veri kaybı).
         validate_mirror(mp)
     conn = sqlite3.connect(dbp)
     init_schema(conn)
@@ -727,7 +748,8 @@ def connect(root):
         # aynı kanıt hâlâ ÖLÜMCÜLDÜR ve öyle kalmalı: orada db gerçekten
         # kaybolmuş olabilir ve boş ayna truncate'in imzasıdır (§38 ölçümü).
         # Asimetri bilinçlidir: ayrım aynada değil, db'nin ne olduğunda.
-        validate_mirror(mp)
+        # (validate_mirror burada TEKRAR çağrılmaz — yukarıdaki koşulsuz guard
+        # bu dalı da kapsıyor; ikinci çağrı 2026-09-11'de artık oldu.)
         rebuilt = True
         orphan = True
     if rebuilt:

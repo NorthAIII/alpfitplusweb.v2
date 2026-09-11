@@ -18,12 +18,14 @@ sınıflar için** taramaktır (sayıyı buradan okuma, blok kendisi sayar).
 `*vurgu*` → `_vurgu_` dönüşümü ne kod çitini ne `**` dengesini ne de bir yolu bozar. O sınıfın çaresi
 bu script değil kurulumun `.prettierignore` muafiyetidir — ama o muafiyet **prettier'a özgü ve ileriye
 dönüktür**: başka bir biçimlendirici, ya da koruma inmeden önce yazılmış hasar için `lib/audit-conform.md`
-→ Adım 1'in çapa süzgeci ayrıca gerekir (orada adıyla sayılı). Ölçümün ve filo maruziyetinin evi motorun
-oturum kanvasıdır. Motor ağacı **hiçbir düzende** bulunamazsa hata
+→ Adım 1'in çapa süzgeci ayrıca gerekir (orada adıyla sayılı). Ölçümün ve filo maruziyetinin kaydı motor
+deposunun yol haritasındadır (kurulumlara kopyalanmaz; buradan adresle atıf yapılmaz). Motor ağacı **hiçbir düzende** bulunamazsa hata
 verip 2 ile çıkar, sessizce "0 bulgu" demez ("boş çıktı 'sorun yok' değil 'bilgi yok'tur" — kanonun
 yasakladığı okuma).
 
-KAPSAM (v1) — sınıflar `yol-haritasi.md` §2.1'in tablosundan:
+KAPSAM (v1) — sınıflar aşağıda sayılıdır (gerekçeleri motor deposunun yol
+haritasındadır; o dosya kurulumlara KOPYALANMAZ, bu yüzden buradan adresle
+atıf yapılmaz):
   B  ölü çapa       — motor metninde geçen doküman yolu gerçekte var mı. Yalnız `lib/` · `templates/` ·
                      `scripts/` · `commands/` segmenti taşıyan yollar; çıplak dosya adları kapsam
                      dışıdır (proje dokümanı adlarından ayırt edilemezler — ölçüldü)

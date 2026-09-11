@@ -1,8 +1,18 @@
 # DevFlow — Tur Talimatı Presetleri
 
-> **Bu dosya doğrudan çağrılmaz** ve **lazy okunur**: yalnız `/devflow:run-phase`'in tur talimatı ilk
-> satırında `TUR TALİMATI: <ad>` taşıdığında, koşum başına bir kez (`lib/kosum-zemini.md` → 1e).
+> **Bu dosya doğrudan çağrılmaz** ve **lazy okunur**: yalnız `/devflow:run-phase`'in tur talimatı
+> baştaki işaret satırlarında `TUR TALİMATI: <ad>` taşıdığında, koşum başına bir kez
+> (`lib/kosum-zemini.md` → 1e).
 > **Tek çağıranı odur.** Talimat ad taşımıyorsa bu dosya hiç okunmaz ve hüküm 1e'nin dört gücünündür.
+>
+> ⚠️ **Preset KULVAR SEÇMEZ ve seçemez.** Talimat ayrıca bir `KULVAR:` işareti taşıyabilir (sözlüğü
+> `lib/kosum-zemini.md` → 1a'dadır); ikisi bir arada, herhangi bir sırada yazılabilir ve biri
+> ötekini geçersizleştirmez. Ayrım tercih değil
+> **sıradır:** kulvar **1a**'da bilinmek zorundadır (kuyruk taraması, ön koşul ve savunmacı
+> kontroller oradadır), bu dosya ise **1e**'de okunur — yani preset kulvarı taşısaydı kulvar kendi
+> kapısından sonra öğrenilirdi. Aşağıdaki presetlerin Yetki blokları **koşumun kulvarından
+> bağımsızdır**: yetkiyi adlandırırlar, işin nereden geldiğini değil — ama bir kulvarın kendi **dağıtım
+> kısıtları** o kulvarındır ve hiçbir presetle açılmaz (aşağıdaki liste).
 >
 > **Ad eşleşmesi aksana ve büyük/küçük harfe duyarsızdır**; adlar bilinçle ASCII'dir. Tanımadığın bir
 > ad **serbest metin değildir** — koşumu açma, adı raporla ve sor (aynı ölçüt: Kulvar'ın tanınmayan
@@ -50,9 +60,10 @@ kesimler de devredilmiştir — yani 1e'nin *"etkisi koşumun dışına taşan k
 kapsamaz"* sınırı bu presette **adlı devirle kalkar**. Karşılığı tek şart: ne yapıldığı ve o kesimin
 neden seçildiği raporda tek satırla yazılır.
 
-**Preset yetkiyi GENİŞLETMEZ, yalnız adlandırır — üçü hiçbir presetle açılmaz:**
+**Preset yetkiyi GENİŞLETMEZ, yalnız adlandırır — aşağıdakiler hiçbir presetle açılmaz:**
 - **Kara liste** (→ Kulvar): `quick`'in yayın/acil düzeltme türleri · kickoff ailesi · oturum-sonu komutları.
-- **Yer kısıtı** (→ Kulvar): ürün koduna **dokunabilecek** kulvar-dışı tur `verify` ile `review` arasında açılmaz — hüküm durmak değil **ertelemektir**.
+- **Yer kısıtı** (→ `lib/kosum-kulvar.md`, **aktif kulvarın kendi bölümü**): `verify` ile `review` arasındaki pencere hiçbir presetle açılmaz. **Hükmü buraya kopyalama, eve yolla** — kulvara göre değişir (FAZ'da ertelemek, **FAZ dışı kulvarlarda koşumu kapatmak**) ve hem kopya hem sayılan kulvar listesi bayatlar.
+- **Kulvarın kendi dağıtım kısıtları** (→ `lib/kosum-kulvar.md`, **aktif kulvarın kendi bölümü**): preset bir komutu adıyla yetkilendirse bile o kulvarın kısıtı onu dağıtmaz ya da yalnız sınırla dağıtır. **Hükmü buraya kopyalama, eve yolla.**
 - **Ölçüm duvarları** (→ `run-phase.md` → Önemli Kurallar → DEĞİŞMEZ): onlarda soru raporlamadır, izin isteme değil; preset onları cevaplamaz.
 
 ### Metin (kullanıcı bunu yapıştırır)
@@ -128,13 +139,15 @@ Devam eden işler/turlar bitsin, sonrasında yenisini açma ve oturumu kapat. Ot
 
 ## Burada OLMAYAN iki talimat — ve neden
 
-Kullanıcı sahada iki talimat daha kullanıyor: **tek bir quick kaydının çok-oturumlu zincirini** ve
-**BULGULAR kuyruğunu eritmeyi** orkestratörle yürütenler. İkisi de preset **değildir ve olmamalıdır**,
-çünkü preset yalnız yetkiyi adlandırır — **kulvar yaratmaz.** `/devflow:run-phase`'in kulvarı kapalı
-bir kümedir (tablo: `lib/kosum-kulvar.md` → `## Kulvar`; değerleri buraya kopyalama, bayatlar) ve o
-iki talimat başka bir kulvar ister: işin nereden
-geldiği, hangi komutun dağıtıldığı, koşumun ne zaman bittiği ve **sırayı kimin seçtiği** farklıdır.
+Kullanıcı sahada iki talimat daha kullanıyor: **açık quick kayıtlarını** ve **BULGULAR kuyruğunu**
+orkestratörle erittirenler. **İkisinin de kulvarı ARTIK VAR** (`KULVAR: quick` · `KULVAR: bulgular`;
+hükümleri `lib/kosum-kulvar.md`'nin kendi bölümlerindedir — değerlerini buraya kopyalama, bayatlar).
 
-Onları buraya yazmak, motorun sahip olmadığı bir yeteneği vaat etmek olurdu. İkisi de motorun
-gündemindedir; kaynak metinleri ve tasarım tartışması **DevFlow'un kendi deposundadır** ve kurulu
-projeye inmez — bu yüzden buradan yolla anılmazlar.
+Yine de ikisinin de **preseti yazılmadı ve yazılmamalı**, iki ayrı gerekçeyle. **Birincisi
+yapısaldır:** preset yalnız yetkiyi adlandırır, **kulvar seçmez** (gerekçe önsözdeki sıra kısıtıdır)
+— işin nereden geldiği, hangi komutun dağıtıldığı, koşumun ne zaman bittiği ve **sırayı kimin
+seçtiği** bir preset'in değil kulvarın hükmüdür; ikisi zaten oraya yazılmıştır. **İkincisi
+ölçüttür:** bugün o iki koşumda adlandıracak bir **yetki farkı** yok — serbest metin 1e'nin dört
+gücüyle çalışıyor — ve tüketicisiz bir preset motorun sahip olmadığı bir yeteneği vaat eder. Bir
+yetki farkı doğarsa (örn. bir kulvarda kalıcı olarak farklı bir duran-yetkilendirme sınırı) preset o
+zaman yazılır.
