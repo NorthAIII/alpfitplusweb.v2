@@ -77,7 +77,7 @@
 
 ## Test Kriterleri
 
-<!-- KURAL: Kriter task'ın KENDİ OTURUMUNDA gözlenebilir olmalı — sonucu ancak push'tan sonra doğan kriter ("CI yeşil olmalı") yazılmaz, yerelde koşulabilir hâli yazılır (`<komut>` geçiyor). Yoksa task oturumu push'layıp CI'ı beklemek zorunda kalır. Yerelde eşi hiç yoksa kriteri gözlenebilir bir ara-çıktıya bağla (ör. "workflow dosyası şema doğrulamasından geçiyor"); kanal teyidi yine verify-phase → Otomatik Kontroller'e kalır. -->
+<!-- KURAL: Kriter task'ın KENDİ OTURUMUNDA gözlenebilir olmalı — sonucu ancak push'tan sonra doğan kriter ("CI yeşil olmalı") yazılmaz, yerelde koşulabilir hâli yazılır (`<komut>` geçiyor). Yoksa task oturumu push'layıp CI'ı beklemek zorunda kalır. Yerelde eşi hiç yoksa kriteri gözlenebilir bir ara-çıktıya bağla (ör. "workflow dosyası şema doğrulamasından geçiyor"); kanal teyidi yine verify-phase → Otomatik Kontroller'e kalır. AMA DEVREDİLEN KANALI DOĞRU ADRESLE: kriterin sonucunu belirleyen katman yerel koşucunun ölçtüğü katmanın DIŞINDAYSA (gerçek tarayıcı yerleşimi/odağı/girdisi, canlı serving zinciri, gerçek cihaz/saat/ağ) kanal Otomatik Kontroller DEĞİLDİR — CI aynı katmanı koşar, aynı körlükle yeşil döner. O hâlde kriterin yanına `kanal: UAT` yaz; verify-phase Adım 4 kolu oradan seçer. -->
 
 - [ ] [Test 1 — somut, doğrulanabilir]
 - [ ] [Test 2 — edge case veya hata durumu]

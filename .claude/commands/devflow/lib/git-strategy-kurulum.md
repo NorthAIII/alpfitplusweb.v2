@@ -52,10 +52,10 @@ Dal oluşturma/değiştirme komutları **kullanıcı onayıyla** çalıştırıl
 
 ## 7. Doküman yeni doğduysa: protokole bağla
 
-Dosya bu oturumda **ilk kez** oluşturulduysa, kök `CLAUDE.md`'nin Oturum Başlangıç Protokolü listesinde `_dev/GIT-STRATEJI.md` maddesi var mı bak — yoksa ekle (kaynak: CLAUDE-MD template'indeki 5. madde) ve `_dev/INDEX.md`'nin "Temel Dokümanlar" listesini de hizala.
+Dosya bu oturumda **ilk kez** oluşturulduysa, parent `CLAUDE.md`'nin (kökte ya da `.claude/` altında) Oturum Başlangıç Protokolü listesinde `_dev/GIT-STRATEJI.md` maddesi var mı bak — yoksa ekle (kaynak: CLAUDE-MD template'indeki 5. madde) ve `_dev/INDEX.md`'nin "Temel Dokümanlar" listesini de hizala.
 
 **Bu adım atlanamaz.** Protokole bağlanmayan doküman her oturum okunmaz; okunmayınca üç kapının hiçbiri (dal doğrulaması, yayın boşluğu ölçümü, quick tür seçimi) ateşlemez — ve kural yazılı olduğu için uygulandığı sanılır. Sahada ölçülmüş kırılma sınıfı tam budur: kuralın var olması yetmez, okunmasını garanti eden ikinci bir mekanizma gerekir.
 
 `kickoff-verify` yolunda CLAUDE.md zaten template'ten üretilir ve madde hazır gelir — oradan gelindiğinde bu adım bir **teyittir**, tekrar yazma.
 
-> Kurulu bir projede motor yeni güncellendiyse CLAUDE.md'de bu maddenin dışında başka template-delta'ları da olabilir (dal yankısı, push hedefi, paralel oturum maddeleri). Onların sahibi `audit-docs` conformance turudur — burada tek tek aktarma; audit önerisini oturum kapanışının «Sıradaki oturumdan önce» satırına `önerilir:` önekiyle yaz.
+> Kurulu bir projede motor yeni güncellendiyse CLAUDE.md'de bu maddenin dışında başka template-delta'ları da olabilir (dal yankısı, push hedefi, paralel oturum maddeleri). Onların sahibi `audit-docs` conformance turudur — burada tek tek aktarma; audit önerisini oturum kapanışının «Açık kalemler» satırına `önerilir:` önekiyle yaz.

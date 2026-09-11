@@ -67,6 +67,8 @@ Araştırma sırasında ortaya çıkan karar noktalarını kullanıcıya sun:
 - Önerisini söyle ama kararı kullanıcıya bırak
 - **ILKELER.md'ye göre öner:** Önerini projenin ilkeleriyle hizala (örn. kalıcılık önceliği → daha sağlam yaklaşıma eğil; öncelikli eksenler → o ekseni güçlendiren yaklaşımı öne çıkar). Bir yaklaşım bir ilkeyle çelişiyorsa bunu açıkça belirt.
 
+**Çekirdek etkileşimi hangi katman ölçüyor?** Fazın kullanıcıya teslim ettiği asıl davranışın sonucunu belirleyen katman — gerçek tarayıcı yerleşimi/odağı/girdisi, canlı serving zinciri, gerçek cihaz/saat/ağ — projede kurulu otomatik katmanın (test koşucusu + ortamı) ölçtüğü katmanın **dışında** kalıyorsa bu sessizce geçilecek bir ayrıntı değil bir **karar noktasıdır**: bu fazda o katmanı ölçen bir araç kurulsun mu, yoksa doğrulama UAT'ın manuel koluna mı bırakılsın? Kullanıcıya sor ve cevabı ölçüsüyle **"Dikkat Edilecekler"e** yaz — task kriterlerinin kanalını plan-phase (`templates/TASK.md` → Test Kriterleri KURAL'ı), UAT kolunu da verify-phase Adım 4 oradan okur. Katman çekirdek etkileşimi zaten ölçüyorsa bu soru düşer. *(Ölçülmeyen çekirdek etkileşim faz sonunda yeşil bir UAT tablosu, ardından düzeltme task'ı ve ikinci bir tur üretir — ayraç fazın konusu değil bu ölçülebilirliktir ve ölçüyü burada vermek en ucuzudur.)*
+
 **Milestone'u adıyla bağlayan karar.** Bu turun bir kararı, milestone cümlesinde **adıyla anılan** bir mekanizmayı/alanı değiştiriyorsa (cümle X der, sen Y'yi seçtin) bunu karar noktasının yanında söyle. Cümle **yeniden yazılmaz** — Adım 4'te faz dokümanında milestone'un altına tek satır düşülür: `mekanizma: X → Y (araştırma kararı)`. Not oraya konur çünkü kriteri okuyan kapılar (verify-plan Adım 3a, verify-phase Adım 2a) cümlenin kendisine bakar; aynı bilgi "Teknik Kararlar"a yazıldığında o kapılara ulaşmaz. PHASES ve DURUM'daki kopyalar özgün taahhüdü taşımaya devam eder, dokunulmaz (review-phase Adım 2 ile aynı ölçü; ölçüm sonuçlarının evi yine "Dikkat Edilecekler"dir — bu tek satır ayrıdır).
 
 Ölçüt **ad kaymasıdır, kapsam değil:** hedef aynı kalıp yolu değiştiyse not düşülür; hedefin kendisi küçülüyorsa (bir ayak düşüyor, ölçüt gevşiyor) bu not değil **karardır** — yukarıdaki gibi kullanıcıya sunulur, faz ortasında sessizce daraltılmaz. Milestone hiçbir mekanizma adı anmıyorsa bu soru düşer.
@@ -96,16 +98,16 @@ Araştırma tamamlandığında, faz dokümanına (`_dev/phases/PHASE-N.md`) "Ara
 - [Karar 2]: [Gerekçe]
 ```
 
-**Milestone not satırı (varsa):** Adım 3'te bir ad kayması tespit ettiysen, tek satırı burada düş — `## Genel Bilgiler`deki Milestone cümlesinin **altına**, cümlenin kendisine dokunmadan.
+**Milestone not satırı (varsa):** Adım 3'te bir ad kayması tespit ettiysen, tek satırı burada düş — `## Genel Bilgiler`deki Milestone cümlesinin **altına**, cümlenin kendisine dokunmadan. Orada zaten bir `mekanizma:` satırı varsa — kaynağı ne olursa olsun (`… (kapsam kararı)` ya da önceki bir araştırma turu) — ikincisini **yazma**: satır tek-değerlidir, zinciri güncelle (`mekanizma: X → Z (araştırma kararı)`) — "Önceki:" merdiveni yasaktır (CLAUDE.md → Çıkarma Disiplini).
 
 **Tanımlayıcı kaynağını kaydet:** Araştırma bulgularında (özellikle "Dikkat Edilecekler") somut bir precondition tanımlayıcı — metric/uid/secret-slot/env-config anahtarı veya somut dosya/modül yolu — andığında, **nereden geldiğini** de yanına yaz: repoda zaten tanımlıysa tanım sitesi (`path`/sembol), bu fazda yaratılacaksa "yeni", dış sistemdeyse (vault slot, uzak dashboard) "dış". Yerini bilmiyorsan tahminle doldurma — hedefli bir `grep` ile bak, sonra kaydet (Çalışma Prensibi #11). Bu **kayıttır, doğrulama değil**: sen yalnız bildiğini işaretlersin, referansın gerçekle tutarlılığını verify-plan doğrular. Böylece research'te doğan tek bir tanımlayıcı N task'a akarken kaynağı bir kez burada sabitlenir — plan-phase kaynak-işaretini, verify-plan referans gerçeklik-kontrolünü buradan besler, her task'ta yeniden türetmez. Secret/env'de yalnız slot **adını** yaz, değeri asla.
 
-### 4b. Faz Dokümanı Boyut Kontrolü (önleyici bölme)
+### 4b. Faz Dokümanı Boyut Kontrolü (kırmızı çizgi kapısı)
 
 "Araştırma Bulguları" faz dokümanının en hacimli bloklarından biridir; bu oturumda dokümanı belirgin büyütebilir. Faz **hâlâ aktifken** tek-okuma sınırını koru (detay: CLAUDE.md → Doküman Disiplini → Boyut ve Bölünme):
 
-- `bash .claude/commands/devflow/scripts/doc-scan.sh _dev/phases/PHASE-N.md` çalıştır. Kırmızı çizgiye (~20k token) yaklaştıysa/aştıysa CLAUDE.md → Boyut ve Bölünme'ye göre teşhis + çöz: **gerçek büyüme** (araştırma detayı) → `PHASE-N-<EK>.md`'ye böl; **şişme** (yanlış-ev) → temizle.
-- Yapısal bölme/temizlik **kullanıcıya önerilir, onayla uygulanır** — mekanik auto-split değil. Bu bir doküman-hijyen adımıdır, kaynak kodu değiştirmez.
+- **Tarif tek evdedir — `.claude/commands/devflow/lib/boyut-kapisi.md`'yi Read ile oku ve izle** (çağrı başına bir kez): ölçüm komutu, üçlü teşhis, kulvar (Onay Ölçütü — kurallı kesim sorulmaz, uygulanır ve raporlanır), ikili kayıt (KURAL yorumu + `accept-size`) ve iki özel hâl (eşik altı · canvas yok) orada tanımlıdır, burada tekrarlanmaz.
+- **Bu adıma özgü olan:** bu oturumda büyüten şey Araştırma Bulguları'dır; şişme hâlinde tipik kaynak, araştırma çalışma notunun ya da kod dökümünün oraya sızmasıdır (doğru ev `_dev/docs/`). **`accept-size` bu adımda çağrılmaz** — Adım 7'nin ilk işidir (gerekçe tek evde). Bu bir doküman-hijyen adımıdır, kaynak kodu değiştirmez.
 
 ### 5. Gerekirse docs/ Güncelle
 
@@ -116,6 +118,8 @@ Araştırmadan çıkan kalıcı bilgileri (veritabanı yapısı, API tasarımı 
 DURUM.md'deki **Adım** alanını `plan` olarak güncelle (araştırma tamamlandı, sıradaki adım planlama).
 
 ### 7. Git Commit & Push
+
+**Önce 4b'nin devrettiği boyut kabulü (varsa)** — komut ve gerekçesi `lib/boyut-kapisi.md` → "`accept-size`'ın zamanı"ndadır (4b'de zaten okundu). Yazıldıysa `_dev/.audit/canvas.tsv` aşağıdaki commit'e girer; ayrı commit atma.
 
 Tüm doküman değişikliklerini commit & push yap:
 ```
@@ -128,7 +132,10 @@ docs(phase-N): research — technical research completed
 ✅ Araştırma tamamlandı. Bulgular faz dokümanına yazıldı.
 📋 Sıradaki adım: /devflow:plan-phase
    → Task yazımı için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder).
 
 ---
 

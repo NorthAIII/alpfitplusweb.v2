@@ -80,7 +80,7 @@ src/
 
 ```
 _dev/
-├── claude/            # Kök CLAUDE.md doktrin çocukları (bölünmüşse; parent'a @import edilir)
+├── claude/            # CLAUDE.md doktrin çocukları (bölünmüşse; parent'a @import edilir)
 ├── OVERVIEW.md        # Bu dosya
 ├── ILKELER.md         # Proje ilkeleri (yön/öncelik — karar fazlarında okunur)
 ├── INDEX.md           # Navigasyon haritası
@@ -106,7 +106,7 @@ _dev/
 └── tasks/             # Task dokümanları ve arşiv
 ```
 
-CLAUDE.md repo kökündedir (`/CLAUDE.md`).
+CLAUDE.md repo kökündedir (`/CLAUDE.md`) — proje onu `.claude/CLAUDE.md`'de tutmayı seçtiyse yol odur (yer kararı: `kickoff-verify` Adım 3).
 
 ---
 

@@ -46,7 +46,7 @@ Kullanıcının seçtiği alana veya Claude'un önerisine göre ilerle:
 - Mevcut bilgiler üzerine inşa et, sıfırdan başlama
 - Yeni keşfedilen bilgiler diğer dokümanları etkiliyorsa onları da güncelle
 - Gerektiğinde web araştırması yap
-- Bir doküman eşik aştıysa önce teşhis et (üçlü teşhis — kanon: CLAUDE.md → Boyut ve Bölünme): şişmeyse temizle/mezun et; gerçek içerik büyümesiyse modüler bölünme öner (onayla uygula); meşru birikimse supabına mezuniyet öner. VERSIONS/SESSION-NOTES/NOTES bölünmez
+- Bir doküman eşik aştıysa **tarif tek evdedir — `.claude/commands/devflow/lib/boyut-kapisi.md`'yi Read ile oku ve izle** (çağrı başına bir kez): ölçüm, üçlü teşhis, kulvar (Onay Ölçütü), ikili kayıt ve iki özel hâl orada. Bu kulvara özgü olan: hedef, bu oturumda dokunduğun PRD dokümanıdır; **`VERSIONS` · `SESSION-NOTES` · `NOTES` bölünmez**. **`accept-size` bu adımda çağrılmaz** — Adım 5'in ilk işidir; Adım 3 versiyon tartışmasını, Adım 4 de "güncellenen dokümanları" bu dokümanlara daha yazacaktır ve burada verilen kabul o yazımla düşer.
 - **ILKELER.md'yi kullan (öner+onayla):** İlkelerle ilgili gri alanlarda cevabı ilkeye göre önceden doldur, teyit ettir. Derinleşme sırasında yeni bir projeye-özgü ilke (ufuk, öncelik, pazarlık-konusu-olmayan) belirginleşirse ILKELER.md'yi güncelle — sınırı koru (yön/öncelik burada, vizyon/feature PRD'de)
 
 ### 3. Versiyon Tartışması
@@ -64,6 +64,8 @@ Feature'lar belirginleştikçe versiyon önerilerinde bulun:
 
 ### 5. Git Commit & Push
 
+**Önce Adım 2'nin devrettiği boyut kabulü (varsa)** — komut ve gerekçesi `lib/boyut-kapisi.md` → "`accept-size`'ın zamanı"ndadır (Adım 2'de zaten okundu). Yazıldıysa `_dev/.audit/canvas.tsv` aşağıdaki commit'e girer; ayrı commit atma.
+
 Tüm PRD doküman değişikliklerini ve (oluştu/değiştiyse) `_dev/ILKELER.md`'yi commit & push yap:
 ```
 docs: prd-refine — PRD deepened and updated
@@ -75,15 +77,21 @@ docs: prd-refine — PRD deepened and updated
 
 **Devam edilecekse:**
 ```
+✅ PRD derinleştirme oturumu tamamlandı — [hangi alan derinleşti, tek cümle].
 📋 Sıradaki adım: /devflow:prd-refine
    → PRD'yi derinleştirmeye devam etmek için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
 
 **Kickoff'a geçilecekse:**
 ```
+✅ PRD olgunlaştı — kickoff'a geçilebilir. [tek cümle].
 📋 Sıradaki adım: /devflow:kickoff
    → PRD'den teknik yapıya dönüştürmek için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder). (Oturum `/devflow:prd-save` ile kapanıyorsa nihai bloğu o komut yazar.)
 
 ---
 

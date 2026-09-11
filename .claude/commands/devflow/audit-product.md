@@ -4,7 +4,7 @@ Bu komut projenin **ürettiği ürünü** denetler: davranış, kullanıcı akı
 
 Varlık nedeni: faz döngüsü odakla çalıştığı için güçlüdür — ama aynı odak, dışında kalan boşlukları görünmez kılar. verify-phase faz penceresinde çalışır; senaryo testi fazı versiyon sonunda bir kez, faz döngüsünün içinde koşar ve bulgularını düzeltme task'larına döndürür; **bu komut ise zamana ve döngüye bağlı değildir** — her an çağrılır, çıktısı kanvastır ve en uzun süredir kimsenin bakmadığı yerde biriken sessiz drift'i aramak için vardır. İşi kullanıcının gözünden kaçanı bulmaktır; kullanıcının zaten bildiğini yeniden keşfetmek değil.
 
-**Kod değiştirmez, projeye bağımlılık eklemez.** Çıktısı bulgu ve öneridir; hepsi `_dev/BULGULAR.md` kanvasına birikir ve faz döngüsünde ele alınır (discuss-phase → bulgu fazı); sırasını bekleyemeyen bulgu için `/devflow:quick` döngü-dışı rotadır. Faz döngüsüne otomatik bağlı değildir — tamamen manuel tetiklenir, `next` kapsamı dışındadır, DURUM'un Aktif Faz/Adım alanlarına dokunmaz.
+**Kod değiştirmez, projeye bağımlılık eklemez.** Çıktısı bulgu ve öneridir; hepsi `_dev/BULGULAR.md` kanvasına birikir ve faz döngüsünde ele alınır (discuss-phase → bulgu fazı); sırasını bekleyemeyen bulgu için `/devflow:quick` döngü-dışı rotadır. Faz döngüsüne otomatik bağlı değildir — tamamen manuel tetiklenir ve DURUM'un Aktif Faz/Adım alanlarına dokunmaz.
 
 **Kullanım:** `/devflow:audit-product [tur talimatı]`
 
@@ -68,7 +68,7 @@ CLAUDE.md'deki Oturum Başlangıç Protokolü'nü uygula (çekirdek dokümanlar 
 
 ### 2. Turu Çerçevele
 
-- **Zemin — koşullu kapı: eksik varsa sormadan başlama, tamsa oku ve geç.** Ürünün nasıl ayağa kalktığı, hangi ortamların (dev/test/prod) var olduğu, **hangi araçların kullanılabildiği** (test suite, tarayıcı otomasyonu, API/CLI), nerede neye izin olduğu MEMORY "Ortam & Araç Notları"nda yaşar. **Eksikliğin ölçütü bu dört kalemdir: biri MEMORY'den cevaplanamıyorsa zemin eksiktir** — kategori dolu görünse bile. Ayağa-kaldırma ve araçlar repodan türetilebilir (türetimi MEMORY'ye yaz); ortam envanteri ve izinler türetilemez, yalnız kullanıcıdan öğrenilir. **Eksikse denetime başlama — önce kullanıcıya sor, cevapları oraya yaz** (kısa ve tek seferlik; sonraki turlar sormaz). Bu kapı atlanırsa ürün ya hiç ayağa kaldırılamaz ya yalnız bilinen dar dilimde gezilir — denetim sessizce koda/dokümana düşer, oysa canlı gözlem kanıtın birincil kaynağıdır (→ Kanıt anlayışı).
+- **Zemin — koşullu kapı: eksik varsa sormadan başlama, tamsa oku ve geç.** Ürünün nasıl ayağa kalktığı, hangi ortamların (dev/test/prod) var olduğu, **hangi araçların kullanılabildiği** (test suite, tarayıcı otomasyonu, API/CLI), nerede neye izin olduğu MEMORY "Ortam & Araç Notları"nda yaşar. **Eksikliğin ölçütü bu dört kalemdir: biri MEMORY'den cevaplanamıyorsa zemin eksiktir** — kategori dolu görünse bile. Ayağa-kaldırma ve araçlar repodan türetilebilir (türetimi MEMORY'ye yaz); ortam envanteri ve izinler türetilemez, yalnız kullanıcıdan öğrenilir. **Eksikse denetime başlama — önce kullanıcıya sor, cevapları oraya yaz** (kısa ve tek seferlik; sonraki turlar sormaz). Yazarken kanca disiplinini gözet — zemin bilgisi tanımı gereği sınıf A'dır (değerin kendisi, kısa); gövde gerekiyorsa atoma iner, index'e tek satır kalır — **yazmadan önce `.claude/commands/devflow/lib/memory-sistemi.md`'yi Read et** — bağlayıcı olan **kanca hakkı testi ve sınıflardır**; o dosyanın supap turu (kümeleme · mezuniyet · budama) bu komutun işi değildir, evi `run-task`/`review-phase` ve `audit-docs`'tur (kanca hakkı testi ve sınıflar orada; zemin turdan tura birikir, kancasını burada büyütmek index'i kalıcı olarak şişirir). Bu kapı atlanırsa ürün ya hiç ayağa kaldırılamaz ya yalnız bilinen dar dilimde gezilir — denetim sessizce koda/dokümana düşer, oysa canlı gözlem kanıtın birincil kaynağıdır (→ Kanıt anlayışı).
 - **Odak:** tur talimatı varsa odur. Yoksa önce **ucuz ve geniş** bir keşifle "duman nerede" haritasını çıkar (kapsama tablosunda en eski bakış + git geçmişinde en uzun süredir dokunulmamış alanlar + eldeki otomatik sinyaller), sonra riski en yüksek yere (para, veri, auth, kritik kullanıcı akışları) **dar ve derin** odaklan. **Genişlik hedefleme içindir, derinlik iş için** — bir turda her şeyi denetlemeye çalışma; genişlik turlar-arası rotasyonla sağlanır.
 - **Yürütme modu:** varsayılan **derin turdur** (→ Denetim Anlayışı → Derin tarama düzeni). Yalnız kullanıcı hafiflik istediyse filo kurmadan tek oturumda geç.
 - Turu tek paragrafla **bildir ve başla** — onay bekleme. Duyuru bilgilendirici olsun: odak + neden + iş paketleri/mercekler + zemin durumu (tam / eksikti-soruldu) + canlı icra yapılacak mı + derinlik. Hedef yanlışsa kullanıcı zaten keser; bulgular ayrıca doğrulama süzgecinden ve tüketim anındaki kullanıcı kararından geçer.
@@ -91,20 +91,42 @@ Oturum sonunda kompakt sağlık fotoğrafı sun:
 🐞 Hatalar/Tutarsızlıklar: [n yeni bulgu — 🔴x 🟡y 🟢z, tek satır özetlerle]
 💡 Öneriler (UI/UX, altyapı): [n öneri, tek satır özetlerle]
 ❓ Sorular: [bilinçli mi / gözden mi kaçmış — kullanıcı kararı bekleyenler; her biri kendi önerisiyle:
-   "önerim X, çünkü Y" — desen: step-by-step]
-📊 Kanvas durumu: [açık toplamı, bu tur mezun edilenler, kapsama güncellemesi, en eski açık: B-NNN]
-📋 Rota: faz kapsamına dokunanlar → o fazın verify-phase süpürmesi · kalanlar → discuss-phase bulgu fazı
+   "önerim X, çünkü Y" — desen ve dil: step-by-step → Pratik dili kullan]
+📊 Bulgu durumu: [açık bulgu sayısı, bu turda kapananlar, hangi alanlar tarandı,
+   en eski açık bulgu: B-NNN]
+🧭 Rota: faz kapsamına dokunanlar → o fazın verify-phase süpürmesi · kalanlar → discuss-phase bulgu fazı
    ("bu fazı bulgulardan doldur") · bekleyemeyen → /devflow:quick
    [PRD düzeyi tespit varsa: → /devflow:prd-note önerisi]
 ```
 
+`🧭 Rota` satırı bulguların **kalıcı kanalını** söyler — oturumun sıradaki adımı değildir; onu Adım 7 yazar. (Amblem bilinçli olarak `📋` değildir: `📋` yalnız kapanış bloğunun sıradaki-adım satırına aittir.)
+
 ### 6. Git Commit & Push
 
-Değişiklik yaptıysan (kanvas + atomlar + INDEX/MEMORY kayıtları) commit & push yap:
+Değişiklik yaptıysan (kanvas + atomlar + INDEX/MEMORY kayıtları) commit & push yap. ⚠️ **Bir atomu `bulgular/archive/`'e mezun ettiysen: taşıma düz `mv`'dir (`git mv` değil) ve commit'e ESKİ yolu da stage et** — silme index'e kendiliğinden yazılmaz; yalnız yeni yolu stage edersen HEAD'de iki kopya kalır ve silme kalıcı olarak stage'siz görünür (kanon: CLAUDE.md → Paralel Oturum Farkındalığı).
 ```
 docs: audit-product — [odak; kısa özet]
 ```
 Değişiklik yapmadıysan commit atma.
+
+### 7. Oturum Kapanışı
+
+```
+✅ Denetim turu tamamlandı — [odak]; [n yeni bulgu · m kapandı].
+📋 Sıradaki adım: [yarım tur kaldıysa: /devflow:audit-product | kalmadıysa: /devflow:<DURUM → Adım'dan türeyen komut>]
+   → [yarım tur: kalan paketler kaldığı yerden sürer — tamamlananlar tekrarlanmaz
+      | türetme faz komutu verdi: faz döngüsü kaldığı yerden sürer
+      | türetme `prd-review` verdi: versiyon sonu değerlendirmesi sırada]
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
+```
+
+Kuralın kanonu **CLAUDE.md → Oturum Kapanışı**'dır (önekler `engel:` / `önerilir:`; amblem onların kulvarından hesaplanır). Burada yalnız bu komuta özgü dallar tanımlanır:
+
+- **Faz-komutu dalı döngü-dışı varsayılandır ve koşulludur:** `_dev/tasks/quick/`'te devralınacak ⬜/🔄 bir kayıt varsa sıradaki adım odur (`/devflow:quick QUICK-NNN`). Komutu DURUM'un **Adım** alanından türet — kaynak kanonun *"Faz döngüsünün sıradaki komutu"* maddesi ve dört özel durumudur (CLAUDE.md → Oturum Kapanışı); türetme komut vermiyorsa `yok — [bekleme koşulu]` yaz.
+- **Kanvasa yazılan bulgular satıra girmez** — evleri kanvas ve `🧭 Rota`'dır; faz döngüsü onları sırası gelince alır. Satır bir bulgu listesi değildir.
+- **Bekleyemeyecek bulgu kanonun terfi kuralına girer:** işi `quick` yapacaksa kaydı **bu oturumda** aç (`Durum: ⬜ Bekliyor`; "Ne Yapılacak" bölümüne repro adımlarını ve kanıtı yaz, atomun numarasını `B-NNN` olarak an) ve `📋 Sıradaki adım: /devflow:quick QUICK-NNN` yaz. Kanonun dört koşulu burada da geçerlidir — özellikle ①: bulgu **doğrulanmışsa** iş kesindir, "doğrulanamadı" ya da soru olarak kalan tespit kayıt açtırmaz.
+- **Cevaplanmamış `❓ Sorular` satıra girmez** — evleri Gelen Kutusu'dur (Adım 4: `[audit-product SORU]` satırı) ve triyajları bir sonraki uzlaştırma turunun ya da `prd-review` Adım 1b'nin işidir.
+- **Zemin eksiği için kullanıcıdan beklenen bir şey kaldıysa** (ortam/izin bilgisi Adım 2'de sorulmuş ama cevapsız kalmışsa) satıra `engel:` önekiyle girer — o bilgi olmadan sonraki tur yine dar dilimde gezer.
 
 ---
 

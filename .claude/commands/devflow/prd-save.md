@@ -50,11 +50,12 @@ docs: prd-save — PRD session saved
 ✅ Oturum kaydedildi.
    Güncellenen dosyalar: [dosya listesi]
    Bir sonraki oturumda şu konulara bakabiliriz: [öneriler]
-📋 Devam etmek için: /devflow:[aktif oturumun tipi]
-<⚠️|✅> Sıradaki oturumdan önce: [iş — kim yapacak — nasıl] | yok
+📋 Sıradaki adım: /devflow:[aktif oturumun tipi]
+   → [kalan konular — tek satır]
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
 
-Son satır oturum kapanış bloğunun parçasıdır (kural + amblem → CLAUDE.md → Oturum Kapanışı); prd-save ile kapanan oturumda nihai bloğu bu komut yazar.
+Son satır oturum kapanış bloğunun parçasıdır (kural + amblem → CLAUDE.md → Oturum Kapanışı); prd-save ile kapanan oturumda nihai bloğu bu komut yazar. Ana PRD komutu bir kalem bildirdiyse (örn. `prd-review` Adım 1b'nin `önerilir:` hatırlatmaları) o kalem bu satıra **taşınır** — prd-save ile kapanan oturumda görünür tek blok budur.
 
 Sıradaki komutu aktif oturumun tipine göre belirt:
 - prd oturumundaysa → `/devflow:prd-refine`

@@ -91,7 +91,7 @@ Her task için `_dev/tasks/TASK-X.YY.md` dosyası oluştur. Template'e uygun yaz
 - Kapsam tartışmasındaki ilgili kararları (referans veya somutlaştırma)
 - Araştırma bulgularındaki ilgili dikkat noktalarını
 - Modül dokümanlarındaki edge case'leri
-- Somut test kriterleri
+- Somut test kriterleri — **kriterin kanalını da yaz.** Araştırma "Dikkat Edilecekler"inde çekirdek etkileşimin **sorumlu katmanına** dair bir kayıt varsa (`research-phase` Adım 3 onu oraya yazar ve tüketicisi olarak burayı gösterir), o katman yerel koşucunun ölçtüğünün dışında kalan kriterler `kanal: UAT` işaretini alır — gerekçe ve tam ölçüt `templates/TASK.md` → Test Kriterleri KURAL'ındadır. İşaret yazılmazsa kriter sessizce Otomatik Kontroller'e devredilir; CI aynı katmanı koşar ve aynı körlükle yeşil döner (`verify-phase` Adım 4 kolu bu işaretten seçer, `verify-plan` eksikse tamamlar).
 - Doğrulama adımları
 - **Artifact referanslarının kaynağını işaretle:** Bir referansın (dosya yolu; Dikkat Noktaları'ndaki metric/uid/secret-slot/env-config anahtarı) bu fazda mı yaratılacağını yoksa zaten var olmasının mı beklendiğini netleştir — yaratılacak dosyaları Etkilenen Dosyalar'da `YENİ` ile işaretle. Zaten-var beklenen bir tanımlayıcıdan emin değilsen tahminle doldurma, kaynağını grep/oku (Çalışma Prensibi #11). Doğrulama verify-plan'da yapılır; burada yalnızca kaynağı belirt.
 
@@ -136,7 +136,10 @@ docs(phase-N): plan — X task documents created
 ✅ Planlama tamamlandı. X task dokümanı oluşturuldu.
 📋 Sıradaki adım: /devflow:verify-plan
    → Task dokümanlarını review etmek için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder).
 
 ---
 

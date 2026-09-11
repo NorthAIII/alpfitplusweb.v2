@@ -76,8 +76,12 @@ Kullanıcıya kayıt özetini sun ve normal faz döngüsüne geri dön.
 ```
 ✅ Not kaydedildi: [konu başlığı]
    Bu not versiyon sonu prd-review oturumunda ele alınacak.
-   Faz döngüsüne devam edebilirsin.
+📋 Sıradaki adım: /devflow:[DURUM → Adım'dan türeyen komut]
+   → [faz komutuysa: Faz döngüsü kaldığı yerden sürer | `prd-review` ise: versiyon sonu değerlendirmesi sırada]
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son iki satır oturum kapanış bloğudur (kanon: CLAUDE.md → Oturum Kapanışı; önekler `engel:` / `önerilir:`, amblem onların kulvarından hesaplanır). **Döngü-dışı varsayılan koşulludur:** `_dev/tasks/quick/`'te devralınacak ⬜/🔄 bir kayıt varsa sıradaki adım odur (`/devflow:quick QUICK-NNN`). `📋` satırındaki komutu DURUM'un **Adım** alanından türet — kaynak kanonun *"Faz döngüsünün sıradaki komutu"* maddesi ve dört özel durumudur (CLAUDE.md → Oturum Kapanışı); türetme komut vermiyorsa `yok — [bekleme koşulu]` yaz. prd-note DURUM'un faz/adım alanlarına dokunmaz, değerler oturuma girerkenki hâliyle durur.
 
 ---
 

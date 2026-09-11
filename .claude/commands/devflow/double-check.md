@@ -37,10 +37,10 @@ Varsayımda bulunma — şüpheli durumlarda kullanıcıya sor. Kafanın karış
 
 ### 3. Düzeltme ve Soru Sorma
 
-`verify-plan` düzeltme kalıbını uygula:
+`verify-plan`'in **iki kulvarlı** düzeltme kalıbını uygula — düzelt + bildir · sor + öneri sun. Kulvarların **adı ve sınırı burada farklıdır:** verify-plan task planlarını inceler, orada ayrım `mekanik ↔ yapısal`tır (bir task'ı bölmek plan kararıdır); bu komut o oturumda düzenlenen **dokümanları** inceler, yani sınırı **CLAUDE.md → Onay Ölçütü** çizer:
 
-- **Mekanik sorunları doğrudan düzelt** — typo, placeholder kalıntısı, kırık referans, INDEX kayıt eksiği gibi doğru cevabı belli olan düzeltmeler için kullanıcıya sorma gerekmez
-- **Yapısal veya anlam etkileyen sorunları kullanıcıya sor — ama önerisiz sorma.** Her kalem şu sırayı taşır: kısa bağlam → (gerçek bir ikilem varsa seçenekler + tradeoff) → **"önerim X, çünkü Y"** → karar bekle (desen: `step-by-step`). Açık uçlu "şurada şu tutarsızlığı gördüm, nasıl ilerleyelim?" tek başına yetmez — kullanıcı bir tartıcı bekler. Gerçekten bir tercihin yoksa onu da söyle ("ikisi de geçerli, şuna yatkınım, güçlü bir sebebim yok").
+- **Kap işlemlerini doğrudan düzelt** — typo, placeholder kalıntısı, kırık referans, INDEX kayıt eksiği, kesimi kurallı bölme gibi doğru cevabı kanonun/template'in yazdığı düzeltmeler için kullanıcıya sorma gerekmez (kanon: CLAUDE.md → Onay Ölçütü; proje kanonu o ölçütü henüz taşımıyorsa taban `audit-docs` → Kulvarın tabanı'ndadır ve burada da geçerlidir)
+- **İçerik işlemlerini kullanıcıya sor — ama önerisiz sorma.** Her kalem şu sırayı taşır: kısa bağlam → (gerçek bir ikilem varsa seçenekler + tradeoff) → **"önerim X, çünkü Y"** → karar bekle (desen ve dil: `step-by-step` → Pratik dili kullan). Açık uçlu "şurada şu tutarsızlığı gördüm, nasıl ilerleyelim?" tek başına yetmez — kullanıcı bir tartıcı bekler. Gerçekten bir tercihin yoksa onu da söyle ("ikisi de geçerli, şuna yatkınım, güçlü bir sebebim yok").
 - **Kafanın karıştığı yerleri mutlaka sor** — varsayımla düzeltme yapma, emin değilsen sor
 
 ### 4. Rapor Sun
@@ -49,13 +49,13 @@ Kullanıcıya iki kategoride rapor ver:
 
 ```
 🔧 Doğrudan Düzeltilenler:
-- [dosya]: [kısa açıklama]
+- [ne düzeltildi — pratik karşılığıyla]   ([dosya])
 
 ❓ Sorularım / Dikkatine Sunarım:
-- [dosya]: [sorun] → önerim: [X], çünkü [Y]   (gerçek ikilem varsa: (a) … / (b) …)
+- [sorun — pratik karşılığıyla] → önerim: [X], çünkü [Y]   (gerçek ikilem varsa: (a) … / (b) …)   ([dosya])
 ```
 
-Birden fazla yapısal kalem varsa hepsi raporda yukarıdaki tek satırıyla (sorun + önerim) listelenir, sonra **sırayla** karara bağlanır: bir kalem kapanınca sonrakini aç. Sorulacakların listesi bir arada, kararlar tek tek olur — audit-docs'un soruları sırayla açma kalıbı; oradaki toplu onay kapısı burada yoktur, mekanik düzeltmeler zaten uygulanmış olarak raporlanır (Adım 3).
+Kalem **pratik karşılığıyla** yazılır, doküman koordinatıyla değil (kanon: CLAUDE.md → Kullanıcının diliyle konuş) — dosya adı satırın sonunda, izlenebilirlik için durur. Birden fazla soru varsa hepsi raporda yukarıdaki tek satırıyla (sorun + önerim) listelenir, sonra **sırayla** karara bağlanır: bir kalem kapanınca sonrakini aç. Sorulacakların listesi bir arada, kararlar tek tek olur — audit-docs ile aynı kalıp; ikisinde de kurallı düzeltmeler uygulanmış olarak raporlanır (Adım 3), ayrı bir onay turu yoktur.
 
 Sorun bulunmadıysa:
 ```
@@ -73,15 +73,18 @@ docs: double-check — [kısa özet]
 
 ### 6. Kapanış Bloğunu Yinele
 
-Oturum double-check ile kapanıyorsa son söz budur — ana komutun kapanış bloğunu (CLAUDE.md → Oturum Kapanışı) **«Sıradaki oturumdan önce» satırı dahil** birebir yinele (ardından `pause`/`prd-save` çalışacaksa nihai kapanış bloğunu o komut yazar):
+Oturum double-check ile kapanıyorsa son söz budur — ana komutun kapanış bloğunu (CLAUDE.md → Oturum Kapanışı) **özet satırı ve «Açık kalemler» satırı dahil** birebir yinele (ardından `pause`/`prd-save` çalışacaksa nihai kapanış bloğunu o komut yazar):
 
 ```
+<✅|⚠️|⏸️> [ana komutun özet satırı — ana komut blok üretmediyse bu oturumun sonucu, tek cümle]
 📋 Sıradaki adım: /devflow:[ana komutun önerdiği komut]
    → [ana komutun verdiği gerekçe]
-<⚠️|✅> Sıradaki oturumdan önce: [ana komutun bildirdiği iş] | yok
+<⚠️|💡|✅> Açık kalemler: [önek: ana komutun bildirdiği kalem] | yok
 ```
 
 Ana komut kapanış bloğu üretmediyse bloğu DURUM'daki duruma göre kur — ama içerik uydurma: sıradaki komutu DURUM belirler, satıra yalnız oturumda gerçekten dile getirilmiş işler girer (amblem kuralı → CLAUDE.md → Oturum Kapanışı).
+
+**Yineleme bloğu dondurmak değildir — bu komutun kendi çıktısı satıra girer.** Adım 3'te düzeltilemeyip kalan bir kalem (kullanıcı "sonra bakalım" dedi, ya da düzeltmesi bu oturumun kapsamı dışı çıktı) **yeni bir kalem doğurur**: kulvarına göre `engel:` / `önerilir:` önekiyle satıra ekle, amblemi yeniden hesapla. Kalem sıradaki adımı engelliyorsa kanonun **terfi kuralı** burada da işler — `📋` satırı ana komutun önerdiği komut değil, o işi yapan komut olur (evi quick ise kaydı **bu oturumda** aç: `Durum: ⬜ Bekliyor`, kanonun dört koşuluyla). Yasak olan **icat etmektir**, güncellemek değil: ana komutun kararını taşı, bu oturumda gerçekten doğan yükümlülüğü ekle.
 
 ---
 
@@ -93,4 +96,4 @@ Ana komut kapanış bloğu üretmediyse bloğu DURUM'daki duruma göre kur — a
 - **Varsayımda bulunma** — şüpheli durumlarda kullanıcıya sor
 - **Değişiklik yapmadıysan commit atma**
 - **Bu komut ana komutun akışına müdahale etmez** — oturumun son doğrulama adımıdır
-- **Kapanış bloğunu kendin uydurma** — ana komutun bloğunu («Sıradaki oturumdan önce» satırı dahil) birebir yinele; ana komut blok üretmediyse DURUM'a göre kur, içerik icat etme
+- **Kapanış bloğunu kendin uydurma** — ana komutun bloğunu (özet satırı ve «Açık kalemler» satırı dahil) birebir yinele; ana komut blok üretmediyse DURUM'a göre kur, içerik icat etme. **İstisna bu oturumun kendi doğurduğu yükümlülüktür** (Adım 6): o icat değil, olgudur — eklenir ve amblem yeniden hesaplanır

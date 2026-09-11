@@ -30,17 +30,11 @@ Not: Kullanıcı genel olarak sağlam/uzun ömürlü tercihleri, hızlı/basit o
 
 ---
 
-## Pratik dili kullan, teknik jargona saplanma
+## Pratik dili kullan
 
-Kullanıcı çok farklı alanlarda projeler yürütüyor — her konunun teknik sözlüğüne hakim olmayabilir. Ama her konunun pratikte nasıl görüneceğine dair tercih sahibi olabilir.
+Kanon: **CLAUDE.md → Kullanıcının diliyle konuş** (Çalışma Prensipleri #13) — her oturumda bağlamdadır, burada tekrarlanmaz. Özeti: soruyu terimle değil **davranışla** kur, ve dokümanın iç koordinatlarıyla (doküman/bölüm/alan adı, satır numarası, template yolu, motor terimi) hiç kurma — kullanıcı o dosyaları okumaz.
 
-Bu yüzden: bir seçim sunarken, kullanıcıya o seçimin pratikte ne anlama geldiğini sor. Terimle değil, davranışla.
-
-Örnek:
-- ❌ "Bu endpoint için idempotency mi, optimistic locking mi kullanalım?"
-- ✅ "Kullanıcı aynı butona iki kez basarsa ne olsun — iki kayıt mı oluşsun (ikincide hata uyarısı), yoksa ikinci tıklama sessizce yok mu sayılsın?"
-
-Teknik terim gerekiyorsa parantez içinde açıkla. Ama soruyu pratik çıktı üzerinden kur. Amaç kullanıcının terminolojiye hakim olmadan da iyi karar verebilmesi.
+Bu komut o kuralın en yoğun uygulandığı yerdir: burada üretilen her şey doğrudan kullanıcıya soru olarak gider. Ölçüt aynı — kullanıcı hiçbir dokümanı açmadan karar verebilmeli.
 
 ---
 
@@ -52,3 +46,5 @@ Teknik terim gerekiyorsa parantez içinde açıkla. Ama soruyu pratik çıktı �
 - Kararı duymadan kendi varsayımınla uygulamayı başlatmak
 - Her konuya aynı şablonla yaklaşmak (bazıları kısa, bazıları derin — fark edilmeli)
 - Pratik karşılığı olan bir soruyu teknik terimle sormak
+- Soruyu doküman adı, bölüm/alan adı, satır numarası ya da motor terimiyle kurmak — kullanıcı o dosyaları okumaz (kanon: CLAUDE.md → Kullanıcının diliyle konuş)
+- Cevabı kurallarda yazılı olan bir şeyi soru diye getirmek — kap işlemi yapılır ve bildirilir (kanon: CLAUDE.md → Onay Ölçütü); bu komut **karar** konuları içindir

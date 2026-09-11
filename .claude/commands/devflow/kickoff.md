@@ -15,9 +15,10 @@ Bu oturumda template'lere gerek yok. Sadece kullanıcıyla konuşulacak ve yapı
 ## Okunacak Dosyalar
 
 ### Oturum Başlangıç Protokolü (önce)
-`_dev/` ve CLAUDE.md varsa (re-kickoff modu) CLAUDE.md'deki Oturum Başlangıç Protokolü'nü uygula (çekirdek dokümanlar orada listelidir — eksik dosyalar atlanır). İlk kickoff modunda (CLAUDE.md henüz yok) bu protokol uygulanmaz.
+CLAUDE.md **varsa** oradaki Oturum Başlangıç Protokolü'nü uygula (çekirdek dokümanlar orada listelidir — eksik dosyalar atlanır); **yoksa** uygulanmaz. ⚠️ **Bu koşul kipi ilan etmez** — kip aşağıdaki Mod Tespiti'nin `_dev/DURUM.md` ölçütünden gelir ve ikisi ayrışabilir (parent doğmuş ama DURUM yok: kip yine İlk Kickoff'tur). Protokolün *"`_dev/DURUM.md` hiç yoksa dur ve `/devflow:kickoff` öner"* maddesi bu komutun **içinde** uygulanmaz: rota zaten burasıdır ve Mod Tespiti onu İlk Kickoff'a yollar — kendi kendini önerip durma (kardeş komut aynı tuzağı adıyla yasaklıyor: `kickoff-docs` → Akış seçimi).
 
 ### Mod Tespiti İçin Kontrol Et
+- **`_dev/DURUM.md` dosyasının varlığını kontrol et** — kipi belirleyen ölçüt budur (aşağıda → Mod Tespiti)
 - `_dev/` klasörünün varlığını kontrol et
 - `_dev/PRD/` klasörünün varlığını kontrol et
 
@@ -35,9 +36,8 @@ Bu oturumda template'lere gerek yok. Sadece kullanıcıyla konuşulacak ve yapı
 
 ## Mod Tespiti
 
-Otomatik tespit yerine kullanıcıya sor:
+⚠️ **Önce ölç: ayırt edici `_dev/`'in doluluğu değil `_dev/DURUM.md`'dir** (aynı ölçüt: `kickoff-docs` → Akış seçimi). Kanon o dosyanın yokluğunu "proje başlatılmamıştır" diye okur, ve `_dev/` **PRD'li greenfield'da da doludur** — `prd` oturumu `PRD/` ile `ILKELER.md`'yi bırakır. Bu yüzden **`_dev/DURUM.md` yoksa hüküm İlk Kickoff'tur** — `_dev/`'in kendisi yokken de, PRD'li greenfield'da dolu iken de: aşağıdaki soru sorulmaz, PRD silme de teklif edilmez ve PRD varsa İlk Kickoff Modu Adım 1'in *"PRD varsa"* kolundan girilir. Aşağıdaki maddeler yalnız `_dev/DURUM.md` **varken** hüküm verir; orada ölçüm kipi tek başına vermez, **otomatik tespit yerine kullanıcıya sorulur**:
 
-- **`_dev/` yok** → İlk kickoff (otomatik, soru sormaya gerek yok)
 - **`_dev/` var, `_dev/PRD/` var** → Kullanıcıya sor: "Mevcut proje yapısı var. Bu bir re-kickoff mu (PRD değişikliği sonrası) yoksa sıfırdan mı başlamak istiyorsun?" Kullanıcı PRD'siz/sıfırdan devam etmek isterse: "Mevcut `_dev/PRD/` klasörü silinsin mi? İleride karışıklık yaratabilir."
 - **`_dev/` var, `_dev/PRD/` yok** → PRD'siz mevcut proje. PRD kullanmak isteyip istemediğini sor. İstemezse İlk Kickoff Modu'nun "PRD yoksa" dallarıyla devam et (mevcut `_dev/` içeriği — ILKELER dahil — varsa-koru kurallarıyla ele alınır).
 
@@ -117,13 +117,18 @@ docs: kickoff — project analysis and decisions recorded
    Kararlar _dev/KICKOFF-NOTES.md dosyasına kaydedildi.
 📋 Sıradaki adım: /devflow:kickoff-docs
    → Dokümanları oluşturmak için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder). İlk kickoff'ta CLAUDE.md henüz yoksa kural yine geçerlidir — motor kanonudur.
 
 ---
 
 ## Yapılacaklar — Re-Kickoff Modu
 
-**Adım 0 — Protokol & Okuma Onayı (her şeyden önce):** Re-kickoff modunda CLAUDE.md vardır — yukarıdaki "Okunacak Dosyalar"daki Oturum Başlangıç Protokolü'nü uygula, sonra tek satırlık okuma-onayını yaz (kural → CLAUDE.md: "Protokol ve `/devflow:` Komutları Arasındaki İlişki" → Okuma onayı). Onay yazılmadan başlama; yazınca da durma — Adım 1'e geç.
+**Adım 0 — Protokol & Okuma Onayı (her şeyden önce):** Re-kickoff modunda CLAUDE.md **genelde** vardır — **varsa** yukarıdaki "Okunacak Dosyalar"daki Oturum Başlangıç Protokolü'nü uygula. **Yoksa** (brownfield girişi: `map-codebase` → `prd` → re-kickoff; dosyayı `kickoff-verify` Adım 3 doğurur) protokol atlanır ama onay satırı yine yazılır — olmayan çekirdek dosyalar `—` ile işaretlenir ve satırın biçimi için `templates/CLAUDE-MD.md` → "Okuma onayı" okunur (bu, aşağıdaki "template okuma" yasağının tek istisnasıdır; başka template açma).
+
+Protokol uygulanabiliyorsa sonra tek satırlık okuma-onayını yaz (kural → CLAUDE.md: "Protokol ve `/devflow:` Komutları Arasındaki İlişki" → Okuma onayı). Onay yazılmadan başlama; yazınca da durma — Adım 1'e geç.
 
 ### Adım 1: Değişiklikleri Tespit Et
 
@@ -170,6 +175,7 @@ docs: re-kickoff — change analysis and decisions recorded
    Kararlar _dev/KICKOFF-NOTES.md dosyasına kaydedildi.
 📋 Sıradaki adım: /devflow:kickoff-docs
    → Dokümanları güncellemek için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
 
 ---

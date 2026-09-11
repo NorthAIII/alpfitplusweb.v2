@@ -1,21 +1,31 @@
 # MEMORY — Proje Hafızası (Index)
 
-> Bu dosya proje hafızasının **index'idir** — her oturum başında okunur. Birikmiş
-> öğrenimler tek tek `_dev/memory/<slug>.md` dosyalarında tutulur; buradaki her
-> satır o dosyalara bir **pointer**dır (başlık + tek satırlık kanca). Bir öğrenimin
-> detayı gerekince o an `memory/<slug>.md` okunur (lazy-load).
+> Bu dosya proje hafızasının **index'idir** — her oturum başında tam okunur. Öğrenimler
+> `_dev/memory/<slug>.md` dosyalarında tutulur; buradaki her satır bir **pointer**dır
+> (başlık + dosya + hak ettiyse tek satırlık kanca). Detay gerekince o an okunur (lazy-load).
 >
-> Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
+> **Sisteme yazmadan önce oku:** `.claude/commands/devflow/lib/memory-sistemi.md` —
+> kanca hakkı testi, sınıflar ve eşikler, kümeleme/mezuniyet supapları, ne yazılır ne yazılmaz.
+> Yöntem oraya, kayıt buraya: index'e konan her karakter her oturumda yeniden ödenir.
 
 **Son Güncelleme:** [Tarih] — [son eklenen/değişen öğrenimin tek cümle özeti, max ~250 karakter]
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
+<!-- KURAL — pointer satırı: `- [Başlık](memory/<slug>.md)` kancasızdır; kanca bir HAKTIR, alan değil.
+     Hak testi: "bu bilgi dosya açılmadan bilinmezse oturum yanlış bir hamle yapar mı?" Evet ise
+     `- [Başlık](memory/<slug>.md) — <kanca>`. Sınıflar: A·sabit (değerin kendisi, ~100 kr) ·
+     B·süreç disiplini (yalnız tetik+eylem, ~150 kr) · C·katalog (kancasız; gerekirse yalnız
+     3-5 kelimelik "ne zaman lazım" işareti). Rehber eşikler
+     (mahkûmiyet değil): kanca ~200 karakteri, toplam pointer ~40'ı aşmamalı; kancalı satırlar
+     azınlıkta kalmalı. Kanca gövdeye dönüştüyse gövde atoma taşınır. Index BÖLÜNMEZ — taşma
+     kümeleme/mezuniyet çağrısıdır (.claude/commands/devflow/lib/memory-sistemi.md → Supaplar). -->
+
 ---
 
 ## Teknik Tuzaklar & Workaround'lar
 
-<!-- Proje genelinde geçerli beklenmedik davranışlar/bug'lar ve çözümleri (pasif gözlem: "şu böyle davranır, dikkat"). Tekrar eden, eyleme/kontrole bağlı bir "şu adımda şu kontrolü yap" kuralıysa → Süreç Disiplinleri. -->
+<!-- Proje genelinde geçerli beklenmedik davranışlar/bug'lar ve çözümleri — pasif gözlem ("şu böyle davranır, dikkat"). Eyleme/kontrole bağlıysa → Süreç Disiplinleri. -->
 
 - [Henüz yok]
 
@@ -39,50 +49,6 @@
 
 ## Süreç Disiplinleri
 
-<!-- Retrospektiften çıkan, proje genelinde geçerli "şunu yaparken şu kontrolü her zaman yap" tipi iş-akışı kuralları. Uygulama anı: planlamada (task bölme) ve task icrası/closure'ında göz önünde tutulur — kanca'yı buna göre yaz ki ilgili anda hatırlansın.
-     Sınır: tek seferlik task nüansı DEĞİL (o → faz retrosu); kalite ekseni DEĞİL (o → QUALITY); tekrar eden bir süreç kuralıdır. Teknik Tuzaktan farkı: tuzak pasif bir gözlemdir ("şu böyle davranır, dikkat"); disiplin aktif, adıma-bağlı bir kuraldır ("şu adımda şu kontrolü yap") — bir kayıt eylem/kontrol içeriyorsa disiplindir. Yalnızca BU projeye özgü olanlar buraya yazılır — DevFlow yönteminin geneline dair olanlar faz retrosuna "DevFlow'a Öneri" olarak yazılıp kullanıcıya bildirilir (review-phase triyajı). -->
+<!-- Retrospektiften çıkan, BU projeye özgü, tekrar eden "şu adımda şu kontrolü yap" kuralları. Kanca sınıf B'dir: yalnız TETİK + EYLEM; gerekçe/istisna atomda kalır. Sınırlar ve Teknik Tuzak'tan farkı → .claude/commands/devflow/lib/memory-sistemi.md → Kategoriler. -->
 
 - [Henüz yok]
-
----
-
-## Memory Sistemi — Nasıl Çalışır?
-
-- **Index satırı:** `- [Başlık](memory/<slug>.md) — tek satırlık kanca`. Slug kebab-case ve açıklayıcı olsun (örn. `mawk-unicode-tuzagi`).
-- **Kendi kendine yeten kanca.** Her zaman geçerli olması gereken kritik bilgide (örn. "paket yöneticisi pnpm, npm değil") kancayı **tam** yaz — böylece dosya açılmadan da bilgi her oturum görünür. Yalnızca duruma-özgü veya uzun detayda kanca "buraya bak" olur, gövde dosyada durur.
-- **Memory dosyası** (`_dev/memory/<slug>.md`): düz markdown — `# Başlık` + gövde. Frontmatter yok. İlgili başka bir memory'ye `[Başlık](diğer-slug.md)` ile link verilebilir. Klasör ilk öğrenim yazıldığında oluşur.
-- **Yeni öğrenim eklerken:**
-  1. `_dev/memory/<slug>.md` oluştur — ya da aynı konu varsa **mevcudu güncelle** (dedup, yeni dosya açma).
-  2. `_dev/MEMORY.md` index'inde ilgili kategori altına pointer satırını ekle/güncelle.
-  3. Bayatlayan öğrenimi hem dosyadan hem index'ten **sil** (soft-delete yok — git history zaten tutar).
-  4. Bir memory dosyası kendisi gerçekten büyürse CLAUDE.md → Boyut ve Bölünme'ye göre alt-dosyaya böl.
-
----
-
-## Bu Sisteme Ne Yazılır, Ne Yazılmaz?
-
-Memory sistemi (MEMORY.md index + `memory/` dosyaları) **kalıcı/operasyonel veri ve çapraz öğrenimler** içindir. Drift'in en büyük kaynağı yanlış-ev sorunudur: task icra detayları, oturum logları veya aktif durum bilgisi buraya yazılırsa sistem şişer ve gerçek değeri (proje genelinde geçerli bilgi) kaybolur.
-
-### TUTULAN içerik
-- Başka dokümana uymayan ama kaybedilmemesi gereken kalıcı bilgiler
-- Geliştirme sırasında keşfedilen, **proje genelinde geçerli** tuzaklar ve workaround'lar
-- Kullanıcının proje genelindeki **operasyonel/teknik** tercihleri (kod stili, iletişim, araç/test-aracı tercihleri vb.) — **yön/öncelik düzeyindeki ilkeler buraya değil → `ILKELER.md`** (kalıcılık önceliği, sır/konfig politikası, test felsefesi, proje ufku)
-- Ortam ve araçlarla ilgili pratik notlar (CI özellikleri, deployment ortam notları) — **dal/merge/yayın kuralı buraya değil → `GIT-STRATEJI.md`**
-- Fazlar arası geçerliliği olan çapraz öğrenimler
-- Retrospektiften çıkan, **bu projeye özgü** süreç disiplinleri (tekrar eden iş-akışı kontrolleri; planlama/icra sırasında uygulanır) → "Süreç Disiplinleri" kategorisi
-- Sabit konfigürasyon değerleri ve kalıcı operasyonel veri (VPS IP, hesap email, repo path, folder yapısı)
-- Mimari karar **özetleri** — detay `docs/DECISIONS.md`'de
-- Secret kategori isimleri (örn. "STRIPE_SECRET_KEY .env'de tutulur") — **değer ASLA yazılmaz**
-
-### YASAK içerik (bunlar başka dokümanlara aittir — memory yanlış evdir)
-- **Task icrası sırasında öğrenilen teknik nüanslar** (mawk vs gawk gibi araç davranışı, framework bug'ı, vb.) → `phases/PHASE-N.md` retrospektifinin "Task-Spesifik Teknik Öğrenimler" alt bölümü
-- **Oturum logları, "şu oturumda şu yapıldı" tarzı kayıt** → git log + ilgili PHASE/TASK dokümanları
-- **Aktif faz/task durumu, ilerleme, son task özetleri** → `DURUM.md` (DURUM'a "Son Tamamlanan Faz" gibi ek özet bölümü EKLENMEZ — detay: CLAUDE.md → Bilginin Doğru Evi)
-- **Diğer bilgi sınıfları** (mimari karar detayı, proje yapısı/kimliği, yön-veren ilkeler, kalite kuralları, faz retrospektifi) → her birinin evi kanonik yönlendirmede: CLAUDE.md → Bilginin Doğru Evi
-
-### Çıkarma Disiplini
-
-CLAUDE.md → Doküman Disiplini bölümü baskındır. Özet:
-- Geçersizleşen bilgi tarihi yanında yazılı olsa bile **silinir** — tarih koruma gerekçesi değildir.
-- "Önceki:" / "Eski:" prefix ile paragraf merdiveni YASAK; her güncelleme üzerine yazma yapar.
-- HTML comment'e sarma (`<!-- removed -->`, `<!-- legacy-... -->`), üstü çizili etiket (`~~...~~`) gibi yumuşak silme yöntemleri YASAK; gerçek silme yapılır (git log zaten her şeyi tutar).

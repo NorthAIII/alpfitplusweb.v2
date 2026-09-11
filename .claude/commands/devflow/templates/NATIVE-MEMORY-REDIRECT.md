@@ -7,4 +7,4 @@ Tüm proje hafızası:
 - Detaylar: `_dev/memory/<slug>.md`
 
 → Proje öğrenimlerini buraya YAZMA. `_dev/MEMORY.md` + `_dev/memory/` kullan.
-→ Kurulum/kullanım: repo kökündeki `CLAUDE.md`.
+→ Kurulum/kullanım: projenin `CLAUDE.md` talimat dosyası (repo kökünde; taşınmadıysa `.claude/CLAUDE.md`).

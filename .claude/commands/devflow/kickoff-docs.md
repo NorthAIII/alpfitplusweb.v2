@@ -39,6 +39,17 @@ Her dokümanı oluştururken ilgili template'i `.claude/commands/devflow/templat
 
 ---
 
+## Akış seçimi — hangi bölüm koşar? (her şeyden önce belirle)
+
+Aşağıda iki tam akış var; **hangisine gireceğini ölçerek belirle, önceki oturumun kip kararına güvenme** — o karar `kickoff`'ta kullanıcıyla verilir ama kapanış bloğu onu taşımaz. **Ölçüt tek ve kanoniktir: `_dev/DURUM.md` var mı?** Kanon o dosyanın yokluğunu zaten "proje başlatılmamıştır" diye okur (CLAUDE.md → Okuma onayı), ve onu üreten iki komut vardır: bu dosyanın İlk Kickoff akışı ve `map-codebase`.
+
+- **DURUM.md varsa → Re-Kickoff.** Proje dokümanları duruyor; işin delta'yı onlara işlemektir. Üç ayak izi de buraya düşer ve üçü de doğrudur: kurulu proje · **brownfield girişi** (`map-codebase` → `prd` → re-kickoff — `map-codebase` DURUM'u üretir ama parent'ı bilinçle üretmez, onu `kickoff-verify` Adım 3 doğurur) · **eski kurulum** (CLAUDE.md'den önceki sürümler).
+- **DURUM.md yoksa → İlk Kickoff.** Dokümanlar sıfırdan doğacaktır. `_dev/`'in kendisi bu hâlde de **dolu olabilir** ve bu normaldir: `kickoff` `KICKOFF-NOTES.md`'yi, `prd` ise `PRD/` ile `ILKELER.md`'yi bırakmış olur — bu yüzden ölçüt "`_dev/` dolu mu" değildir, o soru PRD'li greenfield'ı yanlış akışa sokar.
+
+⚠️ **Doktrin parent'ının varlığı bu ölçüte girmez.** Parent varken DURUM.md yoksa (biri `kickoff-verify` Adım 3'ü erken koşmuş ya da dosya silinmiş olabilir) hüküm yine **İlk Kickoff**'tur: eksik olan dokümanlardır ve bu akış tam onları doğurur — CLAUDE.md'ye hiç dokunmaz, parent'ın yeri `kickoff-verify` Adım 3'ün işidir. Buraya bir duruş kapısı koyma: o hâlin onarımı zaten bu akıştır, ve kullanıcıyı `kickoff-verify`'a yollamak boş bir tura mal olur — o komut kipini `_dev/DURUM.md`'nin Aktif Faz alanından ölçer ve dosya yokken **ÖLÇÜLEMEDİ**'ye düşüp durur.
+
+⚠️ **Yanlış akış geri alınması pahalıdır:** İlk Kickoff'un Adım 3'ü DURUM'u `Phase 1 / discuss` diye yeniden kurar ve PHASES'in Faz Durumu tablosunu **boş başlatır** — kurulu bir projede bu, yürüyen fazın konumunu siler.
+
 ## Yapılacaklar — İlk Kickoff
 
 ### Adım 1: Önceki Oturumun Kararlarını Doğrula
@@ -90,7 +101,7 @@ Her dokümanı template'e uygun oluştur:
 ```
 Versiyon sütunu PRD'deki VERSIONS.md'den feature-versiyon eşleştirmesi aktarılarak doldurulur. **PRD yoksa Versiyon sütunu eklenmez** — versiyon takibi PRD'ye bağlıdır. **Faz sütunu bu oturumda tüm feature'larda `—`'dir** — feature'a faz numarası, o faza girildiğinde (discuss-phase) atanır (just-in-time; bkz. PHASES.md → Faz Numaralandırma Kuralı).
 
-**PHASES.md** — Faz Durumu tablosu **boş başlar** (henüz girilmiş faz yok). Kickoff'ta taslaklanan yakın faz konularını (konu + milestone) numarasız **Sıradaki Fazlar** listesine yaz — ilk faz dahil hiçbiri önceden numaralanmaz. İlk faz, discuss-phase 1'de numara (1) alıp Faz Durumu tablosuna geçer (bkz. PHASES.md → Faz Numaralandırma Kuralı).
+**PHASES.md** — Faz Durumu tablosu **boş başlar** (henüz girilmiş faz yok). ⚠️ **Bu boşluk ölçülüyor:** `kickoff-verify` çağrı kipini bu tablodan belirler (ölçüt onun kendi *Çağrı kipi* bloğundadır) — tabloya burada bir satır yazılırsa ilk kurulumun kapanışı "hedefli onarım" sanılır — ve o çağrı çıplak olduğu için **hiçbir adım koşmaz**: CLAUDE.md, git stratejisi ve native memory yönlendirmesi doğmaz. Kickoff'ta taslaklanan yakın faz konularını (konu + milestone) numarasız **Sıradaki Fazlar** listesine yaz — ilk faz dahil hiçbiri önceden numaralanmaz. İlk faz, discuss-phase 1'de numara (1) alıp Faz Durumu tablosuna geçer (bkz. PHASES.md → Faz Numaralandırma Kuralı).
 
 **MEMORY.md** — Template'ten oluştur (index formatı). Boş başlangıç — proje ilerledikçe öğrenimler `_dev/memory/<slug>.md` dosyalarına yazılıp index'e pointer eklenerek dolar. `memory/` klasörü ilk öğrenimde oluşur (şimdi boş klasör açma).
 
@@ -131,13 +142,18 @@ docs: kickoff-docs — project documents created
 ✅ Proje dokümanları oluşturuldu. KICKOFF-NOTES.md silindi.
 📋 Sıradaki adım: /devflow:kickoff-verify
    → Oluşturulan dokümanları kontrol etmek ve CLAUDE.md'yi oluşturmak için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+⚠️ **İkinci cümle koşulludur — dosyayı gerçekten sildiysen yazılır.** Adım 6'nın guard'ı aktarılmamış bir karar yüzünden silmeyi durdurduysa cümle *"KICKOFF-NOTES.md duruyor — [aktarılamayan karar]"* olur. **Kalem `engel:` kulvarındadır ve bu terfi demektir:** işin bir DevFlow komutu vardır (`/devflow:kickoff-docs` — aktarım bu komutun kendi gövdesidir), yani `📋` ona geçer, `kickoff-verify` `→` satırında "ondan sonra" diye anılır ve kalem son satırda **tekrarlanmaz** (kanon: Oturum Kapanışı → Terfi kuralı; alıcı ev aynı hükmü veriyor: `kickoff-verify` → Adım 1 → *b) Doküman Bütünlüğü*). Olmamış bir silmeyi bildirmek, o komutun aynı dosyayı bir tur sonra yeniden bulmasıyla sonuçlanır ve kullanıcı iki kez "tamamlandı" görür. **Terfi ettiğin çağrı Re-Kickoff akışına düşer ve bu doğrudur** — dokümanlar artık vardır, kalan iş NOTES'taki kararı onlara işlemektir; aynı guard orada da silmeyi kapatır.
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder).
 
 ---
 
 ## Yapılacaklar — Re-Kickoff
 
-**Adım 0 — Protokol & Okuma Onayı (her şeyden önce):** Re-kickoff modunda CLAUDE.md varsa Oturum Başlangıç Protokolü uygulanır (yukarıdaki "Okunacak Dosyalar") — uygula ve tek satırlık okuma-onayını yaz (kural → CLAUDE.md: "Protokol ve `/devflow:` Komutları Arasındaki İlişki" → Okuma onayı). Onay yazılmadan başlama; yazınca da durma — aşağıdaki Re-Kickoff akışına geç.
+**Adım 0 — Protokol & Okuma Onayı (her şeyden önce):** Re-kickoff modunda CLAUDE.md **varsa** Oturum Başlangıç Protokolü uygulanır (yukarıdaki "Okunacak Dosyalar") — uygula ve tek satırlık okuma-onayını yaz (kural → CLAUDE.md: "Protokol ve `/devflow:` Komutları Arasındaki İlişki" → Okuma onayı). **Yoksa** (brownfield girişi — yukarıdaki Akış seçimi'nin saydığı rota: `map-codebase` → `prd` → re-kickoff; parent'ı `kickoff-verify` Adım 3 doğurur) protokol atlanır ama **onay satırı yine yazılır**: olmayan çekirdek dosyalar `—` ile işaretlenir ve satırın biçimi için `templates/CLAUDE-MD.md` → "Okuma onayı" okunur (aynı kol kardeş komutta da yazılı: `kickoff` → Re-Kickoff Modu → Adım 0). Onay yazılmadan başlama; yazınca da durma — aşağıdaki Re-Kickoff akışına geç.
 
 Re-kickoff sadece delta ile ilgilenir ve **merge prensibiyle** çalışır:
 - **Mevcut bilgi korunur** — MODULE'lerde faz döngüsü sırasında eklenmiş bilgiler aynen kalır
@@ -169,9 +185,14 @@ docs: re-kickoff — documents updated
 Sıradaki adımı öner:
 ```
 ✅ Re-kickoff tamamlandı. Değişiklikler dokümanlara yansıtıldı.
-📋 Sıradaki adım: /devflow:kickoff-verify
+📋 Sıradaki adım: /devflow:kickoff-verify (re-kickoff kapanışı)
    → Güncellenen dokümanları kontrol etmek için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+⚠️ **Bu bloğun ilk iki satırı koşulludur** (aynı koşulluluk İlk Kickoff → Adım 8'de) — blok her hâlde yazılır, yalnız içeriği değişir. Aktarım kontrolü (İlk Kickoff → Adım 6) aktarılmamış bir karar bulduysa özet satırı *"Re-kickoff dokümanlara yansıdı — KICKOFF-NOTES.md duruyor: [aktarılamayan karar]"* olur; kalem `engel:` kulvarındadır, yani `📋` **`/devflow:kickoff-docs`'a terfi eder** ve aşağıdaki kip notu o turda **yazılmaz** — notun işi `kickoff-verify`'a kip söylemektir, o tura gidilmiyor.
+
+**Parantezli kip notu bu dalda zorunludur, süs değil** (kanon: CLAUDE.md → Oturum Kapanışı, *"Parantezli kip notu argüman değildir"*). Faz ortasında koşan re-kickoff — PRD ekleme yolu — Aktif Fazı boşaltmaz, yani `kickoff-verify` çağrıyı **hedefli onarım** kipinde karşılar ve orada çıplak çağrının çalıştıracak adımı yoktur. Notu düşürürsen o komut, senin adıyla gönderdiğin oturumda "ne aradın?" diye sormak zorunda kalır (alıcı ev: `kickoff-verify` → Çağrı kipi → çıplak çağrı fıkrası).
 
 ---
 

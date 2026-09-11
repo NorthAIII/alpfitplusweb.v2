@@ -3,7 +3,8 @@
 """
 DevFlow — Audit Canvas (rolling audit kuyruğu)
 
-Bir DevFlow projesinin dokümanlarını (kök CLAUDE.md + _dev/**/*.md) izleyen,
+Bir DevFlow projesinin dokümanlarını (parent CLAUDE.md — kökte ya da `.claude/`
+altında — + _dev/**/*.md) izleyen,
 SQLite tabanlı bir "kontrol kuyruğu" yönetir. Asıl kaynak _dev/'in kendisidir;
 bu canvas yalnızca "hangi doküman ne zaman / hangi konvansiyon versiyonuna göre
 kontrol edildi" durumunu tutan, yeniden üretilebilir bir cursor'dır.
@@ -12,14 +13,16 @@ kontrol edildi" durumunu tutan, yeniden üretilebilir bir cursor'dır.
 - Ayna:  _dev/.audit/canvas.tsv  (git-tracked; her yazımda deterministik üretilir;
          canvas.db kaybolursa buradan rebuild edilir)
 
-Bu script dokümanları ASLA değiştirmez (READ-ONLY). Yalnızca .audit/ altına ve
-(eksik canvas satırı varsa) kök .gitignore'a yazar. Tüm düzeltmeler Claude + kullanıcı onayı
-üzerinden yapılır; script sadece tarar, seçer, durumu tutar.
+Bu script dokümanları ASLA değiştirmez (READ-ONLY). Proje kökünde yalnızca kendi KAP
+dosyalarına dokunur, ve yalnız eksikse: .audit/ altı · .gitignore (canvas satırları) ·
+.prettierignore (motor kopyasının muafiyeti — YALNIZ prettier yapılandırılmış projede;
+gerekçe: ensure_prettierignore). Üçü de içerik değil kap. Tüm düzeltmeler Claude + kullanıcı
+onayı üzerinden yapılır; script sadece tarar, seçer, durumu tutar.
 
 Bağımlılık: yalnızca python3 stdlib (sqlite3 + hashlib) — sqlite3 CLI gerekmez.
 
 Komutlar:
-  reconcile            _dev/ + CLAUDE.md tara; yeni dokümanı ekle, silineni çıkar
+  reconcile            _dev/ + parent CLAUDE.md tara; yeni dokümanı ekle, silineni çıkar
   scan                 mekanik acil tespit (boyut red-line) → status=urgent
   next [--limit N]     sıradaki kontrol edilecek doküman(lar)ı gerekçeyle döndür
                        (boyut kırmızı çizgisini uçuş-anında da tespit eder:
@@ -84,10 +87,24 @@ MIRROR_COLUMNS = ["id", "path", "status", "status_reason", "checked_version",
 MIRROR_OPTIONAL_TAIL = {"size_accepted"}
 
 # `next` öncelik katmanları — path-based, statik (DevFlow yapısı sabit yollar kullanır).
-# Aynı bucket'ta (urgent / conformance) düşük tier önce gider; rotation bucket'ında
-# ise yaş öne geçer (en eski önce) — proaktif rotasyonun "en uzun süredir
-# denetlenmemiş" sözünü tutmak için (bkz. cmd_next sort).
-#   Tier 1 = çekirdek yaşayan dokümanlar (her oturum okunur, blast radius geniş)
+# Aynı bucket'ta (urgent / conformance) düşük tier önce gider, tier içinde ise
+# doktrin parent'ı (`PARENT_DOCS`) ilk; rotation bucket'ında yaş öne geçer (en eski
+# önce, parent istisnası yok) — proaktif rotasyonun "en uzun süredir denetlenmemiş"
+# sözünü tutmak için (üç kuralın gerekçesi de: bkz. cmd_next sort).
+#   Tier 1 = çekirdek yaşayan dokümanlar. Ölçüt İKİ KOLLUDUR — "her oturum
+#            bağlama girer" YA DA "blast radius geniş" — ve tek kollu okumak
+#            kümeye yeni aday tartılırken yanlış ölçüt uygular.
+#            Birinci kol DAR: protokolün **koşulsuz** çekirdeği (OVERVIEW ·
+#            INDEX · DURUM · MEMORY · GIT-STRATEJI) artı parent — onu harness
+#            her oturum kendiliğinden yükler — ve `_dev/claude/*`, parent'a
+#            `@import` ile bağlı. Protokolün KOŞULLU maddeleri bu kolu geçmez
+#            ve bilinçle kümenin dışındadır: aktif task varken okunan
+#            TASKS-README (Tier 3 — motor template'inin kopyası, audit'in işi
+#            minimaldir) ve task dokümanı (Tier 2). Projeye özgü sabit
+#            dokümanlar da geçmez — yolları motorda bilinemez.
+#            İkinci kol: MODULE-MAP ve PHASES faz döngüsünün haritasıdır,
+#            ILKELER Korumalı sınıftır, QUALITY kalite kapısıdır. Üye SAYISI
+#            buraya yazılmaz (bayatlar) — ölçüt iki kollu tanımın kendisidir.
 #   Tier 3 = tarihsel/sistem (audit'in işi minimal — içerik-koruyan reformat)
 #   Tier 2 = kalan her şey (modüller, memory atomları, aktif task, faz, PRD, docs/*)
 #
@@ -101,9 +118,28 @@ MIRROR_OPTIONAL_TAIL = {"size_accepted"}
 # CLAUDE.md'ye @import edildikleri için her oturumda bağlamdadırlar ve blast
 # radius'ları parent'ınkiyle aynıdır. Prefix ile eşlenir (sayı/ad motorun
 # kesimine bağlıdır, burada literal liste tutmak bayatlar).
+# Parent'ın ikinci meşru konumu. Harness `.claude/CLAUDE.md`'yi de bağlama yükler
+# (resmî doküman), yani oradaki dosya projenin canlı talimat dosyasıdır — ama
+# canvas onu görmezse sessizce denetim dışında kalır.
+PARENT_ALT_REL = ".claude/CLAUDE.md"
+
+# NOT — parent'ın İKİ meşru yolu da Tier 1'dir. Küme yol-tabanlı olduğu için
+# `.claude/CLAUDE.md` buraya yazılmazsa `tier_for` onu Tier 2 döndürür ve doktrin
+# parent'ı, kendisinin @import ettiği çocuklarının ARKASINA sıralanır — yukarıdaki
+# gerekçenin ("blast radius'ları parent'ınkiyle aynıdır") tam tersi. İki yol aynı
+# mantıksal dokümanın alternatif konumudur; bir projede normalde yalnız biri bulunur,
+# yani bölünmüş bir projede parent kümeye bir kez girer. "İki canlı parent"
+# hâli sayım sorunu değil kalemin kendisidir ve rotası `kickoff-verify` Adım
+# 3'ün birleştirme koludur. (Üye sayısı yazılmaz — yukarıdaki gloss'un kendi
+# yasağı; küme `TIER1_DOCS` + `TIER1_PREFIXES`'in kendisidir, `ls` sayar.)
+# ⚠️ Tier üyeliği bu yasağı tek başına TUTMUYOR — gerekli ama YETERLİ değil: aynı
+# tier içinde sıra `last_checked`'a düşer ve doktrin çocukları boş `last_checked`
+# ile doğar (boş dize her tarihten küçüktür), yani parent yine çocuklarının
+# arkasına düşer. Yasağı fiilen tutan şey `PARENT_DOCS` + `cmd_next` sort'undaki
+# parent-rank'tir; gerekçesi orada.
+PARENT_DOCS = frozenset(("CLAUDE.md", PARENT_ALT_REL))
 TIER1_PREFIXES = ("_dev/claude/",)
-TIER1_DOCS = {
-    "CLAUDE.md",
+TIER1_DOCS = set(PARENT_DOCS) | {
     "_dev/OVERVIEW.md",
     "_dev/DURUM.md",
     "_dev/INDEX.md",
@@ -160,11 +196,90 @@ def sha256_file(path):
     return h.hexdigest()
 
 
+# Türkçe aksan katlaması — ayırt edici testler için. **NFKD YETMEZ:** 'ı' (U+0131)
+# ayrı bir harftir, birleşen işareti yoktur; NFKD onu 'i' yapmaz (ölçüldü:
+# "Başlangıç" --NFKD--> "Baslangıc", hâlâ "Baslangic" değil).
+# Gerekçe dürüstçe: filoda başlığını TÜMÜYLE AKSANSIZ yazan canlı bir proje var
+# (EnderLLC/rakorix → "## Oturum Baslangic Protokolu"; aksana duyarlı arama 0,
+# katlamalı 1 bulur). O projenin parent'ı KÖKTE olduğu için bu fonksiyon ona hiç
+# çağrılmaz — yani katlama BUGÜN filoda hiçbir hükmü değiştirmiyor. Katlama, o
+# yazım biçiminin gerçek olduğu ÖLÇÜLDÜĞÜ için var: aynı biçimde yazılmış bir
+# `.claude/` parent'ını katlamasız bir test "global kural kopyası" sayar ve
+# sessizce denetim dışında bırakır — tam da bu fonksiyonun önlediği şey.
+# Markup da katlanır: karşılaştırmanın İKİ tarafına da uygulanır. Küme burada
+# `*`, backtick VE `_` — sonuncusu prettier'ın `*vurgu*` → `_vurgu_` yeniden
+# yazımı yüzünden gerekli. Ölçüldü: sarmalayan vurgu (`## _Ad_`) alt-dize testini
+# zaten geçiyor, ama **başlığın ORTASINDAKİ** vurgu (`## Oturum _Başlangıç_
+# Protokolü`) `_` katlanmadan KAÇIYOR ve o proje sessizce denetim dışında kalır —
+# tam olarak bu fonksiyonun önlemek için var olduğu şey. Filoda bugün 0 vaka;
+# yine de tek karakterlik katlama, sessiz bir kaçış yolundan ucuzdur.
+# NOT: `lib/audit-conform.md` Adım 1'in çapa süzgeci `_`'yi DAHA DAR alır (yalnız
+# tırnağa bitişik) — orası ad ÇIKARIR, burası ad EŞLEŞTİRİR; çıkarmada fazla
+# silme adı bozar, eşleştirmede bozmaz. Kümelerin ayrılığı bilinçlidir.
+_ASCII_FOLD = str.maketrans("çğıİöşüÇĞÖŞÜâîûÂÎÛ",
+                            "cgiIosuCGOSUaiuAIU")
+_PARENT_MARK = "oturum baslangic protokolu"
+
+
+def fold(s):
+    """Aksan + markup katlaması (küçük harfe indirir)."""
+    return (s.translate(_ASCII_FOLD)
+            .replace("*", "").replace("`", "").replace("_", "").lower())
+
+
+def is_devflow_parent(path):
+    """`.claude/CLAUDE.md` projenin KENDİ doktrin parent'ı mı, yoksa kullanıcının
+    global kural kopyası mı?
+
+    Ayırt edici motorda zaten kuruludur — `## Oturum Başlangıç Protokolü` başlığı
+    (aynı ölçüt: `kickoff-verify` Adım 3 · `audit-docs` Adım 1).
+    Gerekçe ölçülmüştür: filoda protokol başlığı TAŞIMAYAN bir `.claude/CLAUDE.md`
+    gerçekten vardır (EnderLLC/vercelender → "# Global Claude Code Kuralları",
+    üstelik o projenin gerçek parent'ı kökte); koşulsuz eklenirse denetim
+    kullanıcının global kural dosyasına proje doktrini yazmaya çalışır.
+
+    Okuma başarısız olursa SESSİZ DÜŞÜRME YOK — uyarı stderr'e yazılır.
+    Okunamayan dosya "parent değil" demek değildir, "bilgi yok" demektir.
+    """
+    try:
+        with open(path, encoding="utf-8", errors="replace") as f:
+            text = f.read()
+    except OSError as e:
+        sys.stderr.write(
+            "uyarı: %s okunamadı (%s) — parent testi YAPILAMADI, izlenen kümeye "
+            "alınmadı. Dosya projenin parent'ıysa denetim dışında kalıyor demektir.\n"
+            % (PARENT_ALT_REL, e))
+        return False
+    # BOM kırpılır: `str.strip()` onu boşluk saymaz, dolayısıyla başlık dosyanın
+    # İLK satırıysa `startswith("##")` BOM yüzünden tutmaz ve gerçek bir parent
+    # "global kural kopyası" sayılırdı. Aynı tuzak `ensure_gitignore`'da zaten
+    # çözülmüş durumda — aynı idiom kullanılıyor.
+    for line in text.lstrip("﻿").splitlines():
+        line = line.strip()
+        if line.startswith("##") and _PARENT_MARK in fold(line):
+            return True
+    return False
+
+
 def iter_doc_paths(root):
-    """İzlenecek doküman seti: kök CLAUDE.md + _dev/**/*.md (.audit/ hariç)."""
+    """İzlenecek doküman seti: parent CLAUDE.md (kökte ve/veya `.claude/` altında)
+    + _dev/**/*.md (.audit/ hariç)."""
     paths = []
+    # Kök CLAUDE.md KOŞULSUZ eklenir (bugünkü davranış korunur): oradaki dosya
+    # tanımı gereği projenin kendisinindir ve koşula bağlamak hâlihazırda izlenen
+    # dokümanları kuyruktan düşürürdü.
     if os.path.isfile(os.path.join(root, "CLAUDE.md")):
         paths.append("CLAUDE.md")
+    # `.claude/` altına os.walk ile İNİLMEZ — motorun projeye kurulmuş kendi komut
+    # dokümanları oradadır (`.claude/commands/devflow/**.md` — motorun her komutu,
+    # template'i ve lib dosyası) ve kuyruğa girerlerse audit motorun vendored
+    # kopyasını proje dokümanı sanıp düzenlemeye çalışır. Sayı yazılmıyor: motor
+    # büyüdükçe bayatlar, soru bayatlamaz. Yalnız TEK dosya, tek koşulla eklenir.
+    # İkisi birden varsa ikisi de izlenir: "iki canlı parent" hâli hatalıdır ama
+    # görünür olması gizli kalmasından iyidir (rota: `kickoff-verify` Adım 3).
+    alt = os.path.join(root, ".claude", "CLAUDE.md")
+    if os.path.isfile(alt) and is_devflow_parent(alt):
+        paths.append(PARENT_ALT_REL)
     dev = os.path.join(root, "_dev")
     audit_abs = os.path.abspath(os.path.join(root, CANVAS_REL_DIR))
     if os.path.isdir(dev):
@@ -225,8 +340,11 @@ def current_version(conn):
 def ensure_gitignore(root):
     """canvas.db (ve yan dosyaları) git'e girmesin; ayna canvas.tsv izlenir."""
     gip = os.path.join(root, ".gitignore")
+    # Üçüncü desen GLOB'dur çünkü geçici ayna adı sürece özgüdür
+    # (`canvas.tsv.tmp.<pid>` — gerekçe: write_mirror). Eski projelerde duran
+    # birebir `canvas.tsv.tmp` satırı zararsız kalır; glob bir kez eklenir.
     needed = ["_dev/.audit/canvas.db", "_dev/.audit/canvas.db-*",
-              "_dev/.audit/canvas.tsv.tmp"]
+              "_dev/.audit/canvas.tsv.tmp*"]
     raw = ""
     if os.path.exists(gip):
         with open(gip, "r", encoding="utf-8", newline="") as f:
@@ -265,6 +383,110 @@ def ensure_gitignore(root):
         lines.extend(e + eol for e in missing)
     with open(gip, "w", encoding="utf-8", newline="") as f:
         f.write("".join(lines))
+    # BİLDİRİM — sessiz yazma, projenin kendi kuralıyla çelişiyordu: filoda
+    # projelerin bir bölümü `.gitignore`'u kanonlarındaki "sormadan değiştirme"
+    # listesine koyuyor ve script o dosyaya zaten yazmış oluyor. Sayıyı buraya
+    # gömme, ölç: kanonlarda `.gitignore` geçen projeleri say, sonra o projelerin
+    # `.gitignore`'unda `_dev/.audit/canvas.` satırı var mı bak.
+    # Yazımın kendisi doğrudur ve README'de beyanlıdır (kurulum değil script
+    # ekler, her çağrıda kontrol eder) — eksik olan tek şey bildirimdi; sessiz
+    # ihlal ile raporlanan altyapı dokunuşu arasındaki fark budur. stderr'e
+    # yazılır: stdout komutun makine-okunur çıktısıdır (`next`/`status` onu
+    # ayrıştırır), uyarı oraya karışmaz — `reconcile`'ın kayıp-yol uyarısıyla
+    # aynı kulvar. Yalnız GERÇEKTEN yazıldığında basar; no-op sessizdir.
+    print("ℹ️  .gitignore güncellendi (DevFlow canvas satırları: "
+          + ", ".join(missing) + ") — altyapı dokunuşu, o turun commit'ine dahildir.",
+          file=sys.stderr)
+
+
+PRETTIER_IGNORE_LINE = ".claude/commands/"
+
+
+def ensure_prettierignore(root):
+    """Motor kopyası projenin KENDİ biçimlendiricisinden muaf kalsın.
+
+    GEREKÇE (ampirik, filoda ölçüldü): prettier motor dosyalarını yeniden yazıyor
+    (`*vurgu*` → `_vurgu_`); `lib/audit-conform.md`'nin çapa taraması adları `_`
+    yapışık çıkarıyor ve projede GERÇEKTEN duran adlar "düşmüş" görünüyor —
+    kalem 🔧 kulvarında olduğu için sorulmadan Tier-1 doktrin parent'ına yazılırdı.
+
+    NEDEN BURADA, KURULUMDA DEĞİL (yalnız kurulumda da var, ama yetmiyor):
+    kurulumun yazdığı satır yalnız **kurulum penceresinde** iner — o an prettier
+    izi olmayan, korumadan önceki bir motorla kurulmuş ya da `.prettierignore`'u
+    sonradan temizlenmiş projeyi kaçırır. Teslim yolu bu yüzden buradadır —
+    `ensure_gitignore` ile aynı çağrı noktası: kurulum nasıl yapılmış olursa olsun,
+    çapa taramasını çalıştıran ilk komut korumayı da yerine koyar (yani koruma,
+    koruduğu taramadan ÖNCE iner).
+
+    YALNIZ prettier yapılandırılmışsa yazar — yapılandırılmamış projede
+    `.prettierignore` yaratmak projeye ait olmayan bir dosya eklemek olurdu.
+    Tespit `"prettier"`i package.json'da bilerek GENİŞ arar (config anahtarı da,
+    devDependency de sayılır): elde prettier varsa `npx prettier --write` bir
+    komut uzaktadır, ve satır yazmanın maliyeti iki satırdır — kaçırmanınki
+    sorulmadan doktrin parent'ına yazılan bir yanlış-pozitif.
+    """
+    pip_ = os.path.join(root, ".prettierignore")
+    yapilandirilmis = os.path.exists(pip_)
+    if not yapilandirilmis:
+        try:
+            for ad in os.listdir(root):
+                if ad.startswith(".prettierrc") or ad.startswith("prettier.config."):
+                    yapilandirilmis = True
+                    break
+        except OSError:
+            return
+    if not yapilandirilmis:
+        pkg = os.path.join(root, "package.json")
+        try:
+            with open(pkg, "r", encoding="utf-8", errors="replace") as f:
+                yapilandirilmis = '"prettier"' in f.read()
+        except OSError:
+            return
+    if not yapilandirilmis:
+        return
+    raw = ""
+    if os.path.exists(pip_):
+        try:
+            with open(pip_, "r", encoding="utf-8", newline="") as f:
+                raw = f.read()
+        except OSError:
+            return
+        # Eşleşme DİZE eşitliği değil, "motor kopyası zaten muaf mı" sorusudur:
+        # elle yazılmış meşru biçimler var (`.claude/commands/**`, `.claude/`,
+        # sondaki eğik çizgisiz hâl). Dize eşitliği ararsak pilotun kendi
+        # satırının (`.claude/commands/**`) üstüne mükerrer bir satır yazardık.
+        for l in raw.splitlines():
+            s = l.strip().lstrip("﻿")
+            if s.startswith("#"):
+                continue
+            if s.rstrip("/*") in (".claude/commands", ".claude"):
+                return
+    # Kullanıcının dosyası — `ensure_gitignore`'ın (1) numaralı kuralı burada da
+    # geçerli: son satırın newline'ı yoksa ÖNCE tamamlanır, yoksa eklenen yorum
+    # kullanıcının son kuralına yapışır ve o kural sessizce yok olur.
+    eol = "\r\n" if "\r\n" in raw else "\n"
+    parcalar = [raw]
+    if raw and not raw.endswith(("\n", "\r")):
+        parcalar.append(eol)
+    if raw.strip():
+        parcalar.append(eol)
+    # Metin install.sh ve install.ps1 ile BİREBİR aynı ve bilerek ASCII: aynı depo
+    # iki makinede kurulunca `.prettierignore` aynı içeriği taşımalı.
+    parcalar.append("# DevFlow motoru - bicimlendirici motorun kendi metnini "
+                    "yeniden yazmamali" + eol)
+    parcalar.append(PRETTIER_IGNORE_LINE + eol)
+    try:
+        with open(pip_, "w", encoding="utf-8", newline="") as f:
+            f.write("".join(parcalar))
+    except OSError:
+        sys.stderr.write("uyarı: .prettierignore yazılamadı, atlandı\n")
+        return
+    # Aynı bildirim ölçütü `ensure_gitignore`'daki gerekçeyle — burada
+    # tekrarlanmaz. Kural yüzey saymaz: kullanıcının bir dosyasına sessizce
+    # yazan her yol bildirir.
+    print("ℹ️  .prettierignore güncellendi (" + PRETTIER_IGNORE_LINE
+          + ") — motor kopyası biçimlendiriciden muaf tutuldu; o turun commit'ine dahildir.",
+          file=sys.stderr)
 
 
 _CONFLICT_MSG = (
@@ -288,10 +510,34 @@ def validate_mirror(path):
                 raise SystemExit(_CONFLICT_MSG % (path, " (satır %d)" % i))
 
 
+def mirror_has_rows(path):
+    """Aynada en az bir VERİ satırı var mı? (yorum ve başlık satırları sayılmaz.)
+
+    Öksüz-boş-db onarımının koşuludur: kurtarılacak bir şey ancak aynada veri
+    varsa vardır. Başlıklı-boş aynada rebuild'e girmek, import_mirror'ın
+    "ayna kayıp" guard'ını haksız yere ateşler.
+    """
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip() or line.startswith("#"):
+                    continue
+                if line.split("\t", 1)[0].strip() == "id":   # başlık satırı
+                    continue
+                return True
+    except OSError:
+        return False
+    return False
+
+
 _MIRROR_LOST_MSG = (
     "hata: %s kullanılabilir bir ayna değil — %s.\n"
     "canvas.db oluşturulmadı.\n"
     "Kurtarma (tercih edilen): git checkout -- %s\n"
+    "  (bu komut o dosyadaki commit'lenmemiş işi de siler — aynada commit'ten\n"
+    "   sonra alınmış bir `exclude`/`accept-size` kararı varsa önce `git diff`\n"
+    "   ile bak; çakışma çözülmemişse komut zaten çalışmaz. Başka bir dosyada\n"
+    "   kullanma.)\n"
     "Kurtarılamıyorsa aynayı sil, kuyruğu diskten kur:\n"
     "  rm %s && python3 <script> --root <kök> reconcile\n"
     "  Bu yol `exclude` ve `accept-size` kayıtlarını KAYBEDER — ikisi yalnız aynada yaşar."
@@ -414,7 +660,28 @@ def write_mirror(conn, root):
     # Ayna git-tracked'dir: YERİNDE truncate edilmez. `open(...,"w")` dosyayı
     # açılış anında 0 bayta düşürür; o pencerede ölen bir süreç aynayı bozuk
     # commit'lenmeye hazır bırakır. Geçici dosya + os.replace (POSIX'te atomik).
-    tmp = mirror_path(root) + ".tmp"
+    #
+    # GEÇİCİ AD SÜRECE ÖZGÜDÜR ve `finally` yalnız KENDİ tmp'sini siler. Sabit
+    # adla iki eş zamanlı yazıcı birbirinin tmp'sini siliyordu: `os.replace`
+    # FileNotFoundError ile çöküyor ve o komut hiçbir şey yazmadan düşüyordu
+    # (ölçüldü ve yeniden üretildi). Yol teorik değil: motor paralel oturumu
+    # "beklenen hâl, arıza değil" sayar (kanon: Paralel Oturum Farkındalığı) ve
+    # kanvasa İKİ ayrı komut ailesi yazar — `audit-docs` turu sürekli, faz
+    # döngüsünün `accept-size` kapıları (research/verify/review/prd-refine)
+    # kendi commit adımlarında. Aynı anda koşan iki oturumda çakışırlar.
+    # Kapsam bilinçle dar: bu düzeltme ÇÖKMEYİ kaldırır, "son yazan kazanır"
+    # semantiğini değiştirmez — o, aynanın türetilmiş olmasının sonucudur
+    # (README → canvas.db asıl kaynaktır) ve ayrı bir karardır.
+    # İKİNCİ BİLİNÇLİ KABUL: sabit adın bir yan faydası vardı — öksüz kalan
+    # tmp'yi bir sonraki koşumun `open(...,"w")`'ı üzerine yazıyordu. Süreç
+    # özgü adla o kendiliğinden toplanma düştü: `finally` normal ve istisnalı
+    # çıkışta temizler, ama SERT ölümde (SIGKILL, güç kesintisi) kalan tmp
+    # kalıcıdır. Süpürme YAZILMADI ve yazılmamalı — başkasının
+    # `canvas.tsv.tmp.*` dosyasını yaş ya da pid-canlılığı ölçütüyle silmek,
+    # yukarıda düzeltilen "başkasının tmp'sini sil" sınıfını geri getirir
+    # (pid yeniden kullanılır). Artık zararsızdır: gitignore glob'u onu kapsar
+    # (ensure_gitignore) ve ayna zaten türetilmiştir.
+    tmp = "%s.tmp.%d" % (mirror_path(root), os.getpid())
     try:
         with open(tmp, "w", encoding="utf-8") as f:
             f.write("\n".join(lines) + "\n")
@@ -430,6 +697,7 @@ def connect(root):
     dbp = db_path(root)
     mp = mirror_path(root)
     rebuilt = not os.path.exists(dbp) and os.path.exists(mp)
+    orphan = False
     if rebuilt:
         # sqlite3.connect() çağrılmadan önce: hata atılırsa diskte boş db
         # kalmamalı (kalırsa sonraki çağrıda rebuilt=False → import_mirror
@@ -437,6 +705,31 @@ def connect(root):
         validate_mirror(mp)
     conn = sqlite3.connect(dbp)
     init_schema(conn)
+    if (not rebuilt and os.path.exists(mp)
+            and conn.execute("SELECT COUNT(*) FROM docs").fetchone()[0] == 0
+            and mirror_has_rows(mp)):
+        # ÖKSÜZ BOŞ DB — "db yok" kadar "db boş" da rebuild tetikler.
+        # connect() şemayı kurduktan SONRA hata veren her komut (örn. canvas'ta
+        # olmayan bir yola `accept-size`: faz döngüsünün boyut kapıları bunu
+        # canvas'ı hiç kurulmamış projede yapar) diskte tam olarak bu hâli
+        # bırakır: dosya var, içi boş. Ayna sonradan git'ten gelirse yukarıdaki
+        # ölçüt rebuilt=False der, import atlanır ve ilk yazan komut aynayı bu
+        # boşlukla ezer — denetim geçmişi (conformant/exclude/accept/hash)
+        # sessizce silinir. Ölçüldü ve yeniden üretildi.
+        # Koşulun üçüncü ayağı bilinçlidir ve AYNAYA bakar, diske değil:
+        # kurtarılacak bir şey ancak aynada veri satırı varsa vardır. Aynası
+        # başlıklı-boş olan projede öksüz db zararsızdır — orada rebuild'e
+        # girmek aşağıdaki "ayna kayıp" guard'ını haksız yere ateşler ve
+        # kurtarılabilir bir projeyi ölümcül hatayla durdurur (ölçüldü).
+        # Diske bakmak yetmez: BU DALDA diskte doküman + başlıklı-boş ayna
+        # meşrudur (kanvas dokümanlar eklenmeden önce yazılmış) — çünkü db'nin
+        # kendisi zaten çöp, kaybedilecek state yok. Aşağıdaki db-YOK dalında
+        # aynı kanıt hâlâ ÖLÜMCÜLDÜR ve öyle kalmalı: orada db gerçekten
+        # kaybolmuş olabilir ve boş ayna truncate'in imzasıdır (§38 ölçümü).
+        # Asimetri bilinçlidir: ayrım aynada değil, db'nin ne olduğunda.
+        validate_mirror(mp)
+        rebuilt = True
+        orphan = True
     if rebuilt:
         # Rebuild ATOMİKTİR: import yarıda patlarsa diskte YARIM/BOŞ db bırakma.
         # Bırakılırsa sonraki çağrıda rebuilt=False olur, import atlanır ve script
@@ -465,8 +758,10 @@ def connect(root):
                 "canvas.db oluşturulmadı — aynadaki bozuk satırı onarıp tekrar dene.\n"
                 "Ayna TSV'dir: her doküman TEK satır, alanlar tab ile ayrılır." % (type(e).__name__, e))
         sys.stderr.write(
-            "not: canvas.db yoktu, canvas.tsv aynasından %d kayıt geri yüklendi.\n" % n)
+            "not: canvas.db %s, canvas.tsv aynasından %d kayıt geri yüklendi.\n"
+            % ("boştu (başarısız bir komuttan kalmış)" if orphan else "yoktu", n))
     ensure_gitignore(root)
+    ensure_prettierignore(root)
     return conn
 
 
@@ -476,20 +771,68 @@ def cmd_reconcile(conn, root, args):
     disk = set(iter_doc_paths(root))
     dbset = set(r[0] for r in conn.execute("SELECT path FROM docs").fetchall())
     added = sorted(disk - dbset)
-    removed = sorted(dbset - disk)
+    # Kümeden düşen yolun dosyası diskte DURUYORSA satır SİLİNMEZ: `.claude/CLAUDE.md`
+    # üyeliği içeriğe bağlıdır (protokol başlığı), başlık yeniden yazılırsa yol düşer
+    # ama dosya durur — satırı silmek `exclude`/`checked_version`/`size_accepted` ve
+    # tüm denetim geçmişini yok ederdi.
+    # Üye OLMAYAN satır kuyrukta da görünmez, ama bunun için bir KAPSAM işareti
+    # yazılmaz: `cmd_next`, `cmd_scan` ve `cmd_status` üyeliği `iter_doc_paths` ile
+    # sorgu anında sorar. (Tek istisna aşağıdaki bayat-`urgent` normalleştirmesidir;
+    # o bir kapsam işareti değil, koşulları ortadan kalkmış bir ÖLÇÜMÜN silinmesidir.)
+    # Bu bilinçli bir tasarım kararıdır ve ölçümle
+    # alınmıştır — üyeliği `exclude`+`status_reason` ile KALICILAŞTIRAN bir sürüm
+    # denendi ve üç ayrı yerden bozuldu: `bump-version`/`invalidate`/`touch` üçü de
+    # `status_reason`'ı NULL'lar (damga silinince geri alma kalıcı olarak ölür), ve
+    # koşulsuz UPDATE kullanıcının ELLE verdiği `exclude`'u otomatiğe çevirip sonra
+    # geri alıyordu. Durum tutmayan süzgeç bu sınıfın tamamını ortadan kaldırır:
+    # senkronu bozulacak bir damga yoktur, kullanıcının `exclude`'una dokunulmaz.
+    # Dal pratikte YALNIZ `.claude/CLAUDE.md` için ateşler: yol-tabanlı bir üye
+    # kümeden ancak o yoldaki dosya yok olunca düşer (taşımak yolu değiştirir,
+    # yani eski yol gerçekten yoktur ve silme doğrudur). Egzotik bir istisna
+    # kalır — `os.walk` dizin symlink'lerini izlemez ama `os.path.isfile` izler,
+    # yani bir `_dev/` alt dizini sonradan symlink olduysa altındaki satırlar
+    # burada korunur. Davranış o hâlde de doğrudur.
+    stale = sorted(dbset - disk)
+    removed = [p for p in stale if not os.path.isfile(os.path.join(root, p))]
+    kept = [p for p in stale if p not in removed]
     for p in added:
         conn.execute("INSERT INTO docs(path,status,added_at) VALUES(?,?,?)",
                      (p, "pending", today()))
     for p in removed:
         conn.execute("DELETE FROM docs WHERE path=?", (p,))
+    # Kümeden düşen satırın tek yazılan alanı: bayat `urgent` YARGISI temizlenir.
+    # Gerekçe ölçüldü — `scan` üyelik süzgecinden döndüğü, `invalidate`/`bump-version`
+    # ise `urgent`'i bilinçle koruduğu için etiket başka hiçbir ROTALI komutla
+    # düşmez; yol yeniden üye olduğunda `cmd_next` uçuş-anı ölçümüne hiç gelmeden
+    # o bayat etiketten prio-0 dispatch üretir (45 baytlık bir dosya için
+    # `urgent:token-hard` döndüğü ölçüldü). Kapsam dar tutuldu: yalnız `status`
+    # sütunu, yalnız `urgent` satırda. `exclude`'a ve boyut kabulüne DOKUNULMAZ —
+    # onlar kullanıcı kararıdır; `urgent` ise script'in kendi ölçümüdür ve ölçüm
+    # koşulları ortadan kalkmıştır. `urgent:token-hard` motorun yazdığı tek urgent
+    # gerekçesidir, yani normalleştirme hiçbir geçerli yargıyı düşürmez.
+    for p in kept:
+        conn.execute("UPDATE docs SET status='pending', status_reason=NULL "
+                     "WHERE path=? AND status='urgent'", (p,))
     conn.commit()
     write_mirror(conn, root)
+    # Toplam DB satır sayısıdır — `status`'ın bastığı sayıyla aynı olsun diye
+    # (`len(disk)` korunan satırları saymaz, iki çıktı ıraksardı).
+    total = conn.execute("SELECT COUNT(*) FROM docs").fetchone()[0]
     print("reconcile: +%d yeni, -%d silinen, toplam %d doküman"
-          % (len(added), len(removed), len(disk)))
+          % (len(added), len(removed), total))
     for p in added:
         print("  + " + p)
     for p in removed:
         print("  - " + p)
+    for p in kept:
+        sys.stderr.write(
+            "uyarı: %s izlenen kümeden düştü ama dosya diskte DURUYOR — satır ve "
+            "geçmişi KORUNDU, kuyrukta görünmüyor (silinmedi, kapsam dışı da "
+            "işaretlenmedi; üyelik her sorguda yeniden ölçülür). Parent'sa "
+            "`## Oturum Başlangıç Protokolü` başlığını hâlâ taşıyor mu bak — "
+            "başlık düzelince yol kendiliğinden geri döner. Dosya artık projenin "
+            "dokümanı değilse yapacak bir şey yok; bu uyarı her `reconcile`'da "
+            "yinelenir.\n" % p)
 
 
 def parse_size_ack(raw):
@@ -512,10 +855,17 @@ def size_ack_active(raw, cur_hash):
 def cmd_scan(conn, root, args):
     rows = conn.execute(
         "SELECT path,status,status_reason,size_accepted FROM docs WHERE exclude=0").fetchall()
+    members = set(iter_doc_paths(root))
     became, cleared, lapsed, accepted = [], [], [], []
     for path, status, reason, ack_raw in rows:
         full = os.path.join(root, path)
         if not os.path.isfile(full):
+            continue
+        # Üyelik sorgu anında ölçülür (tek ev: `iter_doc_paths`). Diskte duran ama
+        # artık üye olmayan satır — parent olmaktan çıkmış `.claude/CLAUDE.md` —
+        # kuyruğa girmez: `is_devflow_parent` kimlik testi kadar güvenlik testidir,
+        # kullanıcının global kural kopyasına proje doktrini yazılmasını engeller.
+        if path not in members:
             continue
         try:
             data = open(full, "rb").read()
@@ -542,8 +892,8 @@ def cmd_scan(conn, root, args):
                          ("urgent:token-hard", path))
         else:
             # Gerekçesi olmayan (ya da `urgent:` öneki taşımayan) `urgent` GEÇERSİZ
-            # bir hâldir: hiçbir kulvara yönlenmez (audit-docs Adım 2 dağıtımı
-            # `urgent:*` kalıbıyla eşleşir, gerekçesiz `urgent` eşleşMEZ),
+            # bir hâldir: hiçbir kulvara yönlenmez (audit-docs Adım 3'ün dağıtım
+            # tablosu `urgent:*` kalıbıyla eşleşir, gerekçesiz `urgent` eşleşMEZ),
             # `scan` onu temizlemezdi ve doküman her turda bir
             # prio-0 slot tutardı. Eşiğin altındaysa normalize edilir.
             if status == "urgent" and (
@@ -580,10 +930,14 @@ def cmd_next(conn, root, args):
     rows = conn.execute(
         "SELECT path,status,status_reason,checked_version,content_hash,last_checked,"
         "size_accepted FROM docs WHERE exclude=0").fetchall()
+    members = set(iter_doc_paths(root))
     cand = []  # (öncelik, tier, last_checked, path, gerekçe)
     for path, status, reason, cver, chash, lchecked, ack_raw in rows:
         full = os.path.join(root, path)
         if not os.path.isfile(full):
+            continue
+        # Üyelik sorgu anında ölçülür — gerekçe `cmd_scan`'in aynı satırındadır.
+        if path not in members:
             continue
         t = tier_for(path)
         # Boyut kabulü bu iki kapının ikisini de aşmalı: DB'deki `urgent` etiketi
@@ -622,9 +976,28 @@ def cmd_next(conn, root, args):
             # günlük döngüye dönüşür (yaş-öncelikli sıralama zaten en eskiyi seçer,
             # bu skip aynı-gün tekrarını engeller).
             cand.append((2, t, lchecked or "", path, "rotation:oldest"))
-    # urgent/conformance bucket'ı tier-first; rotation bucket'ı (prio==2) yaş-first
-    # (last_checked tier'in önünde) → "en uzun süredir denetlenmemiş" sözünü tutar.
-    cand.sort(key=lambda c: (c[0], c[2], c[1], c[3]) if c[0] == 2 else (c[0], c[1], c[2], c[3]))
+    # urgent/conformance bucket'ı tier-first ve tier İÇİNDE doktrin parent'ı ilk;
+    # rotation bucket'ı (prio==2) yaş-first (last_checked tier'in önünde) →
+    # "en uzun süredir denetlenmemiş" sözünü tutar.
+    # PARENT-RANK NEDEN VAR (ölçüldü, pilot `EnderLLC/DevToolBox`): parent'ı
+    # TIER1_DOCS'a koymak yasağı tutmuyor (bkz. TIER1_DOCS üstündeki NOT). Doktrin
+    # çocukları bölmeyle YENİ doğar; `reconcile` yeni yolu `last_checked`'i NULL
+    # bırakarak ekler ve boş dize her tarihten küçüktür — yani parent, kendi
+    # @import ettiği çocuklarının ARKASINA düşer (pilotta 5. sıra). Mekanizma
+    # `bump-version` DEĞİLDİR: o `last_checked`'e dokunmaz, yalnız durumu
+    # `pending`e çeker (bkz. cmd_bump_version) — kusuru doğuran şey yeni doğan
+    # yolun boş tarihidir.
+    # KURALIN KAPSAMI, mekanizmasıyla aynı genişlikte yazılıyor: rank yalnız
+    # kendi (öncelik, tier) grubunun içinde sıralar. Farklı önceliğe geçmez —
+    # `urgent` satırı taşıyan bir doküman parent'ın `conformance` satırının
+    # önünde kalır, ve bu bilinçlidir: o kulvarın işi mekanik/boyuttur, dokümanı
+    # parent'ın kanonuna göre uygunlamaz. Kanon gerektiren hâlin tabanı
+    # `audit-docs.md` → Kulvarın tabanı'ndadır.
+    # ROTASYON DALINA KONMAZ: oradaki söz yaş sözüdür ve parent istisnası tanımaz;
+    # kusur da orada doğmaz (rotation adayı olmak `checked_version`'ın dolu
+    # olmasını gerektirir, `touch` ikisini birlikte yazar → boş tarih oluşmaz).
+    cand.sort(key=lambda c: (c[0], c[2], c[1], c[3]) if c[0] == 2
+              else (c[0], c[1], 0 if c[3] in PARENT_DOCS else 1, c[2], c[3]))
     if not cand:
         print("# kuyrukta hazır doküman yok (her şey güncel konvansiyona uygun)")
         return
@@ -704,10 +1077,15 @@ def cmd_set_exclude(conn, root, args, value):
 def cmd_accept_size(conn, root, args):
     """Boyut aşımını KAYITLI olarak kabul et — `exclude` değil, kulvar değişimi.
 
-    Giriş koşulu doküman kuralıdır (audit-docs → Section 1): kabul, ❓ bölme/
-    sıkıştırma sorusu sorulduktan SONRA kullanıcının erteleme/ret kararının
-    kaydıdır; serbest bir bayrak değildir. Script bunu zorlayamaz, ama
-    --reason'ı zorunlu tutarak kaydın gerekçesiz kalmasını engeller.
+    Giriş koşulu doküman kuralıdır ve tek evi `lib/audit-mekanik.md` → Boyut
+    kırmızı-çizgisi'dir (giriş yolları orada sayılır). Ortak yan: kabul,
+    serbest bir bayrak değil
+    KULLANICININ KARARININ kaydıdır. Script bunu zorlayamaz, ama --reason'ı
+    zorunlu tutarak kaydın gerekçesiz kalmasını engeller.
+
+    Aşağıdaki eşik kontrolü bir yan etki değil, o kuralın uygulama sırasını
+    dayatır: uygulanmış bir bölme geri alınmadan bu komut çağrılırsa doküman
+    hâlâ eşiğin altındadır ve kabul reddedilir — önce geri al, sonra kaydet.
     """
     path = norm(args.path)
     row = conn.execute("SELECT exclude FROM docs WHERE path=?", (path,)).fetchone()
@@ -773,11 +1151,28 @@ def cmd_unaccept_size(conn, root, args):
 def cmd_status(conn, root, args):
     print("Konvansiyon versiyonu: %d" % current_version(conn))
     print("Toplam doküman: %d" % conn.execute("SELECT COUNT(*) FROM docs").fetchone()[0])
-    for status, n in conn.execute(
-            "SELECT status, COUNT(*) FROM docs WHERE exclude=0 GROUP BY status ORDER BY status"):
-        print("  %-12s %d" % (status, n))
+    # Sayaçlar ÜYELİĞE göre bölünür: `next`/`scan` üye olmayan satırı hiç görmez,
+    # bu yüzden onları canlı kuyruk sayacında göstermek `status`'u yalancı yapardı
+    # (aşağıdaki `accepted` yorumuyla aynı ilke: iki çıktı birbirini yalanlamamalı).
+    # Üye olmayan satır sessizce kaybolmaz da — kendi borç satırında görünür.
+    members = set(iter_doc_paths(root))
+    live, orphan = {}, []
+    for path, status in conn.execute("SELECT path,status FROM docs WHERE exclude=0"):
+        if path in members:
+            live[status] = live.get(status, 0) + 1
+        else:
+            orphan.append(path)
+    for status in sorted(live):
+        print("  %-12s %d" % (status, live[status]))
     print("  excluded     %d" % conn.execute(
         "SELECT COUNT(*) FROM docs WHERE exclude=1").fetchone()[0])
+    # BORÇ satırı: diskte duruyor ama izlenen kümede değil (parent olmaktan çıkmış
+    # `.claude/CLAUDE.md`). Kuyruğa girmez, geçmişi durur; `reconcile` her koşuda
+    # uyarır. Sıfırsa basılmaz — gürültü yapmasın.
+    if orphan:
+        print("  üye değil    %d" % len(orphan))
+        for p in orphan:
+            print("     ~ %s  (izlenen kümede yok; `reconcile` gerekçeyi yazar)" % p)
     # `accepted` de `excluded` gibi bir BORÇ kalemidir, iş listesi değil: doküman
     # kırmızı çizginin üstünde durmaya devam eder, yalnız acil kulvarı kapalıdır.
     # Farkı — excluded'ın drift'i sessizdir, accepted uygunluk denetimi almaya

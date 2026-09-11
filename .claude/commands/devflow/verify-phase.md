@@ -22,6 +22,7 @@ CLAUDE.md'deki Oturum Başlangıç Protokolü'nü uygula (çekirdek dokümanlar 
 - Bu fazın task dokümanları → faz dokümanındaki task listesinden task numaralarını al, `_dev/tasks/` ve `_dev/tasks/archive/` klasörlerinde `TASK-N.*` dosyalarını oku
 - `_dev/BULGULAR.md` → Adım 1 süpürmesi ve Adım 6 çözüm teyidi için oku (varsa; yoksa atla): bu fazın kapsamına dokunan Gelen Kutusu notları + işaretsiz açık bulgular + bu fazla ilişkili işaretli bulgular
 - Fazın modül dokümanları → MODULE-MAP.md'den bu fazın feature'larına bak, ilgili `_dev/modules/MX-*.md` dosyalarını oku (kabul kriterleri ve edge case'ler için)
+- `_dev/tasks/TASKS-README.md` → **Adım 7 düzeltme task'ı açacaksa oku:** Durum Kodları'nın ve numara **biçiminin** kaynağı orasıdır (`templates/TASK.md`'nin `**Durum:**` KURAL'ı oraya işaret eder). Protokolün bu dosyayı okutan maddesi **koşulludur** (*Aktif task varsa*) — koşul tutmazsa dosya bağlamda olmaz.
 
 ---
 
@@ -42,20 +43,7 @@ CI/CD workflow'larının güncel durumunu kontrol et — yalnız bu fazın commi
 Projede çalışan otomatik araçların (bağımlılık tarayıcı, security scanner, code quality bot vb.) çıktılarını gözden geçir. Uyarı, öneri veya açılmış PR varsa not al. Projede hangi araç kullanılıyorsa onu tespit et ve sonuçlarına bak.
 
 **c) Güvenlik taraması:**
-Bu fazın değişikliklerini güvenlik merceğiyle kendin tara. Önce faz-penceresi diff'ini çıkar (N = bu komutun faz numarası — `[N]` parametresi, verilmediyse DURUM.md'deki aktif faz):
-
-```bash
-N=<faz no>; PREV=$((N-1))
-ANCHOR=$(git log --format='%H %s' | grep -E -m1 "^[0-9a-f]+ docs\(phase-$PREV\): review" | cut -d' ' -f1)
-FIRST=$(git log --reverse --format='%H %s' | grep -E -m1 "^[0-9a-f]+ [a-z]+\((phase-$N\):|TASK-$N\.)" | cut -d' ' -f1)
-if   [ -n "$ANCHOR" ]; then RANGE="$ANCHOR..HEAD"   # birincil çapa: önceki fazın review'u → HEAD (aradaki quick commit'ler dahil)
-elif [ -n "$FIRST"  ]; then RANGE="$FIRST^..HEAD"   # fallback: fazın ilk commit'inin parent'ı (Faz 1 / önceki faz review'suz)
-else RANGE=""; echo "Hiç faz commit'i bulunamadı"   # dur: taramayı yapma, durumu kullanıcıya bildir
-fi
-[ -n "$RANGE" ] && git diff "$RANGE"
-```
-
-N'yi faz numarasıyla doldur, bloğun kalanını aynen çalıştır; tırnaklara ve kalıplara dokunma — çift tırnak `$N`/`$PREV` açılımı için gerekli, `\):` / `\.` guard'ları çift-haneli numaralarda (phase-1 ↔ phase-11, TASK-1. ↔ TASK-11.) yanlış eşleşmeyi önler. Çapa bilinçli olarak tam `phase-(N-1)` review'unu hedefler; "en son herhangi-faz review'u" gibi gevşek bir çapaya çevirme — düzeltme task'ları sonrası yeniden çalıştırmada pencereyi daraltır. Bu tarifte çapa sabit kalır, yeni fix commit'leri pencereye kendiliğinden girer. "Hiç faz commit'i bulunamadı" çıktısı görürsen dur ve durumu kullanıcıya bildir (muhtemel neden: yanlış faz numarası ya da konvansiyon-dışı commit geçmişi); yanıtına göre ilerle — faz numarası yanlışsa doğrusuyla yeniden dene, geçmiş konvansiyon-dışıysa kullanıcı onayıyla 1c'siz devam et.
+Bu fazın değişikliklerini güvenlik merceğiyle kendin tara. Önce **faz-penceresi diff'ini** çıkar — tarifi tek evdedir: **`.claude/commands/devflow/lib/faz-penceresi.md`'yi Read ile oku** (çağrı başına bir kez) ve bloğu orada yazıldığı gibi çalıştır. Ayrı dosyadır çünkü iki çağıranı vardır (bu adım + `review-phase` Adım 3) ve her çağıranın kendisi tek Read çağrısına sığmalıdır (kanon: CLAUDE.md → Boyut ve Bölünme). Çapanın gerekçesi, kalıp guard'ları ve `Hiç faz commit'i bulunamadı` dalı orada yazılıdır.
 
 Diff'i şu mercekle incele: injection (SQL / command / path traversal), auth/yetkilendirme atlaması, hardcoded secret, veri sızıntısı ve hassas veri loglama. Yalnız emin olduğun somut bulguları raporla — teorik/style bulgu yok. Sistem-seviyesi bak: tek başına güvenli görünen task değişiklikleri faz boyunca birikip etkileşime girince açık yaratabilir.
 
@@ -75,7 +63,7 @@ CI ciddi düzeyde başarısız olsa bile UAT'ye devam edilir; CI fix'i Adım 7'd
 Şu kaynaklardan test senaryoları oluştur:
 
 **a) Milestone kriterlerinden:**
-Milestone'daki her kriter = en az bir test senaryosu. Cümlenin **altındaki not satırları kriterin parçasıdır**: `mekanizma: X → Y (araştırma kararı)` varsa senaryo Y'yi sınar, X'i değil (kaynak: `research-phase` Adım 4) — 2c'deki bayat-kriter ölçüsünün milestone tarafındaki karşılığı.
+Milestone'daki her kriter = en az bir test senaryosu. Cümlenin **altındaki not satırları kriterin parçasıdır**: `mekanizma: X → Y (araştırma/kapsam kararı)` varsa senaryo Y'yi sınar, X'i değil (kaynak: `research-phase` Adım 4 / `discuss-phase` Adım 6) — 2c'deki bayat-kriter ölçüsünün milestone tarafındaki karşılığı.
 
 **b) Kapsam tartışmasındaki kararlardan:**
 Kullanıcının aldığı her karar doğrulanabilir bir senaryoya dönüşür — ama **önce kararın türüne bak**: işi bu turun dışına çıkaran bir **tercih** senaryo doğurmaz, bir **iddia** ise senaryo iddiayı sınar; ayrımın ölçüsü ve kriterle kesiştiği hâl 2c'dedir, burada tekrarlanmaz.
@@ -90,9 +78,9 @@ Task dokümanlarında belirtilen edge case'ler
 Bu fazda yaptıklarımızı kırmaya çalışan senaryolar. Faz bazlı bakış: "Bu fazda yaptıklarımızı kırmaya çalışsam ne olur?" Beklenmeyen girdiler, yetki dışı erişim denemeleri, hata durumları ve kurtarma, sınır değerleri. Checklist değil — fazın doğasına göre hangi adversarial senaryolar öne çıkıyorsa onları düşün.
 
 **f) QUALITY.md eksenlerinden:**
-QUALITY.md'deki değerlendirme eksenlerini sistematik gözden geçir; fazın doğasına göre hangileri bu faza dokunuyorsa kapsayan senaryolar üret — özellikle güvenlik dışı eksenler (performans, test kapsamı, bakım/sürdürülebilirlik, erişilebilirlik vb.). Bu (e)'deki adversarial bakışı ve Adım 1c'deki güvenlik taramasını **tekrarlamaz, tamamlar**: onların kapsamadığı kalite eksenlerinin UAT'de sistematik karşılığını verir.
+QUALITY.md'deki değerlendirme eksenlerini sistematik gözden geçir; fazın doğasına göre hangileri bu faza dokunuyorsa kapsayan senaryolar üret — özellikle güvenlik dışı eksenler (performans, test kapsamı, bakım/sürdürülebilirlik, erişilebilirlik vb.). Bu (e)'deki adversarial bakışı ve Adım 1c'deki güvenlik taramasını **tekrarlamaz, tamamlar**: onların kapsamadığı kalite eksenlerinin UAT'de sistematik karşılığını verir. **Bir eksenin notunu fazın kayıtlı bir kararı geçersizleştirdiyse senaryo karara göre yazılır** — bayat eksen notundan ❌ üretme (ölçü 2c'dedir, burada tekrarlanmaz). Bu eksen özellikle risklidir: QUALITY'nin hizalaması **faz kapanışına** ertelenmiştir (`review-phase` Adım 5c) — yani verify anında eksen notu, fazın kararı onu geçersizleştirdiyse tanımı gereği henüz eskidir. (Modül gövdesi de aynı fazda hizalanır, Adım 6'da; ayrım eve dairdir, sıraya değil.)
 
-**Ölçüm nesnesi üründür.** Yukarıdaki kaynaklar ürünün davranışını sınayan senaryolar üretir; fazın **kendi kayıt katmanı** (task/faz dokümanları, DURUM, BULGULAR ve önceki koşumların çıktıları) senaryo konusu değildir — ikiz sınırın öbür yarısı audit-docs'ta zaten yazılı ("kod kalitesi ve ürün davranışı audit-docs'un kapsamı dışı; faz penceresinde onlar için verify-phase"). Bu, kod-satırı-sıfır bir düzeltmeyi körleştirmez: kriter ürünün **davranışına** bakıyorsa senaryo olur, düzeltmenin kendi **kaydına** bakıyorsa olmaz. Kayıtta gördüğün kusuru da düşürme — evi Adım 7 triyajıdır (kapsam-dışı → BULGULAR Gelen Kutusu); Adım 1 süpürmesi ve Adım 6 çözüm teyidi bu cümleden etkilenmez, onlar kanvas rotasının kendisidir.
+**Ölçüm nesnesi üründür.** Yukarıdaki kaynaklar ürünün davranışını sınayan senaryolar üretir; fazın **kendi kayıt katmanı** (task/faz dokümanları, DURUM, BULGULAR ve önceki koşumların çıktıları) senaryo konusu değildir — ikiz sınırın öbür yarısı audit tarafında zaten yazılı (`lib/audit-kurallar.md` → Kod kalitesi ve ürün davranışı: kapsam dışı, faz penceresinde onlar için verify-phase). Bu, kod-satırı-sıfır bir düzeltmeyi körleştirmez: kriter ürünün **davranışına** bakıyorsa senaryo olur, düzeltmenin kendi **kaydına** bakıyorsa olmaz. Kayıtta gördüğün kusuru da düşürme — evi Adım 7 triyajıdır (kapsam-dışı → BULGULAR Gelen Kutusu); Adım 1 süpürmesi ve Adım 6 çözüm teyidi bu cümleden etkilenmez, onlar kanvas rotasının kendisidir.
 
 **Milestone'u cümle cümle tara** — senaryo doğurmayan bir kriteri "test edilecek bir şey gibi durmuyor" diye sessizce atlama. Kriter fazın kendi kayıt katmanına bakıyorsa (pratik ayraç `_dev/`: oradaki doküman fazın kaydıdır, ürün ağacındaki doküman üründür — örn. bulgu fazında "faza alınan bulguların hepsi kapandı", "PHASE-N eşiğin altına iner") ondan senaryo doğmaması eksiklik değildir. Ama **kriter düşmez, evi değişir**: kapanışta ölçülür — review-phase Adım 2'nin milestone kontrolü, kuralın review tarafındaki evi. Fazın bulgu kayıtları ayrıca Adım 1 + Adım 6 rotasında yürür; boyut tipi bir kriterin **ölçüm anı** ise review-phase Adım 5b'dir, Adım 2 değil (faz dokümanı son hâlini Adım 5'te alır).
 
@@ -117,6 +105,13 @@ Test senaryolarını hemen faz dokümanına (`_dev/phases/PHASE-N.md`) yaz — s
 
 Bu erken yazım, context dolması gibi olağan dışı durumlarda senaryoların kaybolmasını önler.
 
+**Dolu bir tablo bulursan sıfırdan kurma — devral.** İki hâl vardır; hangisinde olduğunu **aradaki turda düzeltme task'ı koşup koşmadığı** söyler:
+
+- **Kesilen koşumun sürdürülmesi** (context doldu, oturum çöktü, kurtarma turu): satırlar **ve sonuçları** olduğu gibi kalır, boş (⬜) satırlardan sürdürülür — yeniden kurmak ölçülmüş sonuçları sessizce siler, erken yazımın koruduğu şey budur.
+- **Düzeltme task'larından sonraki yeniden koşum** (Adım 10): kontroller **baştan** yapılır. **Sonuç** ⬜'ye döner · **Geçen/Kalan** `—` olur, **Toplam korunur** (küme değiştiyse yeniden sayılır) · **Not**'ta yalnız `→ TASK-X.YY` kalır (Adım 7'nin evi); önceki turun sorun açıklaması ve 5b'nin `kontrol:`/`ters-çevirme:` kanıt notları **silinir** — kanıt o turun ölçümüne bağlıdır, bayatını taşımak 5b'nin "kanıt notu olmayan yokluk-iddialı satır ✅ sayılmaz" hükmünü deler. Yenileri Adım 6'da yazılır.
+
+Her iki hâlde de küme değiştiyse eksik senaryoyu **ekle**, mevcut satırları yeniden numaralandırma.
+
 ### 4. Test Modunu Sor
 
 Senaryoları kullanıcıya göster ve test modunu sor:
@@ -130,7 +125,13 @@ Nasıl ilerleyelim?
      yapamadıklarım için sana sorarım
 ```
 
-Kullanıcının tercihine göre Adım 5a veya 5b ile devam et.
+**Mod önceden verilmiş olabilir.** Orkestratörlü koşumda (`run-phase`) mod **`otonom`** varsayılanıyla gelir — o koşumun tanımı gereği; kullanıcı tur talimatında aksini demedikçe menü basılmaz. Araç/ortam envanteri MEMORY'den okunur, eksikse koşum açılışında bir kez sorulmuş olarak brief'te gelir. Envanterde **kapı düşmez, anı değişir**; modda **seçim sorulmaz, varsayılana bağlanır** — aşağıdaki "Kolu yine kullanıcı seçer" hükmü bu koşumda da doğrudur, seçim yalnız daha erken yapılmıştır. İki teşhis atlanmaz: envanter yine MEMORY'ye yazılır, ve otonom kolda **yeşille kapanmayacak** senaryolar adıyla bildirilir — kanalları yok sayılmaz, o turun raporuyla kullanıcıya ulaşır.
+
+**Menüyü envanterle kur, örnekle değil.** (b)'de sayacağın araçlar **projede gerçekten kurulu** olanlardır — envanter MEMORY → "Ortam & Araç Notları"ndadır (`audit-product` Adım 2 ile aynı ev); orada yoksa kullanıcıya sor, var saymayla araç adı yazma — **ve cevabı oraya yaz**, yoksa aynı soru her fazın verify'ında yeniden sorulur ve o evin "tek seferlik" vaadi bu kulvarda geçersiz kalır. Yazarken kanca disiplinini gözet (zemin bilgisi sınıf A: değerin kendisi, kısa; gövde gerekiyorsa `_dev/memory/<slug>.md` atomuna iner, index'te tek pointer kalır) — **yazmadan önce `.claude/commands/devflow/lib/memory-sistemi.md`'yi Read et**; supap turu bu komutun işi değildir (aynı muafiyet: `audit-product` Adım 2). Aynı yerde senaryoların **sorumlu katmanına** bak: bir senaryonun sonucunu belirleyen katman (gerçek tarayıcı yerleşimi/odağı/girdisi, canlı serving zinciri, gerçek cihaz/saat/ağ) o araçların ölçtüğü katmanın **dışında** kalıyorsa — research'in "Dikkat Edilecekler"inde kayıtlıysa oradan okunur, task kriterinde `kanal: UAT` işareti varsa oradan — bunu (b)'nin yanında **adıyla** söyle: o sınıf otonom kolda **yeşille kapanmaz**, kanıtını Adım 5b'nin merdiveni kurar. Kullanıcıya söylerken **davranışı** anlat, katman terimini değil — "sürükleme sonrası odak gerçek tarayıcı ister, onu sana soracağım" (Prensip #13). **Ölçüt "mock var mı" değildir:** ikame katman senaryonun sonucunu belirleyen katmanı **içeriyorsa** ölçüm geçerlidir — in-process bir sunucuyla route mantığı ölçülür, aynı kurulumla önündeki proxy'nin kuralı ölçülmez. Kolu yine kullanıcı seçer; senin işin hangi senaryonun hangi kolda kapanabileceğini söylemektir.
+
+*(Turların sayısını belirleyen şey fazın konusu değil bu ölçüdür: sorumlu katmanı dışarıda kalan senaryolar ilk turda otonom kapatılırsa tablo yeşil çıkar, kusurlar bir sonraki turda görünür ve faz düzeltme task'ı + ikinci tura düşer. Ölçünün kendisi fazın işiyse yeri burası değil `research-phase` Adım 3'tür — "o katmanı ölçen araç bu fazda kurulsun mu" sorusu orada karara bağlanır.)*
+
+Kullanıcının tercihine — orkestratörlü koşumda brief'te verilen kola — göre Adım 5a veya 5b ile devam et.
 
 ### 5a. Manuel Test
 
@@ -173,10 +174,10 @@ Her senaryoyu otonom olarak çalıştırmaya çalış:
 
 **Akış:**
 1. Her senaryoyu sırayla al
-2. Otonom çalıştırılabiliyorsa çalıştır, sonucu kaydet. **Otonom kolda probe'u yazan da yargılayan da sensin** (5a'da hakem kullanıcıdır): bir şeyin *olmadığını/engellendiğini* iddia eden senaryo — kapı, yetki, "sızıntı yok", "erişilemiyor" — yalnız yeşil olduğu için kanıtlanmış sayılmaz. ✅ yazmadan önce yeşili sına:
-   - **Kontrol koş.** Aynı yolla **başarması gereken** bir çağrı yap ve başardığını gör (denetimdeki "boş grep tek başına kanıt değildir" ilkesinin UAT karşılığı). Kontrolü UAT tablosunun `Not` sütununa yaz — `kontrol: <ne koşuldu> → <görülen sonuç>` (örn. `kontrol: geçerli token'la aynı uç → 200`); **kanıt notu olmayan yokluk-iddialı satır ✅ sayılmaz** — bu hüküm aşağıdaki dallar için de geçerlidir.
+2. Otonom çalıştırılabiliyorsa çalıştır, sonucu kaydet. **Otonom kolda probe'u yazan da yargılayan da sensin** (5a'da hakem kullanıcıdır): bir şeyin *olmadığını/engellendiğini* iddia eden senaryo — kapı, yetki, "sızıntı yok", "erişilemiyor" — yalnız yeşil olduğu için kanıtlanmış sayılmaz. **İkinci hâl sorumlu katmandır:** senaryonun sonucunu belirleyen katman probe'un koştuğu katmanın **dışındaysa** (Adım 4'te işaretlediysen o sınıf; işaretlemediysen burada görürsün) oradaki yeşil o katman hakkında hiçbir bilgi taşımaz — bu hâlde iddianın olumlu ya da olumsuz olması fark etmez. Ölçü `run-task` Adım 3'ünkiyle aynıdır: bozukluk **kusurun gerçekte oluşacağı yerde** yaratılır, yanlış katmanı okuyan kapıya kırmızı hiç gelmez. ✅ yazmadan önce yeşili sına:
+   - **Kontrol koş.** Aynı yolla **başarması gereken** bir çağrı yap ve başardığını gör (denetimdeki "boş grep tek başına kanıt değildir" ilkesinin UAT karşılığı). Kontrolü UAT tablosunun `Not` sütununa yaz — `kontrol: <ne koşuldu> → <görülen sonuç>` (örn. `kontrol: geçerli token'la aynı uç → 200`); **kanıt notu olmayan yokluk-iddialı satır ✅ sayılmaz** — bu hüküm aşağıdaki dallar için de geçerlidir. **Kontrol koşumu ikinci hâli delmez** — kontrol de aynı katmanda koşar, yani sorumlu katman dışarıdaysa yeşili de kırmızısı da bilgi taşımaz; o hâlde doğrudan bir alt basamağa geç.
    - **Kontrol başarması gerekirken o da engelleniyor/boş dönüyorsa** probe sistemi hiç sürmüyordur: sonuç ✅ değil **❌ (doğrulanamadı: test sürmüyor)** — bulgu üründe değil testtedir, olağan Adım 7 rotasına girer.
-   - **Kontrol kurulamıyorsa** bir üst basamak, korunan kararı **saf karar noktasında** geçici ters çevirip kırmızıyı görmektir — yalnız **geri alınabilir ve iz bırakmayan** yerde: kalıcı yan etkili hiçbir noktaya (append-only kayıt/tablo, dış servis çağrısı, migration), **ortam/serving katmanına** (geri alma git'le yapılamaz) ve **prod'a** dokunulmaz. Ters çevirme ile geri alma **aynı adımda kapanır**; 5b'den çıkmadan `git status` ile ağacın sınama öncesi hâline döndüğünü teyit et. İzi `Not` sütununa yaz (`ters-çevirme: <ne kapatıldı> → <görülen kırmızı> → geri alındı`). Bu geçici sınama düzeltme değil **kanıttır**, "bu oturumda kod düzeltme yapılmaz" kuralını delmez.
+   - **Kontrol kurulamıyorsa — ya da kurulup geçtiği hâlde senaryonun sorumlu katmanına hiç dokunmuyorsa** — bir üst basamak, korunan kararı — ikinci hâlde senaryonun dayandığı davranışı — **saf karar noktasında** geçici ters çevirip kırmızıyı görmektir — yalnız **geri alınabilir ve iz bırakmayan** yerde: kalıcı yan etkili hiçbir noktaya (append-only kayıt/tablo, dış servis çağrısı, migration), **ortam/serving katmanına** (geri alma git'le yapılamaz) ve **prod'a** dokunulmaz. Ters çevirme ile geri alma **aynı adımda kapanır**; 5b'den çıkmadan `git status` ile ağacın sınama öncesi hâline döndüğünü teyit et. İzi `Not` sütununa yaz (`ters-çevirme: <ne kapatıldı> → <görülen kırmızı> → geri alındı`). Bu geçici sınama düzeltme değil **kanıttır**, "bu oturumda kod düzeltme yapılmaz" kuralını delmez. **Ters çevirmede kırmızı gelmiyorsa** probe o katmanı hiç görmüyordur: ✅ yazma, senaryoyu 3. maddeye düşür (manuel kol); kullanıcı da doğrulayamıyorsa sonuç **❌ (doğrulanamadı: probe kör)**. Kör probe'un kendisi ayrıca **bulgudur** — hiç kırmızı üretemeyen test yeşil görünür ama hiçbir şey ölçmez (`run-task` Adım 3 → boş kapsam); senaryo manuel kolda geçse bile onu Adım 7 triyajına taşı.
    - **İkisi de kurulamıyorsa** senaryo otonom kolda kapanmaz: ✅ yazma, 3. maddeye düşür (kullanıcıya manuel doğrulat). Kullanıcı da doğrulayamıyorsa sonuç **❌ (doğrulanamadı: kanıt kurulamadı)**
 3. Otonom çalıştırılamıyorsa kullanıcıya sor: ne yapması gerektiğini açıkla, sonucu al. Sonuç kısmiyse (otonom koşum da dahil) 5a'daki kural aynen geçerlidir: tabloda **iki ayrı satır**, "Kısmen" diye bir sonuç yoktur
 4. Başarısız senaryolar için kök neden analizi yap ve not al (düzeltme task'ı Adım 7'de oluşturulacak). **`doğrulanamadı` sonuçları bu maddeyi tetiklemez** — süpürülecek ürün sınıfı yoktur, önce kanıt/probe kurulur; sınıf sorusu onarım sonrası turda sorulur. **Adversarial/güvenlik senaryosu kaldıysa sınıfı süpür** — bulgu bir sınıfın ilk örneğidir: sınıfı türet, varyasyon eksenlerini (encoding türevleri, HTTP-metot yüzeyi, üretim-vs-serve tarafı — örnektir, sınır değil) aynı turda koş, türetilen varyantları UAT tablosuna satır olarak ekle (kapsam fazın penceresi; Adım 3'ün erken yazımı tur ortasında da geçerli)
@@ -210,12 +211,12 @@ Ayrıca Adım 1'de bulunan otomatik kontrol bulgularını da kayda al (kısa öz
 
 **Bulgu çözüm teyidi (BULGULAR varsa):** Bu fazla ilişkili işaretli bulguların (`→ Faz N` / `→ TASK-X.YY`) düzeltmesi bu fazda yapılmış ve ilgili senaryo/kontrol ✅ geçtiyse çözüm teyit edilmiştir — senaryo/kontrol doğmayan (kod-satırı-sıfır) düzeltmede teyit kanıtı task arşivi/commit'tir (BULGULAR kuralı: "Çözüm teyidi kanıt ister"). Teyitliyse: atomun Çözüm Kaydı'nı doldur, Durum'unu `✅ Çözüldü` yap, atomu `bulgular/archive/`e taşı, index satırını sil (BULGULAR kuralı). Teyit edilemeyen işaretli bulgu olduğu gibi bekler. Çözüm Kaydı **kapanış kapsamıyla** yazılır (BULGULAR kuralı): bulgunun sınıfından sayılmamış bir yüzey kaldıysa onu kayda yaz ve **Adım 7 triyajına taşı** — arşiv donuktur, orada bırakılan kalan iş kimseye görünmez.
 
-### 6b. Faz Dokümanı Boyut Kontrolü (önleyici bölme)
+### 6b. Faz Dokümanı Boyut Kontrolü (kırmızı çizgi kapısı)
 
 UAT senaryoları + sonuçları eklendiği için faz dokümanı bu oturumda büyüdü. Faz **hâlâ aktifken** tek-okuma sınırını koru (detay: CLAUDE.md → Doküman Disiplini → Boyut ve Bölünme):
 
-- `bash .claude/commands/devflow/scripts/doc-scan.sh _dev/phases/PHASE-N.md` çalıştır. Kırmızı çizgiye (~20k token) yaklaştıysa/aştıysa CLAUDE.md → Boyut ve Bölünme'ye göre teşhis + çöz: **gerçek büyüme** (UAT yığını / araştırma detayı) → `PHASE-N-<EK>.md`'ye böl; **şişme** (icra detayı veya çalışma notu Task Listesi'ne sızmışsa — doğru ev `tasks/TASK-N.md`) → temizle.
-- Yapısal bölme/temizlik **kullanıcıya önerilir, onayla uygulanır** — mekanik auto-split değil. Faz tamamlanınca (review ✅) bu pencere kapanır; eşik aşımı varsa şimdi çöz. Bu bir doküman-hijyen adımıdır — kaynak kodu/test davranışını değiştirmez, "bu oturumda kod düzeltme yapılmaz" kuralıyla çelişmez.
+- **Tarif tek evdedir — `.claude/commands/devflow/lib/boyut-kapisi.md`'yi Read ile oku ve izle** (çağrı başına bir kez): ölçüm komutu, üçlü teşhis, kulvar (Onay Ölçütü — kurallı kesim sorulmaz, uygulanır ve raporlanır), ikili kayıt (KURAL yorumu + `accept-size`) ve iki özel hâl (eşik altı · canvas yok) orada tanımlıdır, burada tekrarlanmaz.
+- **Bu adıma özgü olan:** bu oturumda büyüten şey UAT senaryoları + sonuçlarıdır; şişme hâlinde tipik kaynak, icra detayının ya da çalışma notunun Task Listesi'ne sızmasıdır (doğru ev `tasks/TASK-N.md`). **`accept-size` bu adımda çağrılmaz** — Adım 9'un ilk işidir; Adım 7 düzeltme task'ı çıkarırsa bu dokümana hem `→ TASK-X.YY` işaretini hem Task Listesi satırını daha yazacaktır. Bu bir doküman-hijyen adımıdır — kaynak kodu/test davranışını değiştirmez, "bu oturumda kod düzeltme yapılmaz" kuralıyla çelişmez.
 
 ### 7. Düzeltme Task'ları (Varsa)
 
@@ -229,7 +230,11 @@ UAT senaryoları + sonuçları eklendiği için faz dokümanı bu oturumda büy�
 - **Kapsam-içi** → düzeltme task'ı (aşağıda). Başarısız UAT senaryoları ve 1c faz-penceresi bulguları tanım gereği kapsam-içidir; **CI failure da her zaman kapsam-içidir** — kırmızı CI repo sağlığıdır, kaynağı hangi faz olursa olsun ertelenmez.
 - **Kapsam-dışı** (fazın milestone kriterlerine, UAT senaryolarına veya faz-penceresi diff'ine dokunmuyor — örn. başka fazdan kalma bot önerisi/uyarısı) → task AÇMA, fazı bekletme: `_dev/BULGULAR.md` Gelen Kutusu'na kaynak işaretli tek satır düş (`- [PHASE-N] ...`; kural → CLAUDE.md "Gördüğün sorunu düşürme") ve Adım 10 raporunda belirt. Düşürmeden önce kanvasa bak: aynı bulgu zaten kayıtlıysa (önceki koşumun kutu satırı ya da mevcut bulgu atomu) yeni satır düşme — yeniden-koşumlar çift kayıt üretmesin, mevcut kaydı raporda an. Bulgu kaybolmaz — kutu notunu audit-product uzlaştırması triyaj eder (atomlaşırsa bulgu fazına girebilir), kapsamına dokunan sonraki fazın verify süpürmesi devralır; faz temiz kapanır.
 
+**`doğrulanamadı` kaleminde triyaj kanıtın nerede eksik olduğuna bakar.** Eksik olan bu fazın kendi probe'uysa (yanlış katmanda kurulmuş, kör kalmış) kapsam-içidir → düzeltme task'ı. O katmanı ölçen araç projede **hiç yoksa** ve kullanıcı da doğrulayamıyorsa eksik fazın değil projenin altyapısındadır → kapsam-dışıdır, Gelen Kutusu'na düşer ve faz onun için bekletilmez. Senaryo yine de düşmez: etkilediği milestone kriteri review-phase Adım 2'nin kapanış-notu rotasına girer. Aynı ayrım 5b'den gelen **kör probe** kalemi için de geçerlidir — senaryo manuel kolda geçmiş olsa bile.
+
 **Task oluştururken — önce oku:** `.claude/commands/devflow/templates/TASK.md`
+
+**Numara = faz içindeki en büyük YY + 1, `_dev/tasks/archive/` dahil sayılır** (kural evi `plan-phase`; burada tekrarlanmasının nedeni numaranın **bu adımda doğması** ve arşiv sayılmazsa çakışan iki `TASK-X.YY`'nin geri alınamaz olmasıdır — TASKS-README yalnız numaranın **biçimini** taşır, tahsisi değil).
 
 - **Evini geriye işle (Adım 6'nın açık bıraktığı halka):** task numarası burada doğduğu için Adım 6 onu yazamamıştı. Task'ı oluşturur oluşturmaz (a) UAT Sonuçları tablosunda ilgili ❌ satırının **Not sütununa** `→ TASK-X.YY` yaz; (b) **Adım 1 ya da 6'nın** bulgu çözüm teyidinde **kapsanmayan yüzey** olarak kayda geçip arşive taşınan bir kalem bu task'a bağlandıysa, **task'ın kendi Test Kriterleri'ne** işle ve kaynak bulguyu orada **numarasıyla** an (`B-0NN`) — arşiv donuktur, **index satırı ise mezuniyeti yapan adımda silinmiştir** (BULGULAR kuralı: arşiv index'te ASLA listelenmez), yani geriye yazılacak tek ev task'ın kendisidir. Bu iki işaret yazılmadan Adım 8'e geçme — aksi halde faz ❌ satırı evsiz kapanır.
 - Task dokümanını template'e uygun yaz
@@ -242,10 +247,14 @@ UAT senaryoları + sonuçları eklendiği için faz dokümanı bu oturumda büy�
 ### 8. DURUM.md Güncelle
 
 - UAT ve otomatik kontrol sonuçlarını kısa özetle
-- Düzeltme task'ları varsa: **Task Durumu (Aktif Faz)** tablosuna ⬜ olarak ekle, ilkini **Aktif Task** yap, **Adım** alanını `task` olarak güncelle (next/run-task'ın "hepsi ✅" savunma kontrolü düzeltme task'ını görebilsin diye tabloya ekleme şart)
-- Tüm kontroller geçtiyse **Adım** alanını `review` olarak güncelle (kapsam-dışı DEFER kayıtları BULGULAR'da bekler — faz kapanışını etkilemez)
+- Düzeltme task'ları varsa: **Task Durumu (Aktif Faz)** tablosuna ⬜ olarak ekle, ilkini **Aktif Task** yap, **Adım** alanını `task` olarak güncelle (`run-task`'ın "hepsi ✅" savunma kontrolü düzeltme task'ını görebilsin diye tabloya ekleme şart)
+- Tüm kontroller geçtiyse **Adım** alanını `review` olarak güncelle — Adım 7'nin **kapsam-dışı** ilan ettiği kalemler (Gelen Kutusu'na düşen bulgular ve ölçülemeyen senaryolar) BULGULAR'da sırasını bekler, faz kapanışını etkilemez
 
 ### 9. Git Commit & Push
+
+**Önce 6b'nin devrettiği boyut kabulü (varsa)** — komut ve gerekçesi `lib/boyut-kapisi.md` → "`accept-size`'ın zamanı"ndadır (6b'de zaten okundu). Yazıldıysa `_dev/.audit/canvas.tsv` aşağıdaki commit'e girer; ayrı commit atma.
+
+⚠️ **Adım 1 ya da 6 bir bulgu atomunu `bulgular/archive/`'e taşıdıysa: taşıma düz `mv`'dir (`git mv` değil) ve commit'e ESKİ yolu da stage et** — silme index'e kendiliğinden yazılmaz; yalnız yeni yolu stage edersen HEAD'de iki kopya kalır ve silme kalıcı olarak stage'siz görünür (kanon: CLAUDE.md → Paralel Oturum Farkındalığı).
 
 Tüm doküman değişikliklerini commit & push yap:
 ```
@@ -257,19 +266,28 @@ docs(phase-N): UAT — user acceptance testing completed
 **Tüm kontroller geçtiyse:**
 ```
 ✅ Verify-phase tamamlandı. Otomatik kontroller ve UAT'den geçildi.
-(varsa) 📥 X kapsam-dışı bulgu BULGULAR Gelen Kutusu'na düşüldü — faz kapanışını etkilemez.
+(varsa) 🔍 X senaryo ölçülemedi ([hangileri]) — o katmanı ölçen araç projede yok; faz kapanışını etkilemez.
+(varsa) 📥 X kapsam-dışı sorun kaydedildi ([tek satırla ne oldukları]) — faz kapanışını etkilemez, sıraları geldiğinde ele alınır.
 📋 Sıradaki adım: /devflow:review-phase
    → Faz review ve retrospektif için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
 
 **Düzeltme task'ları varsa:**
 ```
 ⚠️ Verify-phase tamamlandı. Otomatik kontroller ve UAT'den X bulgu — Y düzeltme task'ı oluşturuldu.
-(varsa) 📥 Z kapsam-dışı bulgu BULGULAR Gelen Kutusu'na düşüldü — faz kapanışını etkilemez.
+(varsa) 📥 Z kapsam-dışı sorun kaydedildi ([tek satırla ne oldukları]) — faz kapanışını etkilemez, sıraları geldiğinde ele alınır.
 📋 Sıradaki adım: /devflow:run-task
    → Düzeltme task'larını çalıştırmak için yeni bir oturum başlat.
    → Düzeltmeler tamamlandıktan sonra **/devflow:verify-phase yeniden çalıştırılır** — bütün kontroller (otomatik + UAT) baştan yapılır, sadece daha önce başarısız olanlar değil.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satır iki dalda da yazılır; kuralı, önekleri (`engel:` / `önerilir:`) ve ambleminin hesabı **CLAUDE.md → Oturum Kapanışı**'dadır. Engelleyen bir kalem varsa `📋` satırı yukarıdaki komut değil, o işi yapan komut olur (kanonun terfi kuralı).
+
+**`🔍` satırı atlanamaz — "geçildi" tek başına yalan söyler.** Adım 7 bir `doğrulanamadı` kalemini kapsam-dışı ilan ettiğinde (o katmanı ölçen araç projede hiç yok) senaryo UAT tablosunda **`❌ doğrulanamadı` olarak durur** ve düzeltme task'ı doğurmaz — yani ilk dal seçilir. Ama o dalın açılış cümlesi "Otomatik kontroller ve UAT'den geçildi" der; ölçülememiş bir senaryo varken bu cümle tek başına kalırsa faz, sınanmamış bir yüzeyi sınanmış gibi kapanır. Sayı ve hangileri oldukları `🔍` satırında görünür kalır; ölçüm boşluğunun kendisi kanvasa `📥` ile ayrıca düşmüştür (Adım 7) ve kriteri etkiliyorsa review-phase Adım 2'nin kapanış-notu rotasına girer.
+
+**Adım 7'nin kapsam-dışı bulguları bu satıra girmez** — evleri BULGULAR'dır, sayıları da `📥` satırında zaten duruyor; satıra ikinci kez yazmak aynı işi iki yerde gösterir. Satırın kaynağı **kanvasın devralmadığı** işlerdir: kullanıcı-tarafı bir hamle, taze oturum isteyen bir denetim önerisi, ya da bu oturumda dile getirilmiş ama yapılamamış bir iş.
 
 ---
 

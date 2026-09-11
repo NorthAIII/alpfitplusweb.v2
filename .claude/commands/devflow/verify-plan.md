@@ -55,7 +55,7 @@ Her task dokümanını şu açılardan kontrol et:
 **c) Yazım Kalitesi:**
 - Typo ve tutarsızlıklar
 - Alt görevler açık ve net mi?
-- Test kriterleri somut ve doğrulanabilir mi — ve task'ın **kendi oturumunda** gözlenebilir mi? ("CI yeşil olmalı" gibi sonucu ancak push'tan sonra doğan kriter geçmez; kanon: `templates/TASK.md` → Test Kriterleri KURAL'ı)
+- Test kriterleri somut ve doğrulanabilir mi — ve task'ın **kendi oturumunda** gözlenebilir mi? ("CI yeşil olmalı" gibi sonucu ancak push'tan sonra doğan kriter geçmez; kanon: `templates/TASK.md` → Test Kriterleri KURAL'ı). Kriter bir **ara-çıktıya** bağlanmışsa devredilen **kanalı yazılmış mı** — sonucu belirleyen katman yerel koşucunun ölçtüğü katmanın dışındaysa kanal Otomatik Kontroller değil `kanal: UAT`'tır (aynı KURAL; ölçüt research'in "Dikkat Edilecekler"indeki katman kaydıdır). Kanal eksikse ve katman ayrımı kayıttan okunabiliyorsa ekle (mekanik); okunamıyorsa Adım 4'e taşı.
 
 **Mekanik sorunları doğrudan düzelt.** Bunlar için kullanıcıya sormaya gerek yok — doğru cevap belli. (İstisna: referans gerçeklik-kontrolünde bulunan **çakışma** mekanik değildir — Adım 4 onay raporuna gider (bkz. Önemli Kurallar); yalnızca _dev dok reflerindeki net typo mekanik kalır. Yerelde koşulabilir karşılığı olmayan bir test kriterinin yeniden yazımı da mekanik değildir → Adım 4.)
 
@@ -66,7 +66,7 @@ Her task dokümanını şu açılardan kontrol et:
 - Milestone'daki her kriter en az bir task'la eşleşiyor mu?
 - Karşılanmayan kriter var mı?
 - Arşivdeki ✅ task'lar da kapsama sayılır — tamamlanan işi kapsam dışı sanma
-- **Milestone cümlesinin altındaki not satırlarını da oku** — `mekanizma: X → Y (araştırma kararı)` biçiminde bir satır varsa kriter Y ile karşılanır; DURUM ve PHASES'teki kopyalar bilerek özgün cümleyi taşır, oradaki X'i arayıp "karşılanmıyor" deme (kaynak: `research-phase` Adım 4)
+- **Milestone cümlesinin altındaki not satırlarını da oku** — `mekanizma: X → Y (araştırma/kapsam kararı)` biçiminde bir satır varsa kriter Y ile karşılanır; DURUM ve PHASES'teki kopyalar bilerek özgün cümleyi taşır, oradaki X'i arayıp "karşılanmıyor" deme (kaynak: `research-phase` Adım 4 / `discuss-phase` Adım 6)
 
 **b) Gereksinim Kontrolü:**
 - MODULE-MAP'teki feature kabul kriterleri task'larla örtüşüyor mu?
@@ -131,6 +131,8 @@ Kullanıcının onayladığı yapısal değişiklikleri uygula:
 - Faz dokümanındaki task listesini güncelle (yeni/değişen task'lar)
 - Task numaralamayı düzelt (gerekirse)
 
+⚠️ **Bu adımda doğan ya da değişen her numara için: numara = faz içindeki en büyük YY + 1, `_dev/tasks/archive/` DAHİL sayılır** (kural evi `plan-phase`; arşivi Zorunlu #5'te zaten okudun — sayılmazsa çakışan iki `TASK-X.YY` geri alınamaz, ve `TASKS-README` yalnız numaranın **biçimini** taşır). Arşiv **sayılır ama değiştirilmez** (Adım 1).
+
 ### 6. DURUM.md Güncelle
 
 - **Adım** alanını `task` olarak güncelle (plan review tamamlandı, sıradaki adım task çalıştırma)
@@ -139,7 +141,7 @@ Kullanıcının onayladığı yapısal değişiklikleri uygula:
 
 ### 7. Git Commit & Push
 
-Değişiklik yapıldıysa (düzeltme veya yapısal değişiklik) commit & push yap:
+Tüm doküman değişikliklerini commit & push yap — Adım 6 her turda DURUM'u güncellediği için commit edilecek değişiklik her zaman vardır (koşullu yazılırsa sorunsuz turda faz durumu commit'siz kalır):
 ```
 docs(phase-N): verify-plan — plan review completed
 ```
@@ -151,7 +153,10 @@ docs(phase-N): verify-plan — plan review completed
    Mekanik düzeltme: Y | Yapısal değişiklik: Z
 📋 Sıradaki adım: /devflow:run-task
    → Aktif task'ı (TASK-N.XX) çalıştırmak için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder).
 
 ---
 

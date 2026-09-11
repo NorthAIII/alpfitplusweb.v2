@@ -108,9 +108,10 @@ Her task bittiğinde sırasıyla (bu sıra ATLANMAZ):
 1. **Test:** Testleri çalıştır (yoksa yaz ve çalıştır)
 2. **Task Dokümanı:** Oturum kaydı ekle, durumu ✅ yap, sonuç özetini doldur
 3. **DURUM.md ve Faz Dokümanı:** Aktif task pointer güncelle, task özeti ekle (son 2 task, eski özetleri sil). Faz dokümanındaki task tablosunda durumu güncelle.
-4. **Archive:** Task dokümanını `tasks/archive/` klasörüne taşı
-5. **Commit & Push:** Bu oturumun tüm değişikliklerini (kod + doküman) tek commit'te gönder (dosya-bazlı stage — CLAUDE.md → Paralel Oturum Farkındalığı)
-6. **Oturum Kapanır** — İkinci task'e geçilmez
+4. **MEMORY** (gerekirse): Proje genelinde geçerli beklenmedik bir tuzak/öğrenim çıktıysa `_dev/memory/<slug>.md` + `_dev/MEMORY.md` index pointer'ı (her task'ta gerekmez)
+5. **Archive:** Task dokümanını `tasks/archive/` klasörüne taşı
+6. **Commit & Push:** Bu oturumun tüm değişikliklerini (kod + doküman) tek commit'te gönder (dosya-bazlı stage — CLAUDE.md → Paralel Oturum Farkındalığı)
+7. **Oturum Kapanır** — İkinci task'e geçilmez
 
 ---
 
@@ -135,6 +136,8 @@ Her task bittiğinde sırasıyla (bu sıra ATLANMAZ):
 
 Faz döngüsü dışı tüm ad-hoc işler (bug fix, küçük feature, config değişikliği, acil düzeltme) `/devflow:quick` komutuyla yapılır ve `_dev/tasks/quick/` klasöründe izlenir. Quick task'larda commit scope'u yoktur, sadece type prefix kullanılır. Quick task'lar archive'a taşınmaz, `quick/` içinde kalır.
 
+Bir QUICK kaydı **quick oturumu başlamadan da doğabilir**: sıradaki oturumda yapılacağı kesinleşmiş bir işi başka bir oturum `⬜ Bekliyor` durumuyla hazırlar (kanon: CLAUDE.md → Oturum Kapanışı). O kayıtta yalnız "Ne Yapılacak" doludur; işi devralan ilk quick oturumu durumu ilerletir.
+
 ---
 
 ## Sorun Giderme
@@ -146,7 +149,7 @@ Faz döngüsü dışı tüm ad-hoc işler (bug fix, küçük feature, config de�
 → Dur, kullanıcıya sor. Varsayımda bulunma.
 
 **Mevcut kodu kırdım:**
-→ Sorunu önce tespit et; geri almayı **dosya bazlı** yap (`git checkout -- <dosya>`). Ağaç-geneli komutlar (`git stash`, `git checkout -- .`, `git reset --hard`) paralel çalışan başka bir oturumun işini de geri dönüşsüz siler — kullanma (CLAUDE.md → Paralel Oturum Farkındalığı). Kullanıcıya bildir.
+→ Sorunu önce tespit et; geri almayı **dosya bazlı** yap. Ağaç-geneli komutlar (`git stash`, `git checkout -- .`, `git reset --hard`) paralel çalışan başka bir oturumun işini de geri dönüşsüz siler — kullanma. ⚠️ **Dosya bazlı olması da tek başına yetmez:** `git checkout -- <dosya>` o dosyadaki commit'lenmemiş işi de siler — önce kendi işini `chore: WIP — …` ile kaydet (tam ölçüt: CLAUDE.md → Paralel Oturum Farkındalığı). Kullanıcıya bildir.
 
 **Bağımlılık eksik (API hazır değil, paket yüklü değil vb.):**
 → Task'ı bloke olarak işaretle (🔴). Kullanıcıya bildir.

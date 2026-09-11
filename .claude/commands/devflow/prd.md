@@ -144,7 +144,10 @@ docs: prd — initial PRD documents created
 ✅ İlk PRD oturumu tamamlandı. _dev/PRD/ yapısı oluşturuldu.
 📋 Sıradaki adım: /devflow:prd-refine
    → PRD'yi derinleştirmek için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder). (Oturum `/devflow:prd-save` ile kapanıyorsa nihai bloğu o komut yazar.)
 
 ---
 

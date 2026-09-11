@@ -98,7 +98,10 @@ docs: map-codebase — project structure created from existing codebase
 📋 Sıradaki adım: /devflow:prd
    → PRD hazırlamak için yeni bir oturum başlat.
    → PRD tamamlandıktan sonra /devflow:kickoff (re-kickoff modu) ile devam edilecek.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder).
 
 ---
 

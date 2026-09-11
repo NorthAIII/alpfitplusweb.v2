@@ -46,15 +46,15 @@ Her çalıştırmada önce versiyon sonuna gelinip gelinmediğini kontrol et:
 **Versiyon Sonu Durumu'na göre:**
 - **`içerik_fazları`** → MODULE-MAP'teki Feature-Faz Matrisi'ni oku.
   - Aktif versiyonun tüm feature'ları ✅ **ve Aktif Faz/Adım dolu** (son içerik fazı yeni tamamlandı; review-phase Adım 6 sonraki faza geçerken N+1/`discuss` bırakır) → DURUM.md'deki Versiyon Sonu Durumu'nu `teknik_borç` olarak güncelle ve Adım 0a'ya geç.
-  - Aktif versiyonun tüm feature'ları ✅ **ama Aktif Faz/Adım boş** → bu versiyon zaten versiyon-sonundan geçmiş (review-phase Adım 6 boşaltır); olağan neden prd-review 2a sonrası re-kickoff beklemesidir, ama harici teslim/go-live beklemesi gibi DevFlow-dışı bir sınırda da durulmuş olabilir. `teknik_borç`'a **YENİDEN GİRME** — dur ve kullanıcıya sor: re-kickoff mu bekleniyor (olağan rota → `/devflow:kickoff`), harici teslim mi; rotayı kullanıcı belirler.
+  - Aktif versiyonun tüm feature'ları ✅ **ama Aktif Faz/Adım boş** → bu versiyon zaten versiyon-sonundan geçmiş (review-phase Adım 6 boşaltır); olağan neden prd-review 2a sonrası re-kickoff beklemesidir, ama harici teslim/go-live beklemesi gibi DevFlow-dışı bir sınırda da durulmuş olabilir. `teknik_borç`'a **YENİDEN GİRME** — dur ve kullanıcıya sor; soruyu pratik karşılığıyla kur (kanon: CLAUDE.md → Kullanıcının diliyle konuş), motor durumlarının adıyla değil: *"Bu versiyon kapanmış görünüyor. Yeni bir versiyon tanımlamaya mı geçiyoruz (olağan rota → `/devflow:kickoff`), yoksa teslim/yayın gibi bir şeyi mi bekliyoruz?"* Rotayı kullanıcı belirler.
   - Aksi halde (feature'lar eksik) → normal faz döngüsü, Adım 1'e geç.
 - **`teknik_borç`** → Teknik borç fazının PHASES.md'deki durumunu kontrol et.
   - Faz ✅ tamamlanmışsa → Versiyon Sonu Durumu'nu `senaryo_testi` olarak güncelle ve Adım 0b'ye geç. *(Güvenlik ağı: review-phase bu geçişi zaten yapmış olmalı — burada tekrar yazılması idempotent, crash/atlanma durumunda yakalar.)*
   - Faz devam ediyorsa veya henüz başlamadıysa → Adım 0a'ya geç.
 - **`senaryo_testi`** → Senaryo testi fazının PHASES.md'deki durumunu kontrol et.
-  - Faz ✅ tamamlanmışsa → Versiyon Sonu Durumu'nu `prd_review_bekliyor` olarak güncelle ve kullanıcıyı bilgilendir: "Versiyon sonu fazları tamamlandı. Şimdi `/devflow:prd-review` çalıştırılmalı." *(Güvenlik ağı: review-phase bu geçişi zaten yapmış olmalı.)*
+  - Faz ✅ tamamlanmışsa → Versiyon Sonu Durumu'nu `prd_review_bekliyor` olarak güncelle ve kullanıcıyı bilgilendir: "Versiyon sonu fazları tamamlandı. Şimdi `/devflow:prd-review` çalıştırılmalı." **Sonra dur — Adım 0a'ya da Adım 1'e de geçme:** `prd_review_bekliyor` iken bu versiyonda yeni faz açılmaz (aynı sınır: CLAUDE.md → Oturum Kapanışı, `Adım` boş dalı). *(Güvenlik ağı: review-phase bu geçişi zaten yapmış olmalı.)*
   - Faz devam ediyorsa veya henüz başlamadıysa → Adım 0b'ye geç.
-- **`prd_review_bekliyor`** → Her iki sabit faz tamamlanmış. Kullanıcıyı bilgilendir: "Versiyon sonu fazları tamamlandı. Sıradaki iş `/devflow:prd-review`." (Teslim DevFlow-dışında beklemedeyse prd-review'un bilinçli ertelenmesi meşrudur — beklemek hata değildir; bkz. DURUM template gloss'u.)
+- **`prd_review_bekliyor`** → Her iki sabit faz tamamlanmış. Kullanıcıyı bilgilendir: "Versiyon sonu fazları tamamlandı. Sıradaki iş `/devflow:prd-review`." **Ve dur — Adım 1'e geçme:** bu versiyonda yeni faz açılmaz, (3) max+1 kuralı bu hâlde uygulanmaz (aynı sınır: CLAUDE.md → Oturum Kapanışı, `Adım` boş dalı). (Teslim DevFlow-dışında beklemedeyse prd-review'un bilinçli ertelenmesi meşrudur — beklemek hata değildir; bkz. DURUM template gloss'u.)
 
 ### 0a. Teknik Borç Kapatma Fazı
 
@@ -68,7 +68,7 @@ Her çalıştırmada önce versiyon sonuna gelinip gelinmediğini kontrol et:
 2. Birikmiş teknik borçları sistematik olarak topla
 3. Kullanıcıya topladığı listeyi sun ve sor: "Başka teknik borç var mı?"
 4. Listeyi önceliklendir
-5. Faz dokümanını oluştur ve normal faz döngüsüyle ilerle (research-phase → plan-phase → verify-plan → run-task → verify-phase → review-phase)
+5. **Adım 6'ya geç ve akışı Adım 9'a kadar normal sürdür** — faz dokümanı orada template'ten kurulur, ilk satırdaki Durum `🔄` yazılır ve faz PHASES → Faz Durumu tablosuna **promote edilir**. Adım 1-5 dinamik fazda atlanır (konu ve kapsam yukarıda toplandı), ama Adım 6-9 atlanamaz: PHASES promosyonu yalnız Adım 6'da yapılır (`review-phase` Adım 6: "tek promosyon noktası discuss-phase"), ve Adım 7 DURUM'u `discuss`tan çıkarır. Atlanırsa faz tabloya hiç girmez, DURUM `discuss`ta kalır ve sıradaki oturum bu komuta geri döner — kapalı döngü. Sıradaki komut önerisini Adım 9 zaten yazar.
 6. **Bu faz tamamlandığında**, review-phase Versiyon Sonu Durumu'nu `senaryo_testi` olarak günceller ve discuss-phase'i önerir. Sonraki discuss-phase çağrıldığında Adım 0b'ye geçilir.
 
 ### 0b. Senaryo Testi Fazı
@@ -84,9 +84,9 @@ Her çalıştırmada önce versiyon sonuna gelinip gelinmediğini kontrol et:
 2. Claude kendi test senaryolarını da önerir (teknik perspektif: edge case'ler, hata durumları, sınır değerleri)
 3. **Sadece happy path değil:** Tüm giriş noktalarından ve tüm roller için test senaryoları oluştur
 4. **Adversarial test:** Sistemi bütünsel olarak kırmaya çalışan senaryolar ekle (beklenmeyen URL'ler, yetki dışı erişim, token manipülasyonu, network kesintisi vb.)
-5. **Serving-katmanı canlı doğrulaması (koşullu):** Ürün canlıya bir serving katmanı (reverse proxy, CDN, edge/cache) üzerinden çıkıyorsa, uygulama katmanında doğrulanan kuralların — özellikle güvenlik kapılarının — canlı zincir ÜZERİNDEN de etkin olduğunu doğrulayan senaryolar ekle: kapı gerçekten route ediliyor mu, katman onu baypas ettirebiliyor mu, origin'e doğrudan erişim mümkün mü (kalıcı eksen tanımı QUALITY → Güvenlik'te; bu adımda okunması gerekmez, buradaki tarif senaryo yazımına yeter). Ortam topolojisi MEMORY "Ortam & Araç Notları"nda — boşsa kullanıcıya sor ve cevabı oraya yaz. Gerçek zincir go-live'a dek ayakta değilse staging'deki eş zincirde koşulur; gerçek-zincir teyidi go-live sonrası pencereye düşer (audit-product turu / ertelenmişse prd-review) ve `_dev/BULGULAR.md` Gelen Kutusu'na `[PHASE-N]` işaretli tek satırla kaydedilir — sinyal buharlaşmasın. Canlı denemede prod salt-okunurdur — veri yazan/değiştiren adım yalnız dev/test'te. Serving katmanı olmayan projede (CLI, kütüphane) bu madde atlanır.
+5. **Serving-katmanı canlı doğrulaması (koşullu):** Ürün canlıya bir serving katmanı (reverse proxy, CDN, edge/cache) üzerinden çıkıyorsa, uygulama katmanında doğrulanan kuralların — özellikle güvenlik kapılarının — canlı zincir ÜZERİNDEN de etkin olduğunu doğrulayan senaryolar ekle: kapı gerçekten route ediliyor mu, katman onu baypas ettirebiliyor mu, origin'e doğrudan erişim mümkün mü (kalıcı eksen tanımı QUALITY → Güvenlik'te; bu adımda okunması gerekmez, buradaki tarif senaryo yazımına yeter). Ortam topolojisi MEMORY "Ortam & Araç Notları"nda — boşsa kullanıcıya sor ve cevabı oraya yaz. **Index'e gövde yazma:** zemin bilgisi kanca sınıfı A'dır (değerin kendisi, kısa); topoloji çok satırlıysa gövde `_dev/memory/<slug>.md` atomuna iner, index'te tek pointer satırı kalır — **yazmadan önce `.claude/commands/devflow/lib/memory-sistemi.md`'yi Read et** (index her oturum tam okunur; oraya konan her karakter proje ömrü boyunca yeniden ödenir). Gerçek zincir go-live'a dek ayakta değilse staging'deki eş zincirde koşulur; gerçek-zincir teyidi go-live sonrası pencereye düşer (audit-product turu / ertelenmişse prd-review) ve `_dev/BULGULAR.md` Gelen Kutusu'na `[PHASE-N]` işaretli tek satırla kaydedilir — sinyal buharlaşmasın. Canlı denemede prod salt-okunurdur — veri yazan/değiştiren adım yalnız dev/test'te. Serving katmanı olmayan projede (CLI, kütüphane) bu madde atlanır.
 6. Kullanıcıya sun ve sor: "Senin eklemek istediğin senaryolar var mı?" — asıl kullanım senaryoları kullanıcıdan gelmeli
-7. Faz dokümanını oluştur ve normal faz döngüsüyle ilerle (research-phase → plan-phase → verify-plan → run-task → verify-phase → review-phase)
+7. **Adım 6'ya geç ve akışı Adım 9'a kadar normal sürdür** — faz dokümanı orada template'ten kurulur, ilk satırdaki Durum `🔄` yazılır ve faz PHASES → Faz Durumu tablosuna **promote edilir**. Adım 1-5 dinamik fazda atlanır (konu ve kapsam yukarıda toplandı), ama Adım 6-9 atlanamaz: PHASES promosyonu yalnız Adım 6'da yapılır, Adım 7 DURUM'u `discuss`tan çıkarır. Atlanırsa faz tabloya hiç girmez ve sıradaki oturum bu komuta geri döner — kapalı döngü. Sıradaki komut önerisini Adım 9 zaten yazar.
 8. **Bu faz tamamlandığında**, review-phase Versiyon Sonu Durumu'nu `prd_review_bekliyor` olarak günceller ve doğrudan `/devflow:prd-review` önerir (discuss-phase'e gerek yok).
 
 ### 1. Faz Kapsamını Analiz Et
@@ -175,6 +175,8 @@ Tüm tartışma tamamlandığında, faz dokümanına (`_dev/phases/PHASE-N.md`) 
 5. **PHASES.md güncelle (faz promosyonu — yalnızca yeni faz)** — Bu fazı Faz Durumu tablosuna **yeni satır** olarak ekle (no = yukarıda belirlenen numara = mevcut max + 1, durum 🔄 Devam ediyor). Konu Sıradaki Fazlar listesindeyse oradan **sil** (mezuniyet — iz bırakma: HTML comment/üstü çizili/"Önceki:" yok). Teknik borç / senaryo testi gibi dinamik fazlar Sıradaki Fazlar'da yer almaz; doğrudan tabloya ekle. discuss-phase, bir fazı Faz Durumu tablosuna ekleyen **tek** komuttur. **Mevcut/aktif bir fazı yeniden tartışıyorsan (doküman zaten var) numara sabit kalır ve yeni satır EKLENMEZ — sadece o fazın bilgisi güncellenir.**
 **Faza BULGULAR'dan bulgu alındıysa** (bulgu fazı ya da mevcut/yeniden tartışılan bir fazın kapsamına bulgu eklenmesi — yeni-faz dalından bağımsız uygulanır): alınan her bulgunun index satırına ` → Faz N` işle ve atomun **Durum**'unu aynı anda güncelle (ikisi birlikte — BULGULAR kuralı). Satır silinmez: bulgu çözüm teyidine dek kanvasta işaretli bekler (teyit → verify-phase Adım 6). Faza alınmayan bulgulara dokunma.
 
+**Milestone'u adıyla bağlayan karar.** Bu turun bir kararı, milestone cümlesinde **adıyla anılan** bir mekanizmayı/alanı değiştiriyorsa (cümle X der, kullanıcı Y'yi seçti) cümle **yeniden yazılmaz** — Genel Bilgiler'deki Milestone cümlesinin **altına** tek satır düşülür: `mekanizma: X → Y (kapsam kararı)`. **Satır tek-değerlidir:** orada zaten bir `mekanizma:` satırı varsa — kaynağı araştırma ya da önceki bir kapsam kararı olsun — ikincisini **yazma**, zinciri güncelle (`mekanizma: X → Z (kapsam kararı)`); "Önceki:" merdiveni yasaktır (CLAUDE.md → Çıkarma Disiplini). Bu, mevcut bir fazın yeniden tartışıldığı hâlde gerçekten doğar (Adım 6 → "Mevcut/aktif bir fazı yeniden tartışıyorsan"), ve iki satır kaldığında kriteri okuyan kapılar (verify-plan Adım 3a, verify-phase Adım 2a) iki farklı hedef görür. Not oraya konur çünkü kriteri okuyan kapılar (verify-plan Adım 3a, verify-phase Adım 2a) cümlenin kendisine bakar; aynı bilgi "Alınan Kararlar"a yazıldığında o kapılara ulaşmaz. Ölçü ad kaymasıdır, kapsam değil — hedefin kendisi küçülüyorsa bu not değil kapsam kararının kendisidir ve yukarıda tartışılmıştır; ayrımın ve PHASES/DURUM kopyalarının dokunulmazlığının tam metni `research-phase` Adım 3'tedir, burada tekrarlanmaz. Milestone hiçbir mekanizma adı anmıyorsa bu soru düşer.
+
 ```markdown
 ## Kapsam Tartışması
 
@@ -211,7 +213,10 @@ docs(phase-N): discuss — scope discussion completed
 ✅ Kapsam tartışması tamamlandı. Kararlar faz dokümanına yazıldı.
 📋 Sıradaki adım: /devflow:research-phase
    → Teknik araştırma yapmak için yeni bir oturum başlat.
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
+
+Son satırın kuralı, önekleri ve amblemi: **CLAUDE.md → Oturum Kapanışı** (engelleyen kalem varsa `📋` satırı terfi eder).
 
 ---
 
