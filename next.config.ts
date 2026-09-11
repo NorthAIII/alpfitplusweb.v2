@@ -47,8 +47,20 @@ const securityHeaders = [
   },
 ];
 
+/**
+ * `standalone` yalnizca Docker uretim imaji icin gerekli (M7 F7.1, 3100): imaj
+ * `.next/standalone` klasorunu kopyalar. Vercel'de ise ZARARLI — olculdu
+ * (TASK-1.03, ilk dagitim): Vercel'in kendi derleyicisi iz dosyalarini
+ * (`.next/next-server.js.nft.json`) bekliyor, standalone modunda Next.js onlari
+ * yazmiyor ve dagitim `onBuildComplete` adiminda ENOENT ile kiriliyor.
+ *
+ * Kosul `VERCEL` sistem degiskeni: Vercel'de varsayilan cikti kalir (platform
+ * paketlemeyi kendisi yapar), disinda standalone uretilir.
+ */
+const output = process.env.VERCEL ? undefined : ("standalone" as const);
+
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output,
   env: {
     NEXT_PUBLIC_DEPLOY_STAGE: deployStage,
   },
