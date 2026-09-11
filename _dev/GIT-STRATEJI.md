@@ -32,7 +32,7 @@ Burada yalnız **"hangi dal, ne zaman, hangi kapıdan"** bilgisi durur.
 
 | Dal | Rolü | Ortam / Hedef | Ömrü |
 |-----|------|---------------|------|
-| `main` | Çalışma **ve** yayın (tek dal) | yok — v2 bugün hiçbir ortama bağlı değil; Vercel bağlantısı M7 F7.3'te kurulacak | Sabit |
+| `main` | Çalışma **ve** yayın (tek dal) | `alpfitplus-web-v2` Vercel projesi — her push git kaynaklı üretim dağıtımı; adres `alpfitplus-web-v2.vercel.app`, aşama `preview`, site `noindex` | Sabit |
 
 <!-- KURAL: Dal adı VARSAYILMAZ, probe'dan yazılır (main / master / develop — projeye göre). Tek dallı proje bu
      tabloyu tek satır olarak tutar; geçerli ve tam bir cevaptır. Çalışma ile yayın ayrıldığında satır çoğalır
@@ -47,6 +47,7 @@ Burada yalnız **"hangi dal, ne zaman, hangi kapıdan"** bilgisi durur.
 
 - **Commit:** her oturum sonunda, istisnasız (DevFlow'un izlenebilirlik çekirdeği — CLAUDE.md → Commit Stratejisi).
 - **Push:** her commit sonrası `origin/main`'e.
+- **Push artık repo dışına çıkar:** her push Vercel'de bir dağıtım başlatır ve önizleme adresini günceller. Bu bir **yayın değildir** (gerekçe → Yayın) ve push'u onaya bağlamaz — çalışma dalına push rutin ve otonom kalır.
 
 <!-- KURAL: Bu bölüm commit'i KAPATAMAZ; commit metodun değişmezidir. Push koşulludur (remote yoksa ya da bilinçli
      olarak yerel tutuluyorsa yapılmaz). Çalışma dalına push RUTİNDİR ve otonomdur — her seferinde onay sorulmaz.
@@ -57,7 +58,9 @@ Burada yalnız **"hangi dal, ne zaman, hangi kapıdan"** bilgisi durur.
 
 ## Yayın
 
-**Yayın hattı:** yok — çalışma dalına push doğrudan geçerlidir; ayrı bir yayın anı yoktur. Bugün `main`'i izleyen otomatik deploy da yoktur (v1'in canlı Vercel projesi `alpfitplus-website` ayrı repodadır ve bu repoya bağlı değildir).
+**Yayın hattı:** yok — ama otomatik dağıtım var. İkisi aynı şey değil: `main`'e her push `alpfitplus-web-v2` projesinde bir üretim dağıtımı üretir ve `https://alpfitplus-web-v2.vercel.app` adresini günceller, fakat o adres bir **önizleme yüzeyidir** — `alpfitplus.com` bağlı olmadığı için aşama `preview` türer ve site üç katmanda `noindex` kalır (ölçüldü: TASK-1.03). Bu yüzden ayrı bir yayın anı, yayın dalı ve doğrulama kapısı hâlâ yoktur; çalışma dalına push doğrudan geçerlidir.
+
+Gerçek yayın alan adının bağlandığı gün doğar (M7 F7.5) — aynı push o günden sonra canlıyı etkileyecek ve bu bölüm o gün yeniden yazılacak. `alpfitplus.com` bugün hâlâ v1'in ayrı repodaki projesini (`alpfitplus-website`) gösterir.
 
 <!-- KURAL: Çalışma ve yayın ayrıldığında bu bölüm şunları yazılı hâle getirir ve hepsi ZORUNLUDUR:
      · YAYIN ANI — hangi olay yayını başlatır (DevFlow'un doğal adayı: versiyon sonu, `prd_review_bekliyor` penceresi).
@@ -108,11 +111,11 @@ Ayrı rota yok — düzeltme çalışma dalında yapılır ve olağan akışla i
      (→ Bilginin Doğru Evi). Doldurulacak başlık yoksa bölüm boş kalır — uydurma başlık açma.
      Bu bölüm zamanla şişerse dokümanın tamamı CLAUDE.md → Boyut ve Bölünme kuralına tabidir — bölünür. -->
 
-- **Vercel bağlantısı bu stratejiyi değiştirecek.** M7 F7.3 v2'yi ayrı bir Vercel projesi olarak `main`'e bağladığında her push önizlemeyi tetikler; F7.5 (alan adı geçişi) ile aynı push **canlıyı** tetikler. F7.5'ten önce çalışma/yayın ayrımı, yayın anı ve doğrulama kapısı yeniden konuşulur (`/devflow:quick` ya da v2.0 sonu `prd-review`) — bu doküman o zaman değişir, bugünkü "yayın hattı yok" beyanı o güne kadar geçerlidir.
-- **CI yok** (M6 F6.3 gelecek). Bugün doğrulama kapısı yerel ölçüm betikleridir (CLAUDE.md → Ölçüm betikleri); push öncesi kapı yoktur, ölçüm task tamamlama sırasının test adımında koşar.
+- **Vercel bağlantısı kuruldu** (TASK-1.03, 2026-09-11): proje `alpfitplus-web-v2`, takım `north-ai`, plan `hobby`, GitHub bağlantısı `NorthAIII/alpfitplusweb.v2`, üretim dalı `main`. **F7.5 (alan adı geçişi) aynı push'u canlıya çevirecek** — o günden önce çalışma/yayın ayrımı, yayın anı ve doğrulama kapısı yeniden konuşulur (`/devflow:quick` ya da v2.0 sonu `prd-review`).
+- **CI yok** (M6 F6.3 gelecek). Bugün doğrulama kapısı yerel ölçüm betikleridir (CLAUDE.md → Ölçüm betikleri); push öncesi kapı yoktur, ölçüm task tamamlama sırasının test adımında koşar. Push **sonrası** tek otomatik sinyal Vercel derlemesidir: kırmızıysa dağıtım yayımlanmaz ve önceki dağıtım ayakta kalır, yani kırık bir commit önizleme adresini düşürmez — ama sessizce de geçmez, adres eski sürümde donar.
 
 ---
 
-**Son Güncelleme:** 2026-09-11 — kickoff-verify: tek dal `main`, remote GitHub, yayın hattı ve otomatik deploy yok; Vercel bağlanınca (M7 F7.3/F7.5) yeniden değerlendirilecek.
+**Son Güncelleme:** 2026-09-11 — TASK-1.03: `main` artık `alpfitplus-web-v2` Vercel projesine bağlı, her push git kaynaklı üretim dağıtımı üretiyor; alan adı bağlı olmadığı için yayın hattı hâlâ yok (adres `noindex` önizleme yüzeyi), F7.5'te yeniden yazılacak.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

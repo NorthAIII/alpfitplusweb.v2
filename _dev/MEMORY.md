@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.02: alternatif env ile üretim derlemesi (Ortam & Araç) ve aşamaya bağlı davranışta ara-hâl sınaması (Süreç Disiplinleri) eklendi.
+**Son Güncelleme:** 2026-09-11 — TASK-1.03: Vercel standalone çıktı çatışması (Teknik Tuzaklar) ve Vercel proje kimlikleri + CLI erişimi (Ortam & Araç) eklendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -17,7 +17,7 @@
 
 <!-- Proje genelinde geçerli beklenmedik davranışlar/bug'lar ve çözümleri (pasif gözlem: "şu böyle davranır, dikkat"). Tekrar eden, eyleme/kontrole bağlı bir "şu adımda şu kontrolü yap" kuralıysa → Süreç Disiplinleri. -->
 
-- [Henüz yok]
+- [Vercel `output: "standalone"` ile derleme kırar](memory/vercel-standalone-cikti-catismasi.md) — Docker imajı standalone ister, Vercel iz dosyası bekler; `next.config.ts`'te koşul `process.env.VERCEL ? undefined : "standalone"`, yerel gözlem bu tuzağı göstermez
 
 ## Kullanıcı Tercihleri
 
@@ -30,6 +30,7 @@
 <!-- Environment, tooling, CI/CD, kalıcı operasyonel veri (VPS IP, repo path, folder yapısı) -->
 
 - [Saf fonksiyon testi — repoda koşucu yok](memory/saf-fonksiyon-testi-node-tip-soyma.md) — Jest/Vitest/tsx yok; saf fonksiyon scratchpad'deki `.mjs` betiğiyle konteynere kopyalanıp `node` ile doğrudan koşturulur (Node tip soyması `.ts` import eder)
+- [Vercel proje kimlikleri ve CLI erişimi](memory/vercel-proje-kimlikleri.md) — CLI kurulu ve oturum açık (`northaiii`), kimlik `$XDG_DATA_HOME/com.vercel.cli` altında; proje `alpfitplus-web-v2` / takım `north-ai` / plan `hobby`; `vercel project add` çerçeve tespiti yapmaz, `framework` ve `autoExposeSystemEnvs` elle doğrulanır
 - [Alternatif env ile üretim derlemesi](memory/alternatif-env-ile-uretim-derlemesi.md) — `.next` paylaşılan isimli hacim; üretim env'ini taklit eden derleme `docker compose run --rm --publish 3200:3000` ile **ayrı** konteynerde yapılır, sonra `docker compose restart web` (3001 kullanılmaz)
 
 ## Çapraz Öğrenimler

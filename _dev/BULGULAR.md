@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.01: Gelen Kutusu'na bir satır (repoda `npm run lint` 25 hatayla kırık, CI öncesi temizlik borcu).
+**Son Güncelleme:** 2026-09-11 — TASK-1.03: Kapsama tablosunda M7 satırı tazelendi (önizleme yayında, başlıklar yayın zincirinde ölçüldü); Gelen Kutusu ve Açık Bulgular değişmedi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -70,7 +70,7 @@
 | M4 Asistan | — | Denetim yapılmadı |
 | M5 Görsel hat | 2026-09-11 | render-product denetimi temiz; logo geçici (B-009) |
 | M6 Kalite kapıları | 2026-09-11 | Elle koşuyor, CI yok |
-| M7 Yayın | — | Vercel bağlantısı yok; başlıklar yalnız yerelde ölçüldü |
+| M7 Yayın | — | Önizleme yayında (`alpfitplus-web-v2`), başlıklar ve noindex yayın zincirinde ölçüldü (TASK-1.03); audit-product turu yapılmadı |
 
 **Yarım tur:** [yok]
 

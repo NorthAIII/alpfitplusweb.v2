@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.02 tamamlandı: noindex üç katmanı (başlık + robots.txt + meta) tek `deployStage` değerine bağlandı; dört ortam senaryosu serving katmanında ölçüldü, `.vercel.app` ara hâli dahil kapalı; sıradaki task TASK-1.03.
+**Son Güncelleme:** 2026-09-11 — TASK-1.03 tamamlandı: v2 kendi Vercel projesinde (`alpfitplus-web-v2`) önizleme adresinde ayakta ve noindex; `main` push git kaynaklı dağıtım üretiyor; güvenlik başlıkları ve noindex üç katmanı yayın zincirinde ölçüldü; GIT-STRATEJI hizalandı; sıradaki task TASK-1.04.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 2/10 task tamamlandı
+**İlerleme:** 3/10 task tamamlandı
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,9 +33,9 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.03 — Vercel'de ayrı proje, env iskeleti ve başlık ölçümü
+**Task:** TASK-1.04 — Google Sheet lead alıcısı — Apps Script web app
 **Durum:** ⬜ Bekliyor
-**İlerleme:** TASK-1.02 kapandı, noindex üç katmanı yerinde — ilk dağıtım anında site kapalı doğacak
+**İlerleme:** TASK-1.03 kapandı; site `https://alpfitplus-web-v2.vercel.app` üzerinde ayakta ve noindex — lead hattının yazacağı hedef henüz yok
 
 ---
 
@@ -45,7 +45,7 @@
 |---|------|-------|
 | 1.01 | Aşama türetimi ve `deployStage` tek kaynağı | ✅ Tamamlandı |
 | 1.02 | noindex üç katman tek kaynaktan | ✅ Tamamlandı |
-| 1.03 | Vercel'de ayrı proje, env iskeleti ve başlık ölçümü | ⬜ Bekliyor |
+| 1.03 | Vercel'de ayrı proje, env iskeleti ve başlık ölçümü | ✅ Tamamlandı |
 | 1.04 | Google Sheet lead alıcısı — Apps Script web app | ⬜ Bekliyor |
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ⬜ Bekliyor |
 | 1.06 | E-posta hattı doğrulaması ve uçtan uca lead testi | ⬜ Bekliyor |
@@ -62,15 +62,6 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-### TASK-1.01 — Aşama türetimi ve `deployStage` tek kaynağı (2026-09-11)
-
-**Özet:**
-- `src/lib/stage.ts` doğdu: saf `deriveDeployStage(env)` + `DEPLOY_STAGE` okuma sabiti; türetim üretim **alan adının** gerçekliğinden okunuyor, `VERCEL_ENV`'den değil.
-- `next.config.ts` değeri hesaplayıp `NEXT_PUBLIC_DEPLOY_STAGE` olarak derlemeye gömüyor; TASK-1.02 aynı sabitten noindex verecek.
-- Alan adı tanımsızsa `preview` dönülüyor (fail-safe) — eksik bilgide noindex açık kalsın diye.
-
-**Test:** Saf fonksiyon 5/5 PASS; `npm run build` hatasız, 23 rota; geçici sonda rotasıyla üç derleme — gömülü değer sırasıyla `local` / `preview` / `production`, sonda silindi.
-
 ### TASK-1.02 — noindex üç katman tek kaynaktan (2026-09-11)
 
 **Özet:**
@@ -79,6 +70,15 @@
 - Alan adı bağlandığında (F7.5) üçü kendiliğinden açılır — kodda elle çevrilecek bayrak yok.
 
 **Test:** Dört ortam senaryosu serving katmanında curl ile ölçüldü — `local` kapalı, gerçek alan adı açık, **`VERCEL_ENV=production` + `.vercel.app` kapalı** (fail-open sınavı), alan adı tanımsız kapalı; `npm run build` hatasız 23 rota; dokunulan dosyalarda eslint 0 sorun; `a11y.mjs` TOPLAM SORUN 0; `scan.mjs` konsol temiz.
+
+### TASK-1.03 — Vercel'de ayrı proje, env iskeleti ve başlık ölçümü (2026-09-11)
+
+**Özet:**
+- v2 kendi Vercel projesinde ayakta: `alpfitplus-web-v2` (takım `north-ai`, plan `hobby`), adres `https://alpfitplus-web-v2.vercel.app`; `main` push git kaynaklı dağıtım üretiyor. v1'in projesine ve `alpfitplus.com`'a dokunulmadı, v1 ölçülerek doğrulandı.
+- **Vercel `output: "standalone"` ile derlemeyi kırıyor** (iz dosyası `ENOENT`); standalone Docker imajı için gerekli olduğundan `next.config.ts`'te `VERCEL`'e bağlı koşullu hâle geldi — kayıt memory → Teknik Tuzaklar.
+- GIT-STRATEJI kullanıcı onayıyla hizalandı: otomatik dağıtım var, yayın hattı yok (adres `noindex` önizleme yüzeyi, gerçek yayın F7.5'te).
+
+**Test:** Dokuz kalem yayın zinciri üzerinden curl ile ölçüldü — beş güvenlik başlığı + tek HSTS (çift yok), `X-Powered-By` yok, `X-Robots-Tag` hem `/` hem `/sitemap.xml`'de, `robots.txt` tam `Disallow: /`, HTML `meta robots`, sekiz rota 200, font `immutable`, `/api/demo` boş POST 422, v1 hâlâ 200; başlıklar önbellek `HIT` yanıtında da tam. Yerel üretim derlemesi hatasız 23 rota ve `.next/standalone/server.js` hâlâ üretiliyor (Docker imajı kırılmadı).
 
 ---
 
@@ -102,7 +102,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.03.md`
+**Aktif Task:** `tasks/TASK-1.04.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

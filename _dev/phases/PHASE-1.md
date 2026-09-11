@@ -123,7 +123,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 |---|------|-------|----------|
 | 1.01 | TASK-1.01 | ✅ Tamamlandı | Aşama türetimi (`local/preview/production`) ve `deployStage` tek kaynağı |
 | 1.02 | TASK-1.02 | ✅ Tamamlandı | noindex üç katman (başlık + robots.txt + metadata), aynı aşama değerinden |
-| 1.03 | TASK-1.03 | ⬜ Bekliyor | Vercel'de ayrı proje, env iskeleti, başlık ölçümü, GIT-STRATEJI güncellemesi |
+| 1.03 | TASK-1.03 | ✅ Tamamlandı | Vercel'de ayrı proje, env iskeleti, başlık ölçümü, GIT-STRATEJI güncellemesi |
 | 1.04 | TASK-1.04 | ⬜ Bekliyor | Google Sheet lead alıcısı — sertleştirilmiş Apps Script web app |
 | 1.05 | TASK-1.05 | ⬜ Bekliyor | Demo ucunu sertleştir: JSON `ok` doğrulaması + lead `env` alanı |
 | 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattı doğrulaması ve uçtan uca gerçek lead testi |
@@ -133,6 +133,49 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.10 | TASK-1.10 | ⬜ Bekliyor | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
+
+---
+
+## Ölçümler
+
+> Fazın yayın zinciri üzerinden alınmış ölçümleri. Rakam ve başlık listesi burada durur (QUALITY 6); icra detayı task dokümanlarında.
+
+### Güvenlik başlıkları — Vercel yayın zinciri (TASK-1.03, 2026-09-11)
+
+Adres `https://alpfitplus-web-v2.vercel.app`, dağıtım `1b1e464` (git kaynaklı, dal `main`). F7.2'nin F7.3'e devredilmiş kabul kriteri: başlıklar uygulamadan çıkıyor ve platform onları soymuyor.
+
+| Başlık | Değer | Sonuç |
+|---|---|---|
+| `X-Content-Type-Options` | `nosniff` | ✅ |
+| `X-Frame-Options` | `SAMEORIGIN` | ✅ |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | ✅ |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), interest-cohort=()` | ✅ |
+| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | ✅ tek değer |
+| `X-Powered-By` | yok | ✅ (`poweredByHeader: false`) |
+
+**Çift HSTS yok** — araştırmada beklenen çakışma gerçekleşmedi, Vercel kendi değerini eklemedi.
+
+**Başlıklar önbellekten de geçiyor:** aynı beş başlık hem `x-vercel-cache: PRERENDER` (ilk istek) hem `HIT` (ikinci istek) yanıtında tam. QUALITY 2'nin "platform başlığı soyuyor, cache'ten baypas ettiriyor mu" sorusu ölçülerek kapandı.
+
+### noindex üç katman — yayın zincirinde (TASK-1.03)
+
+| Katman | Ölçüm | Sonuç |
+|---|---|---|
+| Başlık | `X-Robots-Tag: noindex, nofollow` — `/` ve `/sitemap.xml` | ✅ HTML-dışı yanıtta da var |
+| `robots.txt` | `User-Agent: *` + `Disallow: /` | ✅ tam kapalı |
+| HTML meta | `<meta name="robots" content="noindex, nofollow"/>` | ✅ |
+
+Aşama `preview` türedi (üretim alan adı `.vercel.app` ile bitiyor). **Aşamanın `local` değil `preview` olduğunun kanıtı dağıtımın kendisidir:** `output` koşulu `VERCEL` sistem değişkenine bakıyor, o değişken tanımsız olsaydı standalone çıktı üretilir ve derleme yine ENOENT ile kırılırdı. Derlemenin geçmesi sistem env'lerinin derleme anında görünür olduğunu kanıtlıyor; proje ayarı da doğrudan okundu (`autoExposeSystemEnvs: true`). noindex'in açık olması bu ayrımı **tek başına gösteremez** — iki aşamada da kapalı olurdu (task dokümanının risk maddesindeki varsayım bu yönden eksikti).
+
+### Diğer kalemler (TASK-1.03)
+
+| Kalem | Ölçüm | Sonuç |
+|---|---|---|
+| Rota erişimi | `/`, `/ozellikler`, `/fiyat`, `/segmentler`, `/demo`, `/destek`, `/kvkk`, `/sitemap.xml` | 8/8 → 200 |
+| Font önbelleği | `/fonts/inter-400-tr.woff2` → `public, max-age=31536000, immutable` | ✅ |
+| `/api/demo` boş POST | 422 · `{"ok":false,"code":"missing",…}` | ✅ uç ayakta |
+| TTFB (soğuk, ana sayfa) | 0,619 s | kayıt — eşik F7.4'te `perf.mjs` ile |
+| v1 dokunulmadı | `https://alpfitplus.com/` → 200, `X-Robots-Tag` yok | ✅ |
 
 ---
 
