@@ -130,7 +130,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.07 | TASK-1.07 | ⬜ Bekliyor | Umami Cloud kurulumu ve tracker bağlantısı (`data-tag=deployStage`) |
 | 1.08 | TASK-1.08 | ⬜ Bekliyor | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
 | 1.09 | TASK-1.09 | ⬜ Bekliyor | Global tıklama dinleyicisi, `data-surface` çapaları, analitik yükü ölçümü |
-| 1.10 | TASK-1.10 | ⬜ Bekliyor | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
+| 1.10 | TASK-1.10 | ✅ Tamamlandı | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 

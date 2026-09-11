@@ -33,7 +33,7 @@ export const KVKK: LegalDoc = {
   title: "KVKK Aydınlatma Metni",
   description:
     "6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında alpfitplus.com ziyaretçileri ve demo talep edenler için aydınlatma metni.",
-  updated: "10 Eylül 2026",
+  updated: "11 Eylül 2026",
   intro: `Bu aydınlatma metni, ${SITE.domain} adresini ziyaret ettiğinizde ve demo talep formunu doldurduğunuzda kişisel verilerinizin nasıl işlendiğini açıklar. Alpfit Plus uygulamasının kendisinde (kulüp üyesi, antrenör, diyetisyen ve yönetim hesapları) işlenen veriler için ayrı bir aydınlatma metni uygulanır ve bu metin onu kapsamaz.`,
   sections: [
     {
@@ -97,7 +97,23 @@ export const KVKK: LegalDoc = {
       blocks: [
         {
           type: "p",
-          text: "Kişisel verileriniz, yalnızca demo talebinizin karşılanması amacıyla ve amacın gerektirdiği ölçüde, barındırma ve elektronik posta gönderimi hizmeti aldığımız tedarikçilerimize aktarılabilir. Verileriniz pazarlama amacıyla üçüncü taraflara satılmaz veya devredilmez.",
+          text: "Kişisel verileriniz, yalnızca demo talebinizin karşılanması amacıyla ve amacın gerektirdiği ölçüde, aşağıdaki hizmetleri aldığımız tedarikçilerimize aktarılabilir:",
+        },
+        {
+          type: "ul",
+          items: [
+            "Barındırma: sitenin ve demo talep formunun çalıştığı altyapı",
+            "Elektronik posta gönderimi: talebinizin bize bildirilmesi",
+            "Kayıt tutma: demo talebiniz, tedarikçimizin (Google) elektronik tablo hizmetinde bir satır olarak saklanır; bu tabloya yalnızca demo süreciyle ilgilenen hesap erişebilir",
+          ],
+        },
+        {
+          type: "p",
+          text: "Siteyi kaç kişinin gezdiğini ölçmek için çerezsiz ve kimlik tanımlamayan bir ölçüm hizmeti (Umami) kullanıyoruz. Bu hizmete kişisel verileriniz aktarılmaz: ölçüm kayıtları sizi kişi olarak tanımlamaz ve demo talebinizdeki bilgilerle birleştirilmez.",
+        },
+        {
+          type: "p",
+          text: "Verileriniz pazarlama amacıyla üçüncü taraflara satılmaz veya devredilmez.",
         },
       ],
     },
@@ -142,7 +158,7 @@ export const PRIVACY: LegalDoc = {
   title: "Gizlilik Politikası",
   description:
     "alpfitplus.com tanıtım sitesinin gizlilik politikası: hangi verileri topluyoruz, neden topluyoruz ve nasıl koruyoruz.",
-  updated: "10 Eylül 2026",
+  updated: "11 Eylül 2026",
   intro: `Bu gizlilik politikası ${SITE.domain} tanıtım sitesi için geçerlidir. Alpfit Plus uygulamasında saklanan kulüp ve üye verileri için kulübünüzle imzalanan sözleşme ve uygulamanın kendi gizlilik metni geçerlidir.`,
   sections: [
     {
@@ -164,11 +180,19 @@ export const PRIVACY: LegalDoc = {
       ],
     },
     {
-      title: "Çerezler",
+      title: "Çerezler ve ölçüm",
       blocks: [
         {
           type: "p",
-          text: "Bu sitede reklam çerezi veya üçüncü taraf takip pikseli kullanmıyoruz. Site, çalışması için gerekli olmayan hiçbir çerez yerleştirmez.",
+          text: "Bu sitede reklam çerezi, reklam ağı kodu veya sizi siteler arasında izleyen bir takip pikseli kullanmıyoruz. Site, çalışması için gerekli olmayan hiçbir çerez yerleştirmez.",
+        },
+        {
+          type: "p",
+          text: "Hangi sayfaların ziyaret edildiğini ve demo talep yolunun kullanılıp kullanılmadığını görmek için çerezsiz bir ölçüm hizmeti (Umami) kullanıyoruz. Bu ölçüm tarayıcınıza çerez yerleştirmez, IP adresinizi saklamaz ve sizi kişi olarak tanımlamaz.",
+        },
+        {
+          type: "p",
+          text: "Ölçüme yalnızca ziyaret edilen sayfa ve tıklanan bağlantının hangi bölümde olduğu gibi bilgiler gider. Adınız, telefon numaranız, elektronik posta adresiniz ve forma yazdığınız mesaj ölçüme gönderilmez.",
         },
       ],
     },
@@ -178,6 +202,10 @@ export const PRIVACY: LegalDoc = {
         {
           type: "p",
           text: "Verilerinizi yalnızca demo talebinize dönüş yapmak ve size uygun bir görüşme planlamak için kullanırız. Verilerinizi satmayız, reklam amacıyla üçüncü taraflarla paylaşmayız.",
+        },
+        {
+          type: "p",
+          text: "Talebiniz bize elektronik posta ile bildirilir ve hizmet aldığımız bir elektronik tablo hizmetinde (Google) kayıt olarak saklanır. Hangi tedarikçiye ne amaçla aktarım yapıldığı KVKK Aydınlatma Metni'nin Aktarım başlığında yazılıdır.",
         },
       ],
     },

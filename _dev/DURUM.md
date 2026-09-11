@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.05 ✅: `/api/demo` webhook yazımı artık sözleşmeye bağlı (HTTP + JSON + `ok===true`) ve lead'e `env` alanı girdi; 32 kontrol + 3 aşama senaryosu yeşil. TASK-1.04 🔄 kaldı — Google dağıtımı kullanıcıda, sıra kullanıcı kararıyla atlandı.
+**Son Güncelleme:** 2026-09-11 — TASK-1.10 ✅: yasal metinler bu fazın iki yeni veri akışını anlatıyor (Google e-tablo kaydı adıyla, çerezsiz Umami ölçümü ayrı paragrafta); a11y/font-guard/scan üçü de temiz. Sıra bozuldu: 1.06 kullanıcı dağıtımına, 1.07–1.09 paralel bir oturuma bağlı.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 4/10 task tamamlandı (TASK-1.04 🔄 devam ediyor — kullanıcı dağıtımı bekliyor)
+**İlerleme:** 5/10 task tamamlandı (TASK-1.04 🔄 devam ediyor — kullanıcı dağıtımı bekliyor)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -36,7 +36,7 @@
 **Task:** TASK-1.04 — Google Sheet lead alıcısı — Apps Script web app
 **Durum:** 🔄 Devam ediyor — **kullanıcıya bağlı**
 **İlerleme:** 4 alt görevin 3'ü bitti (betik, sütun şeması, `.env.example`); kalan alt görev 3 **kullanıcının Google hesabında** yapılacak — e-tablo, betiğin yapıştırılması, `LEAD_TOKEN` Script Properties'e girilmesi, web app dağıtımı. Tarif `research/lead-sheet.gs` başındaki KURULUM bloğunda; devam adımları task dokümanının "Sonraki Adım Detayı" alanında.
-**Not:** Dağıtım hâlâ yapılmadıysa sıradaki çalıştırılabilir task **TASK-1.07**'dir (Umami kurulumu); TASK-1.06 da canlı `/exec` adresine bağlıdır.
+**Not:** TASK-1.06 canlı `/exec` adresine bağlı, yani o da bu dağıtımı bekliyor. **TASK-1.07 paralel bir oturumda çalışıyor** (ağaçta commit'lenmemiş Umami değişiklikleri var — `src/app/layout.tsx`, `.env.example`); TASK-1.08 ve 1.09 onun çıktısına bağlı. Bu oturum bu yüzden sıra dışı TASK-1.10'u çalıştırdı (kullanıcı kararı).
 
 ---
 
@@ -53,7 +53,7 @@
 | 1.07 | Umami kurulumu ve tracker bağlantısı | ⬜ Bekliyor |
 | 1.08 | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` | ⬜ Bekliyor |
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ⬜ Bekliyor |
-| 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ⬜ Bekliyor |
+| 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -63,15 +63,6 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-### TASK-1.04 — Google Sheet lead alıcısı — Apps Script web app (2026-09-11, 🔄 devam ediyor)
-
-**Özet:**
-- `research/lead-sheet.gs` yazıldı: token Script Properties'te, `LockService` ile kilit, başlık satırı kendiliğinden doğar, her yolda JSON yanıt.
-- **Sheets formül enjeksiyonu** icrada çıktı ve kapatıldı: dışarıdan gelen `= + - @` ile başlayan alan tek tırnakla metne sabitleniyor.
-- Kalan alt görev kullanıcıda: e-tablo, betiğin yapıştırılması, `LEAD_TOKEN`, web app dağıtımı.
-
-**Test:** Canlı `/exec` adresi yok; sözleşme `research/lead-sheet.test.mjs` ile sahte Apps Script servislerine karşı kanıtlandı — 12 senaryo, 40 kontrol, TOPLAM SORUN 0. Token kapısı iki yönden sınandı (yanlış token reddedildi; `LEAD_TOKEN` tanımsızken de reddedildi, fail-open yok). Kapsam dışı: Google'ın gerçek davranışı — canlı tura kaldı.
-
 ### TASK-1.05 — Demo ucunu sertleştir: JSON doğrulaması ve `env` alanı (2026-09-11)
 
 **Özet:**
@@ -80,6 +71,15 @@
 - Teşhis logları hedef adresi, token'ı ve kişisel veriyi taşımıyor; yalnız durum kodu, alıcının hata kodu ve zaman damgası.
 
 **Test:** Yerel üretim derlemesine karşı serving katmanında (ayrı konteyner, 3200) **32 kontrol, TOPLAM SORUN 0**. Sözleşmeyi bozan beş gerçek yanıt (HTML, `ok:false`, HTTP 500, bozuk JSON, dizi gövde) beşi de 503 + `no-sink` verdi; kontrol grubu aynı koşuda yeşil — beşi de eski kodda `stored:true` sayılacaktı. Aşama senaryoları ayrıca koştu (3 senaryo, sorun 0): gerçek alan adı → `production`, **ara hâl** `vercel.app` → `preview`, alan adı env'i tanımsız → `preview`; yerel → `local`. Build ve eslint temiz. Devredilen tek kriter: gerçek `/exec` adresiyle uçtan uca tur → TASK-1.04 canlı turu.
+
+### TASK-1.10 — Yasal metin: Aktarım ve Çerezler maddeleri (2026-09-11)
+
+**Özet:**
+- KVKK Aktarım maddesi artık kayıt tutma tedarikçisini (Google elektronik tablo) adıyla sayıyor ve erişim kontrolünün gerçeğini yazıyor; ölçüm sağlayıcısı (Umami) **ayrı paragrafta**, çünkü ona kişisel veri gitmiyor — listeye konsaydı metin yanlış beyan olurdu.
+- Gizlilik'te "Çerezler" başlığı "Çerezler ve ölçüm" oldu: çerez konmadığı, IP saklanmadığı ve ölçüme hangi bilginin gidip gitmediği açıkça yazıldı. Korunan takip-pikseli cümlesi çelişik okunmasın diye "siteler arasında izleyen" ile keskinleştirildi.
+- **Yurt dışına aktarım bilinçle yazılmadı** — sağlayıcı ülkesi ve aktarımın hukuki dayanağı hukukçu kararı; B-024'ün üç kalemi (IP, Gizlilik veri listesi, form onay metni) açık kaldı ve gerekçesiyle bulgu atomuna işlendi. Detay: `tasks/archive/TASK-1.10.md`
+
+**Test:** `a11y.mjs` TOPLAM SORUN 0 (8 sayfa; yasal metinlerden yalnız `/kvkk` kapsamda — `/gizlilik` ve `/kullanim-kosullari` bu kapıdan geçmiyor, B-012), `font-guard.mjs` kümede olmayan karakter yok (16 sayfa), `scan.mjs` üç yasal sayfada konsol temiz, build ve eslint hatasız. Kapılar geliştirme sunucusuna (3000) karşı koştu; üretim konteyneri bayat (B-019) ve paralel oturum yüzünden yeniden derlenmedi.
 
 ---
 

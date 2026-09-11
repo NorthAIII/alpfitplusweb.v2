@@ -63,4 +63,11 @@ Metinler yazıldığında lead hedefi henüz seçilmemişti ve hız sınırı so
 
 ## Çözüm Kaydı
 
-—
+**Kısmen kapandı — TASK-1.10, 2026-09-11.** Task'ın planlanmış kapsamı iki maddeydi (Aktarım ve Çerezler), bu bulgu dört madde istiyor; task planı bu bulgudan **önce** yazıldı. Kapananlar ve kalanlar:
+
+- **2. madde — yarı kapandı.** KVKK Aktarım maddesi artık kayıt tutma tedarikçisini (Google, elektronik tablo) ve ölçüm sağlayıcısını (Umami) adıyla sayıyor; Gizlilik'e de aynı akışı anlatan bir paragraf girdi. **Yurt dışına aktarım hâlâ hiçbir metinde geçmiyor** — aynı belge bu hakkı saymaya devam ediyor. Adlandırma bilinçle yapılmadı: hangi sağlayıcının verisini hangi ülkede işlediğinin beyanı ve aktarımın hukuki dayanağı hukukçu kararıdır (v1'in metni bu ayrımı açıkça yapıyor), bu oturum uydurmadı.
+- **1. madde — açık.** IP ve hız sınırı amacı KVKK'nın işlenen-veri listesine girmedi.
+- **3. madde — kısmen.** Gizlilik'e aktarım paragrafı eklendi, ama topladığı-veri listesi hâlâ tarih/saat ve tarayıcı bilgisini saymıyor; KVKK ile ayrışma sürüyor.
+- **4. madde — açık.** Form onay metni (`DemoForm.tsx`) genişletilmedi.
+
+Bulgu **açık kalır**. Üç kalem tek düzenlemede kapanacak boyutta ve aynı dosyaya dokunuyor; doğal evi ya bir düzeltme task'ı ya da [B-008](B-008-yasal-metin-hukukcu-onayi.md) gönderiminden önceki son geçiştir.
