@@ -93,6 +93,17 @@ Temizlik hattı **metin** için tasarlanmış ve o katmanda özenli: eşleme tab
 - **Bugün yapılabilecek en ucuz iş:** `sube.webp` yayından çekilir (`render-product.mjs`'in `SCREENS` listesinden düşürülerek — `public/` elle düzenlenmez). Bu, B-018'in ve kalem 1'in kamuya açık yüzeyini kapatır; "çıktı 8 `.webp`" kriteri de kullanımla hizalanır.
 - Düzeltme sonrası **sekiz görselin tamamı** yeniden denetlenir; yukarıdaki envanter kapanış kapsamının ölçütüdür.
 
+**2026-09-12 kapsam daralması (QUICK-001) — atom AÇIK kalır.**
+
+`sube` ekranı `render-product.mjs`'in `SCREENS` listesinden düşürüldü ve `public/product/sube.webp` yayınlanan kümeden çıktı (`/product/sube.webp` → **404**). Bu **yalnız kalem 1'in yayınlanan örneğini** kaldırır: "Vadi" yazan karedeki `BŞ` avatarı artık üretilmiyor.
+
+**Kapanmayan — bu yüzden atom açık:**
+- **Kalem 1 sınıf olarak duruyor.** `INITIALS` tablosunda hâlâ semt girdisi yok; `patron-mobil.html`'deki `TU`/Tuzla, `KA`/Kadıköy, `BŞ`/Beşiktaş aynı tablodan üretilir. Ekran bugün yayımlanmıyor, ama hatta girdiği gün aynı sızıntıyla gelir.
+- **Kalem 2 hiç etkilenmedi** ve **gösterilen** görselleri etkiliyor: `grup.webp`'te üç uyumsuzluk (`"Burak Ş."+DK`, `"Deniz A."+EÖ`, `"Tolga B."+BT`), `takvim.webp`'te bir (`"Aslıhan A."+AK`). `AVATAR_SELECTOR` hâlâ `.av` sınıfını görmüyor — 25 düğüm haritanın dışında.
+- **Kalem 3 hiç etkilenmedi.** Denetim hâlâ iki dallı; ekran düşürmek dal açmaz.
+
+Yukarıdaki envanter tablosunun `sube.webp` satırı bugünden itibaren **tarihsel** okunur — o ekran artık üretilmiyor. Kalan yedi satır kapanış kapsamının ölçütü olmayı sürdürür. Koruma Önerisi'ndeki *"bugün yapılabilecek en ucuz iş"* maddesi **yapıldı**; listedeki diğer maddeler açık.
+
 ## Çözüm Kaydı
 
 —

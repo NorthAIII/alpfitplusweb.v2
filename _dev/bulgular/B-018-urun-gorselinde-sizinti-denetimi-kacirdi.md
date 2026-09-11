@@ -67,6 +67,17 @@ Yukarıdaki kapsam notu ("sekiz görselden ikisi gözle satır satır okundu …
 
 Bugün yapılabilecek en ucuz iş de ölçümden çıktı: `sube.webp` `render-product.mjs`'in `SCREENS` listesinden düşürülürse bu atomun iki ağır kaleminin kamuya açık yüzeyi kapanır (`public/` elle düzenlenmez).
 
+**2026-09-12 kapsam daralması (QUICK-001) — atom AÇIK kalır.**
+
+`sube` ekranı `render-product.mjs`'in `SCREENS` listesinden düşürüldü, hat yeniden koşturuldu (7 görsel, denetim sızıntı bulmadı) ve `public/product/sube.webp` yayınlanan kümeden çıktı: `/product/sube.webp` artık **404** (önce 200, 62.494 B). Bu, yukarıdaki kalemlerden **yalnız** `sube.webp`'te duranların kamuya açık yüzeyini kapatır — *"Simge & Gizem"*, *"~₺110B/ay artabilir"*, *"+%34 geçen aya göre"*, *"227 üye · +30 bu ay (rekor)"*, *"★ en hızlı büyüyen şube"*.
+
+**Kapanmayan — bu yüzden atom açık:**
+- **`grup.webp`'teki "Gizem Ö." gösterilmeye devam ediyor** (ProductStory adım 2 → `/` ve `/ozellikler`). Yasal metnin *"gerçek bir kişinin verisi gösterilmemektedir"* beyanı hâlâ çürük.
+- **Kök neden duruyor:** `auditTexts()` hâlâ iki dallı, iddia sızıntısı için hiç dal yok — bir ekranı listeden düşürmek denetimi görür hâle getirmez. `DROP_NODES` hâlâ sekiz ekranın üçünü kapsıyor.
+- **"Kampanyalar" nav girdisi** kalan yedi görselin altısında, *"Yenileme & Churn"* kartı `raporlar.webp`'te duruyor.
+
+Kapanış kapsamının ölçütü hâlâ [B-044](B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md)'teki envanter tablosudur; o tablonun `sube.webp` satırı bugün **tarihsel** okunur (ekran artık üretilmiyor).
+
 ## Çözüm Kaydı
 
 —

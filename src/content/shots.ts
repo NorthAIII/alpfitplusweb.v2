@@ -30,12 +30,6 @@ export const SHOTS = {
     height: 601,
     alt: "Alpfit Plus finans ekranı: ciro trendi, gelir kırılımı ve ödeme tipi dağılımı",
   },
-  sube: {
-    src: "/product/sube.webp",
-    width: 1440,
-    height: 1104,
-    alt: "Alpfit Plus şube detay ekranı: aylık ciro, aktif üye ve gelir kırılımı",
-  },
   antrenor: {
     src: "/product/antrenor.webp",
     width: 1200,

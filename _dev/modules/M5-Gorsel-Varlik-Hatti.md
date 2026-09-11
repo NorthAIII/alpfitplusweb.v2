@@ -10,10 +10,10 @@
 
 ### F5.1: Ürün ekran görüntüsü hattı → Phase —
 
-**Açıklama:** `render-product.mjs` demo ekranlarını Playwright ile render eder; marka düzeltmesi (eski ad), kişi/yer temizliği (nötr adlar, avatar baş harfleri senkron), düğüm düşürme (karşılanmayan iddia kartları), denetim (sızıntı varsa **üretim durur**). `churn.html` ve `kampanya.html` bilinçle kapsam dışı. Kickoff öncesi tamamlandı.
+**Açıklama:** `render-product.mjs` demo ekranlarını Playwright ile render eder; marka düzeltmesi (eski ad), kişi/yer temizliği (nötr adlar, avatar baş harfleri senkron), düğüm düşürme (karşılanmayan iddia kartları), denetim (sızıntı varsa **üretim durur**). `churn.html` ve `kampanya.html` bilinçle kapsam dışı; `sube.html` sonradan düşürüldü (QUICK-001, 2026-09-12 — Edge Case'ler). Kickoff öncesi tamamlandı.
 
 **Kabul Kriterleri:**
-- Çıktı 8 `.webp`; hiçbirinde eski marka, gerçek sporcu/semt adı yok (metin denetimi + görsel denetim)
+- Çıktı 7 `.webp`; hiçbirinde eski marka, gerçek sporcu/semt adı yok (metin denetimi + görsel denetim)
 - Bir sızıntı tespit edilince betik sıfır-olmayan kodla çıkar, dosya yazmaz
 - Betik `../Alpfit.v1` dizinine yazmaz (salt okunur mount)
 
@@ -22,6 +22,7 @@
 **Edge Case'ler:**
 - Kaynak demoda `<img>` olarak gömülü logo metin denetimini atlatmıştı — görsel denetim bu yüzden var (`BULGULAR.md` arşiv B-001)
 - Ürün yeni kart eklerse (örn. SMS) sitedeki iddiayla çelişebilir; temizlik tablosu güncellenir (arşiv B-002)
+- `sube` ekranı hattan çıkarıldı (QUICK-001, 2026-09-12): kaynağı üç sızıntı sınıfını birden taşıyor — `&` ile bağlı gerçek ilk ad, ciro projeksiyonu/yüzde/üstünlük rozeti, gerçek pilot semtinin baş harfleri — ve denetim üçüne de kör. Görsel hiçbir sayfada kullanılmıyordu ama adresi 200 dönüyordu. **Geri eklemenin koşulu denetimin bu üç dalının kapanmasıdır** (`BULGULAR.md` B-018, B-044); kriter o gün 8'e döner
 
 ---
 

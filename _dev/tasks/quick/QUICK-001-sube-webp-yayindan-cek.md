@@ -1,7 +1,7 @@
 # QUICK-001: `sube.webp` üretim hattından düşürülüp yayından çekilsin
 
 **Tarih:** 2026-09-12
-**Durum:** ⬜ Bekliyor
+**Durum:** ✅ Tamamlandı
 
 ## Ne Yapılacak
 
@@ -27,8 +27,41 @@
 
 ## Yapılanlar
 
+- **`SCREENS` listesinden `sube` düşürüldü** ve yerine **gerekçe yorumu** yazıldı: üç sızıntı sınıfı (`&` ile bağlı gerçek ilk ad, ciro/yüzde/üstünlük rozeti, gerçek semtin baş harfleri), denetimin üçüne de kör olduğu, ve **geri eklemenin koşulu** (B-018 + B-044'ün denetim dalları kapanmalı). Satırın neden yok olduğu dosyadan okunabilir — sonraki oturum onu geri eklemesin diye.
+- **Hat araştırma konteynerinde yeniden koşturuldu** (`/demo` salt-okunur mount ile). 7 ekran üretildi, denetim sızıntı bulmadı, çıkış kodu 0. Yeni çıktılar mevcut yayınlanan dosyalarla **bayt bayt aynı** çıktı (hat belirlenimci) — yani `public/product/`'ta tek değişiklik `sube.webp`'in düşmesi, diğer 7 görsel dokunulmamış gibi duruyor.
+- **`public/product/sube.webp` yayınlanan kümeden çıkarıldı** (`git rm`). `research/product-out/`'ta kalan bayat kopya da silindi — hat çıktı klasörünü temizlemiyor, duran dosya "hâlâ üretiliyor" gibi okunurdu.
+- **`SHOTS.sube` künyesi kaldırıldı** (`src/content/shots.ts`). Künye 8'den 7'ye indi; tüketicisi olmadığı zaten ölçülmüştü, derleme teyit etti.
+- **M5 F5.1 hizalandı:** kabul kriteri "Çıktı 8 `.webp`" → **7**; açıklamaya `sube.html`'in sonradan düşürüldüğü, Edge Case'lere gerekçe ve **geri ekleme koşulu** girdi.
+- **B-018 ve B-044'e kapsam daralması notu işlendi** — ikisi de **Açık** kaldı, Çözüm Kaydı'na dokunulmadı. Notlar neyin kapandığını (yalnız `sube.webp`'in kamuya açık yüzeyi) ve neyin kapanmadığını (gösterilen `grup.webp`'teki "Gizem Ö.", avatar uyumsuzlukları, semt baş harfi sınıfı, iki dallı denetim) ayrı ayrı yazıyor. `BULGULAR.md`'de B-044'ün kancası gerçeğe çekildi — "Vadi/BŞ" artık yayınlanan bir karede değil, kanca yayınlanan uyumsuzluğu gösteriyor.
+
 ## Değişen Dosyalar
 
+- `research/scripts/render-product.mjs` — `SCREENS`'ten `sube` düştü + gerekçe/geri-ekleme-koşulu yorumu
+- `public/product/sube.webp` — **silindi** (hattın artık üretmediği varlık)
+- `src/content/shots.ts` — `SHOTS.sube` künyesi kaldırıldı
+- `_dev/modules/M5-Gorsel-Varlik-Hatti.md` — F5.1 kriteri 8 → 7, açıklama + edge case
+- `_dev/bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md` — kapsam daralması notu (atom açık)
+- `_dev/bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md` — kapsam daralması notu (atom açık)
+- `_dev/BULGULAR.md` — B-044 kancası tazelendi, Son Güncelleme satırı
+
 ## Not
+
+**Doğrulama — ne koşuldu, ne görüldü:**
+
+| Kapı | Sonuç |
+|---|---|
+| `render-product.mjs` (araştırma konteyneri, `/demo` `:ro`) | 7 ekran üretildi, **denetim sızıntı bulmadı**, çıkış kodu **0** |
+| `npx tsc --noEmit` (web konteyneri) | çıkış **0** |
+| `npm run build` (yalıtılmış konteyner) | çıkış **0**, 23 rota üretildi |
+| 16 rotanın HTML'i `sube.webp` referansı için tarandı | **0 referans**, 15 rota 200 + 404 sayfası 404 |
+| `/product/sube.webp` | **404** (önce 200, 62.494 B) · `/product/grup.webp` hâlâ 200 |
+| `scan.mjs /` ve `scan.mjs /ozellikler` (ürün turunu gösteren iki sayfa) | ikisinde de **konsol temiz** |
+| `a11y.mjs` | **TOPLAM SORUN: 0** |
+
+**Derleme paylaşılan `.next` hacmini ezmeden koşturuldu.** `docker-compose.yml`'de `.next` isimli bir hacim ve `web` servisiyle paylaşılıyor; oturum sırasında **paralel bir oturum TASK-1.07'yi çalıştırıyordu** ve geliştirme sunucusu ayaktaydı. Derleme bu yüzden `-v /app/.next` anonim hacmiyle yalıtılmış bir konteynerde koşturuldu — `docker compose restart web` gerekmedi, geliştirme sunucusu hiç kesilmedi. Ölçüldü: derlemeden sonra 3000 hâlâ 200 dönüyor.
+
+**`AUDIT_ALLOW.sube` bilinçle bırakıldı** (`research/lib/screen-cleanup-v2.mjs`). Ekran listeden düştüğü için `auditTexts` artık o girdiyi hiç okumuyor — ölü ama zararsız: içindeki altı kalem ("Şube Detayı", "Aylık Ciro", "Gelir Kırılımı"…) masum etiketler, gerçek sızıntı dizgelerinin **hiçbiri** listede değil. Silmek, ekran hatta geri döndüğü gün yeniden çıkarılması gereken bir bilgiyi kaybettirirdi.
+
+**Kapsam sınırı korundu:** `demo-shots.mjs` hâlâ `sube.html` yakalıyor ama o betik `research/out/` altına ham (temizlenmemiş) araştırma çıktısı yazıyor, yayın hattı değil — gitignore'da ve `public/`'e hiç dokunmuyor. Dokunulmadı.
 
 Bulgu atomları: `_dev/bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md` · `_dev/bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md`. Hattın koşum tarifi ve konteyner kuralları: `_dev/memory/arastirma-konteynerinde-tarayici-olcumu.md`.

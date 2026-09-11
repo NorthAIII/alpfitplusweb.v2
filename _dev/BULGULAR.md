@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-12 — audit-product derin turu, bütün proje (filo 9 ajan + doğrulama dalgası): 22 yeni bulgu atomlaştı (7 🔴), Gelen Kutusu'nun üç `[TASK-1.07]` notu mezun oldu, dokuz karar sorusu kutuya düştü ve **dördü aynı oturumda cevaplandı** (ikisi kanca aldı, ikisi B-050 ve QUICK-001'e mezun oldu); B-012'nin hipotezi ölçülüp çürütüldü, B-018'in kapsam notu kapandı. Açık bulgu 43 — rehber eşik (~30) aşıldı, triyaj çağrısı.
+**Son Güncelleme:** 2026-09-12 — audit-product derin turu, bütün proje (filo 9 ajan + doğrulama dalgası): 22 yeni bulgu atomlaştı (7 🔴), Gelen Kutusu'nun üç `[TASK-1.07]` notu mezun oldu, dokuz karar sorusu kutuya düştü ve **dördü aynı oturumda cevaplandı** (ikisi kanca aldı, ikisi B-050 ve QUICK-001'e mezun oldu); B-012'nin hipotezi ölçülüp çürütüldü, B-018'in kapsam notu kapandı. Açık bulgu 43 — rehber eşik (~30) aşıldı, triyaj çağrısı. QUICK-001 `sube` ekranını hattan düşürdü: B-018 ve B-044 **açık kalır**, ikisine de kapsam daralması notu işlendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -38,6 +38,7 @@
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px; referans alınan rakip de benzer uzunlukta. Kısaltılsın mı? Karar kullanıcıda — tek başına içerik atılmadı (bkz. `modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
 - [TASK-1.07] Ana sayfada iki ardışık ikon kartı ızgarası (`Modules` 3 sütun + `Benefits` 4 sütun, ikon kümesi tekrar ediyor) — STYLE-GUIDE "jenerik ikonlu kart ızgarası" maddesiyle çelişiyor; Modules'ta 5 kart 3 sütuna dizildiği için ikinci satır tırtıklı bitiyor
 - [oturum triyajı] `/devflow:next` motorda yok (rev 4e55308) ama kök `CLAUDE.md` hâlâ listeliyor ve oturum kapanışının varsayılan önerisi olarak gösteriyor; motorun yeni `run-phase` komutu da listede yok — DevFlow Komutları bölümü motorla hizalanmalı (audit-docs)
+- [QUICK-001] `render-product.mjs` çıktı klasörünü (`research/product-out/`) hiç temizlemiyor: `SCREENS`'ten bir ekran düşürülünce eski `.webp` orada kalıyor ve "hâlâ üretiliyor" gibi okunuyor — `public/`'e elle kopyalayan bir sonraki oturum bayat varlığı geri koyabilir. Klasör ayrıca konteynerin root kullanıcısına ait, host'tan silinemiyor (docker gerekiyor)
 
 - [audit-product SORU] `DemoForm.tsx:76` `noValidate` ve hız sınırının doğrulamadan önce sayması bilinçli mi? İkisi birlikte M3 F3.1 kriteriyle çelişiyor ve geçerli talebi 429'a düşürüyor (bkz. B-020) — önerim: kota yalnız doğrulamayı geçen isteği saysın, istemci doğrulaması açılsın
 - [audit-product SORU] Footer'daki "Giriş Yap" bilinçli mi? Bilinçli Tercihler kaydı yalnız **header**'ın yokluğunu kapsıyor ("footer'a, ürün canlıya çıkınca"), ama bağlantı bugün footer'da ve `app.alpfitplus.com` çözümlenmiyor — önerim: ürün canlıya çıkana dek gizlensin, kayıt gerçeği yansıtsın
@@ -86,7 +87,7 @@
 - 🟡 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — IP, yurt dışı aktarım, onay kapsamı; hukukçuya gönderimden (B-008) önce düzeltilmeli
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — analitik eklenirken yazmak için doğal an; pencere kapanırsa bir daha zor açılır
 - 🟡 [B-025 — Çalışma zamanı için hiçbir alarm yok](bulgular/B-025-calisma-zamani-alarm-yok.md) — "hiçbir hedefe yazılamadı" satırı yalnız Hobby loglarına düşüyor; kimse haber almaz
-- 🟡 [B-044 — Ürün görselinde semt baş harfi sızıntısı ve avatar-ad uyumsuzluğu](bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) — "Vadi" yazan karede "BŞ" duruyor; denetim 21 sızıntı dizgesinin 20'sine kör
+- 🟡 [B-044 — Ürün görselinde semt baş harfi sızıntısı ve avatar-ad uyumsuzluğu](bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) — yayınlanan uyumsuzluk `grup`/`takvim`'de sürüyor ("Burak Ş."+DK); semt baş harfi sınıfı açık, denetim 20/21 kör
 - 🟡 [B-042 — Paylaşım kartı sayfa başına türemiyor, `/foto` önbelleksiz, JSON-LD geriledi](bulgular/B-042-paylasim-karti-ve-yayin-yuzeyi.md) — 15 sayfanın `og:url`'ü ana sayfa; WhatsApp birincil kanal
 - 🟡 [B-043 — F7.5 geçiş yüzeyi tabloda yazandan geniş](bulgular/B-043-f75-gecis-yuzeyi-tablodan-genis.md) — altı varlık adresi 200'den 404'e düşecek, `www` haritada yok; geçişin DNS işi olmadığı da ölçüldü
 - 🟡 [B-039 — Metin bileşende: 402 gömülü prose, 70 bölüm başlığının 67'si literal](bulgular/B-039-metin-bilesende.md) — "Metin tonu" fazının ön koşulu; kriteri bugünkü envanterle sağlanamaz

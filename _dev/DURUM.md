@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.10 ✅: yasal metinler bu fazın iki yeni veri akışını anlatıyor (Google e-tablo kaydı adıyla, çerezsiz Umami ölçümü ayrı paragrafta); a11y/font-guard/scan üçü de temiz. Sıra bozuldu: 1.06 kullanıcı dağıtımına, 1.07–1.09 paralel bir oturuma bağlı.
+**Son Güncelleme:** 2026-09-12 — QUICK-001 (`sube.webp` yayından çekildi) ✅ tamamlandı: ekran `render-product.mjs` hattından düştü, hat 7 görsel üretti (denetim temiz), `/product/sube.webp` artık 404; B-018 ve B-044 kapsam daralması notuyla **açık kaldı**. Faz konumu değişmedi — TASK-1.04 hâlâ kullanıcı dağıtımına, 1.07–1.09 paralel oturuma bağlı.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 

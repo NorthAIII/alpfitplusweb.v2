@@ -27,7 +27,14 @@ const SCREENS = [
   { id: 'antrenor', file: 'antrenor.html', out: 'antrenor.webp', width: 1200, quality: 82, clipBelow: '.detgrid' },
   { id: 'raporlar', file: 'raporlar.html', out: 'raporlar.webp', width: 1200, quality: 82, clipBelow: '.repgrid' },
   { id: 'grup',     file: 'grup.html',     out: 'grup.webp',     width: 1440, quality: 82 },
-  { id: 'sube',     file: 'sube.html',     out: 'sube.webp',     width: 1440, quality: 82 },
+  // 'sube' EKRANI BILEREK YOK (QUICK-001). sube.html'in kaynagi uc ayri sizinti
+  // sinifini birden tasiyor ve denetim ucune de kor: gercek ilk ad ("Simge & Gizem",
+  // & ile bagli oldugu icin ad kalibina uymuyor), ciro projeksiyonu / yuzde / ustunluk
+  // rozeti (auditTexts'te iddia dali HIC yok) ve gercek pilot semtinin bas harfleri
+  // ("BS" avatari; INITIALS tablosu yalniz kisi bas harfi tasiyor). Gorsel hicbir
+  // sayfada kullanilmiyordu ama /product/sube.webp adresinden 200 donuyordu.
+  // Geri eklemeden once denetimin bu uc dali kapanmali → BULGULAR B-018, B-044.
+
   // .phone elemani 1400 px viewport'a sigmiyordu ve klip alttan kesiliyordu →
   // bu ekran daha uzun bir viewport ister. Digerlerinde 1400 yeterli ve .app
   // yuksekligi icerik surumlu oldugu icin genel yukseklige dokunulmadi.
