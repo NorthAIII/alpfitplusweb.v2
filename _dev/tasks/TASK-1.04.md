@@ -1,6 +1,6 @@
 # TASK-1.04: Google Sheet lead alıcısı — Apps Script web app
 
-**Durum:** ⬜ Bekliyor
+**Durum:** 🔄 Devam ediyor
 **Modül:** M3 — Lead Hattı (`modules/M3-Lead-Hatti.md`)
 **Feature:** F3.2: Dayanıklı kayıt hedefi
 **Faz:** Phase 1 (`phases/PHASE-1.md`)
@@ -40,7 +40,7 @@ Yedek rota (web app pratikte güvenilmez çıkarsa): Sheets API + servis hesabı
 
 ## Alt Görevler
 
-- [ ] **1. Betiği yaz**
+- [x] **1. Betiği yaz**
   - `doPost(e)`: `e.parameter.token` paylaşılan token'la karşılaştırılır; eşleşmezse `{ok:false, code:"bad-token"}` döner ve **satır yazılmaz**
   - `LockService.getScriptLock()` ile kilit alınır (eşzamanlı `appendRow` satır kaybedebilir)
   - Gövde JSON parse edilir, sütun sırasına göre `appendRow`
@@ -48,7 +48,7 @@ Yedek rota (web app pratikte güvenilmez çıkarsa): Sheets API + servis hesabı
   - Başlık satırı yoksa oluşturulur (ilk çalıştırmada e-tablo boş olabilir)
   - Dosya: `research/lead-sheet.gs` (YENİ)
 
-- [ ] **2. Sütun şemasını sabitle**
+- [x] **2. Sütun şemasını sabitle**
   - Sıra: `at · env · name · club · branches · phone · email · segment · message · consent · ua`
   - `route.ts` → `type Lead` ile bire bir, artı yeni `env` alanı (TASK-1.05 ekleyecek)
   - **IP kayda girmez** (KVKK asgarilik; bugün de girmiyor)
@@ -59,7 +59,7 @@ Yedek rota (web app pratikte güvenilmez çıkarsa): Sheets API + servis hesabı
   - Dağıt → Web app → **"Execute as: me"**, **"Who has access: Anyone"**
   - Üretilen `/exec` URL'sine `?token=…` eklenerek `LEAD_WEBHOOK_URL` değeri oluşur; kullanıcı Vercel'e girer (ve yerel `.env`'ine)
 
-- [ ] **4. `.env.example` güncelle**
+- [x] **4. `.env.example` güncelle**
   - `LEAD_WEBHOOK_URL` açıklaması token'lı biçimi anlatır (`https://script.google.com/macros/s/…/exec?token=…`)
   - `LEAD_FILE_PATH` yorumuna "Vercel'de kalıcı disk yok — yalnız yerel Docker" notu
   - Değer yazılmaz — **bugün dolu duran `DEMO_TO` ve `DEMO_FROM` değerleri de boşaltılır**, gerçek adresler yorum satırına örnek olarak bile taşınmaz (kök talimat: `.env.example` yalnız anahtar adlarını taşır)
@@ -71,7 +71,8 @@ Yedek rota (web app pratikte güvenilmez çıkarsa): Sheets API + servis hesabı
 
 ```
 research/
-└── lead-sheet.gs         # YENİ — Apps Script kaynağı (Google'daki kopyayla eşit tutulur)
+├── lead-sheet.gs         # YENİ — Apps Script kaynağı (Google'daki kopyayla eşit tutulur)
+└── lead-sheet.test.mjs   # YENİ — sahte Apps Script ortamı; dağıtımdan önce sözleşmeyi kanıtlar
 ./
 └── .env.example          # LEAD_WEBHOOK_URL / LEAD_FILE_PATH açıklamaları — zaten var
 ```
@@ -103,7 +104,7 @@ research/
 
 ## Karar Noktaları
 
-- **Token'ın evi:** betikte sabit (önerilen — tek yer, kullanıcı dağıtım anında yazar) vs. Apps Script "Script Properties" (panelden yönetilir, kod temiz kalır). İkincisi daha temiz ama kurulumda bir ekran daha ekler; kullanıcıya sor.
+- **Token'ın evi — karar verildi (kullanıcı, 2026-09-11): Script Properties.** Gerekçe: task hedefi "repodaki kaynak ile Google'daki kopya eşit tutulur" diyor; betikte yer tutucu sabit dursaydı iki kopya hiçbir zaman eşitlenemezdi. Token artık `PropertiesService.getScriptProperties().getProperty("LEAD_TOKEN")` ile okunur, kod yüzeyinde sır yok. Maliyeti kurulumda tek ekran (Proje ayarları → Komut dosyası özellikleri).
 
 ---
 
@@ -126,12 +127,55 @@ research/
 
 ## Oturum Kayıtları
 
-### Oturum — [TARİH]
+### Oturum — 2026-09-11
 
-**Durum:** [durum]
+**Durum:** 🔄 Devam edecek — kod tarafı bitti, Google tarafındaki dağıtım kullanıcıda
 
 **Yapılanlar:**
-- [...]
+- **Alt görev 1 ✅** — `research/lead-sheet.gs` yazıldı. `doPost(e)` sırasıyla: Script Properties'ten `LEAD_TOKEN` okur (tanımsızsa **hiçbir şey yazmaz**, fail-open yok), `e.parameter.token` ile karşılaştırır, gövdeyi JSON parse eder, `LockService.tryLock(20 sn)` ile kilit alır, başlık satırı yoksa oluşturup dondurur, `appendRow` ile satırı yazar, kilidi `finally`'de bırakır. Her yol — beklenmeyen hata dâhil — `ContentService` ile JSON döner; dosyanın başında kurulum ve "aynı adresi koruyarak yeni sürüm dağıtma" tarifi yorum olarak durur.
+- **Alt görev 2 ✅** — Sütun şeması `COLUMNS` sabitinde: `at · env · name · club · branches · phone · email · segment · message · consent · ua`. `route.ts` → `type Lead` ile bire bir, artı `env` (TASK-1.05 dolduracak). IP yok.
+- **Alt görev 3 ⬜** — E-tablo + Apps Script dağıtımı **yapılmadı**; kullanıcının Google hesabında, tarayıcıdan yapılacak iş. Oturumda yapılamaz.
+- **Alt görev 4 ✅** — `.env.example`: `LEAD_WEBHOOK_URL` açıklaması token'lı biçimi ve token'ın Script Properties'te durduğunu anlatıyor; `LEAD_FILE_PATH` yorumu "Vercel'de kalıcı disk YOKTUR, yalnız yerel Docker" diyor; dosyanın başına "yalnızca anahtar adları" kuralı yazıldı ve **`DEMO_TO` / `DEMO_FROM` değerleri boşaltıldı**.
+- **Ek:** Dağıtım beklerken sözleşmeyi kanıtlamak için `research/lead-sheet.test.mjs` yazıldı — Apps Script global servislerini sahteleyip betiği doğrudan koşturur.
+
+**Sorunlar:**
+- **Test kriterleri canlı `/exec` adresi istiyor, adres yok.** Çözüm: kriterler sahte Apps Script ortamında koşturuldu (aşağıda). Bu, canlı curl turunun yerine geçmez — onun yerine **önüne** geçer; kullanıcı dağıttığında aynı kriterler canlı adrese karşı tekrarlanır.
+- **Sheets formül enjeksiyonu** (araştırmada yoktu, icrada çıktı): lead `message`/`club` alanı dışarıdan gelir ve `=IMPORTXML(...)` ile başlarsa `appendRow` onu **formül** olarak yorumlar — e-tablo içeriğini dışarı sızdırabilir. `cell()` fonksiyonu `= + - @ TAB CR` ile başlayan değerleri tek tırnakla metne sabitliyor.
+
+**Kararlar:**
+- **Token Script Properties'te** (kullanıcı kararı) — gerekçe Karar Noktaları bölümünde.
+- **Formül kaçırma betik tarafında**, route tarafında değil — kaçış e-tablonun kendi yorumlama kuralına ait; route'un gönderdiği veri ham kalmalı ki e-posta gövdesi ve ileride başka hedefler bozulmasın.
+- **`doGet` eklendi** (tarifte yoktu): tarayıcıdan adrese girildiğinde HTML hata sayfası yerine `{"ok":false,"code":"use-post"}` döner — "adres ayakta mı" sorusu böyle yanıtlanır.
+- docs/DECISIONS.md'ye eklendi: Hayır — yedek rotaya geçilmedi, mekanizma kararı zaten araştırmada kayıtlı.
+
+**Kalan İşler:**
+- Alt görev 3: e-tablo oluşturma, betiği yapıştırma, `LEAD_TOKEN` girme, web app dağıtımı (kullanıcı, tarayıcı).
+- Canlı curl turu: altı test kriteri gerçek `/exec` adresine karşı.
+- **Canlı turda ayrıca doğrulanacak:** telefon alanı `+90…` ile başladığı için formül kaçırma önekini alıyor. Beklenen, önekin e-tabloda görünmemesi. Hücrede düz `'+90…` görünüyorsa kaçış kümesi yalnız `=` ile sınırlanır (gerekçe `lead-sheet.gs` → `cell()` yorumunda).
+- `LEAD_WEBHOOK_URL` Vercel'e (Production + Preview) ve yerel `.env`'e girilir.
+
+**Son Yaklaşım:**
+Kod tarafı bitti ve yerelde kanıtlandı; kalan tek şey Google hesabında yapılacak dağıtım. Betiğin Google'daki kopyası repodakiyle **birebir aynı** olacak — token kodda değil Script Properties'te durduğu için kopyalar hiç ayrışmıyor. Dağıtım sonrası kod değişirse adres korunmalı: "Dağıtımları yönet → mevcut dağıtımı düzenle → Yeni sürüm"; yeni dağıtım açmak `/exec` adresini değiştirir ve Vercel env'i güncellemek gerekir.
+
+**Sonraki Adım Detayı:**
+1. Kullanıcı `research/lead-sheet.gs` başındaki KURULUM bloğunu adım adım uygular (e-tablo → Apps Script → `LEAD_TOKEN` Script Properties → Web app dağıtımı: Farklı çalıştır = Ben, Erişimi olanlar = Herkes).
+2. Üretilen adres repo kökündeki `.env` dosyasına `LEAD_WEBHOOK_URL=https://script.google.com/macros/s/<ID>/exec?token=<TOKEN>` olarak yazılır (`.env` gitignore'da; token sohbete/commit'e/task dokümanına yazılmaz).
+3. Oturum `.env`'den okuyup **değeri ekrana basmadan** altı test kriterini curl ile koşar (doğru token → `{"ok":true}` + tek satır; yanlış token → satır yok; eksik alan; boş e-tabloda başlık; arka arkaya 5 istek → 5 satır; formül kaçırma görünümü).
+4. Kullanıcı aynı değeri Vercel'de `alpfitplus-web-v2` projesine Production + Preview kapsamında girer.
+5. Task ✅ + arşiv; sıradaki TASK-1.05 (route tarafında JSON `{ok:true}` doğrulaması ve `env` alanı).
+
+**Dosya Değişiklikleri:**
+- `research/lead-sheet.gs` → YENİ. Apps Script web app kaynağı: token kapısı, kilit, başlık satırı, formül kaçırma, her yolda JSON yanıt, başta kurulum/yeniden-dağıtım tarifi.
+- `research/lead-sheet.test.mjs` → YENİ. Sahte Apps Script ortamı; `node research/lead-sheet.test.mjs`, geçme şartı `TOPLAM SORUN: 0`.
+- `.env.example` → `LEAD_WEBHOOK_URL` ve `LEAD_FILE_PATH` açıklamaları yazıldı; `DEMO_TO` / `DEMO_FROM` değerleri boşaltıldı; "yalnız anahtar adları" kuralı dosyanın başına girdi.
+
+**Test Sonuçları:**
+<!-- Kapsam: betiğin KENDİ mantığı, sahte Apps Script servislerine karşı. Google'ın gerçek davranışı (302 yönlendirmesi, yetki ekranı, kota, apostrof önekinin hücrede görünüp görünmemesi) bu kapsamda DEĞİL — canlı tura kalıyor. -->
+- `node research/lead-sheet.test.mjs` → **TOPLAM SORUN: 0** (12 senaryo, 40 kontrol). Kapsanan task kriterleri: doğru token → gövde tam olarak `{"ok":true}` ve tek veri satırı; yanlış token → `bad-token`, satır yok; eksik alanlı gövde → satır düşer, eksik sütunlar boş; boş e-tabloda ilk istek başlık satırını da yazar (ve yalnız bir kez); arka arkaya 5 istek → 5 satır, sıra korunur, kilit `finally`'de bırakılır.
+- **Ürettiğim kapıyı sınadım — bozuk girdi:** yanlış token ve token'sız istek, ikisi de `{"ok":false,"code":"bad-token"}` döndü ve `rows` boş kaldı. Kontrol grubu (doğru token) aynı koşuda yeşil — yani kapı gerçekten token'ı ölçüyor, her şeye kırmızı basmıyor.
+- **Ürettiğim kapıyı sınadım — boş kapsam:** `LEAD_TOKEN` Script Properties'te **tanımsızken** istek `no-token-configured` ile reddedildi, satır yazılmadı. İkinci ayak olarak token tanımsızken boş token gönderildi (`""` === `null` tuzağı) — yine reddedildi. Kapı kurulum eksikliğinde fail-open yapmıyor.
+- Ek senaryolar (kriter listesinde yoktu, icrada eklendi): formül enjeksiyonu dört tetik karakterde kaçırıldı ve zararsız metne dokunulmadı; bozuk JSON / boş gövde / dizi gövde reddedildi, satır yazılmadı; kilit alınamazsa `busy` döndü ve satır yazılmadı; `doGet` JSON döndü; 9000 karakterlik mesaj 4000'e kırpıldı.
+- `npx eslint research/lead-sheet.gs` → dosya eslint yapılandırmasının dışında (uyarı, hata değil). `src/` altında değişiklik yok, derleme yüzeyi bu oturumda değişmedi.
 
 ---
 

@@ -124,7 +124,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.01 | TASK-1.01 | ✅ Tamamlandı | Aşama türetimi (`local/preview/production`) ve `deployStage` tek kaynağı |
 | 1.02 | TASK-1.02 | ✅ Tamamlandı | noindex üç katman (başlık + robots.txt + metadata), aynı aşama değerinden |
 | 1.03 | TASK-1.03 | ✅ Tamamlandı | Vercel'de ayrı proje, env iskeleti, başlık ölçümü, GIT-STRATEJI güncellemesi |
-| 1.04 | TASK-1.04 | ⬜ Bekliyor | Google Sheet lead alıcısı — sertleştirilmiş Apps Script web app |
+| 1.04 | TASK-1.04 | 🔄 Devam ediyor | Google Sheet lead alıcısı — sertleştirilmiş Apps Script web app |
 | 1.05 | TASK-1.05 | ⬜ Bekliyor | Demo ucunu sertleştir: JSON `ok` doğrulaması + lead `env` alanı |
 | 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattı doğrulaması ve uçtan uca gerçek lead testi |
 | 1.07 | TASK-1.07 | ⬜ Bekliyor | Umami Cloud kurulumu ve tracker bağlantısı (`data-tag=deployStage`) |
