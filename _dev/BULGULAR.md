@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.03: Kapsama tablosunda M7 satırı tazelendi (önizleme yayında, başlıklar yayın zincirinde ölçüldü); Gelen Kutusu ve Açık Bulgular değişmedi.
+**Son Güncelleme:** 2026-09-11 — audit-product derin turu (M4 asistan · M1 iddia sızıntısı · M7 yayın yüzeyi · dönüşüm hunisi): 18 yeni bulgu atomlaştı (6 🔴), Gelen Kutusu'nun üç doğrulanabilir notu mezun oldu, yedi karar sorusu kutuya düştü; TASK-1.07 satırlarına dokunulmadı (paralel oturum).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -36,9 +36,18 @@
      SİLİNİR — bilgi yeni evine taşınmıştır (mezuniyet). Olgun hal: boş kutu. -->
 
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px; referans alınan rakip de benzer uzunlukta. Kısaltılsın mı? Karar kullanıcıda — tek başına içerik atılmadı (bkz. `modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
-- [PHASE-1] `src/app/global-error.tsx:72` WhatsApp adresini elle yazıyor, `CONTACT.whatsapp.href` yerine — tek-kaynak ihlali (M1 F1.1); numara değişirse burası kaçar
-- [PHASE-1] `alpfitplus.com` apex'te MX kaydı yok (iki çözümleyiciyle ölçüldü) — `destek@alpfitplus.com` (yasal metinlerde KVKK başvuru adresi, `CONTACT.support`) ve `demo@alpfitplus.com` posta alamıyor olabilir; DNS Squarespace'te, kullanıcı doğrular
-- [TASK-1.01] `npm run lint` repoda kırık: 25 hata + 5 uyarı, hepsi `src/components/sections/*.tsx` ve `src/app/*` içinde (çoğu `react/no-unescaped-entities`, bir de kullanılmayan değişken) — CI kurulmadan (M6 F6.3) temizlenmeli, yoksa kapı ilk günden kırmızı doğar
+- [TASK-1.07] `FounderProgram.tsx:37` ızgara çocuklarında `min-w-0` yok — mobilde (390px) iki track 350 yerine 370px oluyor, bölümün `overflow-hidden`'ı sağ boşluğu sessizce kırpıyor; tarayıcıda `min-width:0` ile 370→350 doğrulandı
+- [TASK-1.07] `mobile-audit.mjs` **sessiz kırpmayı görmüyor** — `overflow-hidden` ile kırpılan taşma sayfa yatay kaydırması üretmediği için kapı "taşan eleman: 0" diyor; yukarıdaki bulgu bu kör noktadan geçti (kapı işi → M6)
+- [TASK-1.07] Ürün turu ekran görüntüleri mobilde 302px'e iniyor (masaüstünde 760px, aynı kaynak) — masaüstü panosu bu ölçekte okunmuyor; mobil için kırpma ya da ayrı görsel gerekebilir (M5/M2)
+- [TASK-1.07] Ana sayfada iki ardışık ikon kartı ızgarası (`Modules` 3 sütun + `Benefits` 4 sütun, ikon kümesi tekrar ediyor) — STYLE-GUIDE "jenerik ikonlu kart ızgarası" maddesiyle çelişiyor; Modules'ta 5 kart 3 sütuna dizildiği için ikinci satır tırtıklı bitiyor
+
+- [audit-product SORU] `DemoForm.tsx:76` `noValidate` ve hız sınırının doğrulamadan önce sayması bilinçli mi? İkisi birlikte M3 F3.1 kriteriyle çelişiyor ve geçerli talebi 429'a düşürüyor (bkz. B-020) — önerim: kota yalnız doğrulamayı geçen isteği saysın, istemci doğrulaması açılsın
+- [audit-product SORU] Footer'daki "Giriş Yap" bilinçli mi? Bilinçli Tercihler kaydı yalnız **header**'ın yokluğunu kapsıyor ("footer'a, ürün canlıya çıkınca"), ama bağlantı bugün footer'da ve `app.alpfitplus.com` çözümlenmiyor — önerim: ürün canlıya çıkana dek gizlensin, kayıt gerçeği yansıtsın
+- [audit-product SORU] `mobile-audit.mjs`'in raporladığı 157 küçük dokunma hedefi kabul mü? M2 F2.3 kriteri "≥ 44 px" diyor ama CLAUDE.md geçme şartı yalnız "yatay kaydırma: yok" — kriter mi bayat, kapı mı dar? (bkz. B-015) — önerim: kriter hedef olarak kalsın, kapı kademeli sıkılsın
+- [audit-product SORU] Asistan paneli bilinçli olarak **modal olmayan** bir yardımcı mı? `role="dialog"` var ama `aria-modal` yok, odak taşınmıyor, arka plan `inert` değil; M4 F4.1 "odak tuzağı yok" diyor. Cevap B-017'nin düzeltme yönünü belirliyor — önerim: modal olmayan yardımcı kabul edilip rol düzeltilsin
+- [audit-product SORU] "İncelediğimiz 9 yerli ve 9 global üründe bu modüle rastlamadık" sitede **yayımlanır** mı? `CLAIMS.md` bu rakamı tablonun "Neden" sütununda, yani iç gerekçe olarak tutuyor; yayımlanan hâli ziyaretçinin doğrulayamayacağı bir tarama iddiası — önerim: yöntem + tarihle birlikte verilsin ya da kaldırılsın
+- [audit-product SORU] Ürün görsellerindeki "Aktif · Alpfit Plus konsepti", "Açılış: Şubat 2026 · 4 aylık" ve aylık ciro grafiği bilinçli demo kurgusu mu? Üç şubeli bir zincirin aylardır ürünü kullandığını ima ediyor, "bir stüdyoda pilot" sınırıyla gerilimde (bkz. B-018) — önerim: tarih ve "aktif" rozetleri temizlik tablosuna girsin
+- [audit-product SORU] `product.ts` BENEFITS başlıkları ("Kaçan randevu azalır", "Riskteki üye fark edilir") rakamsız yönlü iyileşme vaatleri — `CLAIMS.md` yüzde iyileşmeyi yasaklıyor, rakamsız vaat sınırın içinde mi sayılıyor? — önerim: içinde sayılsın ve CLAIMS'e tek satır açıklık eklensin
 
 ## Açık Bulgular
 
@@ -52,9 +61,27 @@
      Bu index bir kanvas dokümandır: BÖLÜNMEZ. Liste yönetilemeyecek kadar uzadıysa (rehber eşik ~30 açık bulgu —
      işaret fişeği, mahkûmiyet değil) bu bir triyaj çağrısıdır: stok eritilir/elenir, yapı değiştirilmez. -->
 
+- 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; `DEMO_TO` de aynı alan adına kurulursa lead sessizce kaybolur
+- 🔴 [B-018 — Ürün görselinde gerçek kişi adı, ciro projeksiyonu ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — "sızıntı varsa üretim durur" kuralı işlemedi; yasal metnin "gerçek kişi verisi yok" beyanı çürüyor
+- 🔴 [B-021 — İletişim formatı hiçbir katmanda doğrulanmıyor](bulgular/B-021-iletisim-formati-dogrulanmiyor.md) — hedef bağlandığı gün ulaşılamaz lead "başarılı" sayılacak; bugün 503 maskeliyor
+- 🔴 [B-020 — Hız sınırı doğrulamadan önce sayıyor, geçerli talep reddediliyor](bulgular/B-020-hiz-siniri-gecerli-talebi-reddediyor.md) — beş kez hata yapan kullanıcının düzeltilmiş talebi 429; ölçüldü
+- 🔴 [B-014 — Chat ağacı pilot cümlesini tek kaynaktan değil elle yazıyor](bulgular/B-014-chat-agaci-pilot-cumlesini-yeniden-yaziyor.md) — `PRODUCT_STATUS` değişince asistan eski iddiada kalır; `faq.ts` doğru deseni zaten taşıyor
+- 🔴 [B-015 — Kalite kapıları hiçbir şeye tıklamıyor, açılan katmanlar ölçülmüyor](bulgular/B-015-kalite-kapilari-etkilesim-durumunu-olcmuyor.md) — M4 F4.1'in "a11y.mjs ile ölçülür" kriteri sahte yeşil; asistan ve mobil menü hiç açılmıyor
+- 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — analitik eklenirken yazmak için doğal an; pencere kapanırsa bir daha zor açılır
+- 🟡 [B-025 — Çalışma zamanı için hiçbir alarm yok](bulgular/B-025-calisma-zamani-alarm-yok.md) — "hiçbir hedefe yazılamadı" satırı yalnız Hobby loglarına düşüyor; kimse haber almaz
+- 🟡 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — IP, yurt dışı aktarım, onay kapsamı; hukukçuya gönderimden (B-008) önce düzeltilmeli
+- 🟡 [B-019 — Üretim konteyneri bayat, ölçümler geçersiz](bulgular/B-019-uretim-konteyneri-bayat-olcumler-gecersiz.md) — 3100 bugün noindex'i açık ve rakip adını yayında gösteriyor; perf ve font-guard onu ölçüyor
+- 🟡 [B-012 — Erişilebilirlik ve mobil kapıları rotaların yarısını gezmiyor](bulgular/B-012-olcum-betikleri-rota-kapsami-eksik.md) — üç yasal sayfa mobil kapısından hiç geçmiyor; font-guard tam listeyi zaten taşıyor
+- 🟡 [B-017 — Asistan panelinin erişilebilirlik katmanı eksik](bulgular/B-017-asistan-erisilebilirlik-katmani-eksik.md) — 28 px dokunma hedefi, canlı bölge yok, odak `body`'ye düşüyor; kontrast ve Esc temiz
+- 🟡 [B-023 — Fiyat ve iletişim değerleri tek kaynak dışında, on iki yer](bulgular/B-023-fiyat-ve-iletisim-tek-kaynak-disinda.md) — biri JSON-LD'de, biri bileşende; `CONTACT.phone.display` hiç kullanılmıyor
+- 🟡 [B-022 — Mobilde ilk ekranda hiçbir dönüşüm yüzeyi yok](bulgular/B-022-mobilde-ilk-ekranda-donusum-yuzeyi-yok.md) — fiyat sayfası 7.678 px, tepesinde tıklanacak şey yok; huninin geri kalanı sağlam
+- 🟡 [B-026 — Dönüş süresi üç farklı biçimde vaat ediliyor](bulgular/B-026-donus-suresi-vaadi-uc-farkli-ve-kanitsiz.md) — asistan "birkaç dakika" + yeşil nokta diyor, site "aynı gün"; panelde soru kutusu yok ama "sorabilirsiniz" yazıyor
+- 🟡 [B-028 — `npm run lint` kırık: 25 hata + 5 uyarı](bulgular/B-028-lint-kirik.md) — CI'dan önce temizlenmeli ya da kural bilinçle kapatılmalı; kapı ilk günden kırmızı doğmasın
 - 🟡 [B-008 — Yasal metinler hukukçu onayı bekliyor](bulgular/B-008-yasal-metin-hukukcu-onayi.md) — dış aktör; metinler gerçek veri akışına göre yazıldı, "örnek metindir" ibaresi yok
 - 🟡 [B-010 — Kurucu Programı "ilk 5 kulüp" diyor, kontenjan takibi yok](bulgular/B-010-kurucu-programi-kontenjan.md) — kanıtsız kıtlık iddiasına dönüşme riski; kurucu kararı gerek
 - 🟡 [B-009 — Logo geçici; favicon, app ikonu ve OG ondan türüyor](bulgular/B-009-logo-gecici.md) — dış aktör; kalıcı logo gelince `brand-assets.mjs` yeniden koşar
+- 🟢 [B-027 — Önizleme paylaşımında kart görseli kırık](bulgular/B-027-onizleme-paylasiminda-kart-gorseli-kirik.md) — `og:image` v1'in alan adını gösteriyor, o adres 404; F7.2 kriterindeki "16 sayfa" da 15 olmalı
+- 🟢 [B-013 — README ve compose yorumu üretim portunu 3001 gösteriyor](bulgular/B-013-readme-uretim-portu-bayat.md) — gerçek port 3100; 3001'e giden başka projenin sitesini görebilir
 
 ## Kapsama
 
@@ -64,13 +91,13 @@
 
 | Alan | Son Bakış | Not |
 |------|-----------|-----|
-| M1 İçerik ve iddia | 2026-09-11 | Kickoff öncesi elle denetim; rakip adı kaldırıldı. Otomatik sızıntı denetimi yok (M6 F6.4) |
-| M2 Sayfalar | 2026-09-11 | Beş ölçüm yeşil (M6 başlangıç ölçümü); audit-product turu yapılmadı |
-| M3 Lead hattı | 2026-09-11 | Kod var, hedef tanımsız — gerçek talep testi yapılmadı |
-| M4 Asistan | — | Denetim yapılmadı |
-| M5 Görsel hat | 2026-09-11 | render-product denetimi temiz; logo geçici (B-009) |
-| M6 Kalite kapıları | 2026-09-11 | Elle koşuyor, CI yok |
-| M7 Yayın | — | Önizleme yayında (`alpfitplus-web-v2`), başlıklar ve noindex yayın zincirinde ölçüldü (TASK-1.03); audit-product turu yapılmadı |
+| M1 İçerik ve iddia | 2026-09-11 | audit-product: rakip adı ve üstünlük dili taraması temiz (23 ad, 13 render sayfa); tek-kaynak ve yasal-metin uyumu bulgu verdi (B-014, B-023, B-024, B-026). **Kapsanmadı:** `segments.ts` orta bölümü cümle cümle okunmadı; ~45 özellik iddiası ürün koduna karşı sınanmadı |
+| M2 Sayfalar | 2026-09-11 | audit-product: 16 sayfa CTA haritası çıkarıldı, 15 iç bağlantı 200, ölü çapa yok; mobil ilk ekran bulgu verdi (B-022). **Kapsanmadı:** zoom %200/%400, 320 px genişlik, gerçek cihaz |
+| M3 Lead hattı | 2026-09-11 | audit-product: 21 senaryoluk form bataryası koştu; 503 yolu dürüst, sahte "gönderildi" yok. Doğrulama ve kota bulgu verdi (B-020, B-021). **Kapsanmadı:** başarılı (200 + gerçek satır) yolu ve Resend hattı hiç denenmedi — TASK-1.06'ya kaldı |
+| M4 Asistan | 2026-09-11 | audit-product **ilk turu**: ağaç iddia sınırına sadık, çıkmaz dal yok, kontrast ve Esc temiz; erişilebilirlik ve vaat metni bulgu verdi (B-014, B-017, B-026). **Kapsanmadı:** yalnız dev (3000) ve Chromium; gerçek ekran okuyucu yok; ana sayfa dışındaki rotalarda ölçülmedi |
+| M5 Görsel hat | 2026-09-11 | audit-product: sızıntı denetiminin kör noktası bulundu (B-018). **Kapsanmadı:** sekiz görselden ikisi satır satır okundu, kaynak HTML gövdeleri taranmadı — düzeltmede sekizi birden denetlenmeli |
+| M6 Kalite kapıları | 2026-09-11 | audit-product: kapıların kendisi denetlendi — rota kapsamı, etkileşim durumu, eşik ve artefakt tazeliği bulgu verdi (B-012, B-015, B-019, B-028) |
+| M7 Yayın | 2026-09-11 | audit-product **ilk turu**: noindex üç katmanı ve beş güvenlik başlığı 25 adreste doğrulandı, Vercel soymuyor; CSP, alarm ve OG bulgu verdi (B-016, B-025, B-027). **Kapsanmadı:** Vercel proje ayarları (MCP kimlik doğrulaması gerekti), dağıtım-özel adresler, `www.` ve 301 haritası (F7.5) |
 
 **Yarım tur:** [yok]
 
