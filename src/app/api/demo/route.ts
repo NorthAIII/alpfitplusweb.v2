@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 
+import { DEPLOY_STAGE } from "@/lib/stage";
+
 /**
  * Demo talebi ucu.
  *
@@ -27,6 +29,13 @@ type Lead = {
   message: string;
   consent: boolean;
   at: string;
+  /**
+   * Dagitim asamasi (`local` | `preview` | `production`) — onizlemeden gelen
+   * test talepleri e-tabloda ve gelen kutusunda boylece ayirt edilir, silinmek
+   * zorunda kalmaz. Deger `VERCEL_ENV`'den DEGIL `deployStage`'den gelir
+   * (gerekce: src/lib/stage.ts dosya yorumu).
+   */
+  env: string;
   ua: string;
 };
 
@@ -51,6 +60,18 @@ function clean(v: unknown, max: number): string {
   return typeof v === "string" ? v.trim().slice(0, max) : "";
 }
 
+/**
+ * Webhook yazimi SOZLESMEYE bagli dogrulanir; `res.ok` tek basina yetmez.
+ *
+ * Alici bir Apps Script web app'idir (kaynak: research/lead-sheet.gs) ve betik
+ * hata firlatirsa Apps Script **200 + HTML** dondurur. Yalnizca `res.ok`'a
+ * bakan bir uc bunu "kaydedildi" sayar, kullaniciya "gonderildi" der ve lead
+ * sessizce kaybolur — v1'de yasanan hata sinifi tam olarak budur. Bu yuzden
+ * sozlesme uc kapidir: HTTP durumu, govdenin JSON olmasi, ve `ok === true`.
+ *
+ * Loglama QUALITY 2'ye bagli: hedef adres, token ve kisisel veri loga GIRMEZ —
+ * yalnizca durum kodu, alicinin kendi hata kodu ve `lead.at` damgasi yazilir.
+ */
 async function toWebhook(lead: Lead): Promise<boolean> {
   const url = process.env.LEAD_WEBHOOK_URL;
   if (!url) return false;
@@ -61,8 +82,47 @@ async function toWebhook(lead: Lead): Promise<boolean> {
       body: JSON.stringify(lead),
       signal: AbortSignal.timeout(8000),
     });
-    return res.ok;
+
+    if (!res.ok) {
+      console.error("[demo] Kayit hedefi HTTP hatasi dondurdu.", { status: res.status, at: lead.at });
+      return false;
+    }
+
+    const text = await res.text();
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      // Govde HTML ise buraya duser: betik hatasi ya da yetki/oturum sayfasi.
+      console.error("[demo] Kayit hedefi JSON yerine baska bir govde dondurdu.", {
+        status: res.status,
+        at: lead.at,
+      });
+      return false;
+    }
+
+    if (typeof parsed !== "object" || parsed === null) {
+      console.error("[demo] Kayit hedefinin govdesi nesne degil.", { status: res.status, at: lead.at });
+      return false;
+    }
+
+    const body = parsed as { ok?: unknown; code?: unknown };
+    if (body.ok !== true) {
+      console.error("[demo] Kayit hedefi ok:true dondurmedi.", {
+        status: res.status,
+        // Alicinin kendi teshis kodu (bad-token, busy, no-token-configured…).
+        // Sir degil, ama yine de sinirlanir.
+        code: typeof body.code === "string" ? body.code.slice(0, 40) : undefined,
+        at: lead.at,
+      });
+      return false;
+    }
+
+    return true;
   } catch {
+    // Ag hatasi ya da 8 sn zaman asimi. Hata nesnesi hedef adresi tasiyabilir,
+    // bu yuzden loglanmaz.
+    console.error("[demo] Kayit hedefine ulasilamadi (ag hatasi ya da zaman asimi).", { at: lead.at });
     return false;
   }
 }
@@ -105,6 +165,8 @@ async function toEmail(lead: Lead): Promise<boolean> {
           ``,
           `KVKK onayı: ${lead.consent ? "verildi" : "YOK"}`,
           `Zaman: ${lead.at}`,
+          // Onizleme testi gelen kutusunda ilk bakista ayrilsin.
+          `Ortam: ${lead.env}`,
         ].join("\n"),
       }),
       signal: AbortSignal.timeout(8000),
@@ -150,6 +212,7 @@ export async function POST(req: Request) {
     message: clean(body.message, MAX.message),
     consent: body.consent === true,
     at: new Date().toISOString(),
+    env: DEPLOY_STAGE,
     ua: (req.headers.get("user-agent") ?? "").slice(0, 200),
   };
 
