@@ -5,6 +5,14 @@ import { Footer } from "@/components/layout/Footer";
 import { Assistant } from "@/components/layout/Assistant";
 import { SITE, CONTACT } from "@/content/site";
 import { PRICING } from "@/content/pricing";
+import { DEPLOY_STAGE } from "@/lib/stage";
+
+/**
+ * Uc katmanin ucuncusu: HTML sayfalarindaki robots meta etiketi. Deger
+ * `next.config.ts` ve `src/app/robots.ts` ile ayni `deployStage`'den gelir;
+ * alan adi baglandigi gun (M7 F7.5) ucu birden kendiliginden acilir.
+ */
+const isPublished = DEPLOY_STAGE === "production";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -39,7 +47,7 @@ export const metadata: Metadata = {
     title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
   },
-  robots: { index: true, follow: true },
+  robots: { index: isPublished, follow: isPublished },
   manifest: "/site.webmanifest",
 };
 

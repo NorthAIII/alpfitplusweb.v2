@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.01: Ortam & Araç Notları'na saf fonksiyon testi yolu eklendi (repoda test koşucusu yok, Node tip soyması kullanılıyor).
+**Son Güncelleme:** 2026-09-11 — TASK-1.02: alternatif env ile üretim derlemesi (Ortam & Araç) ve aşamaya bağlı davranışta ara-hâl sınaması (Süreç Disiplinleri) eklendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -30,6 +30,7 @@
 <!-- Environment, tooling, CI/CD, kalıcı operasyonel veri (VPS IP, repo path, folder yapısı) -->
 
 - [Saf fonksiyon testi — repoda koşucu yok](memory/saf-fonksiyon-testi-node-tip-soyma.md) — Jest/Vitest/tsx yok; saf fonksiyon scratchpad'deki `.mjs` betiğiyle konteynere kopyalanıp `node` ile doğrudan koşturulur (Node tip soyması `.ts` import eder)
+- [Alternatif env ile üretim derlemesi](memory/alternatif-env-ile-uretim-derlemesi.md) — `.next` paylaşılan isimli hacim; üretim env'ini taklit eden derleme `docker compose run --rm --publish 3200:3000` ile **ayrı** konteynerde yapılır, sonra `docker compose restart web` (3001 kullanılmaz)
 
 ## Çapraz Öğrenimler
 
@@ -42,7 +43,7 @@
 <!-- Retrospektiften çıkan, proje genelinde geçerli "şunu yaparken şu kontrolü her zaman yap" tipi iş-akışı kuralları. Uygulama anı: planlamada (task bölme) ve task icrası/closure'ında göz önünde tutulur — kanca'yı buna göre yaz ki ilgili anda hatırlansın.
      Sınır: tek seferlik task nüansı DEĞİL (o → faz retrosu); kalite ekseni DEĞİL (o → QUALITY); tekrar eden bir süreç kuralıdır. Teknik Tuzaktan farkı: tuzak pasif bir gözlemdir ("şu böyle davranır, dikkat"); disiplin aktif, adıma-bağlı bir kuraldır ("şu adımda şu kontrolü yap") — bir kayıt eylem/kontrol içeriyorsa disiplindir. Yalnızca BU projeye özgü olanlar buraya yazılır — DevFlow yönteminin geneline dair olanlar faz retrosuna "DevFlow'a Öneri" olarak yazılıp kullanıcıya bildirilir (review-phase triyajı). -->
 
-- [Henüz yok]
+- [Aşamaya bağlı davranışta "ara hâl" ayrıca sınanır](memory/asama-bagimli-davranis-ara-hal-sinamasi.md) — `deployStage`'e göre davranan her task `VERCEL_ENV=production` + `…vercel.app` hâlini de koşar (projenin F7.5'e kadarki gerçek hâli); iki uçlu test bu fail-open'ı göremez
 
 ---
 

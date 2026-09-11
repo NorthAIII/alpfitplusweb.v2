@@ -4,10 +4,25 @@ import { deriveDeployStage } from "./src/lib/stage";
 
 /**
  * Asama tek yerde turetilir ve derlemeye gomulur; gerekcesi ve kurali
- * `src/lib/stage.ts` dosya yorumunda. Ayni sabit `headers()` icinde noindex
- * kararini besleyecek (TASK-1.02) — iki ayri yerde iki kosul drift'tir.
+ * `src/lib/stage.ts` dosya yorumunda. Ayni sabit hem asagidaki noindex
+ * basligini hem `robots.ts` / `layout.tsx` katmanlarini besler — uc katman
+ * tek kosuldan okur, iki ayri yerde iki kosul drift'tir.
  */
 const deployStage = deriveDeployStage(process.env);
+
+/**
+ * Uretim disinda site arama motorlarina kapalidir. Uc katmanin ilki bu baslik:
+ * HTML disi yanitlari da (gorsel, sitemap.xml, json) kapsar, meta etiketin
+ * yetisemedigi yer tam olarak burasi. Diger iki katman `src/app/robots.ts` ve
+ * `src/app/layout.tsx` icinde, ayni `deployStage` degerinden.
+ *
+ * Vercel'in kendi otomatik noindex'i yeterli degil: o yalnizca uretim-disi
+ * dallara ve eskimis dagitimlara gider, `main`'in guncel dagitimi indekslenir.
+ */
+const robotsHeaders =
+  deployStage === "production"
+    ? []
+    : [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }];
 
 /**
  * Guvenlik basliklari v1 denetiminin D-14 bulgusudur: o kurulumda vercel.json
@@ -45,6 +60,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      ...robotsHeaders,
       {
         source: "/fonts/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],

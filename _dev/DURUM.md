@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-11 — TASK-1.01 tamamlandı: aşama türetimi `src/lib/stage.ts`'te, değer `next.config.ts` üzerinden `NEXT_PUBLIC_DEPLOY_STAGE` olarak gömülü; beş senaryo + üç derleme ölçümü geçti; sıradaki task TASK-1.02.
+**Son Güncelleme:** 2026-09-11 — TASK-1.02 tamamlandı: noindex üç katmanı (başlık + robots.txt + meta) tek `deployStage` değerine bağlandı; dört ortam senaryosu serving katmanında ölçüldü, `.vercel.app` ara hâli dahil kapalı; sıradaki task TASK-1.03.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 1/10 task tamamlandı
+**İlerleme:** 2/10 task tamamlandı
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,9 +33,9 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.02 — noindex üç katman tek kaynaktan
+**Task:** TASK-1.03 — Vercel'de ayrı proje, env iskeleti ve başlık ölçümü
 **Durum:** ⬜ Bekliyor
-**İlerleme:** TASK-1.01 kapandı, `deployStage` kaynağı hazır
+**İlerleme:** TASK-1.02 kapandı, noindex üç katmanı yerinde — ilk dağıtım anında site kapalı doğacak
 
 ---
 
@@ -44,7 +44,7 @@
 | # | Task | Durum |
 |---|------|-------|
 | 1.01 | Aşama türetimi ve `deployStage` tek kaynağı | ✅ Tamamlandı |
-| 1.02 | noindex üç katman tek kaynaktan | ⬜ Bekliyor |
+| 1.02 | noindex üç katman tek kaynaktan | ✅ Tamamlandı |
 | 1.03 | Vercel'de ayrı proje, env iskeleti ve başlık ölçümü | ⬜ Bekliyor |
 | 1.04 | Google Sheet lead alıcısı — Apps Script web app | ⬜ Bekliyor |
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ⬜ Bekliyor |
@@ -71,6 +71,15 @@
 
 **Test:** Saf fonksiyon 5/5 PASS; `npm run build` hatasız, 23 rota; geçici sonda rotasıyla üç derleme — gömülü değer sırasıyla `local` / `preview` / `production`, sonda silindi.
 
+### TASK-1.02 — noindex üç katman tek kaynaktan (2026-09-11)
+
+**Özet:**
+- Üretim dışında üç katman birden kapalı: `X-Robots-Tag: noindex, nofollow` (`next.config.ts`), `robots.txt` tam `disallow`, HTML `metadata.robots` — üçü de tek `deployStage` değerinden.
+- Başlık katmanı HTML-dışı yanıtları da kapsıyor (`/sitemap.xml` üzerinde ölçüldü); güvenlik başlıkları ve önbellek kuralları değişmedi.
+- Alan adı bağlandığında (F7.5) üçü kendiliğinden açılır — kodda elle çevrilecek bayrak yok.
+
+**Test:** Dört ortam senaryosu serving katmanında curl ile ölçüldü — `local` kapalı, gerçek alan adı açık, **`VERCEL_ENV=production` + `.vercel.app` kapalı** (fail-open sınavı), alan adı tanımsız kapalı; `npm run build` hatasız 23 rota; dokunulan dosyalarda eslint 0 sorun; `a11y.mjs` TOPLAM SORUN 0; `scan.mjs` konsol temiz.
+
 ---
 
 <!-- KURAL: Sadece son 2 task özeti tutulur, daha eskileri silinir (gerçek silme — HTML comment yasak). -->
@@ -93,7 +102,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.02.md`
+**Aktif Task:** `tasks/TASK-1.03.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
