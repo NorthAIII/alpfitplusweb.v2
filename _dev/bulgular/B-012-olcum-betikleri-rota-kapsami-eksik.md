@@ -55,6 +55,20 @@ Daha derin katman: ölçüm sonucu ("kontrast ihlali: 0") **hangi kapsamda** al�
 - Her ölçüm betiği çıktısına **gezdiği sayfa sayısını** yazar, "TOPLAM SORUN: 0" satırı "N sayfada 0" hâline gelir. F6.2 tek komut bu sayıyı da eşik olarak taşır — kapsam düşerse kapı kırmızıya döner.
 - Bu iş M6 F6.2/F6.3 (tek komut + CI) kapsamına doğal olarak girer; oradaki task yazılırken liste tek-kaynak maddesi kabul kriterine konur.
 
+**2026-09-12 ölçümü — bu atomun hipotezi sınandı ve DOĞRULANMADI; yerine ikinci bir kör nokta ölçüldü.**
+
+Yukarıdaki "risk azaltıcı" paragrafı şunu öngörüyordu: *"kapsanmayan, o şablona giren **içeriğin** kendisi — yasal metinlerin uzun paragrafları ve segmentlerin farklı uzunluktaki başlıkları kontrast ve taşma davranışını şablondan bağımsız değiştirebilir."* Sekiz kör-nokta rotası 1440 / 390 / 320 px'te ölçüldü:
+
+| Rota | yatay kaydırma | taşan eleman | sessiz kırpma | eşik altı kontrast |
+|---|---|---|---|---|
+| 4 segment (390 / 320) | yok / yok | 0 / 0 | 0 / 0 | 0 |
+| 3 yasal (390 / 320) | yok / yok | 0 / 0 | 0 / 0 | 0 (en düşük 4,76) |
+| 404 (390 / 320) | yok / yok | 0 / 0 | 0 / 0 | **1** (aşağıda) |
+
+Yani şablona giren içerik davranışı **değiştirmiyor**; hipotez kapanabilir. Rota listesi boşluğunun somut bedeli tek bir yerde: **404 sayfasındaki "404" rakamı 1,12–1,17:1** (gereken 3,0) ve bir **h1 → h3 hiyerarşi atlaması** — ikisi de bugüne dek hiç ölçülmedi çünkü 404 iki kapının da listesinde yok. Kalemler [B-032](B-032-olculmus-aa-ihlalleri.md) ve [B-045](B-045-hata-yuzeyleri.md)'te. Sonuç: **rota listesi düzeltildiği gün `TOPLAM SORUN: 0` regresyon çizgisi kırılır.**
+
+Buna karşılık aynı ölçüm bu atomun kapsamadığı **ikinci bir kör nokta** buldu ve o rota listesiyle kapanmıyor: kapının **yöntemi** — gradyan/şeffaf/opaklık atlaması (9 rotada 25 metin ölçüm dışı, **6'sı eşik altı**, ve ikisi kapının **zaten gezdiği** sayfalarda) ve başlık hiyerarşisini hiç kontrol etmemesi → [B-031](B-031-a11y-kontrast-yontemi-kor-noktalari.md). Elle tutulan rota kopyası sayısı da üç değil **beş**: `a11y.mjs`(8) · `mobile-audit.mjs`(9) · `font-guard.mjs`(16) · `sitemap.ts`(11+4) · `site.ts` NAV(4) — son ikisi ürün kodunda, bu atomun kapsamı dışında ama aynı tek-kaynak işine girer.
+
 ## Çözüm Kaydı
 
 —

@@ -56,6 +56,17 @@ Temizlik iki listeye dayanıyor: **ne değiştirilecek** (ad eşlemeleri) ve **n
 
 **Kapsam notu:** Bu turda sekiz görselden ikisi gözle satır satır okundu (`sube`, `grup`), diğerleri nav girdisi ve bilinen kalıplar için tarandı. Kaynak HTML belgelerinin kırpma dışında kalan gövdesi okunmadı — başka karşılanmamış iddia veya ad bulunması mümkün. Düzeltme yapılırken sekiz görselin tamamı yeniden denetlenmeli.
 
+**2026-09-12 ölçümü — kapsam notu KAPANDI ve etki kalibrasyonu düzeltildi.**
+
+Yukarıdaki kapsam notu ("sekiz görselden ikisi gözle satır satır okundu … düzeltme yapılırken sekizin tamamı yeniden denetlenmeli") yerine getirildi: **sekiz görselin tamamı gözle okundu** ve tam sızıntı envanteri [B-044](B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md)'te tablo hâlinde duruyor. Kapanış kapsamının ölçütü artık o tablodur.
+
+İki düzeltme bu atomun kendi ifadelerine:
+
+1. **Başlık "yayındaki" diyor; en ağır sızıntının görünür yüzeyi yok.** `public/product/sube.webp` — "Simge & Gizem" ve `~₺110B/ay` kalemlerini taşıyan görsel — **hiçbir sayfada render edilmiyor**: `SHOTS.sube` tanımlı ama tüketicisi yok ve 15 rotanın hiçbirinin HTML'inde geçmiyor (ölçüldü). Dosya yalnız `/product/sube.webp` adresinden **200 dönüyor** (62.494 B, canlı önizlemede doğrulandı). Yani bu iki kalem bugün yalnız doğrudan adresle erişilebilir; yasal metnin ("gerçek bir kişinin verisi gösterilmemektedir") çürüdüğü iddiası **kamuya açık bir varlık** için geçerli, **gösterilen bir sayfa** için değil. `grup.webp`'teki "Gizem Ö." ise gerçekten gösteriliyor (ProductStory adım 2 → `/` ve `/ozellikler`).
+2. **Kök neden bu atomun yazdığından keskin.** Buradaki teşhis "denetim, temizliğin kalıbıyla aynı varsayımı paylaşıyor" idi ve doğrudur; ölçüm bir adım ötesini gösterdi: `auditTexts()` yalnız **iki dal** taşıyor (iki-tam-sözcük ad kalıbı + eski marka regex'i), yani **iddia sızıntısı için hiç dal yok** — yüzde, ciro, üstünlük, tarih ve yol-haritası kalemleri "kalıp kaçırdı" değil, **hiç kontrol edilmiyor**. 21 gerçek sızıntı dizgesi kalıba verildi, 20'si kör. Ayrıca `DROP_NODES` sekiz ekranın yalnız **üçünü** kapsıyor.
+
+Bugün yapılabilecek en ucuz iş de ölçümden çıktı: `sube.webp` `render-product.mjs`'in `SCREENS` listesinden düşürülürse bu atomun iki ağır kaleminin kamuya açık yüzeyi kapanır (`public/` elle düzenlenmez).
+
 ## Çözüm Kaydı
 
 —
