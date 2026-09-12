@@ -45,6 +45,5 @@ timeout 900 docker compose --profile research run --rm --name audit-<etiket> \
 - `npm run build` **koşturulmaz**: `.next` isimli hacim `web` servisiyle paylaşılır ve çalışan
   geliştirme sunucusunun derlemesini ezer (kurulumu
   [Alternatif env ile üretim derlemesi](alternatif-env-ile-uretim-derlemesi.md)).
-
-İlgili: [Saf fonksiyon testi — repoda koşucu yok](saf-fonksiyon-testi-node-tip-soyma.md)
-— saf fonksiyon `web` konteynerinde, tarayıcı ölçümü bu tarifle koşar.
+- Saf fonksiyonlar artık `web` konteynerinde `npm test` (Vitest, `tests/`) ile sınanır —
+  ayrı bir betik/kopyalama tarifi gerekmez (TASK-1.16).

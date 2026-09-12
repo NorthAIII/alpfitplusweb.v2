@@ -137,7 +137,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.03 | TASK-1.03 | ✅ Tamamlandı | Vercel'de ayrı proje, env iskeleti, başlık ölçümü, GIT-STRATEJI güncellemesi |
 | 1.04 | TASK-1.04 | ❌ İptal | Google Sheet lead alıcısı — hedef Bunker'a değişti (2026-09-13) |
 | 1.05 | TASK-1.05 | ✅ Tamamlandı | Demo ucunu sertleştir: JSON `ok` doğrulaması + lead `env` alanı |
-| 1.16 | TASK-1.16 | ⬜ Bekliyor | Test koşucusu Vitest; aşama ve `/api/demo` testleri kalıcı olur |
+| 1.16 | TASK-1.16 | ✅ Tamamlandı | Test koşucusu Vitest; aşama ve `/api/demo` testleri kalıcı olur |
 | 1.11 | TASK-1.11 | ⬜ Bekliyor | Bunker keşfi: giriş yolu, sözleşme, tüketici envanteri ve izolasyon, yedek gerçeği, yerel prova girdileri (keşif ayağı) |
 | 1.12 | TASK-1.12 | ⬜ Bekliyor | İletişim biçimi doğrulaması (B-021) |
 | 1.17 | TASK-1.17 | ⬜ Bekliyor | Yerel prova ortamı: compose profili, n8n + Postgres (Bunker şeması) |

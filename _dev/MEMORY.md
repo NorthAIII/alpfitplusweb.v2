@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-13 — plan revizyonu işareti: kendi sunucudaki n8n, Bunker ve Umami adresleri ile Bunker talep tablolarının otomasyon tuzağı (Ortam & Araç Notları) eklendi.
+**Son Güncelleme:** 2026-09-13 — TASK-1.16: Vitest kuruldu, "Saf fonksiyon testi — repoda koşucu yok" kaydı bayatladı ve silindi (Node tip soyma artık gerekmiyor).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -29,7 +29,6 @@
 
 <!-- Environment, tooling, CI/CD, kalıcı operasyonel veri (VPS IP, repo path, folder yapısı) -->
 
-- [Saf fonksiyon testi — repoda koşucu yok](memory/saf-fonksiyon-testi-node-tip-soyma.md) — Jest/Vitest/tsx yok; saf fonksiyon scratchpad'deki `.mjs` betiğiyle konteynere kopyalanıp `node` ile doğrudan koşturulur (Node tip soyması `.ts` import eder)
 - [Vercel proje kimlikleri ve CLI erişimi](memory/vercel-proje-kimlikleri.md) — CLI kurulu ve oturum açık (`northaiii`), kimlik `$XDG_DATA_HOME/com.vercel.cli` altında; proje `alpfitplus-web-v2` / takım `north-ai` / plan `hobby`; `vercel project add` çerçeve tespiti yapmaz, `framework` ve `autoExposeSystemEnvs` elle doğrulanır
 - [Alternatif env ile üretim derlemesi](memory/alternatif-env-ile-uretim-derlemesi.md) — `.next` paylaşılan isimli hacim; üretim env'ini taklit eden derleme `docker compose run --rm --publish 3200:3000` ile **ayrı** konteynerde yapılır, sonra `docker compose restart web` (3001 kullanılmaz)
 - [Araştırma konteynerinde tarayıcı ölçümü](memory/arastirma-konteynerinde-tarayici-olcumu.md) — Playwright yalnız araştırma konteynerinde; betik scratchpad'e yazılıp `-v` ile mount edilir, `research/`'e yazılmaz ve `--name` her koşumda farklı olur

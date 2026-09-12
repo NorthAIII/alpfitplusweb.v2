@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-13 — TASK-1.07 kısmi: tracker kendi Umami'ye çevrildi ve yerelde ölçüldü; site kaydı kullanıcı adımına kaldı (BULGULAR Gelen Kutusu), 1.07 1.06'nın arkasına taşındı, sıradaki TASK-1.16.
+**Son Güncelleme:** 2026-09-13 — TASK-1.16 tamamlandı: Vitest kuruldu, aşama türetimi (5) + `/api/demo` sözleşmesi (13) kalıcı test oldu, kapı kırmızıya dönebiliyor ölçüldü; sıradaki TASK-1.11.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Bunker'a otomasyon tetiklemeden düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 5/17 task tamamlandı (1 iptal: TASK-1.04)
+**İlerleme:** 6/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,8 +33,8 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.16 — Test koşucusu (Vitest) — mevcut elle testler kalıcı olur
-**Durum:** ⬜ Bekliyor — plan review tamamlandı, çalıştırılmaya hazır
+**Task:** TASK-1.11 — Bunker keşfi — giriş yolu ve otomasyon dışı tutma
+**Durum:** ⬜ Bekliyor
 **İlerleme:** Henüz başlanmadı. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:** TASK-1.07 kısmi ilerlemeyle 1.06'nın arkasına, bağımlıları 1.08 · 1.09 · 1.15'in önüne taşındı (orkestratör kararı 2026-09-13). Umami farkı ve tracker çevirisi commit'li; ağaçta Umami kiri kalmadı, 1.14 ve 1.17'nin "`.env.example` Umami bloğu commit'li olmalı" koşulu sağlandı. 1.07'nin kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` girişi (`BULGULAR.md` → Gelen Kutusu `[TASK-1.07]`; devam: `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 
@@ -49,7 +49,7 @@
 | 1.03 | Vercel'de ayrı proje, env iskeleti ve başlık ölçümü | ✅ Tamamlandı |
 | 1.04 | Google Sheet lead alıcısı — Apps Script web app | ❌ İptal |
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ✅ Tamamlandı |
-| 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ⬜ Bekliyor |
+| 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ✅ Tamamlandı |
 | 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ⬜ Bekliyor |
 | 1.12 | İletişim biçimi doğrulaması (B-021) | ⬜ Bekliyor |
 | 1.17 | Yerel prova ortamı — n8n + Postgres (Bunker şeması) | ⬜ Bekliyor |
@@ -71,15 +71,6 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-### TASK-1.05 — Demo ucunu sertleştir: JSON doğrulaması ve `env` alanı (2026-09-11)
-
-**Özet:**
-- `toWebhook` artık üç kapılı: HTTP durumu, gövdenin JSON olması, `ok === true`. Apps Script hata verdiğinde dönen **200 + HTML** artık "kaydedildi" sayılmıyor — v1'de lead kaybettiren hata sınıfı kapandı.
-- Lead'e `env` alanı (`DEPLOY_STAGE`) eklendi; e-posta gövdesine `Ortam:` satırı girdi — önizleme testleri e-tabloda ve gelen kutusunda ayrılıyor.
-- Teşhis logları hedef adresi, token'ı ve kişisel veriyi taşımıyor; yalnız durum kodu, alıcının hata kodu ve zaman damgası.
-
-**Test:** Yerel üretim derlemesine karşı serving katmanında (ayrı konteyner, 3200) **32 kontrol, TOPLAM SORUN 0**. Sözleşmeyi bozan beş gerçek yanıt (HTML, `ok:false`, HTTP 500, bozuk JSON, dizi gövde) beşi de 503 + `no-sink` verdi; kontrol grubu aynı koşuda yeşil — beşi de eski kodda `stored:true` sayılacaktı. Aşama senaryoları ayrıca koştu (3 senaryo, sorun 0): gerçek alan adı → `production`, **ara hâl** `vercel.app` → `preview`, alan adı env'i tanımsız → `preview`; yerel → `local`. Build ve eslint temiz. Devredilen tek kriter (canlı alıcıya giden talebin `env=local` yazması) 2026-09-13 revizyonuyla TASK-1.04'ten TASK-1.18'e geçti.
-
 ### TASK-1.10 — Yasal metin: Aktarım ve Çerezler maddeleri (2026-09-11)
 
 **Özet:**
@@ -88,6 +79,15 @@
 - **Yurt dışına aktarım bilinçle yazılmadı** — sağlayıcı ülkesi ve aktarımın hukuki dayanağı hukukçu kararı; B-024'ün üç kalemi (IP, Gizlilik veri listesi, form onay metni) açık kaldı ve gerekçesiyle bulgu atomuna işlendi. Detay: `tasks/archive/TASK-1.10.md`
 
 **Test:** `a11y.mjs` TOPLAM SORUN 0 (8 sayfa; yasal metinlerden yalnız `/kvkk` kapsamda — `/gizlilik` ve `/kullanim-kosullari` bu kapıdan geçmiyor, B-012), `font-guard.mjs` kümede olmayan karakter yok (16 sayfa), `scan.mjs` üç yasal sayfada konsol temiz, build ve eslint hatasız. Kapılar geliştirme sunucusuna (3000) karşı koştu; üretim konteyneri bayat (B-019) ve paralel oturum yüzünden yeniden derlenmedi.
+
+### TASK-1.16 — Test koşucusu (Vitest) — mevcut elle testler kalıcı olur (2026-09-13)
+
+**Özet:**
+- Vitest kuruldu (`vitest@4.1.11` — 5.x, projenin `@types/node@^20` sabitiyle ERESOLVE veriyordu), `npm test` (`vitest run`) kalıcı koşucu oldu; `tests/` kökte, `@` takma adı `resolve.alias` ile çözülüyor.
+- TASK-1.01'in 5 aşama-türetimi senaryosu ve TASK-1.05'in 13 `/api/demo` sözleşme/doğrulama senaryosu artık her oturumda tekrar koşuyor; Node tip-soyma workaround'u (memory) gereksiz kaldı, silindi.
+- Kapı bilerek bozulan bir beklentiyle kırmızıya döndü (çıkış kodu 1), geri alınca yeşile döndü (B-030 dersi karşılandı).
+
+**Test:** `docker compose exec web npm test` → **2 dosya, 18 test, TÜMÜ PASS, çıkış kodu 0**. Sözleşme bataryası TASK-1.05'in sonuçlarını birebir üretti (kontrol grubu 200 · beş bozuk yanıt 503 `no-sink` · 3× 422 · 1× 400 · 429 · kırpma 400 dönmedi). Log casusu hedef adres/ad/telefon/e-posta/mesaj sızıntısı bulmadı. Build (23 rota) ve `web-prod` imajı hatasız; eslint temiz. Kapsam dürüstlüğü: route handler doğrudan çağrıldı, gerçek Next sunucusu/başlıklar TASK-1.05'in 3200 ölçümünde kaldı. Detay: `tasks/archive/TASK-1.16.md`
 
 ---
 
@@ -111,7 +111,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.16.md`
+**Aktif Task:** `tasks/TASK-1.11.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

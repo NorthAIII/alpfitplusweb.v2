@@ -27,5 +27,7 @@ docker compose restart web      # geliştirme sunucusunun .next'ini tazele
 - Konteyner ölçüm biter bitmez **silinir**; unutulursa 3200 portu ve `.next`
   hacmi üzerinde asılı kalır.
 
-İlgili: [Saf fonksiyon testi — repoda koşucu yok](saf-fonksiyon-testi-node-tip-soyma.md)
-— saf fonksiyon o yolla, gömülü değerin gerçek etkisi bu yolla ölçülür.
+İlgili: saf fonksiyon `npm test` (Vitest, `tests/`) ile ölçülür (TASK-1.16) — ama
+`next.config.ts` → `env` ile gömülen bir değerin **gerçekten gömüldüğü** bu yolla
+kanıtlanmaz, gömme yalnız değeri okuyan kod varsa çıktıya girer; doğrulaması bu
+alternatif derlemeyi ister.
