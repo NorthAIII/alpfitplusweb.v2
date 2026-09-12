@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-13 — TASK-1.16 tamamlandı: Vitest kuruldu, aşama türetimi (5) + `/api/demo` sözleşmesi (13) kalıcı test oldu, kapı kırmızıya dönebiliyor ölçüldü; sıradaki TASK-1.11.
+**Son Güncelleme:** 2026-09-13 — TASK-1.11 keşfi commit'lendi (giriş yolu, envanter, yedek, prova girdileri); kapanış kullanıcı kararına bağlı, task 1.12'nin arkasına alındı; sıradaki TASK-1.12.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -33,10 +33,12 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.11 — Bunker keşfi — giriş yolu ve otomasyon dışı tutma
+**Task:** TASK-1.12 — İletişim biçimi doğrulaması (B-021)
 **Durum:** ⬜ Bekliyor
 **İlerleme:** Henüz başlanmadı. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
-**Not:** TASK-1.07 kısmi ilerlemeyle 1.06'nın arkasına, bağımlıları 1.08 · 1.09 · 1.15'in önüne taşındı (orkestratör kararı 2026-09-13). Umami farkı ve tracker çevirisi commit'li; ağaçta Umami kiri kalmadı, 1.14 ve 1.17'nin "`.env.example` Umami bloğu commit'li olmalı" koşulu sağlandı. 1.07'nin kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` girişi (`BULGULAR.md` → Gelen Kutusu `[TASK-1.07]`; devam: `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
+**Not:**
+- **TASK-1.11:** keşif yapıldı ve commit'li. Kapanışı kullanıcı kararına bağlı; sorular `tasks/TASK-1.11.md` → Kullanıcıya Sorular, Gelen Kutusu satırı `[TASK-1.11]`. Task kısmi ilerlemeyle 1.12'nin arkasına alındı (orkestratör kararı 2026-09-13). 1.12 bu karardan bağımsız; 1.17 · 1.13 · 1.14 · 1.18 · 1.06 buna bağlı.
+- **TASK-1.07:** kısmi ilerlemeyle 1.06'nın arkasında. Kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Gelen Kutusu `[TASK-1.07]`, `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 
 ---
 
@@ -50,8 +52,8 @@
 | 1.04 | Google Sheet lead alıcısı — Apps Script web app | ❌ İptal |
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ✅ Tamamlandı |
 | 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ✅ Tamamlandı |
-| 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ⬜ Bekliyor |
 | 1.12 | İletişim biçimi doğrulaması (B-021) | ⬜ Bekliyor |
+| 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ⬜ Bekliyor |
 | 1.17 | Yerel prova ortamı — n8n + Postgres (Bunker şeması) | ⬜ Bekliyor |
 | 1.13 | Alıcıyı yerel prova ortamında kur | ⬜ Bekliyor |
 | 1.14 | Site bağlantısı — alıcı sözleşmesi ve Apps Script kalıntısı | ⬜ Bekliyor |
@@ -111,7 +113,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.11.md`
+**Aktif Task:** `tasks/TASK-1.12.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
