@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -13,6 +14,31 @@ import { DEPLOY_STAGE } from "@/lib/stage";
  * alan adi baglandigi gun (M7 F7.5) ucu birden kendiliginden acilir.
  */
 const isPublished = DEPLOY_STAGE === "production";
+
+/**
+ * Kendi Umami kurulumu (M7 F7.4) — v1'in de saydigi `umami.kiwiailab.com`.
+ * Alan adi gecisinde olcum gecmisi tek kurulumda kalsin diye Cloud degil
+ * (`docs/DECISIONS.md` 2026-09-13). Cerezsiz ve kimlik tanimlamayan olcum;
+ * riza bandi gerekmez (yasal metin TASK-1.10, kendi kuruluma hizasi TASK-1.15).
+ *
+ * Betik adresi sir degil ve ortamdan bagimsiz (tek kurulum) — env degil sabit.
+ * Site kimligi env'den gelir: ayni kurulumda v2'nin KENDI site kaydi var, v1'in
+ * `alpfitplus.com` kaydinin kimligi burada kullanilmaz (v1'in sayilarini kirletir).
+ *
+ * Anahtar SIR DEGILDIR — `data-website-id` zaten sayfa kaynaginda gorunur.
+ * Bos/tanimsizken etiket HIC render edilmez: yerel gelistirmede gurultu olmaz
+ * ve anahtar bir ortamda unutulursa panele sahte trafik dusmez. `.trim()`
+ * bilincli: Vercel'de bos string tanimlamak `undefined` ile ayni sonucu versin.
+ *
+ * `data-tag` ortami ayirir ve ayni `deployStage`den gelir — noindex ve lead
+ * `env` alani da oradan okur, ucuncu bir ortam kavrami dogmaz.
+ *
+ * `data-domains` KULLANILMAZ — v1'den bilincli fark: v1 yalniz canli alan adini
+ * sayar; v2 bugun yalniz onizleme adresinde yasiyor ve orada da saymali. Yerel
+ * ve onizleme trafigi alan adiyla kesilmez, `data-tag` ile ayrilir.
+ */
+const UMAMI_SCRIPT_SRC = "https://umami.kiwiailab.com/script.js";
+const umamiWebsiteId = (process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ?? "").trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -129,6 +155,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="icerik">{children}</main>
         <Footer />
         <Assistant />
+        {/* `afterInteractive`: olcum LCP'yi geciktirmez (QUALITY 4). */}
+        {umamiWebsiteId ? (
+          <Script
+            src={UMAMI_SCRIPT_SRC}
+            strategy="afterInteractive"
+            data-website-id={umamiWebsiteId}
+            data-tag={DEPLOY_STAGE}
+          />
+        ) : null}
       </body>
     </html>
   );

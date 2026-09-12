@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-13 — verify-plan tamamlandı: 8 mekanik düzeltme ve 3 onaylı yapısal değişiklik yapıldı (TASK-1.11'e Bunker tüketici envanteri, yedek referansı düzeltildi, TASK-1.12 lint kriteri B-028'e göre); sıra değişmedi, sıradaki adım TASK-1.07.
+**Son Güncelleme:** 2026-09-13 — TASK-1.07 kısmi: tracker kendi Umami'ye çevrildi ve yerelde ölçüldü; site kaydı kullanıcı adımına kaldı (BULGULAR Gelen Kutusu), 1.07 1.06'nın arkasına taşındı, sıradaki TASK-1.16.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -33,10 +33,10 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.07 — Kendi Umami'ye site kaydı ve tracker bağlantısı
+**Task:** TASK-1.16 — Test koşucusu (Vitest) — mevcut elle testler kalıcı olur
 **Durum:** ⬜ Bekliyor — plan review tamamlandı, çalıştırılmaya hazır
 **İlerleme:** Henüz başlanmadı. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
-**Not:** Ağaçtaki commit'lenmemiş Umami Cloud farkını (`src/app/layout.tsx`, `.env.example`) bu task devralır (kullanıcı kararı 2026-09-13); bu yüzden sıranın başına alındı. Plan revizyonu ve verify-plan oturumları bu iki dosyaya dokunmadı ve commit'lerine almadı (verify-plan farkı okudu: task dokümanının anlattığıyla aynı).
+**Not:** TASK-1.07 kısmi ilerlemeyle 1.06'nın arkasına, bağımlıları 1.08 · 1.09 · 1.15'in önüne taşındı (orkestratör kararı 2026-09-13). Umami farkı ve tracker çevirisi commit'li; ağaçta Umami kiri kalmadı, 1.14 ve 1.17'nin "`.env.example` Umami bloğu commit'li olmalı" koşulu sağlandı. 1.07'nin kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` girişi (`BULGULAR.md` → Gelen Kutusu `[TASK-1.07]`; devam: `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 
 ---
 
@@ -49,7 +49,6 @@
 | 1.03 | Vercel'de ayrı proje, env iskeleti ve başlık ölçümü | ✅ Tamamlandı |
 | 1.04 | Google Sheet lead alıcısı — Apps Script web app | ❌ İptal |
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ✅ Tamamlandı |
-| 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ⬜ Bekliyor |
 | 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ⬜ Bekliyor |
 | 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ⬜ Bekliyor |
 | 1.12 | İletişim biçimi doğrulaması (B-021) | ⬜ Bekliyor |
@@ -58,6 +57,7 @@
 | 1.14 | Site bağlantısı — alıcı sözleşmesi ve Apps Script kalıntısı | ⬜ Bekliyor |
 | 1.18 | Alıcıyı canlıya taşı ve Vercel env | ⬜ Bekliyor |
 | 1.06 | E-posta hattını aç ve uçtan uca canlı tur | ⬜ Bekliyor |
+| 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ⬜ Bekliyor |
 | 1.08 | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` | ⬜ Bekliyor |
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ⬜ Bekliyor |
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
@@ -111,7 +111,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.07.md`
+**Aktif Task:** `tasks/TASK-1.16.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
