@@ -67,7 +67,7 @@ Kod zaten yazılı: `toEmail` Resend HTTP API'sini kullanıyor. Eksik olan yayı
   - E-posta: gövde tüm alanları ve `Ortam: preview` satırını taşıyor, `reply_to` lead'in adresi
 
 - [ ] **4. Otomasyon izolasyonunu canlı talepte teyit et**
-  - TASK-1.11'in salt okunur seçim sorguları: kayıt üç otomasyonun hiçbirine girmiyor
+  - TASK-1.11'in salt okunur seçim sorguları: kayıt envanterdeki gönderen/eylem yapan yolların hiçbirine girmiyor
   - Otomasyonların en az bir döngüsü sonrası kayıt değişmemiş; talepteki e-posta adresine giden gönderim kaydı yok
 
 - [ ] **5. Düşen hedef davranışını sına**
@@ -109,10 +109,10 @@ _dev/
 - [ ] Aynı talep `DEMO_TO`'ya e-posta olarak gelir; gövde ad, kulüp, şube, segment, telefon, e-posta, mesaj, KVKK onayı, zaman ve `Ortam: preview` satırını taşır — kanal: UAT
 - [ ] E-postanın `reply_to` alanı lead'in e-posta adresi — kanal: UAT
 - [ ] E-posta spam klasörüne düşmüyor (DKIM/DMARC hizası; başlıkta `dkim=pass`) — kanal: UAT
-- [ ] Kayıt üç otomasyonun seçim sorgusuna girmiyor, bir döngü sonrası değişmemiş, gönderim kaydı yok — kanal: UAT
+- [ ] Kayıt TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorgusuna girmiyor, bir döngü sonrası değişmemiş, gönderim kaydı yok — kanal: UAT
 - [ ] Alıcı devre dışıyken talep **200** (`stored:false`, `mailed:true`) ve e-posta gelir; kayıt yok (F3.3 kabulü: e-posta yazdıysa 200) — kanal: UAT
 - [ ] Alıcı geri açıldıktan sonra gönderilen talep iki hedefe de ulaşır — kanal: UAT
-- [ ] `vercel env ls`: `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `LEAD_WEBHOOK_URL` Production + Preview'de var (değer basılmadan)
+- [ ] `vercel env ls`: `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `LEAD_WEBHOOK_URL` (ve varsa TASK-1.14'ün kimlik anahtarı) Production + Preview'de var (değer basılmadan)
 
 ---
 

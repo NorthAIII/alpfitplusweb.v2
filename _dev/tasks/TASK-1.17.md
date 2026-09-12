@@ -12,7 +12,7 @@
 
 Demo talebi alıcısının canlıya çıkmadan önce kurulup sınanabileceği bir yerel ortam kurmak. `docker-compose.yml`'a ayrı bir profil eklenir; servisler canlıdaki sürümlerle aynı imaj etiketinden kalkar, Bunker şeması ve `alpfit` kiracısı asgari tohumla yüklenir.
 
-Task, profil tek komutla ayağa kalkıp sağlıklı olduğunda, üç otomasyonun seçim sorguları yerel veritabanında çalıştığında ve varsayılan `web` servisi etkilenmediğinde tamamlanmış sayılır.
+Task, profil tek komutla ayağa kalkıp sağlıklı olduğunda, TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorguları yerel veritabanında çalıştığında ve varsayılan `web` servisi etkilenmediğinde tamamlanmış sayılır.
 
 ---
 
@@ -56,7 +56,7 @@ Hangi servislerin gerektiği TASK-1.11'in seçtiği yola bağlıdır:
 
 - [ ] **2. Şemayı ve asgari tohumu yükle**
   - Bunker şeması TASK-1.11'in gösterdiği kaynaktan (migration dosyaları ya da salt okunur şema dökümü) uygulanır. `../bunker-dashboard` salt okunur bağlanır, içine yazılmaz
-  - Asgari tohum: `alpfit` kiracısı ve üç otomasyonun seçim sorgularını koşturmaya yetecek kayıtlar. **Gerçek kişi verisi yok**; canlı veritabanından veri kopyalanmaz
+  - Asgari tohum: `alpfit` kiracısı ve TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorgularını koşturmaya yetecek kayıtlar. **Gerçek kişi verisi yok**; canlı veritabanından veri kopyalanmaz
   - Dosya: `research/lead-lab/seed.sql` (YENİ; konum TASK-1.11'in alıcı versiyonlama kararıyla birlikte teyit edilir)
 
 - [ ] **3. Web'den erişimi doğrula**
@@ -90,7 +90,7 @@ research/lead-lab/
 ## Test Kriterleri
 
 - [ ] `docker compose --profile lead up -d` → Postgres ve n8n sağlıklı (n8n `/healthz` 200, `pg_isready` başarılı)
-- [ ] Yerel veritabanında Bunker tabloları var ve `alpfit` kiracısı tohumlu; üç otomasyonun seçim sorguları (TASK-1.11) yerelde hatasız çalışıyor
+- [ ] Yerel veritabanında Bunker tabloları var ve `alpfit` kiracısı tohumlu; TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorguları yerelde hatasız çalışıyor
 - [ ] `web` konteynerinden alıcı servisine compose ağı üzerinden istek ulaşıyor
 - [ ] Varsayılan `docker compose up -d web` profil servislerini **başlatmıyor**; geliştirme sunucusu 3000'de 200
 - [ ] Servis imaj etiketleri canlıdaki sürümlerle aynı (TASK-1.11 kaydıyla karşılaştırma)

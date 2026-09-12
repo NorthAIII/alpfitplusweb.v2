@@ -14,7 +14,7 @@ TASK-1.11'de onaylanan alıcıyı **önce yerel prova ortamında** kurmak ve sö
 
 - Kimlik doğrulamalı JSON POST'u `alpfit` kiracısına talep olarak yazar.
 - Yalnız yazım başarılıysa `{ok:true}` döner, her hata yolunda JSON `{ok:false, code}` döner.
-- Yazdığı kayıt üç satış otomasyonunun seçim sorgusuna girmez.
+- Yazdığı kayıt TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorgusuna girmez.
 
 Task şu üç koşul sağlandığında tamamlanmış sayılır:
 
@@ -64,6 +64,7 @@ E-posta bu alıcının işi **değildir**: site her talepte Resend'le gönderir 
 
 - [ ] **3. Sözleşme test paketini yaz**
   - Adres ve kimlik env'den (`LEAD_RECEIVER_URL`, `LEAD_RECEIVER_TOKEN` gibi — adlar TASK-1.11 sözleşmesine göre). Env tanımsızsa paket **atlanır** ve atlandığını açıkça raporlar; varsayılan `npm test`'i kırmaz
+  - Paket yeni bir env adı okuyorsa ad `.env.example`'a **değersiz** girer (kök kural: repoda yalnız anahtar adları)
   - Senaryolar aşağıdaki test kriterleriyle birebir. Kayıt sayımı yerel veritabanından okunur (canlıda TASK-1.18'de salt okunur sorguyla). Sayım test içinden yapılacaksa Postgres istemcisi yeni bir devDependency'dir; eklenmeden önce `psql` ile dışarıdan sayımın yetip yetmediği tartılır, karar gerekçesiyle Oturum Kaydı'na yazılır
   - Dosya: `tests/lead-receiver.contract.test.ts` (YENİ)
 
@@ -76,6 +77,8 @@ research/lead-lab/
 └── receiver.workflow.json          # YENİ — alıcı tanımı (n8n yolu; kimlik değeri yok)
 tests/
 └── lead-receiver.contract.test.ts  # YENİ — ortamdan bağımsız sözleşme paketi
+./
+└── .env.example                    # paketin env adları (yalnız yeni ad doğarsa) — zaten var
 ```
 
 > Yol Bunker giriş ucuysa ilk dosya bu repoda doğmaz; alıcı kodu `../bunker-dashboard`'da değişir.
@@ -102,7 +105,7 @@ tests/
   - Zorunlu alanı eksik gövde → TASK-1.11 sözleşmesindeki davranış
   - Arka arkaya 5 istek → 5 kayıt; en uzun yanıt süresi yazıldı ve 8 sn'nin çok altında
 - [ ] **Ürettiğim kapıyı sınadım — yazım hatası:** yerel veritabanında yazım bilerek başarısız kılındığında (ör. hedef tabloya yazma yetkisi geri alınır ya da kısıt ihlali üretilir) yanıt `{"ok":false,…}` JSON; paket bu senaryoyu yakalıyor. Geri alınınca yeşil
-- [ ] Test kaydı üç otomasyonun seçim sorgusuna (TASK-1.11) yerel veritabanında **girmiyor**; kontrol grubu olarak otomasyona girmesi beklenen bir kayıt aynı sorguda **görünüyor** (sorgu gerçekten seçiyor, her şeye boş dönmüyor)
+- [ ] Test kaydı TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorgularına yerel veritabanında **girmiyor**; kontrol grubu olarak otomasyona girmesi beklenen bir kayıt aynı sorguda **görünüyor** (sorgu gerçekten seçiyor, her şeye boş dönmüyor)
 - [ ] Env tanımsızken `npm test` sözleşme paketini atladığını raporluyor, çıkış kodu 0
 - [ ] Versiyonlanan alıcı tanımı yerel ortama sıfırdan içe alınınca aynı paket yine yeşil (tanım kendi kendine yeter)
 - [ ] Dışa aktarım dosyasında sır değeri yok (`grep` ile)

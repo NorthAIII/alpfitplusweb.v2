@@ -39,7 +39,7 @@ Kullanıcı kararı (2026-09-13): koşucu bu fazda, **lead task'larından önce*
 **Güncellenmesi Gereken (Task Sonunda):**
 - `_dev/DURUM.md` — Task durumu ve özet
 - `_dev/phases/PHASE-1.md` — Task Listesi tablosunda durumu güncelle
-- `CLAUDE.md` → Projeye Özgü Kurallar → "Ölçüm betikleri" tablosuna `npm test` satırı (komut + geçme şartı) — kök doktrin dosyası; değişiklik kullanıcıya bildirilir
+- `CLAUDE.md` → Projeye Özgü Kurallar → "Ölçüm betikleri" tablosuna `npm test` satırı (komut + geçme şartı) — kök doktrin dosyası; değişiklik kullanıcıya bildirilir. Tablonun giriş cümlesi "Hepsi araştırma konteynerinde" diyor; `npm test` `web` konteynerinde koşar, satır bu ayrımı açıkça taşır
 - `_dev/memory/saf-fonksiyon-testi-node-tip-soyma.md` — koşucu artık var: kayıt yeni gerçeğe göre yeniden yazılır ya da silinir, MEMORY.md index'i birlikte
 - `_dev/docs/DECISIONS.md` — yalnız kurulum 2026-09-13 "Test koşucusu" kaydından saparsa (konum, komut)
 
@@ -66,7 +66,7 @@ Kullanıcı kararı (2026-09-13): koşucu bu fazda, **lead task'larından önce*
     - Eksik ad/kulüp 422, iletişimsiz 422, rızasız 422, bozuk JSON 400, 6. istek 429
     - Uzun alan kırpılır, 400 dönmez
   - Hız sınırı modül düzeyinde (`HITS`) test dosyası boyunca yaşar → **her senaryo kendi `x-forwarded-for`'unu taşır**; 429 senaryosu ayrı bir IP'de altı istekle ölçülür
-  - Loglarda hedef adres ve kişisel veri olmadığı `console.error` casusuyla doğrulanır
+  - Loglarda hedef adres ve kişisel veri olmadığı `console.error` casusuyla doğrulanır. Aranan: alıcı adresi, token, ad, telefon, e-posta, mesaj. `no-sink` logu `club` ve `at` taşır (`route.ts:244`, TASK-1.05 kararı) — casus bunu ihlal saymaz
   - Dosya: `tests/api-demo.test.ts` (YENİ)
 
 ---

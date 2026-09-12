@@ -59,6 +59,7 @@ v1'in kurulumu referanstır (salt okunur): `../Alpfitplus-website.v1/src/layouts
   - Umami kurulumunun **sürümü** okunur. `data-tag` özniteliğini destekliyor mu? Desteklemiyorsa ortam ayrımı için alternatif (aşama başına ayrı site kaydı) **kullanıcıya sorulur**
   - Site eklenir: ad önerisi `Alpfit Plus v2 (önizleme)`, alan adı `alpfitplus-web-v2.vercel.app`. v1'in `alpfitplus.com` kaydına **dokunulmaz**
   - Website ID kopyalanır (sır değil)
+  - Kurulumun çerez ve IP saklama davranışı (varsayılandan değiştirilmiş mi) okunur ve Oturum Kaydı'na yazılır — TASK-1.15'in yasal metni bu kayda dayanır ("teyit edilmiş olmalı")
 
 - [ ] **3. Tracker'ı kendi kuruluma çevir**
   - `src="https://umami.kiwiailab.com/script.js"`, `strategy="afterInteractive"`, `data-website-id`, `data-tag={DEPLOY_STAGE}`

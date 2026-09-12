@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-13 — plan revizyonu: B-021 → TASK-1.12 (kullanıcı kararıyla faza alındı), B-038 → TASK-1.14 (Apps Script dosyaları siliniyor, konusuz kalacak). Açık bulgu 43 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
+**Son Güncelleme:** 2026-09-13 — verify-plan: Gelen Kutusu'na sunucu yedeği çelişkisi düştü (DECISIONS gerekçesi ↔ `../altyapi/vps/CLAUDE.md`). Açık bulgu 43 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -39,6 +39,7 @@
 - [TASK-1.07] Ana sayfada iki ardışık ikon kartı ızgarası (`Modules` 3 sütun + `Benefits` 4 sütun, ikon kümesi tekrar ediyor) — STYLE-GUIDE "jenerik ikonlu kart ızgarası" maddesiyle çelişiyor; Modules'ta 5 kart 3 sütuna dizildiği için ikinci satır tırtıklı bitiyor
 - [oturum triyajı] `/devflow:next` motorda yok (rev 4e55308) ama kök `CLAUDE.md` hâlâ listeliyor ve oturum kapanışının varsayılan önerisi olarak gösteriyor; motorun yeni `run-phase` komutu da listede yok — DevFlow Komutları bölümü motorla hizalanmalı (audit-docs)
 - [QUICK-001] `render-product.mjs` çıktı klasörünü (`research/product-out/`) hiç temizlemiyor: `SCREENS`'ten bir ekran düşürülünce eski `.webp` orada kalıyor ve "hâlâ üretiliyor" gibi okunuyor — `public/`'e elle kopyalayan bir sonraki oturum bayat varlığı geri koyabilir. Klasör ayrıca konteynerin root kullanıcısına ait, host'tan silinemiyor (docker gerekiyor)
+- [verify-plan] `docs/DECISIONS.md` 2026-09-13 "Lead hedefi (yeniden)" gerekçesi sunucu DB'si için "sunucu dışı kopya ve aylık geri yükleme testi zaten kurulu" diyor ve `../altyapi/README.md`'yi gösteriyor; o dosya masaüstünün yedeğini anlatıyor, sunucunun kaydı `../altyapi/vps/CLAUDE.md` (2026-09-10 durumu) ise "sunucu dışında hiç yedek kopyası yok, indirme ve test otomasyonu göçte gelmedi" diyor. Bugünkü durumu TASK-1.11 alt görev 5 ölçer; e-posta her talepte bağımsız kopya olduğu için talep kaybı sınırlı, onarım altyapı işi
 
 - [audit-product SORU] `DemoForm.tsx:76` `noValidate` ve hız sınırının doğrulamadan önce sayması bilinçli mi? İkisi birlikte M3 F3.1 kriteriyle çelişiyor ve geçerli talebi 429'a düşürüyor (bkz. B-020) — önerim: kota yalnız doğrulamayı geçen isteği saysın, istemci doğrulaması açılsın
 - [audit-product SORU] Footer'daki "Giriş Yap" bilinçli mi? Bilinçli Tercihler kaydı yalnız **header**'ın yokluğunu kapsıyor ("footer'a, ürün canlıya çıkınca"), ama bağlantı bugün footer'da ve `app.alpfitplus.com` çözümlenmiyor — önerim: ürün canlıya çıkana dek gizlensin, kayıt gerçeği yansıtsın

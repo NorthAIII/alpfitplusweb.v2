@@ -33,7 +33,7 @@ Somut girdiler TASK-1.11'in keşfinden gelir: sunucunun ülkesi ve talep kaydın
 
 **Okunması Gereken:**
 - `_dev/tasks/archive/TASK-1.10.md` — önceki düzenlemenin kararları (sağlayıcı adlandırma, "aktarım" kaleminin sınırı, yurt dışı aktarımın neden yazılmadığı)
-- `_dev/tasks/archive/TASK-1.11.md` → Oturum Kaydı — sunucu konumu, talep kaydına erişen hesaplar
+- `_dev/tasks/archive/TASK-1.11.md` → Oturum Kaydı — sunucu konumu, talep kaydına erişen hesaplar, yedek durumu, KVKK silme/dışa aktarma kapsamı (envanterin (c) sınıfı)
 - `_dev/bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md` — açık kalan üç kalem (bu task kapatmaz)
 - `_dev/docs/CLAIMS.md` — iddia sınırı (yasal metin de iddiadır)
 - `../Alpfitplus-website.v1/src/i18n/legal.ts` — kendi sunucu ve Umami maddelerinin ton örneği (salt okunur)

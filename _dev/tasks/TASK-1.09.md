@@ -100,10 +100,10 @@ src/app/
 ## Test Kriterleri
 
 - [ ] Yerelde Umami tanımsızken tüm WhatsApp/telefon bağlantıları normal çalışır, konsol temiz (`scan.mjs` ana sayfa + `/demo` + `/destek`)
-- [ ] Önizlemede hero'daki WhatsApp tıklaması panelde `whatsapp-click` / `surface=hero` üretir
+- [ ] Önizlemede hero'daki WhatsApp tıklaması panelde `whatsapp-click` / `surface=hero` üretir — kanal: UAT
 - [ ] Footer'daki telefon tıklaması `phone-click` / `surface=footer` üretir
 - [ ] Fiyat bölümündeki (id'li `<Section>`) bir bağlantı `surface=fiyat` üretir — `section[id]` yedeği çalışıyor
-- [ ] Üç olayın üçü de (`demo-submit` dâhil) panelde `preview` etiketiyle görünüyor
+- [ ] Üç olayın üçü de (`demo-submit` dâhil) panelde `preview` etiketiyle görünüyor — kanal: UAT
 - [ ] `perf.mjs` üretim konteynerine karşı koşuyor; ana sayfa ağırlığı başlangıç çizgisiyle kıyaslanmış ve rakam yazılmış — B-035 kapsam notuyla
 - [ ] Umami betiği (`umami.kiwiailab.com/script.js`) ve bir olay isteğinin aktarım boyutu tarayıcı ağ kaydından ayrıca ölçülmüş ve yazılmış
 - [ ] `a11y.mjs` TOPLAM SORUN: 0 ve `mobile-audit.mjs` yatay kaydırma: yok (öznitelik eklemeleri düzeni bozmadı)

@@ -12,7 +12,7 @@
 
 Web sitesinden gelen demo talebinin Bunker'a (`alpfit` kiracısı) **nereden, nasıl ve hangi kayıtla** gireceğini salt okunur incelemeyle belirlemek. Kalan lead task'larının (1.17 yerel prova ortamı, 1.13 yerel alıcı, 1.14 site bağlantısı, 1.18 canlıya taşıma, 1.06 uçtan uca tur, 1.15 yasal metin) dayanacağı sözleşmeyi de yazılı hâle getirmek.
 
-Task, seçilen giriş yolu tüm ayaklarıyla kaynağa bağlanıp yazıldığında, talebin üç satış otomasyonuna girmeyeceği kodla gösterildiğinde ve kullanıcı yolu onayladığında tamamlanmış sayılır.
+Task, seçilen giriş yolu tüm ayaklarıyla kaynağa bağlanıp yazıldığında, kaydın yazılacağı tabloyu okuyan kod yollarının envanteri çıkarılıp talebin gönderen/eylem yapan yolların hiçbirine girmeyeceği kodla gösterildiğinde ve kullanıcı yolu onayladığında tamamlanmış sayılır.
 
 ---
 
@@ -61,10 +61,13 @@ Revizyonda verilen iki karar keşfin sınırını çizer:
   - `env` (`local`/`preview`/`production`) nasıl taşınır? Önizleme testleri panelde ayırt edilmeli
   - Bunker'ın telefon/e-posta için beklediği biçim varsa not edilir — TASK-1.12'nin doğrulama kuralına girer
 
-- [ ] **3. Otomasyon izolasyonunu kanıtla**
-  - `outreach-sequence-tick`, `triage-auto-approve`, `lead-classify-tick` kaydı hangi koşulla seçiyor? Kod okunur, dosya:satır yazılır
-  - Önerilen kayıt biçiminin üç seçim koşulunun **hiçbirine** girmediği gösterilir
-  - `alpfit` kiracısında Hermes'in durumu (duraklatılmış mı) okunur; demo talebine dokunabilecek başka zamanlanmış iş varsa listelenir
+- [ ] **3. Tüketici envanterini çıkar ve izolasyonu kanıtla**
+  - Kaydın yazılacağı tabloyu okuyan kod yolları sayılır. verify-plan sayımı (2026-09-13, `grep`): `leads` ~55 dosya, `staged_leads` 17 dosya. Ayrı tablo seçilirse sayım o tablo için yapılır; (c) sınıfı yine sorulur. Her yol üç sınıftan birine yazılır:
+    - **(a) Gönderen / eylem yapan:** zamanlanmış işler (`outreach-sequence-tick`, `triage-auto-approve`, `lead-classify-tick`, `lead-pull-tick` ve `src/app/api/internal/` altındaki diğer tick'ler) **ve** zamanlanmamış yollar (`alfred-tool`, `brain/executors` onay akışı, `hermes-send`, `outreach/batch`). Her birinin kaydı hangi koşulla seçtiği okunur, dosya:satır yazılır; önerilen kayıt biçiminin **hiçbirine** girmediği gösterilir
+    - **(b) Rapor / metrik:** `reports`, `leads/funnel`, `tenant-performance`, `cross-tenant-overview`, `daily/briefing` gibi. Demo talebi ve `env=local`/`preview` test kayıtları bu sayılara karışıyor mu? Karışıyorsa kabul mü filtre mi, kullanıcıya getirilir
+    - **(c) KVKK hakları:** `leads/gdpr-delete` ve `leads/export`. Demo talebi silme ve dışa aktarma başvurusunda kapsanıyor mu? Kapsanmıyorsa not düşülür (TASK-1.15 girdisi)
+  - Liste verify-plan'ın `grep` örneklemidir, eksiksiz değildir — envanterin kendisi bu task'ın çıktısıdır
+  - `alpfit` kiracısında Hermes'in durumu (duraklatılmış mı) okunur
   - Bunker yeni talep için **kendiliğinden bildirim** üretiyor mu? Üretiyorsa site e-postasıyla çift bildirim olur, kullanıcıya getirilir
 
 - [ ] **4. Sözleşmeyi yaz**
@@ -76,12 +79,12 @@ Revizyonda verilen iki karar keşfin sınırını çizer:
 - [ ] **5. KVKK ve yedek gerçeğini oku**
   - Sunucunun konumu (ülke) — TASK-1.15 yasal metni buna dayanır
   - Talep kaydına Bunker'da kimler erişebiliyor (kiracı kullanıcıları)
-  - Yeni kayıtlar Postgres yedeğine ve sunucu dışı kopyaya giriyor mu (`../altyapi/README.md`)
+  - Yeni kayıtlar sunucunun veritabanı yedeğine giriyor mu, ve sunucu dışı kopya **bugün** var mı — ölçülür. Kaynak `../altyapi/vps/CLAUDE.md` → yedek tablosu; 2026-09-10 durum notu "sunucu dışında hiç yedek kopyası yok" diyor, `docs/DECISIONS.md` 2026-09-13 ise kurulu diyor (çelişki Gelen Kutusu'nda). `../altyapi/README.md` masaüstü makinenin yedeğini anlatır, sunucuyu değil
 
 - [ ] **6. Yerel prova ortamının girdilerini çıkar** (TASK-1.17 bunlarla kurar)
   - Canlıdaki n8n ve Postgres **sürümleri** (imaj etiketleri)
   - Bunker şemasının yerelde kurulabileceği kaynak: migration dosyaları mı, salt okunur şema dökümü mü? Canlı şema migration'larla birebir mi (elle yapılmış fark var mı)?
-  - Asgari tohum: `alpfit` kiracısı ve üç seçim sorgusunu koşturmaya yeten kayıtlar — gerçek kişi verisi olmadan
+  - Asgari tohum: `alpfit` kiracısı ve envanterdeki (a) sınıfı seçim sorgularını koşturmaya yeten kayıtlar — gerçek kişi verisi olmadan
   - Yol Bunker giriş ucuysa Bunker uygulamasının yerelde nasıl koşacağı (reponun kendi komutu, bağımlılıklar)
 
 - [ ] **7. Kullanıcı onayı**
@@ -116,10 +119,10 @@ _dev/
 ## Test Kriterleri
 
 - [ ] Seçilen giriş yolunun her ayağı (adres, kimlik, yazılan tablo/değer, yanıt) kaynağıyla (dosya:satır ya da sorgu çıktısı) Oturum Kaydı'nda yazılı
-- [ ] Üç otomasyonun seçim koşulu kodda okunmuş; önerilen kayıt biçiminin üçüne de girmediği satır satır gösterilmiş
+- [ ] Tüketici envanteri üç sınıfıyla (gönderen/eylem yapan · rapor/metrik · KVKK silme/dışa aktarma) Oturum Kaydı'nda; (a) sınıfındaki her yolun seçim koşulu dosya:satır ile okunmuş ve önerilen kayıt biçiminin hiçbirine girmediği satır satır gösterilmiş; (b) ve (c) için karar ya da not yazılı
 - [ ] Yanıt sözleşmesi, `toWebhook`'un üç kapısıyla (HTTP durumu, JSON gövde, `ok === true`) karşılaştırılmış; site tarafında değişiklik gerekip gerekmediği yazılı
 - [ ] Yazma yapılmadığı kanıtlanmış: veritabanı oturumu salt okunur, n8n iş akışı listesi ve Bunker reposunun `git status`'u keşif öncesi ve sonrası aynı
-- [ ] Sunucu konumu ve talep kaydına erişen hesaplar yazılı (TASK-1.15 girdisi)
+- [ ] Sunucu konumu, talep kaydına erişen hesaplar ve yedek durumu (sunucu içi yedek + sunucu dışı kopya, bugünkü ölçümle) yazılı (TASK-1.15 girdisi)
 - [ ] Yerel prova girdileri yazılı: canlı sürümler, şema kaynağı ve canlıyla farkı, asgari tohum tanımı (TASK-1.17 girdisi)
 - [ ] Kullanıcı seçilen yolu onayladı; karar `docs/DECISIONS.md`'de
 

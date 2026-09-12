@@ -113,7 +113,8 @@ tests/
 - [ ] Regresyon: TASK-1.16 bataryasının tamamı yeşil (bal küpü, 422'ler, 400, 429, beş bozuk alıcı yanıtı)
 - [ ] Tarayıcıda (araştırma konteyneri, `/demo`, dev 3000): bozuk e-posta ile gönderim sonrası e-posta alanında `aria-invalid="true"`, `aria-describedby` hata metnini gösteriyor, odak o alanda; yazılan değerler yerinde
 - [ ] `a11y.mjs` TOPLAM SORUN: 0 · `font-guard.mjs` kümede olmayan karakter yok · `scan.mjs /demo` konsol temiz
-- [ ] `docker compose exec web npm run build` hatasız; dokunulan dosyalarda `npx eslint` temiz
+- [ ] `docker compose exec web npm run build` hatasız; `npx eslint src/lib/contact.ts src/app/api/demo/route.ts tests/` temiz
+- [ ] `DemoForm.tsx`'te **yeni** lint hatası yok: öncesi 4 kalem `react/no-unescaped-entities` (B-028; satır 60/65/169/192, 2026-09-13 ölçümü), sonrası aynı 4 kalem (satır numaraları kayabilir). B-028 bu task'ta düzeltilmez — kuralın kapatılıp kapatılmayacağı açık bir karar (verify-plan kullanıcı kararı 2026-09-13)
 
 ---
 

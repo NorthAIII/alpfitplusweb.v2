@@ -72,6 +72,7 @@ src/components/sections/
 - Olay yalnız **gerçek başarıda** gönderilir; bal küpü dolu istek de 200 döner ama form zaten `json.ok`'a bakıyor — bot gönderimi başarı sayılırsa sayım şişer. Mevcut `res.ok && json.ok` koşulu korunur, olay o dalın içine konur.
 - Umami tanımsızken sayfa **hatasız** çalışmalı — dönüşüm akışı analitiğe bağımlı olmamalı.
 - Yüzey listesi bu dosyada büyür; TASK-1.09 yeni ad **icat etmez**, buradan seçer.
+- **Betik adresinin evi bu task'ta karara bağlanır** (TASK-1.07 Dikkat Noktaları devretti): `https://umami.kiwiailab.com/script.js` `layout.tsx`'te sabit olarak mı kalır, `analytics.ts`'e mi taşınır. Taşınırsa `src/app/layout.tsx` de değişir; karar ve gerekçe Oturum Kaydı'na.
 
 ---
 
@@ -80,7 +81,7 @@ src/components/sections/
 - [ ] Yerelde Umami env'i tanımsızken demo formu gönderimi hatasız tamamlanır, konsol temiz (`scan.mjs /demo`)
 - [ ] Yerelde Umami tanımlıyken başarılı gönderimde ağ sekmesinde Umami olay isteği görünür
 - [ ] Başarısız gönderimde (hedefler kapalı, 503) olay **gönderilmez**
-- [ ] Önizlemede gönderilen talep panelde `demo-submit` / `surface=demo-form` olarak görünür
+- [ ] Önizlemede gönderilen talep panelde `demo-submit` / `surface=demo-form` olarak görünür — kanal: UAT
 - [ ] TypeScript: yüzey sözlüğünde olmayan bir etiket derleme hatası verir
 - [ ] `docker compose exec web npm run build` hatasız geçer
 

@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-13 — Plan revize edildi: TASK-1.04 iptal, sekiz task eklendi (Bunker keşfi, Vitest, B-021, yerel prova, yerel alıcı, site bağlantısı, canlıya taşıma, yasal metin), TASK-1.06/1.07 yeniden yazıldı; e-posta site kaynaklı, faz sırası yeniden kuruldu (`docs/DECISIONS.md` 2026-09-13); sıradaki adım verify-plan.
+**Son Güncelleme:** 2026-09-13 — verify-plan tamamlandı: 8 mekanik düzeltme ve 3 onaylı yapısal değişiklik yapıldı (TASK-1.11'e Bunker tüketici envanteri, yedek referansı düzeltildi, TASK-1.12 lint kriteri B-028'e göre); sıra değişmedi, sıradaki adım TASK-1.07.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,7 +10,7 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Bunker'a otomasyon tetiklemeden düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** verify-plan
+**Adım:** task
 **İlerleme:** 5/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
@@ -34,9 +34,9 @@
 ## Aktif Task
 
 **Task:** TASK-1.07 — Kendi Umami'ye site kaydı ve tracker bağlantısı
-**Durum:** ⬜ Bekliyor — plan revize edildi, önce verify-plan
+**Durum:** ⬜ Bekliyor — plan review tamamlandı, çalıştırılmaya hazır
 **İlerleme:** Henüz başlanmadı. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
-**Not:** Ağaçtaki commit'lenmemiş Umami Cloud farkını (`src/app/layout.tsx`, `.env.example`) bu task devralır (kullanıcı kararı 2026-09-13); bu yüzden sıranın başına alındı. Plan revizyonu oturumu bu iki dosyaya dokunmadı ve commit'ine almadı.
+**Not:** Ağaçtaki commit'lenmemiş Umami Cloud farkını (`src/app/layout.tsx`, `.env.example`) bu task devralır (kullanıcı kararı 2026-09-13); bu yüzden sıranın başına alındı. Plan revizyonu ve verify-plan oturumları bu iki dosyaya dokunmadı ve commit'lerine almadı (verify-plan farkı okudu: task dokümanının anlattığıyla aynı).
 
 ---
 

@@ -102,7 +102,7 @@ _dev/
 
 - [ ] Sözleşme paketi canlı adrese karşı yeşil: doğru kimlik → `{"ok":true}` + bir kayıt; yanlış/eksik kimlik, bozuk ve `null` gövde → JSON `ok:false`, kayıt yok; 5 ardışık istek → 5 kayıt ve yanıt süresi yazılı — kanal: UAT
 - [ ] Canlı alıcı tanımı repo kopyasıyla birebir (dışa aktarım karşılaştırması) — kanal: UAT
-- [ ] Test kaydı üç otomasyonun seçim sorgusuna girmiyor; bir döngü sonrası kayıt değişmemiş, gönderim kaydı yok — kanal: UAT
+- [ ] Test kaydı TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorgusuna girmiyor; bir döngü sonrası kayıt değişmemiş, gönderim kaydı yok — kanal: UAT
 - [ ] Yerelden (dev, 3000) canlı alıcıya gönderilen talep Bunker'da `alpfit` kiracısına **bir** kayıt olarak düşüyor ve `env` = `local` (TASK-1.05'ten devralınan) — kanal: UAT
 - [ ] `vercel env ls`: `LEAD_WEBHOOK_URL` (ve varsa kimlik anahtarı) Production + Preview'de var, değer basılmadan — kanal: UAT
 - [ ] Yedek dosyası ve geri dönüş komutu Oturum Kaydı'nda yazılı; yedeğin okunabilir olduğu doğrulandı

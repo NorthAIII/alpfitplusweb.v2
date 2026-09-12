@@ -124,7 +124,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 
 ## Task Listesi
 
-> Bu bölüm `/devflow:plan-phase` oturumunda dolduruldu (2026-09-11) ve **2026-09-13'te revize edildi**: TASK-1.04 iptal edildi (lead hedefi Bunker'a değişti). Sekiz task eklendi (keşif, test koşucusu, biçim doğrulaması, yerel prova, yerel alıcı, site bağlantısı, canlıya taşıma, yasal metin hizası); TASK-1.06 ve TASK-1.07 yeniden yazıldı, TASK-1.08/1.09 hizalandı. Gerekçeler `docs/DECISIONS.md` 2026-09-13. **Satır sırası çalıştırma sırasıdır**, numara sırası değil (TASKS-README → Lineer Çalıştırma). TASK-1.07 başa alındı: ağaçtaki commit'lenmemiş Umami farkını devralır.
+> Bu bölüm `/devflow:plan-phase` oturumunda dolduruldu (2026-09-11) ve **2026-09-13'te revize edildi**: TASK-1.04 iptal edildi (lead hedefi Bunker'a değişti). Sekiz task eklendi (keşif, test koşucusu, biçim doğrulaması, yerel prova, yerel alıcı, site bağlantısı, canlıya taşıma, yasal metin hizası); TASK-1.06 ve TASK-1.07 yeniden yazıldı, TASK-1.08/1.09 hizalandı. Gerekçeler `docs/DECISIONS.md` 2026-09-13. **Satır sırası çalıştırma sırasıdır**, numara sırası değil (TASKS-README → Lineer Çalıştırma). TASK-1.07 başa alındı: ağaçtaki commit'lenmemiş Umami farkını devralır. **verify-plan (2026-09-13):** sekiz mekanik düzeltme yapıldı. Kullanıcı onayıyla üç yapısal değişiklik girdi: TASK-1.11 izolasyonu Bunker'daki tüketici envanterine genişledi (gönderen/eylem yapan · rapor · KVKK silme; 1.13/1.17/1.18/1.06 buna bağlandı), yedek referansı `../altyapi/vps/CLAUDE.md`'ye düzeltildi ve TASK-1.12'nin lint kriteri B-028'e göre "yeni hata yok" oldu. Task sayısı ve sırası değişmedi.
 
 <!-- KURAL: Task Listesi yalnızca özet tablodur (#, Task, Durum, kısa açıklama). Task'ın icra detayı / oturum kaydı / çalışma notu buraya değil `tasks/TASK-N.md`'ye yazılır — bu bölüme sızan detay şişmedir, temizlenir (bölme değil). -->
 
@@ -137,7 +137,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.05 | TASK-1.05 | ✅ Tamamlandı | Demo ucunu sertleştir: JSON `ok` doğrulaması + lead `env` alanı |
 | 1.07 | TASK-1.07 | ⬜ Bekliyor | Kendi Umami'ye site kaydı ve tracker (ağaçtaki yarım işi devralır) |
 | 1.16 | TASK-1.16 | ⬜ Bekliyor | Test koşucusu Vitest; aşama ve `/api/demo` testleri kalıcı olur |
-| 1.11 | TASK-1.11 | ⬜ Bekliyor | Bunker keşfi: giriş yolu, sözleşme, otomasyon izolasyonu, yerel prova girdileri (keşif ayağı) |
+| 1.11 | TASK-1.11 | ⬜ Bekliyor | Bunker keşfi: giriş yolu, sözleşme, tüketici envanteri ve izolasyon, yedek gerçeği, yerel prova girdileri (keşif ayağı) |
 | 1.12 | TASK-1.12 | ⬜ Bekliyor | İletişim biçimi doğrulaması (B-021) |
 | 1.17 | TASK-1.17 | ⬜ Bekliyor | Yerel prova ortamı: compose profili, n8n + Postgres (Bunker şeması) |
 | 1.13 | TASK-1.13 | ⬜ Bekliyor | Alıcıyı yerelde kur; sözleşme paketi ve seçim sorgusu izolasyonu |
