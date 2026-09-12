@@ -9,9 +9,9 @@
 
 ## Genel Bilgiler
 
-**Amaç:** v2'yi v1'den **ayrı** bir Vercel projesinde önizleme adresine çıkarmak; demo talebini gerçek bir hedefe (Google Sheet) dayanıklı yazıp e-postayla bildirmek; üç dönüşüm olayını (demo gönderimi, WhatsApp tıklaması, telefon tıklaması) yüzey etiketiyle saymak. Bu faz ILKELER'in iki pazarlıksız maddesini ("gelen talep kaybolmaz", "ölçülebilirlik") bugün karşılanmayan hâlden çıkarır. v1 Vercel projesine ve `alpfitplus.com`'a dokunulmaz.
+**Amaç:** v2'yi v1'den **ayrı** bir Vercel projesinde önizleme adresine çıkarmak; demo talebini gerçek bir hedefe (kendi sunucudaki satış paneli Bunker, `alpfit` kiracısı) satış otomasyonlarına sokmadan dayanıklı yazıp e-postayla bildirmek ve bu hattın sözleşmesini kalıcı testle korumak; üç dönüşüm olayını (demo gönderimi, WhatsApp tıklaması, telefon tıklaması) yüzey etiketiyle saymak. Bu faz ILKELER'in iki pazarlıksız maddesini ("gelen talep kaybolmaz", "ölçülebilirlik") bugün karşılanmayan hâlden çıkarır. v1 Vercel projesine ve `alpfitplus.com`'a dokunulmaz.
 
-**Milestone:** v2 ayrı Vercel projesinde `vercel.app` önizleme adresinde ayakta ve `noindex`; önizlemeden gönderilen gerçek bir demo talebi Google Sheet'e satır olarak düşüyor **ve** `DEMO_TO`'ya e-posta geliyor; üç olay yüzey etiketiyle analitik panelinde görünüyor; güvenlik başlıkları önizleme adresinde ölçüldü; v1 projesine dokunulmadı.
+**Milestone:** v2 ayrı Vercel projesinde `vercel.app` önizleme adresinde ayakta ve `noindex`; önizlemeden gönderilen gerçek bir demo talebi Bunker'da `alpfit` kiracısına kayıt olarak düşüyor, hiçbir satış otomasyonunu tetiklemiyor **ve** `DEMO_TO`'ya e-posta geliyor; üç olay yüzey etiketiyle kendi Umami panelinde görünüyor; güvenlik başlıkları önizleme adresinde ölçüldü; v1 projesine dokunulmadı.
 
 ### Feature Listesi
 
@@ -20,9 +20,11 @@
 | Feature | Modül | Açıklama |
 |---------|-------|----------|
 | F7.3: Vercel'de ayrı proje ve önizleme yayını | M7-Yayın ve Altyapı | Repo Vercel'e bağlanır, env tanımlanır, `main` push önizlemeyi günceller; önizleme `noindex` |
-| F3.2: Dayanıklı kayıt hedefi | M3-Lead Hattı | `LEAD_WEBHOOK_URL` → Google Sheet (Apps Script web app); gerçek talep satıra düşer |
-| F3.3: E-posta bildirimi | M3-Lead Hattı | Resend + `demo@alpfitplus.com`; alan adı DNS'te doğrulanır |
-| F7.4: Analitik olay sayımı | M7-Yayın ve Altyapı | Çerezsiz sağlayıcı; üç olay yüzey etiketiyle; sayfa ağırlığı ölçülür |
+| F3.2: Dayanıklı kayıt hedefi | M3-Lead Hattı | `LEAD_WEBHOOK_URL` → Bunker `alpfit` kiracısı (giriş yolu TASK-1.11); alıcı önce yerel provada, sonra canlıda; talep otomasyonlara girmez |
+| F3.3: E-posta bildirimi | M3-Lead Hattı | Resend + `demo@alpfitplus.com`; site her talepte gönderir, alıcı göndermez; alan adı DNS'te doğrulanır |
+| F7.4: Analitik olay sayımı | M7-Yayın ve Altyapı | Kendi Umami (`umami.kiwiailab.com`), çerezsiz; üç olay yüzey etiketiyle; sayfa ağırlığı ölçülür |
+
+**Destek işleri (feature matrisi değişmez):** test koşucusu Vitest (M6 F6.1'in genişlemesi, TASK-1.16) ve alıcının yerel prova ortamı (M7 F7.1'in genişlemesi, TASK-1.17) F3.2'ye hizmet eder.
 
 ---
 
@@ -33,18 +35,20 @@
 ### Alınan Kararlar
 
 - **Faz sırası değişti:** Bu faz "Metin tonu"nun önüne geçti. Metin tonu kullanıcı örneklerine bağlıydı ve hiçbir faz ona bağımlı değil; lead hattı ve ölçüm ise ILKELER'in pazarlıksız maddeleri. Yeni sıra `docs/DECISIONS.md` (2026-09-11) ve `PHASES.md` → Sıradaki Fazlar.
-- **Lead hedefi Google Sheet:** Talep bir e-tabloya satır olarak düşer; telefondan bakılır, filtrelenir, dışa aktarılır; tek kişilik ekip için en ucuz dayanıklı kayıt. Vercel'de kalıcı disk olmadığından `LEAD_FILE_PATH` yolu yayın ortamında kullanılmaz (yerel Docker'da kalabilir). Alıcı mekanizma (Apps Script web app, paylaşılan gizli anahtar, satır şeması) research-phase'de netleşir.
-- **E-posta bu fazda kapanır:** Kod zaten Resend'e yazılı; `demo@alpfitplus.com` göndericisi için alan adı doğrulaması (TXT/DKIM/SPF) gerekir. Kayıtlar `alpfitplus.com` DNS'ine eklenir, v1 barındırmasına dokunmaz. Kayıtları oturum hazırlar, kullanıcı ekler.
+- **Lead hedefi Bunker (2026-09-13 plan revizyonu):** Talep kendi sunucudaki satış panelinde `alpfit` kiracısına düşer; satış takibi zaten orada yürür. İlk karar Google Sheet'ti, Google hesabındaki dağıtım yapılamadığı için değişti (`docs/DECISIONS.md` 2026-09-13). Vercel'de kalıcı disk olmadığından `LEAD_FILE_PATH` yolu yayın ortamında kullanılmaz (yerel Docker'da kalabilir). Giriş yolu ve otomasyon dışı tutma TASK-1.11 keşfinde netleşir; alıcı önce yerel prova ortamında kurulur, sonra canlıya taşınır.
+- **E-posta bu fazda kapanır:** Site her talepte gönderir, alıcı göndermez — kayıt ve bildirim birbirinden bağımsız kalır (revizyon kararı 2026-09-13). Kod zaten Resend'e yazılı; `demo@alpfitplus.com` göndericisi için alan adı doğrulaması (TXT/DKIM/SPF) gerekir. Kayıtlar `alpfitplus.com` DNS'ine eklenir, v1 barındırmasına dokunmaz. Kayıtları oturum hazırlar, kullanıcı ekler.
 - **Analitik sağlayıcısı research'te seçilir, ölçütler burada:** Vercel planı **Hobby**; Vercel Web Analytics bu planda özel olay saymaz. Aday: çerezsiz üçüncü taraf (Umami, Plausible benzeri) ya da kendi küçük olay ucu. Seçim ölçütleri sırayla: çerezsiz ve rıza gerektirmez (KVKK), üç özel olayı yüzey etiketiyle sayar, sayfa ağırlığı ve LCP/CLS etkisi ölçülebilir küçük, ücretsiz ya da düşük sabit ücret, bakım yükü. Reklam engelleyicinin sayıları eksiltmesi bilinerek kabul edilir.
 - **Önizleme açık adres + noindex:** Şifre koruması yok (telefonda şifresiz bakılır, form testi korumaya takılmaz). Üretim dışı ortamda (`VERCEL_ENV !== "production"`) `X-Robots-Tag: noindex, nofollow` başlığı ve `robots.txt` tam `disallow` gider; üretimde bugünkü davranış korunur.
 - **Test ve gerçek talep ayrımı:** Lead kaydına ortam alanı (`env`: preview/production/development) eklenir; önizlemeden gelen test satırları e-tabloda ayırt edilir, silinmesi gerekmez.
-- **Yasal metin dokunuşu kapsamda:** `legal.ts` Aktarım maddesi yalnız "barındırma ve e-posta tedarikçisi" diyor; e-tablo/kayıt tutma tedarikçisi ve çerezsiz analitik ölçümü eklenir. Metin zaten hukukçu onayı bekliyor (B-008); bu değişiklik o kapsamda kalır, bulgu kapanmaz.
+- **Yasal metin dokunuşu kapsamda:** `legal.ts` Aktarım maddesi yalnız "barındırma ve e-posta tedarikçisi" diyordu; kayıt tutma yeri ve çerezsiz analitik ölçümü eklenir (TASK-1.10 Google/Umami Cloud'a göre yazdı, revizyon sonrası kendi sunucuya TASK-1.15 hizalar). Metin zaten hukukçu onayı bekliyor (B-008); bu değişiklik o kapsamda kalır, bulgu kapanmaz.
 - **GIT-STRATEJI bu fazda değişecek:** Repo Vercel'e bağlanınca her `main` push önizlemeyi tetikler; "yayın hattı yok" beyanı "push = önizleme, üretim alan adı bağlı değil" olarak güncellenir. Güncelleme F7.3 task'ının kapanışında `lib/git-strategy-kurulum.md` tarifiyle yapılır (korumalı doküman, kullanıcıya bildirilerek).
 - **Başlangıç ölçümü korunur:** F7.4 sonrası `perf.mjs` ağırlık ve LCP/CLS başlangıç çizgisiyle (`modules/M6-Kalite-Kapilari.md` → Teknik Notlar) kıyaslanır; artış rakamıyla task dokümanına yazılır.
 
 ### Kullanıcı Tercihleri
 
-- Lead hedefi: **Google Sheet** (Notion, Slack/WhatsApp ve Postgres seçenekleri elendi).
+- Lead hedefi: **Bunker** (2026-09-13; Google Sheet dağıtımı yapılamadı). Notion, Slack/WhatsApp, yönetilen Postgres, yalnız e-posta ve Sheets API seçenekleri elendi.
+- Alıcı önce **yerel prova ortamında** (compose; n8n + Postgres) kurulup sınanır, sonra canlıya taşınır; test koşucusu **Vitest** bu fazda kurulur (2026-09-13).
+- Analitik: **kendi Umami** (2026-09-13; Umami Cloud yerine).
 - DNS: kullanıcı `alpfitplus.com` DNS'ine kayıt ekleyebilir; Resend hesabı kullanıcıda.
 - Vercel planı: **Hobby**.
 - Önizleme: **açık adres + noindex**.
@@ -63,6 +67,8 @@
 - Slack/WhatsApp anlık bildirim; e-posta bildirim yeterli
 - Sayfa görüntüleme dışında ek olaylar (fiyat hesaplayıcı kullanımı, segment tıklaması vb.) — üç dönüşüm olayıyla sınırlı, dar faz
 - Vercel şifre/oturum koruması, önizleme için ayrı dal veya PR akışı (tek dal `main`)
+- Lead hattı bulgularından B-020 (kota + `noValidate`; Gelen Kutusu sorusu açık), B-036 ve B-037 — bu faza yalnız B-021 alındı (revizyon kararı 2026-09-13)
+- Umami'nin yerel kopyası (analitik canlı kurulumda `data-tag` ile ayrılır)
 
 ---
 
@@ -71,21 +77,24 @@
 > Bu bölüm `/devflow:research-phase` oturumunda dolduruldu (2026-09-11). Dört karar noktası kullanıcıya sunuldu ve seçildi; gerekçeler "Teknik Kararlar"da.
 >
 > **Bölme çocukları:** `PHASE-1-ARASTIRMA.md` — yaklaşım karşılaştırması (elenenler dâhil) ve ölçülmüş tuzakların tam listesi (araştırma-detayı).
+>
+> **Plan revizyonu (2026-09-13):** lead alıcısı (Apps Script → Bunker) ve analitik sağlayıcısı (Umami Cloud → kendi Umami) değişti; aşağıdaki seçimler güncel hâlleridir. Gerekçeler `docs/DECISIONS.md` 2026-09-13, Apps Script'e özgü ayrıntılar iptal edilen `tasks/archive/TASK-1.04.md`'de.
 
 ### Değerlendirilen Yaklaşımlar (özet)
 
 Tam karşılaştırma (elenen seçenekler, artı/eksi) → `PHASE-1-ARASTIRMA.md`. Seçilenler:
 
-- **Lead alıcısı:** Google Apps Script web app, sertleştirilmiş (token URL sorgusunda, betik JSON `{ok:true}` döner ve route bunu doğrular, `LockService`, betik kaynağı repoda). Yedek rota: Sheets API + servis hesabı.
-- **Analitik:** Umami Cloud ücretsiz katman — çerezsiz, script 4,7 KB (2,3 KB gzip), `data-tag` ile ortam ayrımı. Vercel Web Analytics Hobby'de özel olay saymadığı için elendi; Plausible ücretsiz plan yok.
+- **Lead alıcısı:** Bunker `alpfit` kiracısı (revizyon). Giriş yolu (n8n iş akışı ya da Bunker giriş ucu) TASK-1.11'de; sitenin üç kapılı sözleşmesi (HTTP durumu, JSON gövde, `ok === true`) korunur. Alıcı yerel prova ortamında kanıtlanıp canlıya taşınır.
+- **Analitik:** kendi Umami (`umami.kiwiailab.com`, revizyon) — çerezsiz, `data-tag` ile ortam ayrımı (kurulum sürümünün desteği TASK-1.07'de teyit). Vercel Web Analytics Hobby'de özel olay saymadığı için elendi; Plausible ücretsiz plan yok.
 - **Olay bağlama:** layout'ta tek global tıklama dinleyicisi (`wa.me` / `tel:`) + bölümlere `data-surface`; demo gönderimi `DemoForm` başarı anında `track`. Kodda 15 WhatsApp + 5 telefon bağlantısı (12 dosya) olduğu için tek tek öznitelik elendi.
 - **Ortam modeli:** `main` = production kalır; aşama (`local | preview | production`) `VERCEL_ENV` + `VERCEL_PROJECT_PRODUCTION_URL`'den türetilir — discuss'taki `VERCEL_ENV !== "production"` varsayımı ölçümde çürüdü (detay çocukta).
 - **noindex:** üç katman aynı aşama değerinden — `X-Robots-Tag` başlığı, `robots.ts` disallow, `metadata.robots`.
 
 ### Kullanılacak Araçlar/Kütüphaneler
 
-- **Umami Cloud tracker** — `https://cloud.umami.is/script.js`, `next/script` ile `strategy="afterInteractive"`; öznitelikler `data-website-id` (yeni env `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, sır değil), `data-tag={deployStage}`. `data-domains` **kullanılmaz** (önizlemede saymalı). Yeni npm bağımlılığı yok.
-- **Google Apps Script web app** — "Execute as: me", "Who has access: Anyone"; `LockService.getScriptLock()`; `ContentService` JSON yanıtı. Betik kaynağı repoda `research/lead-sheet.gs` (yeni; Google tarafındaki kopyayla eşit tutulur). Kota: 30 eşzamanlı çalıştırma/kullanıcı, 6 dk/çalıştırma — bu trafik için sınır uzak.
+- **Umami tracker (kendi kurulum)** — `https://umami.kiwiailab.com/script.js` (v1 aynı adresi kullanıyor), `next/script` ile `strategy="afterInteractive"`; öznitelikler `data-website-id` (yeni env `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, sır değil), `data-tag={deployStage}`. `data-domains` **kullanılmaz** (önizlemede saymalı). Yeni npm bağımlılığı yok.
+- **Bunker / n8n (kendi sunucu)** — giriş yolu, kimlik doğrulama ve yanıt sözleşmesi TASK-1.11'de; kurallar `../altyapi/vps/CLAUDE.md` ve `../bunker-dashboard/AGENTS.md`, adresler ve tuzak memory → Kendi sunucu. Yerel prova: compose profili, n8n + Postgres (TASK-1.17).
+- **Vitest** — tek devDependency, kök `tests/`, `npm test` konteynerde (TASK-1.16).
 - **Resend HTTP API** — mevcut `fetch` kullanımı korunur, SDK yok; alan `reply_to` doğru (API böyle). `Idempotency-Key` başlığı isteğe bağlı (tekrar gönderimde çift e-posta önler; 24 saat, ≤256 karakter) — `lead.at + club` türevi kullanılabilir.
 - **Vercel sistem env'leri** — `VERCEL`, `VERCEL_ENV`, `VERCEL_PROJECT_PRODUCTION_URL` (üçü de derleme ve çalışma anında; projede "Enable access to System Environment Variables" kutusu açık olmalı — F7.3'te teyit).
 - **Next.js 16 `next.config.ts` → `env`** — aşama tek yerde hesaplanır ve `NEXT_PUBLIC_DEPLOY_STAGE` olarak koda gömülür; `src/lib/stage.ts` (yeni) yalnız okur. Aynı değer `headers()` içinde noindex'i belirler.
@@ -97,25 +106,25 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 - `VERCEL_ENV` tek başına önizlemeyi ayırmaz (main push = production); `env` alanı ve etiket `deployStage`'den yazılır.
 - Resend DNS kayıtları (DKIM, `send` MX+SPF eu-west-1, DMARC katı) alan adında **zaten var**; kullanıcı yalnız panelde "Verified" teyit eder. `DEMO_FROM` tam `@alpfitplus.com` olmalı.
 - Apex MX yok → `destek@`/`demo@alpfitplus.com` posta alamayabilir (Gelen Kutusu; faz dışı). `DEMO_TO` Google MX'li, etkilenmez.
-- Apps Script: başlık okunamaz (token sorguda), betik hatası 200+HTML döner (route JSON `ok` doğrular), sürüm güncellemesi aynı URL'de yapılır, `LockService` zorunlu.
+- Bunker'ın `leads`/`staged_leads` tabloları soğuk e-posta dizisini, otomatik onayı ve model sınıflandırmasını besler — demo talebi körlemesine yazılmaz; izolasyon kodla (TASK-1.11), yerelde sorguyla (TASK-1.13), canlıda çalışma zamanında (TASK-1.18) kanıtlanır. Alıcı her hata yolunda JSON dönmeli (HTML hata sayfası "kaydedildi" okunur).
 - Umami yoksa `window.umami?.track` sessiz geçer; kişisel veri olaya girmez; yük `perf.mjs` ile ölçülür (başlangıç 144/133 KB).
-- `legal.ts` Aktarım + Çerezler maddeleri güncellenir (e-tablo tedarikçisi, çerezsiz ölçüm); B-008 açık kalır.
+- `legal.ts` Aktarım + Çerezler maddeleri: TASK-1.10 Google e-tablo ve Umami'ye göre yazdı; revizyon sonrası kayıt yeri kendi sunucu, ölçüm kendi Umami → TASK-1.15. B-008 açık kalır.
 - Vercel Hobby ticari kullanıma kapalı — bilinçli tercih (BULGULAR), F7.5'te yeniden.
 
 ### Teknik Kararlar
 
 - **Aşama türetimi tek yerde:** `next.config.ts` `deployStage`'i hesaplar (`local | preview | production`), `env.NEXT_PUBLIC_DEPLOY_STAGE` ile gömer ve aynı değerle `headers()`'da noindex'i verir; `src/lib/stage.ts` yalnız okur. Gerekçe: iki ayrı yerde iki koşul drift'tir; `VERCEL_ENV` tek başına yanlış (yukarıda ölçüldü). Kayıt `docs/DECISIONS.md` (2026-09-11).
-- **Lead alıcısı Apps Script, sertleştirilmiş:** token sorguda, JSON `ok` doğrulanır, `LockService`, betik kaynağı repoda. Gerekçe: bakım kolaylığı (tek URL, sır yok) + kalıcılık (sessiz kayıp yolları kapatıldı). Yedek rota: Sheets API + servis hesabı.
-- **Analitik Umami Cloud + global dinleyici:** olay adları `demo-submit` / `whatsapp-click` / `phone-click`, tek özellik `surface`, etiket `data-tag=deployStage`; kişisel veri girmez. Kayıt `docs/DECISIONS.md` (2026-09-11).
+- **Lead alıcısı Bunker (revizyon 2026-09-13):** sitenin sözleşmesi korunur, e-posta site kaynaklı, alıcı yerel provadan canlıya taşınır, sözleşme paketi iki ortamda koşar. Gerekçe: gelen talep kaybolmaz (yedekli Postgres), satış takibi zaten orada, yeni tedarikçi yok. Kayıtlar `docs/DECISIONS.md` 2026-09-13.
+- **Analitik kendi Umami + global dinleyici:** olay adları `demo-submit` / `whatsapp-click` / `phone-click`, tek özellik `surface`, etiket `data-tag=deployStage`; kişisel veri girmez. Kayıtlar `docs/DECISIONS.md` (2026-09-11 dinleyici, 2026-09-13 sağlayıcı).
 - **noindex üç katman aynı kaynaktan:** başlık + robots.txt + metadata; F7.5'te alan adı bağlanınca üçü birden açılır, elle adım yok.
-- **`.env.example` anahtar seti:** `LEAD_WEBHOOK_URL` (token'lı), `LEAD_FILE_PATH` (yalnız yerel), `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (yeni). Değer yok.
-- **Milestone cümlesi değişmedi:** cümle mekanizma adı anmıyor (`VERCEL_ENV` yalnız kapsam kararındaydı); not satırı gerekmedi.
+- **`.env.example` anahtar seti:** `LEAD_WEBHOOK_URL` (kimlik biçimi TASK-1.11; başlıkla taşınırsa yeni sır anahtarı), `LEAD_FILE_PATH` (yalnız yerel), `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, yerel prova anahtarları (TASK-1.17). Değer yok.
+- **Milestone cümlesi 2026-09-13 plan revizyonunda değişti:** "Google Sheet'e satır" → "Bunker'da kayıt, otomasyon tetiklenmeden"; "analitik paneli" → "kendi Umami paneli".
 
 ---
 
 ## Task Listesi
 
-> Bu bölüm `/devflow:plan-phase` oturumunda dolduruldu (2026-09-11). Sıra bağımlılık sırasıdır: aşama türetimi → noindex → Vercel → lead hattı → analitik → yasal metin.
+> Bu bölüm `/devflow:plan-phase` oturumunda dolduruldu (2026-09-11) ve **2026-09-13'te revize edildi**: TASK-1.04 iptal edildi (lead hedefi Bunker'a değişti). Sekiz task eklendi (keşif, test koşucusu, biçim doğrulaması, yerel prova, yerel alıcı, site bağlantısı, canlıya taşıma, yasal metin hizası); TASK-1.06 ve TASK-1.07 yeniden yazıldı, TASK-1.08/1.09 hizalandı. Gerekçeler `docs/DECISIONS.md` 2026-09-13. **Satır sırası çalıştırma sırasıdır**, numara sırası değil (TASKS-README → Lineer Çalıştırma). TASK-1.07 başa alındı: ağaçtaki commit'lenmemiş Umami farkını devralır.
 
 <!-- KURAL: Task Listesi yalnızca özet tablodur (#, Task, Durum, kısa açıklama). Task'ın icra detayı / oturum kaydı / çalışma notu buraya değil `tasks/TASK-N.md`'ye yazılır — bu bölüme sızan detay şişmedir, temizlenir (bölme değil). -->
 
@@ -124,13 +133,21 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.01 | TASK-1.01 | ✅ Tamamlandı | Aşama türetimi (`local/preview/production`) ve `deployStage` tek kaynağı |
 | 1.02 | TASK-1.02 | ✅ Tamamlandı | noindex üç katman (başlık + robots.txt + metadata), aynı aşama değerinden |
 | 1.03 | TASK-1.03 | ✅ Tamamlandı | Vercel'de ayrı proje, env iskeleti, başlık ölçümü, GIT-STRATEJI güncellemesi |
-| 1.04 | TASK-1.04 | 🔄 Devam ediyor | Google Sheet lead alıcısı — sertleştirilmiş Apps Script web app |
+| 1.04 | TASK-1.04 | ❌ İptal | Google Sheet lead alıcısı — hedef Bunker'a değişti (2026-09-13) |
 | 1.05 | TASK-1.05 | ✅ Tamamlandı | Demo ucunu sertleştir: JSON `ok` doğrulaması + lead `env` alanı |
-| 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattı doğrulaması ve uçtan uca gerçek lead testi |
-| 1.07 | TASK-1.07 | ⬜ Bekliyor | Umami Cloud kurulumu ve tracker bağlantısı (`data-tag=deployStage`) |
+| 1.07 | TASK-1.07 | ⬜ Bekliyor | Kendi Umami'ye site kaydı ve tracker (ağaçtaki yarım işi devralır) |
+| 1.16 | TASK-1.16 | ⬜ Bekliyor | Test koşucusu Vitest; aşama ve `/api/demo` testleri kalıcı olur |
+| 1.11 | TASK-1.11 | ⬜ Bekliyor | Bunker keşfi: giriş yolu, sözleşme, otomasyon izolasyonu, yerel prova girdileri (keşif ayağı) |
+| 1.12 | TASK-1.12 | ⬜ Bekliyor | İletişim biçimi doğrulaması (B-021) |
+| 1.17 | TASK-1.17 | ⬜ Bekliyor | Yerel prova ortamı: compose profili, n8n + Postgres (Bunker şeması) |
+| 1.13 | TASK-1.13 | ⬜ Bekliyor | Alıcıyı yerelde kur; sözleşme paketi ve seçim sorgusu izolasyonu |
+| 1.14 | TASK-1.14 | ⬜ Bekliyor | Site bağlantısı (yerel): `toWebhook` kimlik biçimi, `.env.example`, `lead-sheet` kalıntısı silinir |
+| 1.18 | TASK-1.18 | ⬜ Bekliyor | Alıcıyı canlıya taşı: yedek, canlı sözleşme, çalışma zamanı izolasyonu, Vercel env |
+| 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattını aç ve önizlemeden uçtan uca canlı tur (Bunker + e-posta, otomasyon yok) |
 | 1.08 | TASK-1.08 | ⬜ Bekliyor | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
 | 1.09 | TASK-1.09 | ⬜ Bekliyor | Global tıklama dinleyicisi, `data-surface` çapaları, analitik yükü ölçümü |
 | 1.10 | TASK-1.10 | ✅ Tamamlandı | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
+| 1.15 | TASK-1.15 | ⬜ Bekliyor | Yasal metin hizası: kayıt yeri kendi sunucu, ölçüm kendi Umami |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 

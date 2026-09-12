@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** hata / test-kapsamı | **Alan:** M3 — Lead hattı (`research/lead-sheet.gs`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → TASK-1.14
 
 ## Gözlem
 

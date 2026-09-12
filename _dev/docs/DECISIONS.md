@@ -13,6 +13,73 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-13 — Test koşucusu: Vitest, Faz 1'de ve lead task'larından önce
+
+**Bağlam:** ILKELER "Kümülatif test altyapısı" karşılanmıyordu. Repoda test koşucusu yoktu; TASK-1.01/1.02/1.05'in testleri scratchpad betikleriyle koşup kayboldu. Plan revizyonunda kullanıcı "container içinde ücretsiz kütüphanelerle çalışalım" dedi.
+
+**Seçenekler:**
+1. Vitest — MIT, TypeScript ve `@/` takma adını yapılandırmayla çözer, route handler doğrudan import edilip çağrılır
+2. `node:test` — sıfır bağımlılık ama `@/` takma adını çözmez
+3. Koşucuyu "Kalite kapıları otomatik" fazına bırakmak
+
+**Karar:** 1, bu fazda ve lead task'larından önce (kullanıcı). Konum kök `tests/`, komut `npm test` (`vitest run`), konteynerde koşar (TASK-1.16). TASK-1.12 ve TASK-1.14 testlerini oraya yazar. CI ve ölçüm betiklerinin kırmızıya dönememesi (B-030) "Kalite kapıları otomatik" fazında kalır.
+
+**Gerekçe:** Lead hattı canlıya bağlanırken sözleşme testleri kalıcı olmalı. Aksi hâlde alıcı ya da uç değiştiğinde geriye dönük güven sıfırdan kurulur. Tek devDependency, çalışma zamanına girmez.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.16
+
+---
+
+### 2026-09-13 — Alıcı provası: yerel kopyada kurulur, sonra canlıya taşınır
+
+**Bağlam:** Aynı gün "Lead hedefi (yeniden)" kaydı "kurulum doğrudan canlı sistemlerde yapılır; yerel n8n kopyası kurulmaz" dedi. Plan revizyonunda kullanıcı alıcının önce container'da kurulup sınanmasını istedi. Bunker'ın talep tabloları satış otomasyonlarını besliyor; canlıda deneme-yanılma bir kulübe soğuk e-posta gönderebilir.
+
+**Seçenekler:**
+1. Yalnız canlı — yerel bakım yükü yok, ama her deneme canlı veritabanında
+2. Yerel prova (compose profili: n8n + Postgres, Bunker şeması, canlıyla aynı sürümler) → sözleşme testi yerelde yeşil → canlıya taşıma
+
+**Karar:** 2 seçildi (kullanıcı). Sıra: TASK-1.17 yerel ortam, TASK-1.13 yerel alıcı, TASK-1.14 site bağlantısı (yerel), TASK-1.18 canlıya taşıma. Aynı sözleşme test paketi iki ortamda koşar. Umami'nin yerel kopyası kurulmaz (`data-tag=local` yeterli). Bu kayıt "Lead hedefi (yeniden)" kararının "yerel n8n kopyası kurulmaz" cümlesini geçersiz kılar; hedef ve kısıt aynen geçerli.
+
+**Gerekçe:** Sunucu kuralı "önce test" sunucuya dokunmadan karşılanır. Canlıya ilk yazan task alıcıyı kanıtlanmış hâliyle taşır. Yerel prova canlı otomasyonların çalışma zamanını kanıtlayamaz; o kanıt TASK-1.18'de canlıda alınır.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.17, 1.13, 1.18
+
+---
+
+### 2026-09-13 — Faz sırası (yeniden): yayın öncesi düzeltmeler → alan adı geçişi → görsel/mobil → kalite kapıları → metin tonu
+
+**Bağlam:** Aynı günün "alan adı geçişi öne alınır" kararı, geçişi kilitleyen bulguların ve yeni sıranın plan revizyonunda netleşmesini istedi. 2026-09-11 sırasında kalite kapıları ve metin tonu geçişten önceydi; M7 F7.5 "M6 F6.3 yeşil" bağımlılığı taşıyor.
+
+**Seçenekler:**
+1. Yayın öncesi düzeltmeler → Alan adı geçişi → Görsel ve mobil → Kalite kapıları → Metin tonu
+2. Yayın öncesi düzeltmeler → Kalite kapıları → Alan adı geçişi → Görsel ve mobil → Metin tonu
+
+Kilitleyen bulgu kümesi için üç aday: kararın dördü (B-029, B-018, B-024, B-011); dördüne ek iddia kuzenleri (B-044, B-050); dördüne ek ölçülmüş AA ihlalleri (B-032, B-033, B-034).
+
+**Karar:** 1 ve kararın dördü (kullanıcı). Yeni faz konusu "Yayın öncesi düzeltmeler" B-029, B-018, B-024 ve B-011'i kapatır; alan adı geçişini kilitleyen tek faz odur. Hukukçu onayına bağlı kalem (B-008, B-024'ün yurt dışı aktarım dayanağı) fazı kilitlemez.
+
+**Gerekçe:** Kullanıcı canlıya almak istiyor; v2'nin v1'den farkı tam bu dört bulgudur. Bedel bilinerek kabul: geçişten sonra CI yokken her push canlıya gider. Yayın kapısı (çalışma/yayın ayrımı, doğrulama) alan adı geçişi fazının kapsam tartışmasında `GIT-STRATEJI.md`'ye yazılır. M7 F7.5'in "M6 F6.3 yeşil" bağımlılığı o faza girerken güncellenir. Metin tonu canlıdan sonraya kalır. Bu kayıt 2026-09-11 "Faz sırası (yeniden)" kararının sırasını geçersiz kılar.
+
+**İlgili Task/Faz:** `PHASES.md` → Sıradaki Fazlar
+
+---
+
+### 2026-09-13 — E-posta kaynağı: site her talepte gönderir, alıcı göndermez
+
+**Bağlam:** "Lead hedefi (yeniden)" kaydı e-postanın tek kaynağını plan revizyonuna bıraktı. `route.ts` bugün kayıt ve e-postayı her talepte ayrı ayrı deniyor; alıcı da e-posta atarsa çift bildirim olur.
+
+**Seçenekler:**
+1. Site her talepte Resend'le gönderir, alıcı yalnız kaydeder — `route.ts` değişmez
+2. Alıcı kaydedip e-posta atar, site Resend'i yalnız kayıt düşünce dener — `route.ts` değişir, iki e-posta düzeneği bakımda kalır
+
+**Karar:** 1 seçildi (kullanıcı). `RESEND_API_KEY` Vercel'e girilir (TASK-1.06). Bunker kendiliğinden bildirim üretiyorsa çift bildirim TASK-1.11'de kullanıcıya getirilir.
+
+**Gerekçe:** ILKELER "hiçbir demo talebi tek bir sağlayıcıya bağlı kalmaz": kayıt kendi sunucuda, bildirim Resend'de — sunucu düşerse e-posta yine gelir, Resend düşerse kayıt yine kalır. Bakım kolaylığı: tek e-posta düzeneği, kod değişikliği yok.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.06, TASK-1.11
+
+---
+
 ### 2026-09-13 — Faz sırası: alan adı geçişi kritik içerik ve yasal bulgular kapanınca, öne alınır
 
 **Bağlam:** Kullanıcı canlıya almak istedi. Alan adı hemen v2'ye geçerse ürün denetiminin kritik bulguları yayına çıkar: site ürünün karşılamadığı beş yeteneği "var" diyor (B-029), ürün görselinde gerçek kişi adı var (B-018), yasal metin veri akışını eksik anlatıyor (B-024), KVKK başvuru adresi posta alamıyor (B-011).

@@ -58,6 +58,7 @@ Bu task fazın son analitik parçasıdır; F7.4'ün yük ölçümü kabul kriter
 - [ ] **4. Analitik yükünü ölç**
   - Üretim konteyneri ayağa kaldırılır (`docker compose --profile prod up -d --build web-prod`), yerel `.env`'de Umami website id tanımlıyken `perf.mjs` koşturulur
   - Başlangıç çizgisiyle (ana sayfa 144 KB / 133 KB) kıyaslanır; artış, TTFB/FCP/LCP/CLS rakamlarıyla birlikte task ve faz dokümanına yazılır
+  - **B-035:** `perf.mjs` ağırlık muhasebesi JS ve CSS'e kör, 144 KB çizgisi geçersiz. Bu yüzden Umami betiğinin ve olay isteğinin aktarım boyutu ağ yanıtından (tarayıcı ağ kaydı) **ayrıca** ölçülür ve iki kaynak ayrı yazılır. B-035 bu task'ta düzeltilmez
 
 ---
 
@@ -103,7 +104,8 @@ src/app/
 - [ ] Footer'daki telefon tıklaması `phone-click` / `surface=footer` üretir
 - [ ] Fiyat bölümündeki (id'li `<Section>`) bir bağlantı `surface=fiyat` üretir — `section[id]` yedeği çalışıyor
 - [ ] Üç olayın üçü de (`demo-submit` dâhil) panelde `preview` etiketiyle görünüyor
-- [ ] `perf.mjs` üretim konteynerine karşı koşuyor; ana sayfa ağırlığı başlangıç çizgisiyle kıyaslanmış ve rakam yazılmış
+- [ ] `perf.mjs` üretim konteynerine karşı koşuyor; ana sayfa ağırlığı başlangıç çizgisiyle kıyaslanmış ve rakam yazılmış — B-035 kapsam notuyla
+- [ ] Umami betiği (`umami.kiwiailab.com/script.js`) ve bir olay isteğinin aktarım boyutu tarayıcı ağ kaydından ayrıca ölçülmüş ve yazılmış
 - [ ] `a11y.mjs` TOPLAM SORUN: 0 ve `mobile-audit.mjs` yatay kaydırma: yok (öznitelik eklemeleri düzeni bozmadı)
 - [ ] `docker compose exec web npm run build` hatasız geçer
 

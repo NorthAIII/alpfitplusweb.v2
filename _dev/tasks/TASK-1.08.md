@@ -4,7 +4,7 @@
 **Modül:** M7 — Yayın ve Altyapı (`modules/M7-Yayin-ve-Altyapi.md`) · dokunulan yüzey M3
 **Feature:** F7.4: Analitik olay sayımı
 **Faz:** Phase 1 (`phases/PHASE-1.md`)
-**Bağımlılıklar:** TASK-1.07 ✅
+**Bağımlılıklar:** TASK-1.07 ✅, TASK-1.06 ✅ (önizlemedeki `demo-submit` kriteri başarılı gönderim ister — canlı alıcı olmadan uç 503 döner ve olay gönderilmez; 2026-09-13 plan revizyonu)
 
 ---
 

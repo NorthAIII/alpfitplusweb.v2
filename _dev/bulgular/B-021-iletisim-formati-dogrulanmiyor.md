@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / sessiz kayıp | **Alan:** M3 — Lead hattı (`/api/demo`, `DemoForm.tsx`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → TASK-1.12
 
 ## Gözlem
 

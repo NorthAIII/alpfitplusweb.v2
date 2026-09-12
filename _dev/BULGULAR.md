@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-13 — plan revizyonu işareti: Gelen Kutusu'ndaki kendi-Umami sorusunun kararı kesinleşti (kendi Umami'ye taşınır, `docs/DECISIONS.md` 2026-09-13). Açık bulgu 43 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
+**Son Güncelleme:** 2026-09-13 — plan revizyonu: B-021 → TASK-1.12 (kullanıcı kararıyla faza alındı), B-038 → TASK-1.14 (Apps Script dosyaları siliniyor, konusuz kalacak). Açık bulgu 43 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -69,7 +69,7 @@
 
 - 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — ürünün kendi paneli "Yakında" diyor; dördünde ürün kaydı v1.5/W8 yazıyor
 - 🔴 [B-018 — Ürün görselinde gerçek kişi adı, ciro projeksiyonu ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — "Gizem Ö." ana sayfada gösteriliyor; yasal metnin "gerçek kişi verisi yok" beyanı çürüyor
-- 🔴 [B-021 — İletişim formatı hiçbir katmanda doğrulanmıyor](bulgular/B-021-iletisim-formati-dogrulanmiyor.md) — hedef bağlandığı gün ulaşılamaz lead "başarılı" sayılacak; bugün 503 maskeliyor
+- 🔴 [B-021 — İletişim formatı hiçbir katmanda doğrulanmıyor](bulgular/B-021-iletisim-formati-dogrulanmiyor.md) — hedef bağlandığı gün ulaşılamaz lead "başarılı" sayılacak; bugün 503 maskeliyor → TASK-1.12
 - 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; `DEMO_TO` de aynı alan adına kurulursa lead sessizce kaybolur
 - 🔴 [B-032 — Ana sayfada ve segment sayfalarında ölçülmüş AA kontrast ihlalleri](bulgular/B-032-olculmus-aa-ihlalleri.md) — ürün turu soluk kartları 2,54:1, kapanış paragrafı 3,48:1; ILKELER pazarlıksız diyor
 - 🔴 [B-033 — 320 px'te Kurucu Programı bölümü içerik ve işlev kaybediyor](bulgular/B-033-320px-kurucu-programi-icerik-kaybi.md) — 18 metin düğümü 70 px kesiliyor, CTA etiketi dâhil; sayfa yatay kaydırma üretmediği için kapı temiz diyor
@@ -82,7 +82,7 @@
 - 🔴 [B-014 — Chat ağacı pilot cümlesini tek kaynaktan değil elle yazıyor](bulgular/B-014-chat-agaci-pilot-cumlesini-yeniden-yaziyor.md) — `PRODUCT_STATUS` değişince asistan eski iddiada kalır; `faq.ts` doğru deseni zaten taşıyor
 - 🟡 [B-036 — Dört ayrı yol talebi "başarılı" gösterip sessizce kaybediyor](bulgular/B-036-lead-kaybi-yollari.md) — bal küpü parola yöneticisine açık, JS'siz gönderim kişisel veriyi URL'ye yazıyor
 - 🟡 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — kota istemcinin başlığıyla anahtarlanıyor (yerelde bypass ölçüldü), `null` gövde 500, `content-type` hiç bakılmıyor
-- 🟡 [B-038 — `lead-sheet.gs` üç operasyonel sessizlik, testi `catch` dalını hiç koşturmuyor](bulgular/B-038-lead-sheet-operasyonel-sessizlikleri.md) — sözleşmenin dayandığı tek dal güvencesiz; TASK-1.04 hâlâ açıkken düzeltilebilir
+- 🟡 [B-038 — `lead-sheet.gs` üç operasyonel sessizlik, testi `catch` dalını hiç koşturmuyor](bulgular/B-038-lead-sheet-operasyonel-sessizlikleri.md) — Google Sheet hedefi düştü; dosya siliniyor, bulgu konusuz kapanacak → TASK-1.14
 - 🟡 [B-041 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor](bulgular/B-041-yasal-sayfalar-noindex-eziyor.md) — canlı önizlemede `index, follow` servis ediliyor; faz ölçüm tablosu bunu yeşil gösteriyor
 - 🟡 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — IP, yurt dışı aktarım, onay kapsamı; hukukçuya gönderimden (B-008) önce düzeltilmeli
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — analitik eklenirken yazmak için doğal an; pencere kapanırsa bir daha zor açılır

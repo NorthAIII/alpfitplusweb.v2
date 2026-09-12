@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-13 — Plan revizyonu işaretlendi: Google e-tablo dağıtımı yapılamadığı için kullanıcı kararıyla talep hedefi Bunker'a (`alpfit` + anında e-posta), analitik kendi Umami'ye taşındı, alan adı geçişi kritik bulgular kapanınca öne alınacak (`docs/DECISIONS.md` 2026-09-13); sıradaki adım plan-phase revizyonu.
+**Son Güncelleme:** 2026-09-13 — Plan revize edildi: TASK-1.04 iptal, sekiz task eklendi (Bunker keşfi, Vitest, B-021, yerel prova, yerel alıcı, site bağlantısı, canlıya taşıma, yasal metin), TASK-1.06/1.07 yeniden yazıldı; e-posta site kaynaklı, faz sırası yeniden kuruldu (`docs/DECISIONS.md` 2026-09-13); sıradaki adım verify-plan.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -9,9 +9,9 @@
 ## Aktif Faz
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
-**Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** plan
-**İlerleme:** 5/10 task tamamlandı (TASK-1.04 🔄 — hedefi değişti, plan revizyonu bekliyor)
+**Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Bunker'a otomasyon tetiklemeden düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
+**Adım:** verify-plan
+**İlerleme:** 5/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,10 +33,10 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.04 — Google Sheet lead alıcısı — Apps Script web app
-**Durum:** 🔄 Devam ediyor — **plan revizyonu bekliyor**
-**İlerleme:** Google hesabındaki dağıtım yapılamadı; hedef Bunker'a değişti ve task'ın varsayımı geçersiz. Revizyon gerekçesi ve revizyon oturumunun karara bağlayacağı sekiz madde task dokümanının 2026-09-13 Oturum Kaydı'nda.
-**Not:** TASK-1.06 (e-posta ve uçtan uca tur) ile TASK-1.07 (analitik) kapsamı revizyonda değişir. Ağaçta TASK-1.07'nin commit'lenmemiş Umami Cloud değişiklikleri duruyor (`src/app/layout.tsx`, `.env.example`); o oturum 2026-09-13'te bu makinede açık görünmüyordu ve değişikliklere dokunulmadı.
+**Task:** TASK-1.07 — Kendi Umami'ye site kaydı ve tracker bağlantısı
+**Durum:** ⬜ Bekliyor — plan revize edildi, önce verify-plan
+**İlerleme:** Henüz başlanmadı. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
+**Not:** Ağaçtaki commit'lenmemiş Umami Cloud farkını (`src/app/layout.tsx`, `.env.example`) bu task devralır (kullanıcı kararı 2026-09-13); bu yüzden sıranın başına alındı. Plan revizyonu oturumu bu iki dosyaya dokunmadı ve commit'ine almadı.
 
 ---
 
@@ -47,13 +47,21 @@
 | 1.01 | Aşama türetimi ve `deployStage` tek kaynağı | ✅ Tamamlandı |
 | 1.02 | noindex üç katman tek kaynaktan | ✅ Tamamlandı |
 | 1.03 | Vercel'de ayrı proje, env iskeleti ve başlık ölçümü | ✅ Tamamlandı |
-| 1.04 | Google Sheet lead alıcısı — Apps Script web app | 🔄 Devam ediyor |
+| 1.04 | Google Sheet lead alıcısı — Apps Script web app | ❌ İptal |
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ✅ Tamamlandı |
-| 1.06 | E-posta hattı doğrulaması ve uçtan uca lead testi | ⬜ Bekliyor |
-| 1.07 | Umami kurulumu ve tracker bağlantısı | ⬜ Bekliyor |
+| 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ⬜ Bekliyor |
+| 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ⬜ Bekliyor |
+| 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ⬜ Bekliyor |
+| 1.12 | İletişim biçimi doğrulaması (B-021) | ⬜ Bekliyor |
+| 1.17 | Yerel prova ortamı — n8n + Postgres (Bunker şeması) | ⬜ Bekliyor |
+| 1.13 | Alıcıyı yerel prova ortamında kur | ⬜ Bekliyor |
+| 1.14 | Site bağlantısı — alıcı sözleşmesi ve Apps Script kalıntısı | ⬜ Bekliyor |
+| 1.18 | Alıcıyı canlıya taşı ve Vercel env | ⬜ Bekliyor |
+| 1.06 | E-posta hattını aç ve uçtan uca canlı tur | ⬜ Bekliyor |
 | 1.08 | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` | ⬜ Bekliyor |
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ⬜ Bekliyor |
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
+| 1.15 | Yasal metin hizası — kendi sunucu ve kendi Umami | ⬜ Bekliyor |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -70,7 +78,7 @@
 - Lead'e `env` alanı (`DEPLOY_STAGE`) eklendi; e-posta gövdesine `Ortam:` satırı girdi — önizleme testleri e-tabloda ve gelen kutusunda ayrılıyor.
 - Teşhis logları hedef adresi, token'ı ve kişisel veriyi taşımıyor; yalnız durum kodu, alıcının hata kodu ve zaman damgası.
 
-**Test:** Yerel üretim derlemesine karşı serving katmanında (ayrı konteyner, 3200) **32 kontrol, TOPLAM SORUN 0**. Sözleşmeyi bozan beş gerçek yanıt (HTML, `ok:false`, HTTP 500, bozuk JSON, dizi gövde) beşi de 503 + `no-sink` verdi; kontrol grubu aynı koşuda yeşil — beşi de eski kodda `stored:true` sayılacaktı. Aşama senaryoları ayrıca koştu (3 senaryo, sorun 0): gerçek alan adı → `production`, **ara hâl** `vercel.app` → `preview`, alan adı env'i tanımsız → `preview`; yerel → `local`. Build ve eslint temiz. Devredilen tek kriter: gerçek `/exec` adresiyle uçtan uca tur → TASK-1.04 canlı turu.
+**Test:** Yerel üretim derlemesine karşı serving katmanında (ayrı konteyner, 3200) **32 kontrol, TOPLAM SORUN 0**. Sözleşmeyi bozan beş gerçek yanıt (HTML, `ok:false`, HTTP 500, bozuk JSON, dizi gövde) beşi de 503 + `no-sink` verdi; kontrol grubu aynı koşuda yeşil — beşi de eski kodda `stored:true` sayılacaktı. Aşama senaryoları ayrıca koştu (3 senaryo, sorun 0): gerçek alan adı → `production`, **ara hâl** `vercel.app` → `preview`, alan adı env'i tanımsız → `preview`; yerel → `local`. Build ve eslint temiz. Devredilen tek kriter (canlı alıcıya giden talebin `env=local` yazması) 2026-09-13 revizyonuyla TASK-1.04'ten TASK-1.18'e geçti.
 
 ### TASK-1.10 — Yasal metin: Aktarım ve Çerezler maddeleri (2026-09-11)
 
@@ -103,7 +111,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.04.md`
+**Aktif Task:** `tasks/TASK-1.07.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

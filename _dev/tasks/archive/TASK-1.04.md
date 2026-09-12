@@ -1,6 +1,6 @@
 # TASK-1.04: Google Sheet lead alıcısı — Apps Script web app
 
-**Durum:** 🔄 Devam ediyor
+**Durum:** ❌ İptal
 **Modül:** M3 — Lead Hattı (`modules/M3-Lead-Hatti.md`)
 **Feature:** F3.2: Dayanıklı kayıt hedefi
 **Faz:** Phase 1 (`phases/PHASE-1.md`)
@@ -216,6 +216,10 @@ Revizyon oturumu (`/devflow:plan-phase`) şunları karara bağlar ve task'lara d
 6. **Analitik:** TASK-1.07 kendi Umami'ye göre yeniden yazılır. Ağaçta commit'lenmemiş Umami Cloud değişiklikleri duruyor (`src/app/layout.tsx`, `.env.example`) — başka bir oturumun yarım işi; 2026-09-13'te bu makinede o oturum açık görünmüyordu, bu oturum dokunmadı. Revizyon onları kullanıcıya sorarak ele alır. TASK-1.08 / 1.09 aynen geçerli.
 7. **Yasal metin:** `legal.ts` Aktarım ve Çerezler/ölçüm maddelerinde Google ve Umami Cloud yerine kendi sunucu ve konumu (konum sunucu tarafında teyit edilir).
 8. **Faz milestone'u ve `PHASES.md` sırası:** milestone "Google Sheet'e satır" diyor → "Bunker'da talep" olur; alan adı geçişinin öne alınması ve onu kilitleyen bulgular (B-029, B-018, B-024, B-011 adayları) Sıradaki Fazlar'a işlenir.
+
+### Plan revizyonu — 2026-09-13
+
+Plan revize edildi (hedef Bunker'a değişti; alıcı önce yerel provada, sonra canlıda kurulur: TASK-1.11 keşif, 1.17 yerel ortam, 1.13 yerel alıcı, 1.14 site bağlantısı, 1.18 canlıya taşıma, 1.06 uçtan uca tur; `research/lead-sheet.*` TASK-1.14'te silinir) — **task iptal edildi**.
 
 ---
 
