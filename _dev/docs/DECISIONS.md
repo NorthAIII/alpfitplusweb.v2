@@ -13,6 +13,61 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-13 — Faz sırası: alan adı geçişi kritik içerik ve yasal bulgular kapanınca, öne alınır
+
+**Bağlam:** Kullanıcı canlıya almak istedi. Alan adı hemen v2'ye geçerse ürün denetiminin kritik bulguları yayına çıkar: site ürünün karşılamadığı beş yeteneği "var" diyor (B-029), ürün görselinde gerçek kişi adı var (B-018), yasal metin veri akışını eksik anlatıyor (B-024), KVKK başvuru adresi posta alamıyor (B-011).
+
+**Seçenekler:**
+1. Alan adı bu fazda v2'ye geçer — kritik bulgular yayına çıkar, her `main` push'u gerçek siteyi değiştirir
+2. Canlı sistemlerde çalışılır; alan adı kritik içerik ve yasal bulgular kapanınca geçer ve sıradaki fazlarda öne alınır
+3. Mevcut sıra korunur
+
+**Karar:** 2 seçildi (kullanıcı). Çalışma canlı sistemlerde yürür (önizleme adresi, Bunker, n8n, Umami); `alpfitplus.com` şimdilik v1'de kalır. Geçişi hangi bulguların kilitlediği ve `PHASES.md` → Sıradaki Fazlar'daki yeni sıra plan revizyonunda netleşir.
+
+**Gerekçe:** ILKELER "Kanıtsız iddia yayınlanmaz"; v2'nin v1'den farkı tam bu bulgulardır. Geçişten sonra her push canlıyı etkiler, yani `GIT-STRATEJI.md` yayın kapısı o gün yeniden yazılır. Bu kayıt 2026-09-11 "Faz sırası (yeniden)" kararındaki alan adı geçişinin yerini değiştirir.
+
+**İlgili Task/Faz:** Faz 1 — plan revizyonu (`tasks/TASK-1.04.md` → 2026-09-13 Oturum Kaydı)
+
+---
+
+### 2026-09-13 — Analitik (yeniden): kendi Umami (`umami.kiwiailab.com`), Umami Cloud değil
+
+**Bağlam:** 2026-09-11'de Umami Cloud seçildi. audit-product (2026-09-12) v1'in kendi sunucusunda Umami çalıştırdığını buldu; araştırma ve karar günlüğü bundan söz etmiyordu. Cloud'da kalınırsa alan adı geçişinde ölçüm iki kuruluma bölünür ve `alpfitplus.com`'un birikmiş geçmişi kopar.
+
+**Seçenekler:**
+1. Kendi Umami'ye ikinci site olarak eklenir
+2. Umami Cloud ücretsiz katman kalır
+
+**Karar:** 1 seçildi (kullanıcı). Olay adları (`demo-submit` / `whatsapp-click` / `phone-click`), `surface` özelliği, global tıklama dinleyicisi ve `data-tag` = aşama kararları aynen geçerli; değişen yalnız betik adresi ve site kimliği.
+
+**Gerekçe:** Ölçüm geçmişi tek yerde kalır; ücretsiz katman sınırı yok; talep hattıyla aynı sunucu olduğu için yasal metin tek konum söyler (v1 metni: "Kendi sunucumuzdaki analitik (Umami) — Almanya (aynı sunucu)"). Reklam engelleyici kaybı aynen kabul. CSP yazılırsa (B-016) izin verilecek alan adı `umami.kiwiailab.com`. Bu kayıt 2026-09-11 "Analitik: Umami Cloud" kararının sağlayıcı kısmını geçersiz kılar.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.07 plan revizyonunda yeniden yazılır
+
+---
+
+### 2026-09-13 — Lead hedefi (yeniden): Bunker'da `alpfit` talebi + anında e-posta, Google Sheet değil
+
+**Bağlam:** 2026-09-11'de Google Sheet (Apps Script web app) seçildi. Kod ve sözleşme testi bitti (TASK-1.04) ama Google hesabındaki dağıtım yapılamadı. Kullanıcının Hetzner sunucusunda n8n (`n8n.kiwiailab.com`) ve çok kiracılı satış paneli Bunker (`ops.kiwiailab.com`, `alpfit` kiracısı, Postgres) zaten çalışıyor; ikisi de dışarıdan erişilebilir (2026-09-13 ölçüldü: n8n `/healthz` 200).
+
+**Seçenekler:**
+1. Sunucudaki n8n üzerinden Bunker'a Alpfit talebi + anında e-posta
+2. Vercel'e bağlı yönetilen Postgres — yeni hesap, yeni kod, telefona uygun görüntüleme yok
+3. Yalnız e-posta (Resend) — kalıcı kayıt yok
+4. Google Sheets API + servis hesabı (araştırmadaki yedek rota) — kurulumu Apps Script'ten zahmetli
+
+**Karar:** 1 seçildi (kullanıcı). Talep Bunker'da `alpfit` kiracısına Alpfit talebi olarak düşer ve `kivanc@kiwiailab.com`'a hemen e-posta gider. Kurulum doğrudan canlı sistemlerde yapılır; yerel n8n kopyası kurulmaz (kullanıcı). Sitenin alıcı sözleşmesi korunur: JSON POST, yanıtta `ok === true` doğrulaması. Giriş yolu (n8n iş akışı ya da Bunker'da ayrı giriş ucu) ve e-postanın tek kaynağı plan revizyonunda netleşir.
+
+**Gerekçe:** ILKELER "gelen talep kaybolmaz": kayıt sunucudaki Postgres'e düşer; günlük yedek, sunucu dışı kopya ve aylık geri yükleme testi zaten kurulu (`../altyapi/README.md`). Satış takibi zaten Bunker'da yürüyor, talep ayrı bir e-tabloda kaybolmaz. Yeni tedarikçi yok.
+
+**Kısıt (ölçüldü):** Bunker'ın `leads` ve `staged_leads` tabloları soğuk e-posta dizisini, otomatik onayı ve model sınıflandırmasını besliyor (`../bunker-dashboard/docs/system-flow.md`; `src/app/api/internal/` → `outreach-sequence-tick`, `triage-auto-approve`, `lead-classify-tick`). Demo talebi bu akışları tetiklememeli — talebi yapan kulübe soğuk satış e-postası gitmemeli. `/api/leads/intake` oturum isteyen CSV içe aktarma ucudur, web sitesi alıcısı olarak kullanılamaz.
+
+KVKK: Aktarım maddesi Google yerine kendi sunucuyu söyler (`legal.ts`). Bu kayıt 2026-09-11 "Lead hedefi: Google Sheet" kararını geçersiz kılar; e-postanın ikincil olması ilkesi korunur.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.04 plan revizyonu
+
+---
+
 ### 2026-09-11 — Vercel ortam modeli: `main` = production, aşama `VERCEL_PROJECT_PRODUCTION_URL`'den türetilir
 
 **Bağlam:** Kapsam tartışması önizlemede noindex'i `VERCEL_ENV !== "production"` koşuluna bağlamıştı. Araştırmada ölçüldü: Git bağlantılı projede `main` push'u `<proje>.vercel.app` adresine **production** dağıtımıdır (`VERCEL_ENV=production`) ve Vercel bu adrese otomatik noindex eklemez. Koşul olduğu gibi yazılsaydı önizleme indekslenir, test talepleri "production" etiketi alırdı.

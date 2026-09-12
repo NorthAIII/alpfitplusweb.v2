@@ -177,6 +177,46 @@ Kod tarafı bitti ve yerelde kanıtlandı; kalan tek şey Google hesabında yap�
 - Ek senaryolar (kriter listesinde yoktu, icrada eklendi): formül enjeksiyonu dört tetik karakterde kaçırıldı ve zararsız metne dokunulmadı; bozuk JSON / boş gövde / dizi gövde reddedildi, satır yazılmadı; kilit alınamazsa `busy` döndü ve satır yazılmadı; `doGet` JSON döndü; 9000 karakterlik mesaj 4000'e kırpıldı.
 - `npx eslint research/lead-sheet.gs` → dosya eslint yapılandırmasının dışında (uyarı, hata değil). `src/` altında değişiklik yok, derleme yüzeyi bu oturumda değişmedi.
 
+### Oturum — 2026-09-13 (plan revizyonu işaretlendi)
+
+**Durum:** 🔄 Devam edecek — task'ın varsayımı değişti, plan revizyonu bekliyor
+
+**Yapılanlar:**
+- Kod yazılmadı. Kullanıcı Google hesabındaki dağıtımı (alt görev 3) daha önce **yapamadığını** bildirdi ve yerine çözüm istedi.
+- Seçenekler çıkarıldı ve kullanıcıya soruldu; kararlar `docs/DECISIONS.md`'ye üç kayıt olarak yazıldı (2026-09-13): talep hedefi Bunker, analitik kendi Umami, alan adı geçişinin sırası.
+
+**Sorunlar:**
+- **Bunker'ın talep tabloları otomasyonları besliyor (ölçüldü, salt okunur).** `leads` ve `staged_leads` soğuk e-posta dizisine (`outreach-sequence-tick`), otomatik onaya (`triage-auto-approve`) ve model sınıflandırmasına (`lead-classify-tick`) giriyor — kaynak `../bunker-dashboard/docs/system-flow.md` ve `src/app/api/internal/`. Demo talebi körlemesine yazılırsa talebi yapan kulübe soğuk satış e-postası gidebilir.
+- `../bunker-dashboard` → `/api/leads/intake` oturum isteyen CSV içe aktarma ucu; web sitesi alıcısı olarak kullanılamaz.
+
+**Kararlar:**
+- **Talep hedefi Bunker'da `alpfit` talebi + `kivanc@kiwiailab.com`'a anında e-posta** (kullanıcı). Google Sheet kararı geçersiz.
+- **Canlı sistemlerde çalışılır, yerel n8n kopyası kurulmaz** (kullanıcı).
+- **Analitik kendi Umami'ye (`umami.kiwiailab.com`) taşınır** (kullanıcı). TASK-1.07'yi etkiler.
+- **Alan adı geçişi kritik içerik ve yasal bulgular kapanınca, öne alınır** (kullanıcı). Faz 1'e girmez.
+- docs/DECISIONS.md'ye eklendi: Evet — üç kayıt, 2026-09-13.
+
+**Kalan İşler:**
+- Plan revizyonu (`/devflow:plan-phase`, revizyon modu) — aşağıdaki Sonraki Adım Detayı.
+
+**Son Yaklaşım:**
+Bu task'ın hedefi (Google e-tablosu) artık geçersiz; sitenin alıcı sözleşmesi ise geçerli ve korunacak: `route.ts` → `toWebhook` JSON POST atıyor ve yanıtta `ok === true` bekliyor. Yeni alıcı bu sözleşmeyi karşılarsa site tarafında kod değişikliği küçük kalır.
+
+Sunucu erişilebilir: `n8n.kiwiailab.com/healthz` ve `umami.kiwiailab.com/api/heartbeat` 2026-09-13'te 200 döndü.
+
+Sunucuya dokunan her iş `../altyapi/vps/CLAUDE.md` → "Değişiklik yaparken — pazarlıksız kurallar"a uyar (önce yedek, önce test, sonra ölç); Bunker kodu ayrı repodur ve kendi kuralları vardır (`../bunker-dashboard/AGENTS.md`).
+
+**Sonraki Adım Detayı:**
+Revizyon oturumu (`/devflow:plan-phase`) şunları karara bağlar ve task'lara döker:
+1. **Bu task'la hesaplaş:** hedef geçersiz → ❌ İptal önerilir. `research/lead-sheet.gs` ve `research/lead-sheet.test.mjs` kalsın mı silinsin mi kararı verilir. B-038 (`lead-sheet.gs` sessizlikleri) konusuz kalıyorsa triyaja not düşülür.
+2. **Keşif task'ı (ilk):** Bunker'a demo talebinin giriş yolu — n8n iş akışı mı, Bunker'da token korumalı ayrı giriş ucu mu; talep hangi tabloya, hangi `source` değeriyle girer; soğuk e-posta dizisi, otomatik onay ve sınıflandırma nasıl dışarıda tutulur; `alpfit` kiracısında Hermes duraklatılmış mı. Bunker reposu ve canlı veritabanı **salt okunur** incelenir.
+3. **Form hazırlığı (bağlantıdan önce):** B-021 iletişim biçimi doğrulaması — hedef bağlandığı gün ulaşılamaz talep "başarılı" sayılır. B-020 hız sınırının doğrulamadan önce sayması aynı dosyada, birlikte ele alınabilir.
+4. **Bağlantı (canlıda):** alıcı kurulur; `ok:true` sözleşmesi karşılanır; e-posta **tek kaynaktan** gider — önerilen: sunucu tarafı talebi yazdıktan sonra hemen mail atar, sitenin Resend e-postası yalnız kayıt düştüğünde devreye girer (bugün `route.ts` ikisini de her seferinde deniyor, çift e-posta olur). TASK-1.06'nın kapsamı buna göre yeniden yazılır.
+5. **Uçtan uca canlı tur:** önizleme adresinden gerçek talep → Bunker'da görünür + e-posta gelir + hiçbir otomasyon tetiklenmez; Vercel env değerini kullanıcı girer.
+6. **Analitik:** TASK-1.07 kendi Umami'ye göre yeniden yazılır. Ağaçta commit'lenmemiş Umami Cloud değişiklikleri duruyor (`src/app/layout.tsx`, `.env.example`) — başka bir oturumun yarım işi; 2026-09-13'te bu makinede o oturum açık görünmüyordu, bu oturum dokunmadı. Revizyon onları kullanıcıya sorarak ele alır. TASK-1.08 / 1.09 aynen geçerli.
+7. **Yasal metin:** `legal.ts` Aktarım ve Çerezler/ölçüm maddelerinde Google ve Umami Cloud yerine kendi sunucu ve konumu (konum sunucu tarafında teyit edilir).
+8. **Faz milestone'u ve `PHASES.md` sırası:** milestone "Google Sheet'e satır" diyor → "Bunker'da talep" olur; alan adı geçişinin öne alınması ve onu kilitleyen bulgular (B-029, B-018, B-024, B-011 adayları) Sıradaki Fazlar'a işlenir.
+
 ---
 
 **Oluşturulma:** 2026-09-11

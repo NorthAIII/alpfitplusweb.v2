@@ -46,3 +46,8 @@ next-env.d.ts
 
 # DevFlow komutları repoda tutulur, yerel ayarlar tutulmaz
 .claude/settings.local.json
+
+# DevFlow audit canvas — yerel/geçici dosyalar (git'e girmez; ayna canvas.tsv izlenir)
+_dev/.audit/canvas.db
+_dev/.audit/canvas.db-*
+_dev/.audit/canvas.tsv.tmp*

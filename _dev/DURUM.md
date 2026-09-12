@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-12 — QUICK-001 (`sube.webp` yayından çekildi) ✅ tamamlandı: ekran `render-product.mjs` hattından düştü, hat 7 görsel üretti (denetim temiz), `/product/sube.webp` artık 404; B-018 ve B-044 kapsam daralması notuyla **açık kaldı**. Faz konumu değişmedi — TASK-1.04 hâlâ kullanıcı dağıtımına, 1.07–1.09 paralel oturuma bağlı.
+**Son Güncelleme:** 2026-09-13 — Plan revizyonu işaretlendi: Google e-tablo dağıtımı yapılamadığı için kullanıcı kararıyla talep hedefi Bunker'a (`alpfit` + anında e-posta), analitik kendi Umami'ye taşındı, alan adı geçişi kritik bulgular kapanınca öne alınacak (`docs/DECISIONS.md` 2026-09-13); sıradaki adım plan-phase revizyonu.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Google Sheet'e düşüyor ve e-postayla geliyor; üç olay yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** task
-**İlerleme:** 5/10 task tamamlandı (TASK-1.04 🔄 devam ediyor — kullanıcı dağıtımı bekliyor)
+**Adım:** plan
+**İlerleme:** 5/10 task tamamlandı (TASK-1.04 🔄 — hedefi değişti, plan revizyonu bekliyor)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -34,9 +34,9 @@
 ## Aktif Task
 
 **Task:** TASK-1.04 — Google Sheet lead alıcısı — Apps Script web app
-**Durum:** 🔄 Devam ediyor — **kullanıcıya bağlı**
-**İlerleme:** 4 alt görevin 3'ü bitti (betik, sütun şeması, `.env.example`); kalan alt görev 3 **kullanıcının Google hesabında** yapılacak — e-tablo, betiğin yapıştırılması, `LEAD_TOKEN` Script Properties'e girilmesi, web app dağıtımı. Tarif `research/lead-sheet.gs` başındaki KURULUM bloğunda; devam adımları task dokümanının "Sonraki Adım Detayı" alanında.
-**Not:** TASK-1.06 canlı `/exec` adresine bağlı, yani o da bu dağıtımı bekliyor. **TASK-1.07 paralel bir oturumda çalışıyor** (ağaçta commit'lenmemiş Umami değişiklikleri var — `src/app/layout.tsx`, `.env.example`); TASK-1.08 ve 1.09 onun çıktısına bağlı. Bu oturum bu yüzden sıra dışı TASK-1.10'u çalıştırdı (kullanıcı kararı).
+**Durum:** 🔄 Devam ediyor — **plan revizyonu bekliyor**
+**İlerleme:** Google hesabındaki dağıtım yapılamadı; hedef Bunker'a değişti ve task'ın varsayımı geçersiz. Revizyon gerekçesi ve revizyon oturumunun karara bağlayacağı sekiz madde task dokümanının 2026-09-13 Oturum Kaydı'nda.
+**Not:** TASK-1.06 (e-posta ve uçtan uca tur) ile TASK-1.07 (analitik) kapsamı revizyonda değişir. Ağaçta TASK-1.07'nin commit'lenmemiş Umami Cloud değişiklikleri duruyor (`src/app/layout.tsx`, `.env.example`); o oturum 2026-09-13'te bu makinede açık görünmüyordu ve değişikliklere dokunulmadı.
 
 ---
 
