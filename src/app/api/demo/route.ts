@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 
+import { checkContact, isValidEmail } from "@/lib/contact";
 import { DEPLOY_STAGE } from "@/lib/stage";
 
 /**
@@ -151,7 +152,7 @@ async function toEmail(lead: Lead): Promise<boolean> {
       body: JSON.stringify({
         from,
         to: [to],
-        reply_to: lead.email || undefined,
+        reply_to: lead.email && isValidEmail(lead.email) ? lead.email : undefined,
         subject: `Demo talebi — ${lead.club || lead.name}`,
         text: [
           `Ad: ${lead.name}`,
@@ -227,6 +228,10 @@ export async function POST(req: Request) {
       { ok: false, code: "missing-contact", message: "Telefon veya e-postadan en az birini yazın." },
       { status: 422 },
     );
+  }
+  const contact = checkContact(lead.phone, lead.email);
+  if (!contact.ok) {
+    return NextResponse.json({ ok: false, code: "bad-contact", message: contact.message }, { status: 422 });
   }
   if (!lead.consent) {
     return NextResponse.json(

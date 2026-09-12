@@ -56,4 +56,14 @@ Doğrulama "zorunlu alan dolu mu" sorusuna göre tasarlanmış; "bu değerle ger
 
 ## Çözüm Kaydı
 
-—
+**Tarih:** 2026-09-13 (TASK-1.12)
+
+Sunucu tarafında `src/lib/contact.ts` (saf fonksiyon) eklendi: `isValidEmail` basit `yerel@alan.uzantı` biçimini, `isValidPhone` Türkiye yazımlarını (boşluk/tire/parantez/`+` atıldıktan sonra 10/11 hane ya da `90` önekiyle 12 hane) kontrol ediyor. `route.ts`'te doğrulama sırasına `missing-contact` ile `no-consent` arasına yeni `bad-contact` (422) kapısı girdi — kural "en az biri geçerli olsun" (bu bulgunun önerisi birebir): dolu alanların hiçbiri geçerli değilse reddedilir, biri geçerliyse kabul edilir. `reply_to` artık yalnız e-posta geçerliyse Resend gövdesine giriyor.
+
+İstemci tarafında `DemoForm.tsx` uçtan dönen `code`'u alanla eşliyor (`aria-invalid` + `aria-describedby`), gönderim sonrası odağı dolu-ama-bozuk alana taşıyor; genel hata kutusu ve yazılan değerler korunuyor.
+
+Kalıcı koruma: `tests/contact.test.ts` (20 senaryo) ve `tests/api-demo.test.ts`'e eklenen 5 senaryo (bad-contact × 2 yön + kabul + reply_to kontrol grubu/bozuk e-posta) — hedef bağlandığında (TASK-1.14) regresyon olarak yakalanacak.
+
+**Kapsam dışı bırakılanlar (bilinçli):** B-020 (`noValidate`, kota sırası) bu task'ta değişmedi — açık `[audit-product SORU]` cevaplanmadı. B-036'nın kırpma kalemi kısmen etkilendi (kırpılıp geçersizleşen e-posta artık reddediliyor) ama B-036 bu task'ta kapanmadı.
+
+Detay: `tasks/archive/TASK-1.12.md` → Oturum Kaydı (arşivleme sonrası).

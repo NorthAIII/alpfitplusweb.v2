@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-13 — TASK-1.11 keşfi commit'lendi (giriş yolu, envanter, yedek, prova girdileri); kapanış kullanıcı kararına bağlı, task 1.12'nin arkasına alındı; sıradaki TASK-1.12.
+**Son Güncelleme:** 2026-09-13 — TASK-1.12 tamamlandı: iletişim biçimi doğrulaması (B-021) sunucuda ve formda; sıradaki TASK-1.11 kullanıcı kararı bekliyor.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Bunker'a otomasyon tetiklemeden düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 6/17 task tamamlandı (1 iptal: TASK-1.04)
+**İlerleme:** 7/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,11 +33,12 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.12 — İletişim biçimi doğrulaması (B-021)
-**Durum:** ⬜ Bekliyor
-**İlerleme:** Henüz başlanmadı. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
+**Task:** TASK-1.11 — Bunker keşfi — giriş yolu ve otomasyon dışı tutma
+**Durum:** ⬜ Bekliyor — kısmi ilerleme (keşif alt görev 1-6 tamam, commit'li)
+**İlerleme:** Alt görev 7 (kullanıcı onayı) bekliyor. Sorular `tasks/TASK-1.11.md` → Kullanıcıya Sorular, Gelen Kutusu satırı `[TASK-1.11]`. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
-- **TASK-1.11:** keşif yapıldı ve commit'li. Kapanışı kullanıcı kararına bağlı; sorular `tasks/TASK-1.11.md` → Kullanıcıya Sorular, Gelen Kutusu satırı `[TASK-1.11]`. Task kısmi ilerlemeyle 1.12'nin arkasına alındı (orkestratör kararı 2026-09-13). 1.12 bu karardan bağımsız; 1.17 · 1.13 · 1.14 · 1.18 · 1.06 buna bağlı.
+- **TASK-1.12** tamamlandı (B-021 çözüldü); bu karardan bağımsızdı.
+- **TASK-1.11** kapanışı kullanıcı kararına bağlı; cevap gelene kadar 1.17 · 1.13 · 1.14 · 1.18 · 1.06 bekler.
 - **TASK-1.07:** kısmi ilerlemeyle 1.06'nın arkasında. Kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Gelen Kutusu `[TASK-1.07]`, `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 
 ---
@@ -52,7 +53,7 @@
 | 1.04 | Google Sheet lead alıcısı — Apps Script web app | ❌ İptal |
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ✅ Tamamlandı |
 | 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ✅ Tamamlandı |
-| 1.12 | İletişim biçimi doğrulaması (B-021) | ⬜ Bekliyor |
+| 1.12 | İletişim biçimi doğrulaması (B-021) | ✅ Tamamlandı |
 | 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ⬜ Bekliyor |
 | 1.17 | Yerel prova ortamı — n8n + Postgres (Bunker şeması) | ⬜ Bekliyor |
 | 1.13 | Alıcıyı yerel prova ortamında kur | ⬜ Bekliyor |
@@ -73,15 +74,6 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-### TASK-1.10 — Yasal metin: Aktarım ve Çerezler maddeleri (2026-09-11)
-
-**Özet:**
-- KVKK Aktarım maddesi artık kayıt tutma tedarikçisini (Google elektronik tablo) adıyla sayıyor ve erişim kontrolünün gerçeğini yazıyor; ölçüm sağlayıcısı (Umami) **ayrı paragrafta**, çünkü ona kişisel veri gitmiyor — listeye konsaydı metin yanlış beyan olurdu.
-- Gizlilik'te "Çerezler" başlığı "Çerezler ve ölçüm" oldu: çerez konmadığı, IP saklanmadığı ve ölçüme hangi bilginin gidip gitmediği açıkça yazıldı. Korunan takip-pikseli cümlesi çelişik okunmasın diye "siteler arasında izleyen" ile keskinleştirildi.
-- **Yurt dışına aktarım bilinçle yazılmadı** — sağlayıcı ülkesi ve aktarımın hukuki dayanağı hukukçu kararı; B-024'ün üç kalemi (IP, Gizlilik veri listesi, form onay metni) açık kaldı ve gerekçesiyle bulgu atomuna işlendi. Detay: `tasks/archive/TASK-1.10.md`
-
-**Test:** `a11y.mjs` TOPLAM SORUN 0 (8 sayfa; yasal metinlerden yalnız `/kvkk` kapsamda — `/gizlilik` ve `/kullanim-kosullari` bu kapıdan geçmiyor, B-012), `font-guard.mjs` kümede olmayan karakter yok (16 sayfa), `scan.mjs` üç yasal sayfada konsol temiz, build ve eslint hatasız. Kapılar geliştirme sunucusuna (3000) karşı koştu; üretim konteyneri bayat (B-019) ve paralel oturum yüzünden yeniden derlenmedi.
-
 ### TASK-1.16 — Test koşucusu (Vitest) — mevcut elle testler kalıcı olur (2026-09-13)
 
 **Özet:**
@@ -90,6 +82,15 @@
 - Kapı bilerek bozulan bir beklentiyle kırmızıya döndü (çıkış kodu 1), geri alınca yeşile döndü (B-030 dersi karşılandı).
 
 **Test:** `docker compose exec web npm test` → **2 dosya, 18 test, TÜMÜ PASS, çıkış kodu 0**. Sözleşme bataryası TASK-1.05'in sonuçlarını birebir üretti (kontrol grubu 200 · beş bozuk yanıt 503 `no-sink` · 3× 422 · 1× 400 · 429 · kırpma 400 dönmedi). Log casusu hedef adres/ad/telefon/e-posta/mesaj sızıntısı bulmadı. Build (23 rota) ve `web-prod` imajı hatasız; eslint temiz. Kapsam dürüstlüğü: route handler doğrudan çağrıldı, gerçek Next sunucusu/başlıklar TASK-1.05'in 3200 ölçümünde kaldı. Detay: `tasks/archive/TASK-1.16.md`
+
+### TASK-1.12 — İletişim biçimi doğrulaması (B-021) (2026-09-13)
+
+**Özet:**
+- Yeni saf fonksiyon `src/lib/contact.ts`: e-posta basit biçim, telefon Türkiye yazımları (10/11 hane ya da `90` önekiyle 12); kural "en az biri geçerli olsun" — `route.ts`'e `bad-contact` (422) kapısı olarak girdi, `missing-contact` ile `no-consent` arasında. `reply_to` artık yalnız e-posta geçerliyse Resend gövdesine giriyor.
+- `DemoForm.tsx` uçtan dönen `code`'u alanla eşliyor (`aria-invalid`/`aria-describedby`), odak dolu-ama-bozuk alana taşınıyor. İlk taslakta odak sabit ilk alana (`phone`) gidiyordu; tarayıcı testinde yakalanıp gerçekten dolu alana yönlendirildi (Test Kriterleri'nin "odak o alanda" şartı).
+- B-021 çözüldü (kapanış teyidi verify-phase'te); B-020 ve B-036 kapsam dışı bırakıldı.
+
+**Test:** `docker compose exec web npm test` → **3 dosya, 43 test, TÜMÜ PASS** (20 yeni + TASK-1.16'nın 18'i + `stage.test.ts` 5'i, kırılma yok). Kapı sınaması: kod öncesi 3 senaryo kırmızıydı (2× bad-contact + reply_to), sonrası yeşil. `a11y.mjs` TOPLAM SORUN 0, `font-guard.mjs` temiz, `scan.mjs /demo` konsol temiz, build hatasız, eslint temiz (yeni dosyalarda 0 hata; `DemoForm.tsx`'te B-028'in 4 kalemi aynen kaldı). Tarayıcı doğrulaması (Playwright): iki yönde de (yalnız e-posta bozuk / yalnız telefon bozuk) doğru alan işaretlendi ve odaklandı. Detay: `tasks/archive/TASK-1.12.md`
 
 ---
 
@@ -113,7 +114,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.12.md`
+**Aktif Task:** `tasks/TASK-1.11.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

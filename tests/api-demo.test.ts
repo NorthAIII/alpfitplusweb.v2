@@ -20,6 +20,8 @@ import { POST } from "@/app/api/demo/route";
 // alti istekle olculur.
 
 const RECEIVER_URL = "https://fake-lead-receiver.test/exec";
+// Resend'in gercek ucu -- toEmail() bu adresi hardcoded cagirir (route.ts).
+const RESEND_URL = "https://api.resend.com/emails";
 
 type ReceiverMode = "ok" | "html" | "ok-false" | "http-500" | "bad-json" | "array-body";
 
@@ -55,8 +57,13 @@ const fetchMock = vi.fn(async (input: unknown, init?: RequestInit): Promise<Resp
     fetchCalls.push({ url, body: typeof init?.body === "string" ? init.body : undefined });
     return receiverResponseFor(receiverMode);
   }
-  // RESEND_* env'i her testte tanimsiz birakiliyor; toEmail bu durumda
-  // fetch'e hic gitmez. Buraya dusulmesi bir regresyon isaretidir.
+  if (url === RESEND_URL) {
+    // Yalniz RESEND_* env'i acikca set edilen testlerde buraya dusulur
+    // (asagida iki test). Diger her testte RESEND_* tanimsiz oldugu icin
+    // toEmail fetch'e hic gitmeden false doner.
+    fetchCalls.push({ url, body: typeof init?.body === "string" ? init.body : undefined });
+    return new Response(JSON.stringify({ id: "mock" }), { status: 200 });
+  }
   throw new Error(`beklenmeyen fetch cagrisi: ${url}`);
 });
 
@@ -222,5 +229,67 @@ describe("POST /api/demo — sozlesme bataryasi", () => {
     const sentLead = JSON.parse(fetchCalls[0].body ?? "{}") as { name: string; branches: string };
     expect(sentLead.name).toHaveLength(120);
     expect(sentLead.branches).toHaveLength(10);
+  });
+
+  // TASK-1.12 (B-021): bicim dogrulamasi. Her senaryo kendi IP'sini tasir
+  // (memory -> hiz-sinirli-uca-test-bataryasi.md).
+  it("bad-contact: yalniz e-posta dolu ve bozuk, telefon yok -> 422, aliciya cagri yok", async () => {
+    const payload = validPayload({ phone: "", email: "bu-eposta-degil" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.7.1"));
+    const json = await res.json();
+
+    expect(res.status).toBe(422);
+    expect(json.code).toBe("bad-contact");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("bad-contact: yalniz telefon dolu ve bozuk, e-posta yok -> 422, aliciya cagri yok", async () => {
+    const payload = validPayload({ phone: "abcdef!!!", email: "" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.7.2"));
+    const json = await res.json();
+
+    expect(res.status).toBe(422);
+    expect(json.code).toBe("bad-contact");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("gecerli telefon + bozuk e-posta -> 200, kabul edilir (en az biri yeterli)", async () => {
+    const payload = validPayload({ phone: "05321112233", email: "bu-eposta-degil" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.7.3"));
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.ok).toBe(true);
+    expect(json.stored).toBe(true);
+  });
+
+  it("reply_to yalniz e-posta gecerliyse Resend govdesine girer (kontrol grubu)", async () => {
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = "sales@example.com";
+    process.env.DEMO_FROM = "noreply@example.com";
+
+    const payload = validPayload({ phone: "05321112233", email: "ayse@example.com" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.7.4"));
+    await res.json();
+
+    const resendCall = fetchCalls.find((c) => c.url === RESEND_URL);
+    expect(resendCall).toBeDefined();
+    const body = JSON.parse(resendCall?.body ?? "{}") as { reply_to?: string };
+    expect(body.reply_to).toBe("ayse@example.com");
+  });
+
+  it("bozuk e-posta -> Resend govdesinde reply_to yok, ama mail yine gonderilir", async () => {
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = "sales@example.com";
+    process.env.DEMO_FROM = "noreply@example.com";
+
+    const payload = validPayload({ phone: "05321112233", email: "bu-eposta-degil" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.7.5"));
+    await res.json();
+
+    const resendCall = fetchCalls.find((c) => c.url === RESEND_URL);
+    expect(resendCall).toBeDefined();
+    const body = JSON.parse(resendCall?.body ?? "{}") as { reply_to?: string };
+    expect(body.reply_to).toBeUndefined();
   });
 });

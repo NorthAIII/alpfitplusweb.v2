@@ -14,9 +14,22 @@ const field =
   "w-full rounded-xl bg-surface px-4 py-3 text-[0.9375rem] text-ink ring-1 ring-line-2 " +
   "transition-shadow placeholder:text-faint/70 focus:outline-none focus:ring-2 focus:ring-sage-deep";
 
+// Uctan donen `code` -> alan eslemesi (TASK-1.12, B-021). Ayni koda giren
+// alanlar aynen isaretlenir; mesaj metni (hangi alanin bozuk oldugu) uctan
+// gelir, burada tekrarlanmaz.
+const FIELD_ERRORS: Record<string, readonly string[]> = {
+  missing: ["name", "club"],
+  "missing-contact": ["phone", "email"],
+  "bad-contact": ["phone", "email"],
+  "no-consent": ["consent"],
+};
+
+const ERROR_ID = "demo-form-error";
+
 export function DemoForm() {
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState("");
+  const [invalidFields, setInvalidFields] = useState<readonly string[]>([]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,14 +46,28 @@ export function DemoForm() {
       const json = await res.json().catch(() => ({}));
       if (res.ok && json.ok) {
         setState("ok");
+        setInvalidFields([]);
         form.reset();
       } else {
         setState("error");
         setError(json.message ?? "Bir sorun oldu. Lütfen WhatsApp'tan yazın.");
+        const fields = FIELD_ERRORS[typeof json.code === "string" ? json.code : ""] ?? [];
+        setInvalidFields(fields);
+        // "missing-contact"/"bad-contact" iki alanı birden isaretler (tablo,
+        // yukarida) ama gercek suclu -- kullanicinin doldurup bozdugu alan --
+        // her zaman ilki degildir: yalniz e-posta doluyken bos telefona degil,
+        // dolu-ama-bozuk alana odaklan. Hicbiri doluysa (ör. missing-contact,
+        // ikisi de bos) ilk alana duser.
+        const focusTarget =
+          fields.find((name) => String(data[name] ?? "").trim().length > 0) ?? fields[0];
+        if (focusTarget) {
+          form.querySelector<HTMLElement>(`[name="${focusTarget}"]`)?.focus();
+        }
       }
     } catch {
       setState("error");
       setError("Bağlantı kurulamadı. Lütfen WhatsApp'tan yazın veya telefonla arayın.");
+      setInvalidFields([]);
     }
   }
 
@@ -81,8 +108,21 @@ export function DemoForm() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Adınız ve soyadınız" name="name" required autoComplete="name" placeholder="Ayşe Yılmaz" />
-        <Field label="Kulüp veya stüdyo adı" name="club" required placeholder="Örnek Pilates Stüdyo" />
+        <Field
+          label="Adınız ve soyadınız"
+          name="name"
+          required
+          autoComplete="name"
+          placeholder="Ayşe Yılmaz"
+          invalid={invalidFields.includes("name")}
+        />
+        <Field
+          label="Kulüp veya stüdyo adı"
+          name="club"
+          required
+          placeholder="Örnek Pilates Stüdyo"
+          invalid={invalidFields.includes("club")}
+        />
         <Field
           label="Telefon"
           name="phone"
@@ -90,8 +130,16 @@ export function DemoForm() {
           autoComplete="tel"
           placeholder="05xx xxx xx xx"
           hint="Telefon veya e-postadan en az birini yazın"
+          invalid={invalidFields.includes("phone")}
         />
-        <Field label="E-posta" name="email" type="email" autoComplete="email" placeholder="ad@kulup.com" />
+        <Field
+          label="E-posta"
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="ad@kulup.com"
+          invalid={invalidFields.includes("email")}
+        />
 
         <div>
           <label htmlFor="branches" className="mb-1.5 block text-sm font-medium text-ink">
@@ -137,9 +185,12 @@ export function DemoForm() {
 
       <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-muted">
         <input
+          id="consent"
           type="checkbox"
           name="consent"
           required
+          aria-invalid={invalidFields.includes("consent") || undefined}
+          aria-describedby={invalidFields.includes("consent") ? ERROR_ID : undefined}
           className="mt-0.5 size-4.5 shrink-0 accent-[#3e6b3c]"
         />
         <span>
@@ -153,6 +204,7 @@ export function DemoForm() {
 
       {state === "error" ? (
         <p
+          id={ERROR_ID}
           role="alert"
           aria-live="assertive"
           className="mt-5 flex items-start gap-2.5 rounded-xl bg-neg-wash px-4 py-3.5 text-sm leading-relaxed text-neg ring-1 ring-neg/20"
@@ -209,6 +261,7 @@ function Field({
   placeholder,
   autoComplete,
   hint,
+  invalid,
 }: {
   label: string;
   name: string;
@@ -217,7 +270,9 @@ function Field({
   placeholder?: string;
   autoComplete?: string;
   hint?: string;
+  invalid?: boolean;
 }) {
+  const describedBy = [hint ? `${name}-hint` : null, invalid ? ERROR_ID : null].filter(Boolean).join(" ");
   return (
     <div>
       <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-ink">
@@ -231,7 +286,8 @@ function Field({
         required={required}
         placeholder={placeholder}
         autoComplete={autoComplete}
-        aria-describedby={hint ? `${name}-hint` : undefined}
+        aria-invalid={invalid || undefined}
+        aria-describedby={describedBy || undefined}
         className={field}
       />
       {hint ? (
