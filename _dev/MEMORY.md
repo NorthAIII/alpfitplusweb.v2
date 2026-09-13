@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-13 — TASK-1.16: Vitest kuruldu, "Saf fonksiyon testi — repoda koşucu yok" kaydı bayatladı ve silindi (Node tip soyma artık gerekmiyor).
+**Son Güncelleme:** 2026-09-13 — audit-product: iki zemin atomuna doğrulanmış tarif eklendi. Biri canlı Umami'ye veri göndermeden izleyici sınama ve hidrasyon öncesi ölçüm tuzakları, öteki repoya ve dev sunucusuna dokunmayan yalıtılmış üretim derlemesi. Index satırı değişmedi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 

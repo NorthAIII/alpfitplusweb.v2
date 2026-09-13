@@ -54,6 +54,18 @@ $ grep -rni "oxyfitclub" src/ public/                              → (vuruş y
 ```
 İlgili commit'ler: noindex `e3537ff` (bugün 03:04), rakip adı kaldırma `cacea4c` — ikisi de imajın doğumundan sonra.
 
+**Yeniden ölçüm (audit-product 2026-09-13) — imaj tazelendi, konteyner tazelenmedi:**
+```
+$ docker images --format '{{.Repository}}:{{.Tag}} {{.CreatedAt}}' | grep web-prod
+alpfitplus-web-web-prod:latest 2026-09-13 01:54:13 +0300          ← TASK-1.16 oturumunda derlendi
+$ docker inspect alpfitplus-web-prod --format '{{.Image}}'   → sha256:bc2aae99a48e…
+$ docker image inspect alpfitplus-web-web-prod:latest --format '{{.Id}}'   → sha256:d1e05fdc4bc7…
+$ docker ps --format '{{.Names}} {{.CreatedAt}}' | grep web-prod   → alpfitplus-web-prod 2026-09-11 00:03:10
+$ curl -s http://localhost:3100/ | grep -o '<meta name="robots"[^>]*>'   → content="index, follow"
+$ curl -s http://localhost:3100/fiyat | grep -oic oxyfitclub            → 7
+```
+Üç gün sonra aynı iki yüzey hâlâ bayat. Yeni olan ikinci mekanizma: imajı yeniden **derlemek** (`build`) çalışan konteyneri yenilemiyor. `up -d` olmadan derlenen taze imaj kullanılmadan bekliyor, 3100 hâlâ 2026-09-11 imajını sunuyor. Yani "imajı tazeledim" duygusu da yanıltıcı; tazelik kontrolü imajı değil **çalışan konteynerin imaj kimliğini** ölçmeli.
+
 Tazeleme: `docker compose --profile prod up -d --build web-prod`.
 
 ## Kök Neden Yönü

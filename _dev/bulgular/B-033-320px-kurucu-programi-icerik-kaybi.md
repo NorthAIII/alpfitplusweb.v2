@@ -8,6 +8,8 @@
 
 **Beklenen:** `ILKELER.md` → "Erişilebilirlik WCAG AA'nın altına düşmez" (pazarlıksız). WCAG 1.4.10 reflow: **320 CSS px** genişlikte içerik ve işlev kaybolmadan akmalı. `docs/STYLE-GUIDE.md` → Düzen Tuzakları #2: *"Grid/flex çocuğuna `min-w-0` ver; `mobile-audit.mjs` doğrular."*
 
+**Kapsam kararı (Kıvanç, audit-product 2026-09-12):** 320 px **destek kapsamında** ve kapıya girer. Bu bulgu bir Bilinçli Tercih'e dönüşmez, düzeltme kapsamı `mobile-audit.mjs`'in ölçtüğü genişliklere 320'nin eklenmesini de içerir. Pazarlıksız erişilebilirlik maddesi 390 px tabanına daralmaz. (Gelen Kutusu'ndaki `[audit-product SORU]` satırının mezuniyeti, 2026-09-13.)
+
 **Gözlenen:** 320 px'te ana sayfadaki `FounderProgram` bölümünün ızgara track'i **370 px**, bölümün içerik kutusu **320 px** → bölümün `overflow-hidden`'ı sağdan **70 px** kesiyor. Bağımsız ölçüm:
 
 ```

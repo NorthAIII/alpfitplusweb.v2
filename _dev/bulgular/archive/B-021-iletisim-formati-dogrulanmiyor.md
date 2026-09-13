@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / sessiz kayıp | **Alan:** M3 — Lead hattı (`/api/demo`, `DemoForm.tsx`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** → TASK-1.12
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -67,3 +67,24 @@ Kalıcı koruma: `tests/contact.test.ts` (20 senaryo) ve `tests/api-demo.test.ts
 **Kapsam dışı bırakılanlar (bilinçli):** B-020 (`noValidate`, kota sırası) bu task'ta değişmedi — açık `[audit-product SORU]` cevaplanmadı. B-036'nın kırpma kalemi kısmen etkilendi (kırpılıp geçersizleşen e-posta artık reddediliyor) ama B-036 bu task'ta kapanmadı.
 
 Detay: `tasks/archive/TASK-1.12.md` → Oturum Kaydı (arşivleme sonrası).
+
+**Kapanış teyidi (audit-product 2026-09-13, güvenlik ağı uzlaştırması):**
+- **Nasıl ölçüldü:** canlı uç (dev 3000), iki bağımsız ölçüm (denetim ajanı + düşmanca doğrulama).
+- **Sonuç:** bu atomun iki repro'su artık `HTTP 422 {"code":"bad-contact"}` alıyor: `email: "bu-eposta-degil"` ve `phone: "abcdef!!!"`.
+- **Test durumu:** `reply_to` koruması `tests/api-demo.test.ts`'te sınanıyor. `npm test` → 3 dosya, 43 test yeşil.
+
+**Kapsam — kapanan:** Harf ya da sembol içeren telefon ve `@`/uzantı taşımayan e-posta sınıfı, sunucuda ve formda (`aria-invalid` + odak) kapandı.
+
+**Kapsam — kapanmayan, yaşayan eve taşındı:**
+- Rakamdan oluşan çöp ve tek hanesi eksik/fazla numara hâlâ kabul ediliyor: `0532111223`, `53211122334`, `+90 532 111 22 3`, `0000000000`.
+  - Hedef tanımlı hâlde (sahte webhook, yalıtılmış Vitest) `HTTP 200 {"ok":true,"stored":true}` ölçüldü.
+  - Yani bu atomun "ulaşılamaz talep başarılı sayılır" sınıfı rakam tarafında açık.
+  - Aynı atomda meşru yazımların reddi (`+90 0532…`, eğik çizgi, Mac Rehber yapıştırmasının görünmez U+202D/U+202C karakterleri) de var → **[B-054](../B-054-iletisim-kurali-ters-eksende-gevsek.md)**.
+- Formun hata akışı → **[B-055](../B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md)**:
+  - mobilde hata metni ekran dışında,
+  - alanda görsel işaret yok,
+  - `missing`'de odak yanlış alana gidiyor,
+  - 503/429/ağ hatasında odak `body`'ye düşüyor (bu atomun koruma önerisindeki odak kalemi yalnız alana eşlenen kodlarda kapandı).
+- TASK-1.12'nin *"kırpılıp @alan kısmını kaybeden e-posta geçersiz sayılır"* savı yalnız alan adının **tamamı** kesildiğinde doğru.
+  - 163 karakterlik `…@kulup.com.tr` 160'a kırpılınca `…@kulup.com` olarak kabul ediliyor.
+  - Pratikte seyrek; ayrı atoma alınmadı, [B-036](../B-036-lead-kaybi-yollari.md)'nın kırpma kaleminin devamıdır.

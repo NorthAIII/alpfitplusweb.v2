@@ -47,3 +47,16 @@ timeout 900 docker compose --profile research run --rm --name audit-<etiket> \
   [Alternatif env ile üretim derlemesi](alternatif-env-ile-uretim-derlemesi.md)).
 - Saf fonksiyonlar artık `web` konteynerinde `npm test` (Vitest, `tests/`) ile sınanır —
   ayrı bir betik/kopyalama tarifi gerekmez (TASK-1.16).
+
+## İzleyici ve hidrasyon sınamaları (audit-product 2026-09-13'te doğrulandı)
+
+- **Umami izleyicisi canlı kuruluma veri göndermeden sınanır.** `umami.kiwiailab.com` kullanıcının
+  canlı sunucusudur. `script.js` bir kez GET ile indirilir, tarayıcı
+  `--host-resolver-rules=MAP umami.kiwiailab.com ~NOTFOUND` ile açılır, betik `page.route` ile yerel
+  kopyadan verilir, `**/api/send**` yakalanıp `abort` edilir. Yakalanan gövde incelenir.
+- **Başsız Chromium'un UA'sı (`HeadlessChrome`) Umami'de bot sayılır:** `/api/send` kayıt yazmadan
+  `200 {"beep":"boop"}` döner. "2xx aldım" kaydın yazıldığını kanıtlamaz; gövdeye bak ya da UA değiştir
+  (bkz. `BULGULAR.md` → B-056).
+- **Hidrasyon öncesi davranış sınanırken yalnız `.js` geciktirilir.** `**/_next/static/chunks/**`
+  deseni dev'de CSS'i de tutar, boyama ve DCL bekler. "Görünür ama hidrate değil" hâli yerine
+  boyanmamış sayfa ölçülür, tıklama hidrasyondan sonraya düşer.

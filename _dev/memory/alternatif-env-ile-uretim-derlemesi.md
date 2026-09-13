@@ -27,6 +27,24 @@ docker compose restart web      # geliştirme sunucusunun .next'ini tazele
 - Konteyner ölçüm biter bitmez **silinir**; unutulursa 3200 portu ve `.next`
   hacmi üzerinde asılı kalır.
 
+## Dev sunucusuna ve repoya hiç dokunmayan yol (audit-product 2026-09-13'te doğrulandı)
+
+Dev sunucusu başka bir oturum ya da ajan tarafından kullanılıyorsa derleme repo **kopyasında** yapılır. Bu yolda `restart` gerekmez, `.next` hacmi paylaşılmaz, repoya iz kalmaz:
+
+```bash
+SP=<scratchpad>/build
+rsync -a --exclude node_modules --exclude .next --exclude .git "/home/kivanc/projects/Alpfitplus website.v2/" "$SP/src/"
+docker run -d --name <ad> -p 3200:3000 -v "$SP/src:/app" \
+  -v alpfitplus-web_node_modules:/app/node_modules:ro -w /app \
+  -e NEXT_TELEMETRY_DISABLED=1 -e VERCEL=1 -e VERCEL_ENV=production \
+  -e VERCEL_PROJECT_PRODUCTION_URL=alpfitplus-web-v2.vercel.app \
+  alpfitplus-web-web sh -c "npm run build && npm start"
+# ... ölç ...
+docker rm -f <ad>
+```
+
+`node_modules` hacmi salt okunur bağlanır. İstemci paketine gömülen `NEXT_PUBLIC_*` değerleri (ör. sahte bir Umami site kimliği) bu yolla derlemeye verilir.
+
 İlgili: saf fonksiyon `npm test` (Vitest, `tests/`) ile ölçülür (TASK-1.16) — ama
 `next.config.ts` → `env` ile gömülen bir değerin **gerçekten gömüldüğü** bu yolla
 kanıtlanmaz, gömme yalnız değeri okuyan kod varsa çıktıya girer; doğrulaması bu

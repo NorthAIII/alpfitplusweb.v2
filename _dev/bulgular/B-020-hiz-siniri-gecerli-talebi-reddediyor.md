@@ -19,6 +19,12 @@
                  "message":"Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin."}
 ```
 
+**Yeni tetikleyici (audit-product 2026-09-13):** TASK-1.12'nin `bad-contact` kapısı kotaya yeni bir 422 türü ekledi.
+- **Olay:** Mac Rehber'den yapıştırılan telefon numarası görünmez U+202D/U+202C karakterleri taşıyor. Alan kusursuz görünüyor ama her gönderim 422 alıyor.
+- **Ölçüm:** gerçek pano yapıştırmasıyla 5 × 422, ardından 6. denemede **429**. Bu kez kullanıcı hatasını **göremediği** için rıza kutusu senaryosundan daha kolay kilitleniyor.
+- **Diğer yollar:** `+90 0532…` ve eğik çizgili yazım gibi reddedilen meşru yazımlar da aynı yoldan 429'a varıyor. Ayrıntı: [B-054](B-054-iletisim-kurali-ters-eksende-gevsek.md).
+- **Satır kayması:** TASK-1.12'den sonra `noValidate` `DemoForm.tsx:103`'te; aşağıdaki `:76` ve `:28` referansları kaydı.
+
 Bu tam kayıp değil — form her hatada WhatsApp yedeğini gösteriyor ve kullanıcının yazdığı veri ekranda kalıyor. Ama huninin ana kolu, hatasını düzeltmiş bir kullanıcının yüzüne kapanıyor. `ILKELER.md` dönüşümü birinci eksen sayıyor; bu senaryo tam olarak onun karşıtı.
 
 **İkinci kayıp yolu — askıda kalan istek.** `DemoForm.tsx:28` fetch çağrısında zaman aşımı yok (`AbortSignal.timeout` kullanılmıyor). Bağlantı **reddedilirse** davranış doğru: dürüst hata, WhatsApp yolu, veri korunuyor. Ama istek askıda kalırsa (mobil şebeke limbosu) buton süresiz "Gönderiliyor" ve `disabled` kalıyor, hiçbir uyarı çıkmıyor — kullanıcı ne gönderdiğini ne gönderemediğini biliyor. Sunucu tarafındaki sekiz saniyelik zaman aşımları (`route.ts:83`, `:172`) yalnız yanıt istemciye **ulaşırsa** işe yarar.
