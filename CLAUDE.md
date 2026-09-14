@@ -227,10 +227,12 @@ Her şey Docker içinde koşar.
 docker compose up -d web                               # geliştirme → localhost:3000
 docker compose exec web npm run build                  # üretim derlemesi
 docker compose --profile prod up -d --build web-prod   # üretim imajı → localhost:3100
+docker compose --profile lead up -d lead-store          # yerel lead deposu provası (TASK-1.17)
 ```
 
 - **Yeni bir rota klasörü eklediğinde `docker compose restart web` gerekir.** Bind-mount üzerinde Turbopack yeni dizinleri sıcak yakalamıyor; 404 görüyorsan önce bunu dene.
 - **Port 3001 kullanılmaz** — makinede başka bir proje tutuyor. Üretim 3100'de.
+- **`lead-store` yalnız profille kalkar** ve host portu yayınlamaz — erişim compose ağı içinden (`http://lead-store:8090`). Kaldırma/silme, token üretimi ve tuzaklar: `_dev/memory/yerel-lead-deposu-docker-profili.md`.
 
 ### Ölçüm betikleri — iş bitmeden koştur
 

@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-14 — verify-plan (revizyon review'u): sekiz mekanik düzeltme, yapısal değişiklik yok; sırada TASK-1.17.
+**Son Güncelleme:** 2026-09-14 — TASK-1.17 tamamlandı: yerel lead deposu (compose profili `lead`) ayakta ve doğrulandı; sırada TASK-1.13.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 8/17 task tamamlandı (1 iptal: TASK-1.04)
+**İlerleme:** 9/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,10 +33,11 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.17 — Yerel lead deposu (compose profili `lead`)
-**Durum:** ⬜ Bekliyor — plan revizyonu ve verify-plan 2026-09-14'te bitti; task sayısı ve sırası değişmedi.
-**İlerleme:** Revizyon ve verify-plan özeti `phases/PHASE-1.md` → Task Listesi notu; kararlar `docs/DECISIONS.md` 2026-09-14 (iki kayıt). Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
+**Task:** TASK-1.13 — Depo sözleşme paketi (yerel depoya karşı kalıcı test)
+**Durum:** ⬜ Bekliyor — TASK-1.17 tamamlandı, yerel lead deposu (compose profili `lead`) ayakta ve doğrulandı; task sayısı ve sırası değişmedi.
+**İlerleme:** Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
+- **Yerel lead deposu hazır:** `docker compose --profile lead up -d lead-store`; komutlar, token üretimi ve tuzaklar `_dev/memory/yerel-lead-deposu-docker-profili.md`. TASK-1.13 ve TASK-1.14 buna karşı çalışır.
 - **Lead hattı kullanıcı adımları:** TASK-1.18 önizleme depo token'ını ister (değer kullanıcıda: parola yöneticisi ya da sunucuda `/opt/alpfit-lead/.env`); TASK-1.06 `RESEND_API_KEY` ister ve Resend panel teyidini bekler. İkisinin de sırası gelmeden hazırlanabilir.
 - **TASK-1.07:** kısmi ilerlemeyle 1.06'nın arkasında. Kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Gelen Kutusu `[TASK-1.07]`, `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 
@@ -54,7 +55,7 @@
 | 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ✅ Tamamlandı |
 | 1.12 | İletişim biçimi doğrulaması (B-021) | ✅ Tamamlandı |
 | 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ✅ Tamamlandı |
-| 1.17 | Yerel lead deposu — v1'in PocketBase'i salt okunur bağlı compose profili | ⬜ Bekliyor |
+| 1.17 | Yerel lead deposu — v1'in PocketBase'i salt okunur bağlı compose profili | ✅ Tamamlandı |
 | 1.13 | Depo sözleşme paketi — yerel depoya karşı kalıcı test | ⬜ Bekliyor |
 | 1.14 | Kayıt adaptörü — `toStore`, `.env.example`, Apps Script kalıntısı | ⬜ Bekliyor |
 | 1.18 | Canlı depo bağlantısı — Vercel env ve token → koleksiyon teyidi | ⬜ Bekliyor |
@@ -73,6 +74,15 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-1.17 — Yerel lead deposu, compose profili `lead` (2026-09-14)
+
+**Özet:**
+- `docker-compose.yml`'e `lead-store` servisi eklendi: imaj `../Alpfitplus-website.v1/pocketbase` bağlamından derlenir (`PB_VERSION=0.39.9`), `pb_hooks`+`pb_migrations` v1'den `:ro`, veri `lead_store_data` isimli hacimde; profil `lead`, varsayılan `up`'ta kalkmaz, host portu yayınlanmaz.
+- Token'lar `${LEAD_TOKEN_PREVIEW:-}` / `${LEAD_TOKEN_PRODUCTION:-}` — v1'in sunucudaki `${…:?}` deseni bilerek kullanılmadı (yoksa `.env`'siz `up -d web` bile durur); boş/tanımsız slot `resolveTarget`'ta eşleşmiyor, fail-closed ölçüldü.
+- `.env.example` güncellendi; `_dev/memory/yerel-lead-deposu-docker-profili.md` yeni kayıt (kaldırma/silme/token-yenileme komutları + 3 tuzak), `CLAUDE.md` Docker bloğuna profil komutu eklendi.
+
+**Test:** `web` içinden `/api/health` → `200`; koleksiyonlar migration'la doğdu (`leads`/`leads_preview` → `403`, olmayan → `404`); geçerli önizleme token'ıyla `POST /lead` → `201 {"id":…,"prior_count":0}`, yanlış/eksik token → `401`; boş kapsam kapısı (token env tanımsızken) → `401`. `docker compose config --services` → yalnız `web` (lead-store varsayılanda yok); `rm -sf lead-store` sonrası `web` kesintisiz, `node_modules`/`next_cache`/`lead_store_data` hacimleri yerinde. v1: `git status --porcelain` 24 → 24 (yabancı, değişmedi), `pocketbase/` temiz. Token değeri sızıntısı yok (`grep`). Detay: `tasks/archive/TASK-1.17.md`
+
 ### TASK-1.12 — İletişim biçimi doğrulaması (B-021) (2026-09-13)
 
 **Özet:**
@@ -81,15 +91,6 @@
 - B-021 çözüldü (kapanış teyidi verify-phase'te); B-020 ve B-036 kapsam dışı bırakıldı.
 
 **Test:** `docker compose exec web npm test` → **3 dosya, 43 test, TÜMÜ PASS** (20 yeni + TASK-1.16'nın 18'i + `stage.test.ts` 5'i, kırılma yok). Kapı sınaması: kod öncesi 3 senaryo kırmızıydı (2× bad-contact + reply_to), sonrası yeşil. `a11y.mjs` TOPLAM SORUN 0, `font-guard.mjs` temiz, `scan.mjs /demo` konsol temiz, build hatasız, eslint temiz (yeni dosyalarda 0 hata; `DemoForm.tsx`'te B-028'in 4 kalemi aynen kaldı). Tarayıcı doğrulaması (Playwright): iki yönde de (yalnız e-posta bozuk / yalnız telefon bozuk) doğru alan işaretlendi ve odaklandı. Detay: `tasks/archive/TASK-1.12.md`
-
-### TASK-1.11 — Bunker keşfi — giriş yolu ve otomasyon dışı tutma (2026-09-14)
-
-**Özet:**
-- Bunker'a giriş ölçüldü (3 kayıt biçimi × 2 alıcı yolu, tüketici envanteri, yedek/konum); `alpfit` canlı soğuk kampanyanın kiracısı, "ayrı `source` yeter" kodla çürüdü.
-- Kullanıcı "canlı sitenin yazdığı yere, basitçe" dedi; v1'in PocketBase deposu (`lead.alpfitplus.com`) seçildi — soğuk hattan ayrık (kural `null`, Bunker kodu ve n8n yedeğinde referans 0), sunucu işi yok.
-- Site tarafı yeni kayıt adaptörü ister (`201 {id}`, `ok:true` yok; `X-Lead-Token`, `ip_hash`); env adları v1'le aynı, alan adı geçişine kadar önizleme token'ı.
-
-**Test:** Yazma yok — v1 `git status` 24 → 24 (yabancı), Bunker OS'ta yalnız grep (araya giren yabancı commit ölçülen yolları değiştirmedi), canlıya tek istek kimliksiz `GET lead.alpfitplus.com/api/health` 200; n8n sayımı `bunker-20260914-023004.dump`'tan ağsız konteynerde. Kod değişikliği yok; `docker compose exec web npm test` → 3 dosya, 43 test PASS (regresyon yok). Detay: `tasks/archive/TASK-1.11.md`
 
 ---
 
@@ -113,7 +114,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.17.md`
+**Aktif Task:** `tasks/TASK-1.13.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

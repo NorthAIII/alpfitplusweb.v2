@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-14 — TASK-1.11: sunucu atomuna lead deposu (PocketBase sözleşme özü, env adları, önizleme token'ı), Bunker kanonik yolu ve yedekten salt okunur ölçüm yöntemi eklendi; index kancası yeni hedefe çevrildi.
+**Son Güncelleme:** 2026-09-14 — TASK-1.17: yeni atom "Yerel lead deposu — Docker profili `lead`" eklendi (kaldırma/silme/token-yenileme komutları, üç tuzak).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -33,6 +33,7 @@
 - [Alternatif env ile üretim derlemesi](memory/alternatif-env-ile-uretim-derlemesi.md) — `.next` paylaşılan isimli hacim; üretim env'ini taklit eden derleme `docker compose run --rm --publish 3200:3000` ile **ayrı** konteynerde yapılır, sonra `docker compose restart web` (3001 kullanılmaz)
 - [Araştırma konteynerinde tarayıcı ölçümü](memory/arastirma-konteynerinde-tarayici-olcumu.md) — Playwright yalnız araştırma konteynerinde; betik scratchpad'e yazılıp `-v` ile mount edilir, `research/`'e yazılmaz ve `--name` her koşumda farklı olur
 - [Kendi sunucu: lead deposu, n8n, Bunker ve Umami](memory/kendi-sunucu-n8n-bunker-umami.md) — demo talebi v1'in PocketBase'ine (`lead.alpfitplus.com`) yazılır, Bunker'a değil: Bunker `leads`/`staged_leads` soğuk e-postayı besler
+- [Yerel lead deposu — Docker profili `lead`](memory/yerel-lead-deposu-docker-profili.md) — `docker compose --profile lead up -d lead-store`; indirme/silme servis+hacim adıyla (`down` YASAK); token değişimi `restart` değil `up -d` ile gelir; `.env`'deki `LEAD_TOKEN_*` tamamen yerel/rastgele
 
 ## Çapraz Öğrenimler
 

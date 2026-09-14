@@ -149,7 +149,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.16 | TASK-1.16 | ✅ Tamamlandı | Test koşucusu Vitest; aşama ve `/api/demo` testleri kalıcı olur |
 | 1.12 | TASK-1.12 | ✅ Tamamlandı | İletişim biçimi doğrulaması (B-021) |
 | 1.11 | TASK-1.11 | ✅ Tamamlandı | Bunker keşfi: giriş yolu, sözleşme, tüketici envanteri ve izolasyon, yedek gerçeği, yerel prova girdileri (keşif ayağı) — kapandı (2026-09-14): hedef v1'in lead deposu (PocketBase), Bunker değil; kalan lead task'ları plan revizyonunda (`docs/DECISIONS.md` 2026-09-14) |
-| 1.17 | TASK-1.17 | ⬜ Bekliyor | Yerel lead deposu: compose profili `lead`, v1'in PocketBase'i salt okunur bağlı |
+| 1.17 | TASK-1.17 | ✅ Tamamlandı | Yerel lead deposu: compose profili `lead`, v1'in PocketBase'i salt okunur bağlı |
 | 1.13 | TASK-1.13 | ⬜ Bekliyor | Depo sözleşme paketi: adaptörün dayandığı davranış yerel depoya karşı kalıcı testte |
 | 1.14 | TASK-1.14 | ⬜ Bekliyor | Kayıt adaptörü: `toWebhook` → `toStore`, `ip_hash`, yerel uçtan uca tur, `lead-sheet` kalıntısı silinir |
 | 1.18 | TASK-1.18 | ⬜ Bekliyor | Canlı depo bağlantısı: Vercel env (önizleme token'ı) ve token → `leads_preview` teyidi |

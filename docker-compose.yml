@@ -45,6 +45,45 @@ services:
     stdin_open: true
     tty: true
 
+  # Lead deposu yerel provasi (TASK-1.17) — v1'in canli PocketBase'inin birebir
+  # kopyasi. Imaj v1'in kendi Dockerfile'indan derlenir, pb_hooks ve pb_migrations
+  # v1 reposundan SALT OKUNUR baglanir — o repoda hicbir dosya degismez. Koleksiyon
+  # semasini migration'lar kendisi kurar, tohum gerekmez. Varsayilan `up`'ta KALKMAZ
+  # (profil: lead) — `docker compose --profile lead up -d lead-store` gerekir.
+  #
+  # Port host'a YAYINLANMAZ (v1'in kendi deseni) — erisim yalniz compose agi
+  # icinden: http://lead-store:8090. Token'lar `:-` ile bos varsayilir (v1'in
+  # `:?` deseni BILEREK kullanilmaz) — yoksa .env'i olmayan biri `docker compose
+  # up -d web` bile kosamazdi. Bos/tanimsiz token slotu KAPALIDIR: resolveTarget
+  # (lead_lib.js) bos env degerini eslemez, her istek 401 alir — fail-closed.
+  lead-store:
+    build:
+      context: ../Alpfitplus-website.v1/pocketbase
+      args:
+        PB_VERSION: "0.39.9"
+    container_name: alpfitplus-lead-store
+    profiles: ["lead"]
+    restart: unless-stopped
+    environment:
+      LEAD_TOKEN_PRODUCTION: ${LEAD_TOKEN_PRODUCTION:-}
+      LEAD_TOKEN_PREVIEW: ${LEAD_TOKEN_PREVIEW:-}
+    volumes:
+      # Lead verisi burada yasar — isimli, atilabilir hacim. v1'in `alpfit_pb_data`
+      # adi KULLANILMAZ (ayri ortam, karisma riski yok ama isim de ayri).
+      - lead_store_data:/pb/pb_data
+      # Hook ve migration v1 reposundan SALT OKUNUR. v1'in kendi compose'u
+      # migrations'i yazilabilir baglar (panelden sema degisikligi icin); bu
+      # yerel provada sema degisikligi panelden yapilmaz, ikisi de :ro yeter.
+      - ../Alpfitplus-website.v1/pocketbase/pb_hooks:/pb/pb_hooks:ro
+      - ../Alpfitplus-website.v1/pocketbase/pb_migrations:/pb/pb_migrations:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8090/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 volumes:
   node_modules:
   next_cache:
+  lead_store_data:
