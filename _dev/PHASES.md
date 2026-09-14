@@ -19,7 +19,7 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 
 | Faz | Konu | Milestone | Durum |
 |-----|------|-----------|-------|
-| 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Bunker'a otomasyon tetiklemeden düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı | 🔄 Devam ediyor |
+| 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı | 🔄 Devam ediyor |
 
 **Durum simgeleri:**
 - 🔄 **Devam ediyor** — discuss-phase başladı (aktif faz)
@@ -86,6 +86,6 @@ Dış aktöre bağlı işler (hukukçu onayı, logo, kurucu programı kontenjan�
 
 ---
 
-**Son Güncelleme:** 2026-09-13 — plan revizyonu: Faz 1 milestone'u Bunker ve kendi Umami'ye göre güncellendi; yeni konu "Yayın öncesi düzeltmeler" (B-029/B-018/B-024/B-011) alan adı geçişinin önüne girdi ve geçiş görsel/mobil, kalite kapıları ve metin tonunun önüne alındı.
+**Son Güncelleme:** 2026-09-14 — plan revizyonu: Faz 1 milestone'unun lead hedefi Bunker'dan v1'in lead deposuna (önizleme koleksiyonu) çevrildi; sıradaki fazlar değişmedi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

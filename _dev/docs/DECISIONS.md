@@ -13,6 +13,20 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-14 — Depo sözleşmesinin sınanması: v1'in PocketBase'inin yerel kopyası, canlıya tek teyit isteği
+
+**Bağlam:** "Lead hedefi (yeniden, 2)" kaydı sitenin yeni kayıt adaptörünün nerede sınanacağını plan revizyonuna bıraktı. Seçenekler yerel konteyner ya da canlı önizleme koleksiyonuydu. Depo kodu (`pb_hooks`, `pb_migrations`, Dockerfile) v1 reposunda, yani bu projenin dokunulmazında duruyor. Canlı depo v1'in üretim taleplerini de tutuyor ve `ip_hash` başına saatte 5 kayıtla sınırlı.
+
+**Seçenekler:**
+1. Yerel kopya: compose profili, imaj v1'in Dockerfile'ından, `pb_hooks` ve `pb_migrations` v1'den salt okunur bağlı. Sözleşme paketi ve sitenin uçtan uca turu yerelde; canlı depoya tek teyit isteği.
+2. Yerel ortam yok: adaptör Vitest'te sahte yanıtlarla sınanır, gerçek depo ilk kez canlı `leads_preview`'da görülür.
+
+**Karar:** 1 (kullanıcı, plan revizyonu). Profil `lead` (TASK-1.17). Sözleşme paketi yalnız yerel adrese karşı koşar, canlı adres verilirse istek atmadan reddeder (TASK-1.13). Sitenin adaptörü yerel depoda uçtan uca sınanır (TASK-1.14). Canlıda tek istek, token'ın önizleme koleksiyonuna yazdığını panelde gösterir (TASK-1.18). 2026-09-13 "Alıcı provası" kararının "aynı sözleşme paketi iki ortamda koşar" cümlesi bu hedefte geçersizdir; paket tek ortamda (yerel) koşar.
+
+**Gerekçe:** Adaptör belgeden kopyalanmış sahte yanıtlara değil depo **kodunun kendisine** karşı sınanır. v1'de hook değişirse paket kırmızıya döner (kümülatif test). Canlı `leads_preview`'a test yığılmaz ve v1 ziyaretçileriyle paylaşılan sınıra takılınmaz. Bedeli tek bir küçük ortam task'ı; v1 reposunda dosya değişmez. Aynı ortam alan adı geçişinde yeniden kullanılır.
+
+**İlgili Task/Faz:** Faz 1 — plan revizyonu 2026-09-14; TASK-1.17, 1.13, 1.14, 1.18
+
 ### 2026-09-14 — Lead hedefi (yeniden, 2): v1'in lead deposu (PocketBase, `lead.alpfitplus.com`), Bunker değil
 
 **Bağlam:** TASK-1.11 keşfi Bunker'a giriş için üç kayıt biçimi ve iki alıcı yolu ölçtü. `alpfit` canlı soğuk e-posta kampanyasının kiracısı; `leads`/`staged_leads`'e yazılan talep soğuk hatta düşebilir. Güvenli yol (ayrı tablo + Bunker ucu) Bunker OS reposunda iş, bir migration ve yerel prova ortamı istiyordu. Kullanıcı sorulara şöyle cevap verdi (2026-09-14): *"şu an mevcut canlı sitede nereye yazılıyor demo talebi basit bir şekilde yazılsın zaten mail de gelecek bu yeterli sonra değiştiririz gerekirse"*. Yönü verdi, seçimi devretti.

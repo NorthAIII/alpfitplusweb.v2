@@ -1,77 +1,80 @@
-# TASK-1.18: Alıcıyı canlıya taşı — yedek, canlı sözleşme, otomasyon izolasyonu ve Vercel env
+# TASK-1.18: Canlı depo bağlantısı — Vercel env ve token → koleksiyon teyidi
 
 **Durum:** ⬜ Bekliyor
 **Modül:** M3 — Lead Hattı (`modules/M3-Lead-Hatti.md`) · altyapı M7
 **Feature:** F3.2: Dayanıklı kayıt hedefi
 **Faz:** Phase 1 (`phases/PHASE-1.md`)
-**Bağımlılıklar:** TASK-1.13 ✅ (alıcı yerelde kanıtlı ve versiyonlu), TASK-1.14 ✅ (site yerel alıcıya bağlı)
+**Bağımlılıklar:** TASK-1.14 ✅ (site depo adaptörüyle yerelde kanıtlı)
 
 ---
 
 ## Hedef
 
-Yerelde kanıtlanan alıcıyı canlı sunucuya taşımak ve siteyi ona bağlamak. Kapsam:
+Sitenin depo adaptörünü canlı depoya (`https://lead.alpfitplus.com`) bağlayacak env değerlerini Vercel'e girdirmek. Girilen token'ın gerçekten **önizleme koleksiyonuna** (`leads_preview`) yazdığını tek bir test isteğiyle kanıtlamak. Kapsam:
 
-- Versiyonlanan tanımla canlıda kurulum (önce yedek).
-- Aynı sözleşme paketinin canlı adrese karşı koşması.
-- Talebin satış otomasyonlarına girmediğinin **çalışma zamanında** kanıtlanması.
-- `LEAD_WEBHOOK_URL`'in (ve varsa kimlik anahtarının) Vercel'e girilmesi.
+- `LEAD_STORE_URL`, `LEAD_STORE_TOKEN` (önizleme token'ı) ve `IP_HASH_SALT` → `alpfitplus-web-v2`, Production + Preview.
+- Canlı depoya kayıt yazmayan kimliksiz teyit.
+- Yerel geliştirme sunucusundan canlı depoya **tek** test talebi. Kaydın `leads_preview`'da, `leads`'te olmadığı panelde görülür.
 
-Task, sözleşme paketi canlıda yeşil olduğunda, test kaydına bir otomasyon döngüsü sonrası dokunulmadığı ölçüldüğünde ve yerelden canlı alıcıya giden talep Bunker'da `env=local` ile göründüğünde tamamlanmış sayılır.
+Task şu koşullar sağlandığında tamamlanmış sayılır:
+
+- Üç anahtar Vercel'de iki ortamda da tanımlı (adla doğrulandı).
+- Test talebi `stored:true` döndü ve panelde önizleme koleksiyonunda görüldü.
+- Gerçek talep koleksiyonuna (`leads`) hiçbir şey yazılmadı.
 
 ---
 
 ## Bağlam
 
-Kullanıcı kararı (2026-09-13): alıcı önce yerel kopyada kurulup sınanır (TASK-1.17, TASK-1.13), sonra canlıya taşınır. Bu task sunucuya **ilk kez yazan** task'tır. Kuralları pazarlıksızdır: önce yedek, önce test, sonra ölç (`../altyapi/vps/CLAUDE.md`).
+**2026-09-14 plan revizyonuyla yeniden yazıldı.** Eski hâli alıcıyı canlı sunucuya taşıyor, otomasyon izolasyonunu çalışma zamanında ölçüyordu. Yeni hedefte ikisi de yok. Depo iki aydır canlıda (2026-07-27). Soğuk otomasyondan ayrık olduğu kodla ve yedekle gösterildi (`docs/DECISIONS.md` 2026-09-14 → Gerekçe (a)). **Bu task sunucuya yazmaz.** v1'in reposuna, deposunun kodlarına ve Vercel projesine de dokunmaz.
 
-Yerel prova sözleşmeyi ve seçim sorgusu düzeyindeki izolasyonu kanıtladı. Yerelin kanıtlayamadığı iki şey burada ölçülür: otomasyonların canlı döngüsünde kayda dokunulmaması ve gerçek ağ/TLS üzerinden yanıt.
+Tek gerçek risk token'dır. v2'nin `main` push'u Vercel **production** ortamında koşar ama aşaması `preview`'dır (TASK-1.01). Production env'ine üretim token'ı girilirse önizlemedeki her test talebi v1'in gerçek taleplerinin durduğu `leads`'e düşer. Kural bu yüzden: alan adı geçişine (M7 F7.5) kadar **iki ortama da önizleme token'ı** (TASK-1.11 → Oturum 2026-09-14 → Kararlar).
 
-**Devralınan kriter:** TASK-1.05'in canlı alıcıya bağlı tek kriteri ("gerçek alıcıya giden talep kayda düşer ve `env` alanı `local` yazar") iptal edilen TASK-1.04'e devredilmişti; artık bu task'ındır.
+Token koleksiyonu gövdeden değil kendisinden seçer. API bu yüzden hangi koleksiyona yazıldığını söylemez: `201` iki koleksiyonda da aynıdır. Ayrımın tek kanıtı panel ya da superuser okumasıdır. Kriterin kanalı bu yüzden UAT.
+
+**Devralınan kriter:** TASK-1.05'in canlı alıcıya bağlı kriteri ("gerçek alıcıya giden talep kayda düşer ve `env` alanı `local` yazar") bu task'ındır. Yeni depoda karşılığı "kayıt `leads_preview`'da, `env=preview`"dir. Gerekçe TASK-1.14 → Dikkat Noktaları.
 
 ---
 
 ## Referans Dokümanlar
 
 **Okunması Gereken:**
-- `_dev/tasks/archive/TASK-1.11.md` → Oturum Kaydı — otomasyon seçim sorguları, canlı erişim yolu
-- `_dev/tasks/archive/TASK-1.13.md` → Oturum Kaydı — alıcı tanımının yeri, sözleşme paketi ve env adları
-- `_dev/tasks/archive/TASK-1.14.md` → Oturum Kaydı — sitenin kimlik biçimi ve env anahtarları
-- `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` — adresler, sır kuralı
-- `../altyapi/vps/CLAUDE.md` → "Değişiklik yaparken — pazarlıksız kurallar"
-- `../bunker-dashboard/AGENTS.md` — yol Bunker giriş ucuysa dağıtım kuralları
+- `_dev/tasks/archive/TASK-1.14.md` → Oturum Kaydı — adaptörün env anahtarları ve Karar Noktaları sonuçları
+- `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` → Lead deposu, Sırlar
+- `_dev/memory/vercel-proje-kimlikleri.md` — CLI erişimi, proje ve takım
+- `../Alpfitplus-website.v1/pocketbase/README.md` → Sırlar, Uç nokta sözleşmesi (salt okunur)
 
 **Güncellenmesi Gereken (Task Sonunda):**
 - `_dev/DURUM.md` — Task durumu ve özet
-- `_dev/phases/PHASE-1.md` — Task Listesi; canlı sözleşme ölçüm tablosu → Ölçümler
-- `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` — canlı alıcının adı/konumu, kimlik anahtarının adı ve konumu (değer değil), geri dönüş komutu
+- `_dev/phases/PHASE-1.md` — Task Listesi; canlı teyit sonucu → Ölçümler
+- `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` — v2 env'inin kurulu olduğu, token değerinin kaynağı (değer değil konum), `IP_HASH_SALT` kararı
 
 ---
 
 ## Alt Görevler
 
-- [ ] **1. Önce yedek**
-  - Değişecek yüzeyin yedeği: n8n iş akışı listesi dışa aktarımı ve/veya Bunker'ın ilgili tablo/şema yedeği
-  - Geri dönüş komutu kurulumdan **önce** yazılır ve Oturum Kaydı'na not edilir
+- [ ] **1. Değerlerin kaynağını kullanıcıyla netleştir**
+  - `LEAD_STORE_URL` sır değil: `https://lead.alpfitplus.com`
+  - `LEAD_STORE_TOKEN`: canlı depodaki `LEAD_TOKEN_PREVIEW`. Değer kullanıcıda: parola yöneticisi, sunucuda `/opt/alpfit-lead/.env` ya da v1 Vercel projesinin Preview env'i. Oturum değeri görmez
+  - `IP_HASH_SALT`: Karar Noktası
 
-- [ ] **2. Canlıda kur**
-  - Versiyonlanan tanım (TASK-1.13) içe alınır; canlı kopya ile repo kopyası birebir
-  - Kimlik sırrı canlı için **yeniden üretilir** (tahmin edilemez, ≥ 32 karakter; yerel prova değeri kullanılmaz) ve yalnız sunucu tarafında durur
+- [ ] **2. Vercel env'i girilir**
+  - Kullanıcı girer, ya da açık izniyle oturum `vercel env add` ile değeri ekrana basmadan ekler (TASK-1.07 emsali). Kapsam: `alpfitplus-web-v2`, Production + Preview. Development gerekmez
+  - Oturum `vercel env ls` ile adları doğrular
+  - Push ya da redeploy henüz **yapılmaz**. Önizleme adresindeki ilk gerçek tur TASK-1.06'nın, e-posta env'iyle birlikte
 
-- [ ] **3. Sözleşme paketini canlıda koş**
-  - `tests/lead-receiver.contract.test.ts` canlı adres ve kimlikle (env yalnız o komut için; `.env`'e canlı kimlik yazılmaz ya da yazıldıysa komuttan sonra geri alınır — karar Oturum Kaydı'na)
-  - Test gövdeleri `env=local` taşır ve gerçek kişi verisi içermez
+- [ ] **3. Canlı depoyu kayıt yazmadan yokla**
+  - `GET https://lead.alpfitplus.com/api/health` → 200
+  - Token'sız `POST /lead` (sahte gövde) → `401 {"error":"unauthorized"}`. Rota yüklü, token kapısı açık, kayıt yok (v1 README → "Dağıtım sonrası hızlı kontrol")
 
-- [ ] **4. Otomasyon izolasyonunu çalışma zamanında kanıtla**
-  - Test kaydı TASK-1.11'in salt okunur seçim sorgularına girmiyor
-  - Otomasyonların en az bir döngüsü geçtikten sonra kaydın durum/sınıflandırma alanları değişmedi ve adrese gönderim kaydı yok
+- [ ] **4. Tek test talebi: token → koleksiyon**
+  - Yerel `.env` geçici olarak canlı `LEAD_STORE_URL` + önizleme token'ı + `IP_HASH_SALT`, sonra `docker compose restart web`. Değerler basılmaz
+  - `/demo` formundan (araştırma konteyneri) **bir** talep: ad `TASK-1.18 test`, kulüp `Test Kulüp`, e-posta `test@example.com`, gerçek kişi verisi yok → başarı ekranı, uç `stored:true`
+  - Kullanıcı `https://lead.alpfitplus.com/_/` panelinde kaydı `leads_preview`'da görür ve `leads`'te **olmadığını** teyit eder. Kanal UAT
+  - Yerel `.env` sonra yerel depo değerlerine geri döner (`LEAD_STORE_URL=http://lead-store:8090`), `docker compose restart web`. **Geri dönüş teyidi zorunlu**: unutulursa yerel geliştirme her denemede canlı depoya yazar
 
-- [ ] **5. Siteyi canlı alıcıya bağla**
-  - Kullanıcı `LEAD_WEBHOOK_URL`'i (ve varsa kimlik anahtarını) Vercel'de `alpfitplus-web-v2`'ye **Production + Preview** kapsamında girer. Değer oturuma gösterilmez; oturum `vercel env ls` ile adı doğrular
-  - Yerel `.env` (dev, 3000) geçici olarak canlı alıcıya çevrilir; bir test talebi gönderilir → Bunker'da `env=local`. Sonra `.env` yerel prova alıcısına geri döner
-
-- [ ] **6. Test kayıtlarının akıbeti**
-  - Bunker canlı satış panelidir: `env=local` işaretli test kayıtları kalsın mı silinsin mi **kullanıcıya sorulur**. Silinecekse yalnız bu task'ın ürettiği kayıtlar, kimlikleriyle
+- [ ] **5. Test kaydının akıbeti**
+  - Kayıt önizleme koleksiyonunda ve 12 ay sonra saklama cron'uyla silinir. Kalsın mı panelden silinsin mi **kullanıcıya sorulur**; silme superuser işidir, oturum yapmaz
 
 ---
 
@@ -79,41 +82,45 @@ Yerel prova sözleşmeyi ve seçim sorgusu düzeyindeki izolasyonu kanıtladı. 
 
 ```
 _dev/
-├── phases/PHASE-1.md                          # canlı sözleşme ölçümü — zaten var
-└── memory/kendi-sunucu-n8n-bunker-umami.md    # canlı alıcı adı/konumu, geri dönüş — zaten var
+├── phases/PHASE-1.md                          # canlı teyit sonucu → Ölçümler — zaten var
+└── memory/kendi-sunucu-n8n-bunker-umami.md    # v2 env kurulumu, token kaynağı, tuz kararı — zaten var
 ```
 
-> Bu repoda kod değişikliği beklenmiyor. Canlı kurulum sunucuda (ya da Bunker ucu yolunda o reponun dağıtımıyla) yapılır.
+> Kod değişikliği yok. Yerel `.env` gitignore'ludur ve task sonunda yerel depo değerlerine döner.
 
 ---
 
 ## Dikkat Noktaları
 
-- **Canlı sistem:** Bunker'ın diğer kiracıları ve v1'in Umami'si aynı sunucuda. Beklenmeyen bir şey görülürse dur ve sor.
-- **Sır değeri** task dokümanına, commit'e, sohbete ya da loga yazılmaz. Canlı kimlik yerel prova kimliğinden **farklıdır**.
-- **Env değişikliği yeni dağıtım ister:** Vercel'e girilen değer mevcut dağıtıma yansımaz. Önizleme turu TASK-1.06'dadır; o task yeni dağıtımı tetikler.
-- İzolasyon canlıda tutmazsa alıcı **hemen** devre dışı bırakılır ve test kaydı temizlenir. Talebi otomasyon öncesi yakalayan yöntem yeniden tasarlanır: bu bir **plan revizyonu** gerekçesidir (DURUM Adım=`plan`).
-- Kötüye kullanım: alıcı internete açıktır, kimlik doğrulaması tek kapıdır. Kimliksiz istek hiçbir yazım yoluna girmez; paketin red senaryoları bunu canlıda da ölçer.
-- Kanal notu: kriterlerin tamamı canlı sunucu, canlı veritabanı ve Vercel katmanındadır; yerel koşucu ve CI göremez.
+- **Üretim token'ı bu fazda hiçbir yere girilmez.** Production env'i dâhil. Yanlış token hatası sessizdir: `201` iki koleksiyonda aynı. Ayrımın tek kanıtı panel (alt görev 4).
+- **Canlı deponun hız sınırı `ip_hash` başına saatte 5.** Bu task tek istek atar. Tekrar gerekirse aynı saatte beşi geçilmez, v1'in gerçek ziyaretçileri etkilenmez (ayrı `ip_hash`).
+- **Sır hijyeni:** token ve tuz task dokümanına, commit'e, sohbete ya da loga yazılmaz. `vercel env ls` değer basmaz; `vercel env pull` **kullanılmaz** (değerleri diske döker).
+- **v1 dokunulmaz:** v1'in Vercel projesi `alpfitplus-website` açılmaz, env'i değiştirilmez. Değer oradan okunacaksa bunu kullanıcı yapar.
+- **Canlı depo v1'in üretim talebini de tutuyor.** Beklenmeyen bir yanıt (`500`, `413`, HTML) görülürse tekrar denenmez, dur ve sor.
+- Kanal notu: alt görev 3 ve 4'ün kriterleri canlı serving zinciri ve canlı panel katmanındadır. Yerel koşucu ve CI göremez.
 
 ---
 
 ## Test Kriterleri
 
-- [ ] Sözleşme paketi canlı adrese karşı yeşil: doğru kimlik → `{"ok":true}` + bir kayıt; yanlış/eksik kimlik, bozuk ve `null` gövde → JSON `ok:false`, kayıt yok; 5 ardışık istek → 5 kayıt ve yanıt süresi yazılı — kanal: UAT
-- [ ] Canlı alıcı tanımı repo kopyasıyla birebir (dışa aktarım karşılaştırması) — kanal: UAT
-- [ ] Test kaydı TASK-1.11 envanterindeki gönderen/eylem yapan yolların seçim sorgusuna girmiyor; bir döngü sonrası kayıt değişmemiş, gönderim kaydı yok — kanal: UAT
-- [ ] Yerelden (dev, 3000) canlı alıcıya gönderilen talep Bunker'da `alpfit` kiracısına **bir** kayıt olarak düşüyor ve `env` = `local` (TASK-1.05'ten devralınan) — kanal: UAT
-- [ ] `vercel env ls`: `LEAD_WEBHOOK_URL` (ve varsa kimlik anahtarı) Production + Preview'de var, değer basılmadan — kanal: UAT
-- [ ] Yedek dosyası ve geri dönüş komutu Oturum Kaydı'nda yazılı; yedeğin okunabilir olduğu doğrulandı
+- [ ] `vercel env ls`: `LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT` Production **ve** Preview'de var, değer basılmadan — kanal: UAT
+- [ ] Canlı `GET /api/health` → 200 ve token'sız `POST /lead` → `401 {"error":"unauthorized"}` — kanal: UAT
+- [ ] Yerelden (dev, 3000) canlı depoya gönderilen tek test talebi → uç `200 stored:true`; kayıt panelde `leads_preview`'da, `env=preview`, alanlar doğru eşlenmiş; `leads`'te aynı kayıt yok (TASK-1.05'ten devralınan) — kanal: UAT
+- [ ] Yerel `.env` task sonunda yerel depoya dönmüş: `docker compose exec web` içinden bir test talebi yerel `lead-store` kaydı üretiyor, canlı panelde ikinci kayıt yok
+- [ ] Task dokümanı, commit ve `_dev/` altında token ya da tuz değeri yok (`git diff` + `grep` ile)
+
+---
+
+## Karar Noktaları
+
+- **`IP_HASH_SALT` değeri:** (a) v1'in canlı değeriyle aynı, (b) v2 için yeni rastgele (`openssl rand -hex 32`). **Önerilen: (b) bugün, (a) alan adı geçişinde.** v2 bugün yalnız önizleme koleksiyonuna yazıyor, v1'le ortak sayaç ya da `prior_count` sürekliliği gerekmiyor. v1'in sırrı yeni bir projeye kopyalanmamış olur. Alan adı geçişinde v2 v1'in yerini alınca aynı tuz, `ip_hash` sürekliliğini korur; o fazın env taşıma listesine not düşülür. Kullanıcıya teyit ettirilir.
 
 ---
 
 ## Risk ve Geri Dönüş Planı
 
-- **Yanlış kiracıya ya da tabloya yazım** → kimlikli test kayıtları silinir, alıcı durdurulur; yedekten dönüş yalnız gerekiyorsa.
-- **Vercel'e yanlış değer girilirse** her talep 503'e düşer ve kullanıcı WhatsApp yoluna yönlenir. Kayıp yok ama huni daralır; TASK-1.06'nın ilk ölçümü yakalar.
-- **Rollback:** n8n'de iş akışı pasif hâle alınır (ya da Bunker ucunun dağıtımı geri alınır); Adım 1'deki yedek ve geri dönüş komutu. Vercel env'i kaldırmak hattı bugünkü 503 hâline döndürür.
+- **Yanlış token (üretim) girilirse** → alt görev 4'te test kaydı `leads`'te görülür. Env hemen önizleme token'ıyla değiştirilir, kayıt kullanıcıya bildirilir (silme superuser işi). Önizleme dağıtımı henüz yeni env'i almadığı için gerçek talep akmamıştır.
+- **Rollback:** Vercel'de üç anahtar kaldırılır. Uç bugünkü "kayıt yok → e-posta ya da 503" davranışına döner. Yerel `.env` yerel depoya döner.
 
 ---
 
@@ -138,4 +145,4 @@ _dev/
 
 ---
 
-**Oluşturulma:** 2026-09-13 (plan revizyonu)
+**Oluşturulma:** 2026-09-13 (plan revizyonu) · **Yeniden yazıldı:** 2026-09-14 (plan revizyonu — alıcıyı canlıya taşıma yerine hazır deponun env bağlantısı ve token teyidi)

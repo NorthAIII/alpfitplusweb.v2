@@ -9,9 +9,9 @@
 
 ## Genel Bilgiler
 
-**Amaç:** v2'yi v1'den **ayrı** bir Vercel projesinde önizleme adresine çıkarmak; demo talebini gerçek bir hedefe (kendi sunucudaki satış paneli Bunker, `alpfit` kiracısı) satış otomasyonlarına sokmadan dayanıklı yazıp e-postayla bildirmek ve bu hattın sözleşmesini kalıcı testle korumak; üç dönüşüm olayını (demo gönderimi, WhatsApp tıklaması, telefon tıklaması) yüzey etiketiyle saymak. Bu faz ILKELER'in iki pazarlıksız maddesini ("gelen talep kaybolmaz", "ölçülebilirlik") bugün karşılanmayan hâlden çıkarır. v1 Vercel projesine ve `alpfitplus.com`'a dokunulmaz.
+**Amaç:** v2'yi v1'den **ayrı** bir Vercel projesinde önizleme adresine çıkarmak; demo talebini gerçek bir hedefe (kendi sunucudaki v1 lead deposu, `lead.alpfitplus.com`) dayanıklı yazıp e-postayla bildirmek ve bu hattın sözleşmesini kalıcı testle korumak; üç dönüşüm olayını (demo gönderimi, WhatsApp tıklaması, telefon tıklaması) yüzey etiketiyle saymak. Bu faz ILKELER'in iki pazarlıksız maddesini ("gelen talep kaybolmaz", "ölçülebilirlik") bugün karşılanmayan hâlden çıkarır. v1 Vercel projesine ve `alpfitplus.com`'a dokunulmaz.
 
-**Milestone:** v2 ayrı Vercel projesinde `vercel.app` önizleme adresinde ayakta ve `noindex`; önizlemeden gönderilen gerçek bir demo talebi Bunker'da `alpfit` kiracısına kayıt olarak düşüyor, hiçbir satış otomasyonunu tetiklemiyor **ve** `DEMO_TO`'ya e-posta geliyor; üç olay yüzey etiketiyle kendi Umami panelinde görünüyor; güvenlik başlıkları önizleme adresinde ölçüldü; v1 projesine dokunulmadı.
+**Milestone:** v2 ayrı Vercel projesinde `vercel.app` önizleme adresinde ayakta ve `noindex`; önizlemeden gönderilen gerçek bir demo talebi v1'in lead deposunda (`lead.alpfitplus.com`, önizleme koleksiyonu) kayıt olarak düşüyor **ve** `DEMO_TO`'ya e-posta geliyor; üç olay yüzey etiketiyle kendi Umami panelinde görünüyor; güvenlik başlıkları önizleme adresinde ölçüldü; v1 projesine dokunulmadı.
 
 ### Feature Listesi
 
@@ -20,11 +20,11 @@
 | Feature | Modül | Açıklama |
 |---------|-------|----------|
 | F7.3: Vercel'de ayrı proje ve önizleme yayını | M7-Yayın ve Altyapı | Repo Vercel'e bağlanır, env tanımlanır, `main` push önizlemeyi günceller; önizleme `noindex` |
-| F3.2: Dayanıklı kayıt hedefi | M3-Lead Hattı | `LEAD_WEBHOOK_URL` → Bunker `alpfit` kiracısı (giriş yolu TASK-1.11); alıcı önce yerel provada, sonra canlıda; talep otomasyonlara girmez |
+| F3.2: Dayanıklı kayıt hedefi | M3-Lead Hattı | `LEAD_STORE_URL` + `LEAD_STORE_TOKEN` → v1'in lead deposu (PocketBase, `leads_preview`); site adaptörü yerel depo kopyasında kanıtlanır, canlıda tek istekle teyit edilir |
 | F3.3: E-posta bildirimi | M3-Lead Hattı | Resend + `demo@alpfitplus.com`; site her talepte gönderir, alıcı göndermez; alan adı DNS'te doğrulanır |
 | F7.4: Analitik olay sayımı | M7-Yayın ve Altyapı | Kendi Umami (`umami.kiwiailab.com`), çerezsiz; üç olay yüzey etiketiyle; sayfa ağırlığı ölçülür |
 
-**Destek işleri (feature matrisi değişmez):** test koşucusu Vitest (M6 F6.1'in genişlemesi, TASK-1.16) ve alıcının yerel prova ortamı (M7 F7.1'in genişlemesi, TASK-1.17) F3.2'ye hizmet eder.
+**Destek işleri (feature matrisi değişmez):** test koşucusu Vitest (M6 F6.1'in genişlemesi, TASK-1.16) ve yerel lead deposu kopyası (M7 F7.1'in genişlemesi, TASK-1.17) F3.2'ye hizmet eder.
 
 ---
 
@@ -35,7 +35,7 @@
 ### Alınan Kararlar
 
 - **Faz sırası değişti:** Bu faz "Metin tonu"nun önüne geçti. Metin tonu kullanıcı örneklerine bağlıydı ve hiçbir faz ona bağımlı değil; lead hattı ve ölçüm ise ILKELER'in pazarlıksız maddeleri. Yeni sıra `docs/DECISIONS.md` (2026-09-11) ve `PHASES.md` → Sıradaki Fazlar.
-- **Lead hedefi Bunker (2026-09-13 plan revizyonu):** Talep kendi sunucudaki satış panelinde `alpfit` kiracısına düşer; satış takibi zaten orada yürür. İlk karar Google Sheet'ti, Google hesabındaki dağıtım yapılamadığı için değişti (`docs/DECISIONS.md` 2026-09-13). Vercel'de kalıcı disk olmadığından `LEAD_FILE_PATH` yolu yayın ortamında kullanılmaz (yerel Docker'da kalabilir). Giriş yolu ve otomasyon dışı tutma TASK-1.11 keşfinde netleşir; alıcı önce yerel prova ortamında kurulur, sonra canlıya taşınır.
+- **Lead hedefi v1'in lead deposu (2026-09-14 plan revizyonu):** Talep, v1 sitesinin iki aydır yazdığı PocketBase deposuna (`lead.alpfitplus.com`) yazılır; önizleme `leads_preview`'a, alan adı geçişinden sonra `leads`'e. Önce Google Sheet seçildi, dağıtım yapılamadı (2026-09-13). Sonra Bunker seçildi; TASK-1.11 keşfi `alpfit`'in canlı soğuk kampanya kiracısı olduğunu ölçtü ve kullanıcı "canlı sitenin yazdığı yere, basitçe" dedi (`docs/DECISIONS.md` 2026-09-14). Vercel'de kalıcı disk olmadığından `LEAD_FILE_PATH` yolu yayın ortamında kullanılmaz (yerel Docker'da kalabilir). Site adaptörü v1'in deposunun yerel kopyasına karşı sınanır (kullanıcı kararı 2026-09-14); depo kodu v1'de kalır, bu fazda değişmez.
 - **E-posta bu fazda kapanır:** Site her talepte gönderir, alıcı göndermez — kayıt ve bildirim birbirinden bağımsız kalır (revizyon kararı 2026-09-13). Kod zaten Resend'e yazılı; `demo@alpfitplus.com` göndericisi için alan adı doğrulaması (TXT/DKIM/SPF) gerekir. Kayıtlar `alpfitplus.com` DNS'ine eklenir, v1 barındırmasına dokunmaz. Kayıtları oturum hazırlar, kullanıcı ekler.
 - **Analitik sağlayıcısı research'te seçilir, ölçütler burada:** Vercel planı **Hobby**; Vercel Web Analytics bu planda özel olay saymaz. Aday: çerezsiz üçüncü taraf (Umami, Plausible benzeri) ya da kendi küçük olay ucu. Seçim ölçütleri sırayla: çerezsiz ve rıza gerektirmez (KVKK), üç özel olayı yüzey etiketiyle sayar, sayfa ağırlığı ve LCP/CLS etkisi ölçülebilir küçük, ücretsiz ya da düşük sabit ücret, bakım yükü. Reklam engelleyicinin sayıları eksiltmesi bilinerek kabul edilir.
 - **Önizleme açık adres + noindex:** Şifre koruması yok (telefonda şifresiz bakılır, form testi korumaya takılmaz). Üretim dışı ortamda (`VERCEL_ENV !== "production"`) `X-Robots-Tag: noindex, nofollow` başlığı ve `robots.txt` tam `disallow` gider; üretimde bugünkü davranış korunur.
@@ -46,8 +46,8 @@
 
 ### Kullanıcı Tercihleri
 
-- Lead hedefi: **Bunker** (2026-09-13; Google Sheet dağıtımı yapılamadı). Notion, Slack/WhatsApp, yönetilen Postgres, yalnız e-posta ve Sheets API seçenekleri elendi.
-- Alıcı önce **yerel prova ortamında** (compose; n8n + Postgres) kurulup sınanır, sonra canlıya taşınır; test koşucusu **Vitest** bu fazda kurulur (2026-09-13).
+- Lead hedefi: **v1'in lead deposu** (2026-09-14; önce Google Sheet, sonra Bunker). Notion, Slack/WhatsApp, yönetilen Postgres, yalnız e-posta, Sheets API ve Bunker seçenekleri elendi.
+- Site adaptörü **yerel depo kopyasında** (compose profili; v1'in `pocketbase/` klasörü salt okunur) sınanır, canlı depoya tek test isteği gider (2026-09-14); test koşucusu **Vitest** bu fazda kurulur (2026-09-13).
 - Analitik: **kendi Umami** (2026-09-13; Umami Cloud yerine).
 - DNS: kullanıcı `alpfitplus.com` DNS'ine kayıt ekleyebilir; Resend hesabı kullanıcıda.
 - Vercel planı: **Hobby**.
@@ -69,6 +69,7 @@
 - Vercel şifre/oturum koruması, önizleme için ayrı dal veya PR akışı (tek dal `main`)
 - Lead hattı bulgularından B-020 (kota + `noValidate`; Gelen Kutusu sorusu açık), B-036 ve B-037 — bu faza yalnız B-021 alındı (revizyon kararı 2026-09-13)
 - Umami'nin yerel kopyası (analitik canlı kurulumda `data-tag` ile ayrılır)
+- v1'in lead deposunda kod, şema ya da ayar değişikliği (dokunulmaz repo); talep sahibine onay e-postası (v1'de var, v2'de yok — Gelen Kutusu)
 
 ---
 
@@ -78,13 +79,15 @@
 >
 > **Bölme çocukları:** `PHASE-1-ARASTIRMA.md` — yaklaşım karşılaştırması (elenenler dâhil) ve ölçülmüş tuzakların tam listesi (araştırma-detayı).
 >
-> **Plan revizyonu (2026-09-13):** lead alıcısı (Apps Script → Bunker) ve analitik sağlayıcısı (Umami Cloud → kendi Umami) değişti; aşağıdaki seçimler güncel hâlleridir. Gerekçeler `docs/DECISIONS.md` 2026-09-13, Apps Script'e özgü ayrıntılar iptal edilen `tasks/archive/TASK-1.04.md`'de.
+> **Plan revizyonu (2026-09-13):** lead alıcısı (Apps Script → Bunker) ve analitik sağlayıcısı (Umami Cloud → kendi Umami) değişti. Gerekçeler `docs/DECISIONS.md` 2026-09-13, Apps Script'e özgü ayrıntılar iptal edilen `tasks/archive/TASK-1.04.md`'de.
+>
+> **Plan revizyonu (2026-09-14):** lead hedefi Bunker → v1'in lead deposu (PocketBase). Aşağıdaki seçimler güncel hâlleridir. Gerekçe `docs/DECISIONS.md` 2026-09-14, Bunker ölçümleri `tasks/archive/TASK-1.11-BUNKER-KESFI.md`'de.
 
 ### Değerlendirilen Yaklaşımlar (özet)
 
 Tam karşılaştırma (elenen seçenekler, artı/eksi) → `PHASE-1-ARASTIRMA.md`. Seçilenler:
 
-- **Lead alıcısı:** Bunker `alpfit` kiracısı (revizyon). Giriş yolu (n8n iş akışı ya da Bunker giriş ucu) TASK-1.11'de; sitenin üç kapılı sözleşmesi (HTTP durumu, JSON gövde, `ok === true`) korunur. Alıcı yerel prova ortamında kanıtlanıp canlıya taşınır.
+- **Lead hedefi:** v1'in lead deposu (revizyon 2026-09-14). `POST /lead` + `X-Lead-Token`; token koleksiyonu seçer; başarı `201 {id, prior_count}`. Sitenin `ok === true` kapısı tutmadığı için `toWebhook` yerine depo adaptörü yazılır (TASK-1.14); "`res.ok` başarı değildir" ilkesi korunur. Sözleşme yerel depo kopyasında paketle dondurulur (TASK-1.17, 1.13).
 - **Analitik:** kendi Umami (`umami.kiwiailab.com`, revizyon) — çerezsiz, `data-tag` ile ortam ayrımı (kurulum sürümünün desteği TASK-1.07'de teyit). Vercel Web Analytics Hobby'de özel olay saymadığı için elendi; Plausible ücretsiz plan yok.
 - **Olay bağlama:** layout'ta tek global tıklama dinleyicisi (`wa.me` / `tel:`) + bölümlere `data-surface`; demo gönderimi `DemoForm` başarı anında `track`. Kodda 15 WhatsApp + 5 telefon bağlantısı (12 dosya) olduğu için tek tek öznitelik elendi.
 - **Ortam modeli:** `main` = production kalır; aşama (`local | preview | production`) `VERCEL_ENV` + `VERCEL_PROJECT_PRODUCTION_URL`'den türetilir — discuss'taki `VERCEL_ENV !== "production"` varsayımı ölçümde çürüdü (detay çocukta).
@@ -93,7 +96,7 @@ Tam karşılaştırma (elenen seçenekler, artı/eksi) → `PHASE-1-ARASTIRMA.md
 ### Kullanılacak Araçlar/Kütüphaneler
 
 - **Umami tracker (kendi kurulum)** — `https://umami.kiwiailab.com/script.js` (v1 aynı adresi kullanıyor), `next/script` ile `strategy="afterInteractive"`; öznitelikler `data-website-id` (yeni env `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, sır değil), `data-tag={deployStage}`. `data-domains` **kullanılmaz** (önizlemede saymalı). Yeni npm bağımlılığı yok.
-- **Bunker / n8n (kendi sunucu)** — giriş yolu, kimlik doğrulama ve yanıt sözleşmesi TASK-1.11'de; kurallar `../altyapi/vps/CLAUDE.md` ve `../bunker-dashboard/AGENTS.md`, adresler ve tuzak memory → Kendi sunucu. Yerel prova: compose profili, n8n + Postgres (TASK-1.17).
+- **PocketBase lead deposu (kendi sunucu, v1'in)** — sözleşme `../Alpfitplus-website.v1/pocketbase/README.md` → Uç nokta sözleşmesi (salt okunur); adres ve env adları memory → Kendi sunucu. Yerel kopya: compose profili `lead`, imaj v1'in Dockerfile'ı (`0.39.9`), `pb_hooks`/`pb_migrations` `:ro` (TASK-1.17). Yeni npm bağımlılığı yok; `ip_hash` `node:crypto` HMAC.
 - **Vitest** — tek devDependency, kök `tests/`, `npm test` konteynerde (TASK-1.16).
 - **Resend HTTP API** — mevcut `fetch` kullanımı korunur, SDK yok; alan `reply_to` doğru (API böyle). `Idempotency-Key` başlığı isteğe bağlı (tekrar gönderimde çift e-posta önler; 24 saat, ≤256 karakter) — `lead.at + club` türevi kullanılabilir.
 - **Vercel sistem env'leri** — `VERCEL`, `VERCEL_ENV`, `VERCEL_PROJECT_PRODUCTION_URL` (üçü de derleme ve çalışma anında; projede "Enable access to System Environment Variables" kutusu açık olmalı — F7.3'te teyit).
@@ -106,7 +109,9 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 - `VERCEL_ENV` tek başına önizlemeyi ayırmaz (main push = production); `env` alanı ve etiket `deployStage`'den yazılır.
 - Resend DNS kayıtları (DKIM, `send` MX+SPF eu-west-1, DMARC katı) alan adında **zaten var**; kullanıcı yalnız panelde "Verified" teyit eder. `DEMO_FROM` tam `@alpfitplus.com` olmalı.
 - Apex MX yok → `destek@`/`demo@alpfitplus.com` posta alamayabilir (Gelen Kutusu; faz dışı). `DEMO_TO` Google MX'li, etkilenmez.
-- Bunker'ın `leads`/`staged_leads` tabloları soğuk e-posta dizisini, otomatik onayı ve model sınıflandırmasını besler — demo talebi körlemesine yazılmaz; izolasyon kodla (TASK-1.11), yerelde sorguyla (TASK-1.13), canlıda çalışma zamanında (TASK-1.18) kanıtlanır. Alıcı her hata yolunda JSON dönmeli (HTML hata sayfası "kaydedildi" okunur).
+- Demo talebi Bunker'a yazılmaz: `leads`/`staged_leads` soğuk e-posta otomasyonunu besler (TASK-1.11 ölçümü). Seçilen depo soğuk hattan kodla ve yedekle ayrık (koleksiyon kuralları `null`, Bunker ve n8n'de referans 0), çalışma zamanı izolasyon ölçümü gerekmez.
+- Depoda `segment`, `consent`, `ua`, `at` kolonu yok; `env`'i token belirler (`production | preview`). v2'nin `main`'i Vercel production env'inde ama aşaması `preview` → alan adı geçişine kadar **iki ortama da önizleme token'ı** (TASK-1.18). `201` iki koleksiyonda aynı; hangi koleksiyona yazıldığı yalnız panelde görülür.
+- Adaptör `stored`'ı yalnız `201` ile true yapar (`res.ok` ve `200 {ok:true}` başarı değildir). Depo `429` ve `413` (JSON olmayan gövde) ayrıca ele alınır; `ip_hash` hız sınırıyla aynı IP kaynağından türer (B-037 (1)).
 - Umami yoksa `window.umami?.track` sessiz geçer; kişisel veri olaya girmez; yük `perf.mjs` ile ölçülür (başlangıç 144/133 KB).
 - `legal.ts` Aktarım + Çerezler maddeleri: TASK-1.10 Google e-tablo ve Umami'ye göre yazdı; revizyon sonrası kayıt yeri kendi sunucu, ölçüm kendi Umami → TASK-1.15. B-008 açık kalır.
 - Vercel Hobby ticari kullanıma kapalı — bilinçli tercih (BULGULAR), F7.5'te yeniden.
@@ -114,11 +119,11 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 ### Teknik Kararlar
 
 - **Aşama türetimi tek yerde:** `next.config.ts` `deployStage`'i hesaplar (`local | preview | production`), `env.NEXT_PUBLIC_DEPLOY_STAGE` ile gömer ve aynı değerle `headers()`'da noindex'i verir; `src/lib/stage.ts` yalnız okur. Gerekçe: iki ayrı yerde iki koşul drift'tir; `VERCEL_ENV` tek başına yanlış (yukarıda ölçüldü). Kayıt `docs/DECISIONS.md` (2026-09-11).
-- **Lead alıcısı Bunker (revizyon 2026-09-13):** sitenin sözleşmesi korunur, e-posta site kaynaklı, alıcı yerel provadan canlıya taşınır, sözleşme paketi iki ortamda koşar. Gerekçe: gelen talep kaybolmaz (yedekli Postgres), satış takibi zaten orada, yeni tedarikçi yok. Kayıtlar `docs/DECISIONS.md` 2026-09-13.
+- **Lead hedefi v1'in lead deposu (revizyon 2026-09-14):** e-posta site kaynaklı kalır; site adaptörü yerel depo kopyasında sınanır, sözleşme paketi yalnız yerelde koşar, canlıya tek teyit isteği gider. Gerekçe: soğuk otomasyondan kanıtlı ayrık, sunucu/Bunker/n8n işi yok, alan adı geçişinde talepler aynı depoda kesintisiz. Kayıtlar `docs/DECISIONS.md` 2026-09-14.
 - **Analitik kendi Umami + global dinleyici:** olay adları `demo-submit` / `whatsapp-click` / `phone-click`, tek özellik `surface`, etiket `data-tag=deployStage`; kişisel veri girmez. Kayıtlar `docs/DECISIONS.md` (2026-09-11 dinleyici, 2026-09-13 sağlayıcı).
 - **noindex üç katman aynı kaynaktan:** başlık + robots.txt + metadata; F7.5'te alan adı bağlanınca üçü birden açılır, elle adım yok.
-- **`.env.example` anahtar seti:** `LEAD_WEBHOOK_URL` (kimlik biçimi TASK-1.11; başlıkla taşınırsa yeni sır anahtarı), `LEAD_FILE_PATH` (yalnız yerel), `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, yerel prova anahtarları (TASK-1.17). Değer yok.
-- **Milestone cümlesi 2026-09-13 plan revizyonunda değişti:** "Google Sheet'e satır" → "Bunker'da kayıt, otomasyon tetiklenmeden"; "analitik paneli" → "kendi Umami paneli".
+- **`.env.example` anahtar seti:** `LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT` (v1'le aynı adlar; `LEAD_WEBHOOK_URL` kalkar — TASK-1.14), `LEAD_FILE_PATH` (yalnız yerel), `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, yerel depo token'ları (TASK-1.17) ve sözleşme paketi adresi (TASK-1.13). Değer yok.
+- **Milestone cümlesi iki revizyonda değişti:** 2026-09-13'te "Google Sheet'e satır" → "Bunker'da kayıt, otomasyon tetiklenmeden" ve "analitik paneli" → "kendi Umami paneli"; 2026-09-14'te "Bunker'da kayıt, otomasyon tetiklenmeden" → "v1'in lead deposunda kayıt (önizleme koleksiyonu)".
 
 ---
 
@@ -129,6 +134,8 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 > **Sıra değişikliği (2026-09-13, run-phase turu):** TASK-1.07 revizyonda başa alınmıştı, ağaçtaki commit'lenmemiş Umami farkını devralsın diye. Fark bu turda commit'lendi. Kapanış kullanıcı adımına (Umami'de site kaydı) bağlı kaldığı için task, orkestratör kararıyla 1.06'nın arkasına, bağımlıları 1.08 · 1.09 · 1.15'in önüne taşındı. Tanımı ve kriterleri değişmedi.
 >
 > **Sıra değişikliği (2026-09-13, run-phase turu):** TASK-1.11'in keşfi yapıldı, kapanışı kullanıcı kararına bağlı: kayıt biçimi, giriş yolu, token yeri, canlı teyit. Sorular `tasks/archive/TASK-1.11-BUNKER-KESFI.md` dosyasında. Karardan bağımsız olan TASK-1.12 öne alındı; 1.11 orkestratör kararıyla onun arkasına taşındı. Tanımı ve kriterleri değişmedi.
+>
+> **Plan revizyonu (2026-09-14, keşif bulgusu):** TASK-1.11 lead hedefini v1'in lead deposuna çevirdi (`docs/DECISIONS.md` 2026-09-14). Kesilen task yok. Task sayısı ve sırası değişmedi; beş task yeniden yazıldı, biri güncellendi. 1.17 n8n + Postgres yerine v1'in PocketBase'inin yerel kopyası oldu (kullanıcı kararı: sınama yerel kopyada). 1.13 alıcı kurulumu yerine depo sözleşme paketi oldu. 1.14 `toWebhook` yerine depo adaptörü oldu. 1.18 alıcıyı canlıya taşımak yerine Vercel env ve token → koleksiyon teyidi oldu. 1.06'dan otomasyon izolasyonu ve düşen hedef sınaması çıktı; depo v1'in canlı taleplerini de tuttuğu için kapatılmaz. 1.15'e saklama maddesi girdi. 1.08'in bağımlılık notu düzeltildi.
 
 <!-- KURAL: Task Listesi yalnızca özet tablodur (#, Task, Durum, kısa açıklama). Task'ın icra detayı / oturum kaydı / çalışma notu buraya değil `tasks/TASK-N.md`'ye yazılır — bu bölüme sızan detay şişmedir, temizlenir (bölme değil). -->
 
@@ -142,16 +149,16 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.16 | TASK-1.16 | ✅ Tamamlandı | Test koşucusu Vitest; aşama ve `/api/demo` testleri kalıcı olur |
 | 1.12 | TASK-1.12 | ✅ Tamamlandı | İletişim biçimi doğrulaması (B-021) |
 | 1.11 | TASK-1.11 | ✅ Tamamlandı | Bunker keşfi: giriş yolu, sözleşme, tüketici envanteri ve izolasyon, yedek gerçeği, yerel prova girdileri (keşif ayağı) — kapandı (2026-09-14): hedef v1'in lead deposu (PocketBase), Bunker değil; kalan lead task'ları plan revizyonunda (`docs/DECISIONS.md` 2026-09-14) |
-| 1.17 | TASK-1.17 | ⬜ Bekliyor | Yerel prova ortamı: compose profili, n8n + Postgres (Bunker şeması) |
-| 1.13 | TASK-1.13 | ⬜ Bekliyor | Alıcıyı yerelde kur; sözleşme paketi ve seçim sorgusu izolasyonu |
-| 1.14 | TASK-1.14 | ⬜ Bekliyor | Site bağlantısı (yerel): `toWebhook` kimlik biçimi, `.env.example`, `lead-sheet` kalıntısı silinir |
-| 1.18 | TASK-1.18 | ⬜ Bekliyor | Alıcıyı canlıya taşı: yedek, canlı sözleşme, çalışma zamanı izolasyonu, Vercel env |
-| 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattını aç ve önizlemeden uçtan uca canlı tur (Bunker + e-posta, otomasyon yok) |
+| 1.17 | TASK-1.17 | ⬜ Bekliyor | Yerel lead deposu: compose profili `lead`, v1'in PocketBase'i salt okunur bağlı |
+| 1.13 | TASK-1.13 | ⬜ Bekliyor | Depo sözleşme paketi: adaptörün dayandığı davranış yerel depoya karşı kalıcı testte |
+| 1.14 | TASK-1.14 | ⬜ Bekliyor | Kayıt adaptörü: `toWebhook` → `toStore`, `ip_hash`, yerel uçtan uca tur, `lead-sheet` kalıntısı silinir |
+| 1.18 | TASK-1.18 | ⬜ Bekliyor | Canlı depo bağlantısı: Vercel env (önizleme token'ı) ve token → `leads_preview` teyidi |
+| 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattını aç ve önizlemeden uçtan uca canlı tur (lead deposu + e-posta) |
 | 1.07 | TASK-1.07 | ⬜ Bekliyor | Kendi Umami'ye site kaydı ve tracker — kod commit'li, kapanış kullanıcının site kaydına bağlı |
 | 1.08 | TASK-1.08 | ⬜ Bekliyor | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
 | 1.09 | TASK-1.09 | ⬜ Bekliyor | Global tıklama dinleyicisi, `data-surface` çapaları, analitik yükü ölçümü |
 | 1.10 | TASK-1.10 | ✅ Tamamlandı | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
-| 1.15 | TASK-1.15 | ⬜ Bekliyor | Yasal metin hizası: kayıt yeri kendi sunucu, ölçüm kendi Umami |
+| 1.15 | TASK-1.15 | ⬜ Bekliyor | Yasal metin hizası: kayıt yeri kendi sunucudaki lead deposu (12 ay), ölçüm kendi Umami |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 

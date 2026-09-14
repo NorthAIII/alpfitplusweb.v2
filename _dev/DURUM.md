@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-14 — TASK-1.11 kapandı: demo talebi Bunker yerine v1'in lead deposuna (PocketBase) yazılacak; lead task zinciri ve milestone plan revizyonuna gitti (Adım `plan`).
+**Son Güncelleme:** 2026-09-14 — plan revizyonu: lead zinciri v1'in PocketBase deposuna göre yeniden yazıldı (1.17 yerel depo kopyası, 1.13 sözleşme paketi, 1.14 depo adaptörü, 1.18 Vercel env + token teyidi, 1.06 ve 1.15 hizalandı), milestone güncellendi; sırada verify-plan.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -9,8 +9,8 @@
 ## Aktif Faz
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
-**Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Bunker'a otomasyon tetiklemeden düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** plan
+**Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
+**Adım:** verify-plan
 **İlerleme:** 8/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
@@ -33,11 +33,11 @@
 
 ## Aktif Task
 
-**Task:** yok — plan revizyonu bekliyor
-**Durum:** TASK-1.11 keşif ayağı ✅ kapandı; bulgusu kalan lead task'larının doğruluğunu değiştirdi (run-task → "Keşif bulgusu plan hatası değildir").
-**İlerleme:** Revizyon girdisi `tasks/archive/TASK-1.11.md` → Oturum — 2026-09-14 → Sonraki Adım Detayı ve `docs/DECISIONS.md` 2026-09-14. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
+**Task:** yok — verify-plan bekliyor (sıradaki task TASK-1.17)
+**Durum:** Plan revizyonu 2026-09-14'te bitti. Yeniden yazılan task'lar: 1.17 · 1.13 · 1.14 · 1.18 · 1.06; güncellenen: 1.15 (ve 1.08 bağımlılık notu). Sayı ve sıra değişmedi.
+**İlerleme:** Revizyon özeti `phases/PHASE-1.md` → Task Listesi notu; kararlar `docs/DECISIONS.md` 2026-09-14 (iki kayıt). Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
-- **Lead hedefi değişti (2026-09-14):** Bunker değil v1'in PocketBase deposu (`lead.alpfitplus.com`). Etkilenen: 1.17 · 1.13 · 1.14 · 1.18 · 1.06 · 1.15 ve yukarıdaki Milestone cümlesi ("Bunker'a otomasyon tetiklemeden") — ikisi de plan revizyonunda yeniden yazılır.
+- **Lead hattı kullanıcı adımları:** TASK-1.18 önizleme depo token'ını ister (değer kullanıcıda: parola yöneticisi ya da sunucuda `/opt/alpfit-lead/.env`); TASK-1.06 `RESEND_API_KEY` ister ve Resend panel teyidini bekler. İkisinin de sırası gelmeden hazırlanabilir.
 - **TASK-1.07:** kısmi ilerlemeyle 1.06'nın arkasında. Kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Gelen Kutusu `[TASK-1.07]`, `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 
 ---
@@ -54,16 +54,16 @@
 | 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ✅ Tamamlandı |
 | 1.12 | İletişim biçimi doğrulaması (B-021) | ✅ Tamamlandı |
 | 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ✅ Tamamlandı |
-| 1.17 | Yerel prova ortamı — n8n + Postgres (Bunker şeması) | ⬜ Bekliyor |
-| 1.13 | Alıcıyı yerel prova ortamında kur | ⬜ Bekliyor |
-| 1.14 | Site bağlantısı — alıcı sözleşmesi ve Apps Script kalıntısı | ⬜ Bekliyor |
-| 1.18 | Alıcıyı canlıya taşı ve Vercel env | ⬜ Bekliyor |
-| 1.06 | E-posta hattını aç ve uçtan uca canlı tur | ⬜ Bekliyor |
+| 1.17 | Yerel lead deposu — v1'in PocketBase'i salt okunur bağlı compose profili | ⬜ Bekliyor |
+| 1.13 | Depo sözleşme paketi — yerel depoya karşı kalıcı test | ⬜ Bekliyor |
+| 1.14 | Kayıt adaptörü — `toStore`, `.env.example`, Apps Script kalıntısı | ⬜ Bekliyor |
+| 1.18 | Canlı depo bağlantısı — Vercel env ve token → koleksiyon teyidi | ⬜ Bekliyor |
+| 1.06 | E-posta hattını aç ve uçtan uca canlı tur (depo + e-posta) | ⬜ Bekliyor |
 | 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ⬜ Bekliyor |
 | 1.08 | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` | ⬜ Bekliyor |
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ⬜ Bekliyor |
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
-| 1.15 | Yasal metin hizası — kendi sunucu ve kendi Umami | ⬜ Bekliyor |
+| 1.15 | Yasal metin hizası — lead deposu (12 ay) ve kendi Umami | ⬜ Bekliyor |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -113,7 +113,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** yok (plan revizyonu) — son kapanan `tasks/archive/TASK-1.11.md`
+**Aktif Task:** yok (verify-plan bekliyor) — sıradaki `tasks/TASK-1.17.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
