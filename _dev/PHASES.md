@@ -43,7 +43,7 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
   - B-011: KVKK başvuru adresi posta alıyor (MX ölçüldü) ya da metin posta alan bir adrese çevrildi.
 
   Hukukçu onayına bağlı kalem (B-008, B-024'ün yurt dışı aktarım dayanağı) fazı kilitlemez.
-- **Alan adı geçişi** — `alpfitplus.com` v2'ye bakıyor; v1'in 20 adresinin (10 TR + 10 `/en/*`) hepsi 301 ile karşılığına gidiyor; v1 Vercel projesi arşivde ama silinmemiş; sitemap ve canonical tutarlı. Geçişten önce yayın kapısı (çalışma/yayın ayrımı, doğrulama) `GIT-STRATEJI.md`'ye yazıldı — bu sırada CI henüz yok. M7 F7.5'in "M6 F6.3 yeşil" bağımlılığı bu sırayla karşılanmıyor, faza girerken güncellenir; Umami site kaydı seçimi (v1 kaydı mı, v2 kaydı mı) bu fazda verilir.
+- **Alan adı geçişi** — `alpfitplus.com` v2'ye bakıyor; v1'in 20 adresinin (10 TR + 10 `/en/*`) hepsi 301 ile karşılığına gidiyor; v1 Vercel projesi arşivde ama silinmemiş; sitemap ve canonical tutarlı. Geçişten önce yayın kapısı (çalışma/yayın ayrımı, doğrulama) `GIT-STRATEJI.md`'ye yazıldı — bu sırada CI henüz yok. M7 F7.5'in "M6 F6.3 yeşil" bağımlılığı bu sırayla karşılanmıyor, faza girerken güncellenir; Umami'de v2 bu fazda v1'in `alpfitplus.com` site kaydına geçer — Production `NEXT_PUBLIC_UMAMI_WEBSITE_ID` v1 kaydının kimliğine çevrilir (`docs/DECISIONS.md` 2026-09-14 «Umami site kaydı»).
 - **Görsel ve mobil iyileştirme** — Site gerçek telefonda ve en az üç viewport'ta (küçük telefon, 390 px, tablet) bölüm bölüm gözle incelendi; bulgular BULGULAR'a düştü ve triyajı yapıldı; ana sayfa mobil uzunluğu kararı verildi (Gelen Kutusu sorusu); düzeltmeler sonrası beş ölçüm yeşil.
 - **Kalite kapıları otomatik** — Beş ölçüm tek komutla koşuyor; GitHub Actions her push'ta çalışıyor; eşik altı değişiklik (kontrast, yatay kaydırma, font kümesi, iddia sızıntısı) kırmızı.
 - **Metin tonu** — Kullanıcıdan fazla samimi bulduğu örnek cümleler alındı (M1 F1.2'deki üç şüpheli yer soruldu); tek sayfada örnek gösterildi ve onaylandı; ton `src/content/` geneline yayıldı (bileşenlerde gömülü metin de oraya taşındı); a11y/scan/font-guard yeşil. Alan adı geçişinden sonra gelir.
@@ -86,6 +86,6 @@ Dış aktöre bağlı işler (hukukçu onayı, logo, kurucu programı kontenjan�
 
 ---
 
-**Son Güncelleme:** 2026-09-14 — plan revizyonu: Faz 1 milestone'unun lead hedefi Bunker'dan v1'in lead deposuna (önizleme koleksiyonu) çevrildi; sıradaki fazlar değişmedi.
+**Son Güncelleme:** 2026-09-14 — TASK-1.18 (run-phase): Alan adı geçişi satırındaki açık Umami site kaydı seçimi kullanıcı kararına bağlandı (v1'in `alpfitplus.com` kaydına geçilir); sıra değişmedi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-14 — Faz 1 plan revizyonu: Gelen Kutusu'na v1 paritesi satırı (talep sahibine onay e-postası, `notify_*` geri yazımı). Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
+**Son Güncelleme:** 2026-09-14 — TASK-1.18 (run-phase): Gelen Kutusu'na UI 🔴 bulgularını "Yayın öncesi düzeltmeler" fazına alma önerisi satırı. Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -41,6 +41,7 @@
 - [TASK-1.07] TASK-1.15 için: Umami 3.1.0'da oturum kaydı (session replay) özelliği var. Sunulan `script.js` kaydedici kod taşımıyor, site ek betik yüklemiyor. Yasal metin "ölçüme ne gider" derken bu sınıra dayanıyor; kaydedici eklenirse metin değişmeli
 - [PHASE-1 plan revizyonu] v1 paritesi: v1'in ucu talep sahibine de onay e-postası gönderiyor ("1 iş günü içinde dönüş") ve bildirim sonucunu depo kaydına geri yazıyor (`notify_team`/`notify_lead`; `../Alpfitplus-website.v1/api/demo.ts:314-371`). v2 yalnız ekibe gönderiyor. Alan adı geçişinde v2 v1'in yerini alınca bu davranış sessizce kaybolur ve `notify_lead` alanı `pending` kalır. TASK-1.14 yalnız `notify_team`'i ele alıyor (Karar Noktası); onay e-postası "Alan adı geçişi" kapsam tartışmasına
 - [TASK-1.11] Bunker OS'a ait: canlı n8n `lead-intake-agent` (aktif, `/webhook/lead-intake`) canlı şemayla uyumsuz INSERT taşıyor (`tenant_id` yok, `ON CONFLICT (email)` karşılıksız) ve Outreach Agent'a (GHL+Instantly) zincirli — çalışmaz görünen ama açık bir giriş kapısı; kapatılması Bunker OS triyajı (bkz. `tasks/archive/TASK-1.11-BUNKER-KESFI.md` → 1. madde tablosu)
+- [TASK-1.18 / run-phase] UI 🔴 bulgularını (B-032 kontrast, B-033 320 px Kurucu Programı, B-034 mobil fiyat CTA 24 px, B-031 a11y.mjs kontrast kör noktası) "Yayın öncesi düzeltmeler" fazına alma önerisi — kullanıcı 2026-09-14: "önce Faz 1 bitsin, arayüz sonra"; faz kapsamı kararı o fazın discuss-phase'inde. Not: `docs/DECISIONS.md` 2026-09-13 «Faz sırası (yeniden)» B-032/033/034'ü aday küme olarak tartıp kilitleyen kümeye almamıştı — öneri o seçimi yeniden açar
 
 - [audit-product SORU] `DemoForm.tsx:103` `noValidate` ve hız sınırının doğrulamadan önce sayması bilinçli mi? İkisi birlikte M3 F3.1 kriteriyle çelişiyor ve geçerli talebi 429'a düşürüyor (bkz. B-020; TASK-1.12 sonrası yeni tetikleyici B-054) — önerim: kota yalnız doğrulamayı geçen isteği saysın, istemci doğrulaması açılsın
 - [audit-product SORU] Footer'daki "Giriş Yap" bilinçli mi? Bilinçli Tercihler kaydı yalnız **header**'ın yokluğunu kapsıyor ("footer'a, ürün canlıya çıkınca"), ama bağlantı bugün footer'da ve `app.alpfitplus.com` çözümlenmiyor — önerim: ürün canlıya çıkana dek gizlensin, kayıt gerçeği yansıtsın

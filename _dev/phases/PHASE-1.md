@@ -152,7 +152,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.17 | TASK-1.17 | ✅ Tamamlandı | Yerel lead deposu: compose profili `lead`, v1'in PocketBase'i salt okunur bağlı |
 | 1.13 | TASK-1.13 | ✅ Tamamlandı | Depo sözleşme paketi: adaptörün dayandığı davranış yerel depoya karşı kalıcı testte |
 | 1.14 | TASK-1.14 | ✅ Tamamlandı | Kayıt adaptörü: `toWebhook` → `toStore`, `ip_hash`, yerel uçtan uca tur, `lead-sheet` kalıntısı silinir |
-| 1.18 | TASK-1.18 | ⬜ Bekliyor | Canlı depo bağlantısı: Vercel env (önizleme token'ı) ve token → `leads_preview` teyidi |
+| 1.18 | TASK-1.18 | ✅ Tamamlandı | Canlı depo bağlantısı: Vercel env (önizleme token'ı) ve token → `leads_preview` teyidi |
 | 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattını aç ve önizlemeden uçtan uca canlı tur (lead deposu + e-posta) |
 | 1.07 | TASK-1.07 | ⬜ Bekliyor | Kendi Umami'ye site kaydı ve tracker — kod commit'li, kapanış kullanıcının site kaydına bağlı |
 | 1.08 | TASK-1.08 | ⬜ Bekliyor | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
@@ -204,6 +204,22 @@ Aşama `preview` türedi (üretim alan adı `.vercel.app` ile bitiyor). **Aşama
 | `/api/demo` boş POST | 422 · `{"ok":false,"code":"missing",…}` | ✅ uç ayakta |
 | TTFB (soğuk, ana sayfa) | 0,619 s | kayıt — eşik F7.4'te `perf.mjs` ile |
 | v1 dokunulmadı | `https://alpfitplus.com/` → 200, `X-Robots-Tag` yok | ✅ |
+
+### Canlı lead deposu bağlantısı (TASK-1.18, 2026-09-14)
+
+Canlı depo `https://lead.alpfitplus.com` (v1'in PocketBase'i). Kayıt yazan istek yalnız yerel geliştirme sunucusundan, önizleme token'ıyla gitti; önizleme adresinden gerçek tur TASK-1.06'da.
+
+| Kalem | Ölçüm | Sonuç |
+|---|---|---|
+| Sağlık | `GET /api/health` | ✅ 200 |
+| Token kapısı | token'sız `POST /lead` | ✅ `401 {"error":"unauthorized"}`, kayıt yok |
+| Uç yanıtı | `/demo` formu → `/api/demo` (yerel dev, canlı URL + önizleme token'ı) | ✅ `200 stored:true mailed:false`, 358 ms |
+| Token → koleksiyon | canlı `data.db` salt-okunur okuma (SSH, `immutable=1`) | ✅ kayıt `leads_preview`'da, `env=preview`, `notify_team=failed`, `notify_lead=pending`, `ip_hash` 64 hex |
+| Üretim koleksiyonu temiz | `leads`: bugünkü kayıt · `TASK-1.18%` · `test@example.com` | ✅ 0 · 0 · 0 |
+| Yerel geri dönüş | yerel `leads_preview` sayımı canlı talep öncesi/sonrası 57/57; geri dönüş talebi sonrası 58; canlıda `geri donus` 0 | ✅ |
+| Vercel env | `vercel env ls` | ✅ `LEAD_STORE_URL` (Config) · `LEAD_STORE_TOKEN` (Secret) · `IP_HASH_SALT` (Secret) — üçü Production + Preview |
+
+**Canlıda iki test kaydı var:** 16:48:16Z'de başka bir oturumun kayıt bırakmadan koştuğu aynı test ve 20:09:03Z'de bu task'ın talebi. İkisi de `leads_preview`'da ve kalıyor; 12 aylık saklama cron'u siler. Vercel'deki token değeri geri okunamaz; önizleme adresinden ilk canlı kanıt TASK-1.06'nın turudur.
 
 ---
 

@@ -13,6 +13,23 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-14 — Umami site kaydı: önizlemede yeni v2 kaydı, alan adı geçişinde v1'in `alpfitplus.com` kaydına geçilir
+
+**Bağlam:** TASK-1.07 v2 için kendi Umami'de yeni bir site kaydı açıyor (`Alpfit Plus v2 (önizleme)`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`). Alan adı geçişinde hangi kaydın kullanılacağını geçiş fazına bırakmıştı (`tasks/TASK-1.07.md` → Dikkat Noktaları; `PHASES.md` → Alan adı geçişi). Kullanıcı yönü verdi (2026-09-14, run-phase turu, orkestratör aracılığıyla).
+
+**Seçenekler:**
+1. Önizleme boyunca ayrı v2 kaydı; alan adı geçişinde v2, v1'in `alpfitplus.com` kaydına geçer.
+2. Geçişten sonra da v2'nin yeni kaydı sürer; `alpfitplus.com`'un geçmişi v1 kaydında ayrı kalır.
+3. Bugünden v1'in kaydı kullanılır.
+
+**Karar:** 1 (kullanıcı). TASK-1.07 planlandığı gibi yeni önizleme kaydını açar. v1'in kaydı v1 canlıyken v2'de kullanılmaz. Alan adı geçişi fazında Production `NEXT_PUBLIC_UMAMI_WEBSITE_ID` v1 kaydının kimliğine çevrilir.
+
+**Gerekçe:** `alpfitplus.com`'un geçmiş trafiği tek kayıtta kesintisiz görünür — 2026-09-13 «Analitik (yeniden)» kararının "birikmiş geçmiş kopmasın" gerekçesiyle aynı. Seçenek 3 önizleme ve test trafiğini v1'in canlı sayılarına karıştırırdı. Seçenek 2 geçmişi iki kayda bölerdi ve geri alınamazdı: geçişten sonra biriken veri yanlış kayıtta kalırdı.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.07; Alan adı geçişi fazı (M7 F7.5)
+
+---
+
 ### 2026-09-14 — Bildirim durumu (notify_*): yalnız notify_team geri yazılır, notify_lead'e dokunulmaz
 
 **Bağlam:** TASK-1.14'ün depo adaptörü kayıt sonrası bildirim durumunu (`notify_team`/`notify_lead`) depoya `PATCH /lead/{id}` ile geri yazabilir (v1'in kendi ucu ikisini de yazıyor — ekip bildirimi + talep sahibine onay e-postası). v2'nin bugünkü tasarımı yalnız ekibe (`DEMO_TO`) tek e-posta gönderiyor (2026-09-13 "E-posta kaynağı"); talep sahibine ayrı bir onay e-postası bu fazın kapsamında değil (Gelen Kutusu'nda, "Alan adı geçişi" kapsam tartışmasına bırakıldı).

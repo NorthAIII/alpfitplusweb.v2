@@ -91,6 +91,10 @@
 **Edge Case'ler:**
 - TR adresler v2'de aynı yolda (`/demo`, `/fiyat`…) — 301 gerekmez ama ölçülür
 - Geri dönüş: DNS'i v1 projesine geri çevirmek; `GIT-STRATEJI.md` (kickoff-verify'da doğar) geri dönüş yönünü yazar
+- **Env taşıma — Production'da üç değer değişir** (bugün önizlemeye göre kurulu):
+  - `LEAD_STORE_TOKEN` → canlı depodaki üretim token'ı. Unutulursa geçişten sonra gerçek talepler `leads_preview`'a düşer ve API bunu söylemez (`201` iki koleksiyonda aynı).
+  - `IP_HASH_SALT` → v1'in değeri, `ip_hash` sürekliliği için (TASK-1.18 Karar Noktası).
+  - `NEXT_PUBLIC_UMAMI_WEBSITE_ID` → v1'in `alpfitplus.com` kaydı (`docs/DECISIONS.md` 2026-09-14 «Umami site kaydı»).
 
 ---
 
