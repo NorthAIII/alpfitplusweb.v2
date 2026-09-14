@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-13 — audit-product (dönüşüm ve ölçüm yüzeyi, derin tur): 7 yeni atom (B-051–B-057), B-021 arşive mezun oldu, kutudan 6 satır triyajla çıktı. Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
+**Son Güncelleme:** 2026-09-14 — TASK-1.11: kullanıcı kararı satırı cevaplandı ve `docs/DECISIONS.md`'ye mezun oldu; Bunker OS gözlem satırının pointer'ı arşive çevrildi. Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -39,8 +39,7 @@
 - [TASK-1.07] **Kullanıcı adımı — TASK-1.07'nin kapanışı buna bağlı, 1.08 · 1.09 · 1.15 de:** Umami'de v2 site kaydı aç (`umami.kiwiailab.com` → Settings → Websites → Add website; ad `Alpfit Plus v2 (önizleme)`, alan adı `alpfitplus-web-v2.vercel.app`; v1'in `alpfitplus.com` kaydına dokunma), Website ID'yi ver, `NEXT_PUBLIC_UMAMI_WEBSITE_ID` girişi için bir yol seç — (a) kullanıcı Vercel Production/Preview'e ve yerel `.env`'e girer · (b) kullanıcı ID'yi ve `.env` için açık izni verir, oturum `vercel env add` ile ekler. Yeni kaydın Bunker "Web Trafik" panelini bozmadığına göz at. Devam: `tasks/TASK-1.07.md` → Sonraki Adım Detayı. ⚠️ **Kimliği girmeden önce B-056:** izleyici etiketinde `data-exclude-search="true"` yokken kimlik girildiği an hidrasyonsuz gönderimin form verisi analitiğe gidebilir
 - [TASK-1.07] TASK-1.15 için: `umami.kiwiailab.com` önündeki nginx'in erişim loglarında IP tutulup tutulmadığı ve ne kadar saklandığı ölçülmedi (sunucu erişimi gerekiyor). "IP saklamaz" cümlesi yalnız Umami veritabanı için doğrulandı: 3.1.0 şemasında IP sütunu yok (`tasks/TASK-1.07.md` → Oturum Kayıtları)
 - [TASK-1.07] TASK-1.15 için: Umami 3.1.0'da oturum kaydı (session replay) özelliği var. Sunulan `script.js` kaydedici kod taşımıyor, site ek betik yüklemiyor. Yasal metin "ölçüme ne gider" derken bu sınıra dayanıyor; kaydedici eklenirse metin değişmeli
-- [TASK-1.11] **Kullanıcı kararı — 1.17 · 1.13 · 1.14 · 1.18 · 1.06 buna bağlı:** Bunker'a giriş yolu — tablo A/B/C · alıcı n8n/Bunker ucu · token yeri · canlı teyit. Sorular `tasks/TASK-1.11.md` → Kullanıcıya Sorular
-- [TASK-1.11] Bunker OS'a ait: canlı n8n `lead-intake-agent` (aktif, `/webhook/lead-intake`) canlı şemayla uyumsuz INSERT taşıyor (`tenant_id` yok, `ON CONFLICT (email)` karşılıksız) ve Outreach Agent'a (GHL+Instantly) zincirli — çalışmaz görünen ama açık bir giriş kapısı; kapatılması Bunker OS triyajı (bkz. `tasks/TASK-1.11.md` → alt görev 1 tablosu)
+- [TASK-1.11] Bunker OS'a ait: canlı n8n `lead-intake-agent` (aktif, `/webhook/lead-intake`) canlı şemayla uyumsuz INSERT taşıyor (`tenant_id` yok, `ON CONFLICT (email)` karşılıksız) ve Outreach Agent'a (GHL+Instantly) zincirli — çalışmaz görünen ama açık bir giriş kapısı; kapatılması Bunker OS triyajı (bkz. `tasks/archive/TASK-1.11-BUNKER-KESFI.md` → 1. madde tablosu)
 
 - [audit-product SORU] `DemoForm.tsx:103` `noValidate` ve hız sınırının doğrulamadan önce sayması bilinçli mi? İkisi birlikte M3 F3.1 kriteriyle çelişiyor ve geçerli talebi 429'a düşürüyor (bkz. B-020; TASK-1.12 sonrası yeni tetikleyici B-054) — önerim: kota yalnız doğrulamayı geçen isteği saysın, istemci doğrulaması açılsın
 - [audit-product SORU] Footer'daki "Giriş Yap" bilinçli mi? Bilinçli Tercihler kaydı yalnız **header**'ın yokluğunu kapsıyor ("footer'a, ürün canlıya çıkınca"), ama bağlantı bugün footer'da ve `app.alpfitplus.com` çözümlenmiyor — önerim: ürün canlıya çıkana dek gizlensin, kayıt gerçeği yansıtsın

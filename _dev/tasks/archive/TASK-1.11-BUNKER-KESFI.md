@@ -1,157 +1,8 @@
-# TASK-1.11: Bunker keşfi — demo talebinin giriş yolu ve otomasyon dışı tutma
+# TASK-1.11 — Bunker Keşfi
 
-**Durum:** ⬜ Bekliyor — kısmi ilerleme (keşif alt görev 1-6 commit'li); kullanıcı kararı bekleniyor (Oturum Kayıtları → Kullanıcıya Sorular + Sonraki Adım Detayı geçerli). Çalıştırma sırasında 1.12'nin arkasına taşındı (2026-09-13).
-**Modül:** M3 — Lead Hattı (`modules/M3-Lead-Hatti.md`)
-**Feature:** F3.2: Dayanıklı kayıt hedefi
-**Faz:** Phase 1 (`phases/PHASE-1.md`)
-**Bağımlılıklar:** Yok (planlı keşif ayağı; lead zincirinin ilki)
+← TASK-1.11.md · keşif-detayı (2026-09-13 oturumunun 0-6. maddeleri, kullanıcıya sunulan sorular ve öneri)
 
----
-
-## Hedef
-
-Web sitesinden gelen demo talebinin Bunker'a (`alpfit` kiracısı) **nereden, nasıl ve hangi kayıtla** gireceğini salt okunur incelemeyle belirlemek. Kalan lead task'larının (1.17 yerel prova ortamı, 1.13 yerel alıcı, 1.14 site bağlantısı, 1.18 canlıya taşıma, 1.06 uçtan uca tur, 1.15 yasal metin) dayanacağı sözleşmeyi de yazılı hâle getirmek.
-
-Task, seçilen giriş yolu tüm ayaklarıyla kaynağa bağlanıp yazıldığında, kaydın yazılacağı tabloyu okuyan kod yollarının envanteri çıkarılıp talebin gönderen/eylem yapan yolların hiçbirine girmeyeceği kodla gösterildiğinde ve kullanıcı yolu onayladığında tamamlanmış sayılır.
-
----
-
-## Bağlam
-
-Lead hedefi 2026-09-13'te Google Sheet'ten Bunker'a değişti. Google hesabındaki Apps Script dağıtımı yapılamamıştı (`docs/DECISIONS.md` 2026-09-13; iptal edilen `tasks/archive/TASK-1.04.md`).
-
-Aynı kararın **ölçülmüş kısıtı** bu task'ın varlık sebebidir. Bunker'ın `leads` ve `staged_leads` tabloları soğuk e-posta dizisini (`outreach-sequence-tick`), otomatik onayı (`triage-auto-approve`) ve model sınıflandırmasını (`lead-classify-tick`) besliyor. Demo talebi körlemesine yazılırsa talebi yapan kulübe soğuk satış e-postası gidebilir. `/api/leads/intake` oturum isteyen CSV içe aktarma ucu olduğu için web sitesi alıcısı olamaz.
-
-Bu bir **keşif ayağıdır**: bulgusu kalan task'ların doğruluğunu değiştirebilir. Değiştirirse bu bir arıza değil beklenen çıktıdır. Rota run-task → "Plan revizyonu gerekirse"dir: ayak ✅ + arşivle kapanır, DURUM Adım'ı `plan`'a çekilir.
-
-Revizyonda verilen iki karar keşfin sınırını çizer:
-
-- **E-postayı site gönderir** (Resend, her talepte), sunucu göndermez. Kayıt ve bildirim birbirinden bağımsız kalır.
-- Alıcı **önce yerel prova ortamında** (compose; n8n + Postgres) kurulup sınanır, sonra canlıya taşınır (kullanıcı kararı; aynı gün verilen "yalnız canlıda çalışılır" kararını değiştirir — `docs/DECISIONS.md` 2026-09-13 "Alıcı provası"). Keşif bu ortamın girdilerini de çıkarır.
-
----
-
-## Referans Dokümanlar
-
-**Okunması Gereken:**
-- `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` — adresler, Bunker tuzağı, sır kuralı
-- `_dev/docs/DECISIONS.md` → 2026-09-13 "Lead hedefi (yeniden)" ve "E-posta kaynağı" kayıtları
-- `src/app/api/demo/route.ts` → `type Lead` (11 alan) ve `toWebhook` (üç kapılı sözleşme: HTTP durumu, JSON gövde, `ok === true`)
-- `../altyapi/vps/CLAUDE.md` → "Değişiklik yaparken — pazarlıksız kurallar" (salt okunur kaynak)
-- `../bunker-dashboard/AGENTS.md` ve `../bunker-dashboard/docs/system-flow.md` (salt okunur kaynak)
-
-**Güncellenmesi Gereken (Task Sonunda):**
-- `_dev/DURUM.md` — Task durumu ve özet
-- `_dev/phases/PHASE-1.md` — Task Listesi tablosunda durumu güncelle
-- `_dev/docs/DECISIONS.md` — seçilen giriş yolu ve kimlik doğrulama biçimi (sözleşme bırakır)
-- `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` — giriş yolu ve izolasyon yöntemi (sır değeri değil, yalnız ad ve konum)
-
----
-
-## Alt Görevler
-
-- [ ] **1. Giriş yolu adaylarını çıkar**
-  - (a) n8n iş akışı: webhook → Bunker veritabanına yazım. n8n'in bu veritabanına yazma kimliği var mı, var olan iş akışları arasında benzer bir desen var mı?
-  - (b) Bunker'da kimlik doğrulamalı ayrı giriş ucu. Reponun kendi kuralları (`AGENTS.md`) ve dağıtım yolu bunu ne kadar pahalı kılıyor?
-  - Her aday için kalıcılık (kaynak nerede versiyonlanır), bakım yükü ve arıza görünürlüğü yazılır
-
-- [ ] **2. Kayıt biçimini belirle**
-  - Talep hangi tabloya, hangi kaynak/tip değeriyle girer? `leads` / `staged_leads` mı, ayrı bir tip ya da tablo mu?
-  - `type Lead` alanlarının (`at · env · name · club · branches · phone · email · segment · message · consent · ua`) Bunker şemasındaki karşılıkları; eşleşmeyen alanın nereye yazılacağı
-  - `env` (`local`/`preview`/`production`) nasıl taşınır? Önizleme testleri panelde ayırt edilmeli
-  - Bunker'ın telefon/e-posta için beklediği biçim varsa not edilir — TASK-1.12'nin doğrulama kuralına girer
-
-- [ ] **3. Tüketici envanterini çıkar ve izolasyonu kanıtla**
-  - Kaydın yazılacağı tabloyu okuyan kod yolları sayılır. verify-plan sayımı (2026-09-13, `grep`): `leads` ~55 dosya, `staged_leads` 17 dosya. Ayrı tablo seçilirse sayım o tablo için yapılır; (c) sınıfı yine sorulur. Her yol üç sınıftan birine yazılır:
-    - **(a) Gönderen / eylem yapan:** zamanlanmış işler (`outreach-sequence-tick`, `triage-auto-approve`, `lead-classify-tick`, `lead-pull-tick` ve `src/app/api/internal/` altındaki diğer tick'ler) **ve** zamanlanmamış yollar (`alfred-tool`, `brain/executors` onay akışı, `hermes-send`, `outreach/batch`). Her birinin kaydı hangi koşulla seçtiği okunur, dosya:satır yazılır; önerilen kayıt biçiminin **hiçbirine** girmediği gösterilir
-    - **(b) Rapor / metrik:** `reports`, `leads/funnel`, `tenant-performance`, `cross-tenant-overview`, `daily/briefing` gibi. Demo talebi ve `env=local`/`preview` test kayıtları bu sayılara karışıyor mu? Karışıyorsa kabul mü filtre mi, kullanıcıya getirilir
-    - **(c) KVKK hakları:** `leads/gdpr-delete` ve `leads/export`. Demo talebi silme ve dışa aktarma başvurusunda kapsanıyor mu? Kapsanmıyorsa not düşülür (TASK-1.15 girdisi)
-  - Liste verify-plan'ın `grep` örneklemidir, eksiksiz değildir — envanterin kendisi bu task'ın çıktısıdır
-  - `alpfit` kiracısında Hermes'in durumu (duraklatılmış mı) okunur
-  - Bunker yeni talep için **kendiliğinden bildirim** üretiyor mu? Üretiyorsa site e-postasıyla çift bildirim olur, kullanıcıya getirilir
-
-- [ ] **4. Sözleşmeyi yaz**
-  - Adres biçimi, kimlik doğrulama (sorgu token'ı mı, başlık mı), istek gövdesi, yanıt gövdesi
-  - Yanıt sözleşmesi: yazım başarılıysa `{ok:true}`; **her hata yolunda JSON** `{ok:false, code}`. HTML hata sayfası, boş gövde ya da yazmadan dönen `ok:true` yok
-  - Sitede kod değişikliği gerekip gerekmediği (TASK-1.14'ün kapsamı buradan çıkar)
-  - Alıcı tanımının versiyonlanacağı yer: Bunker reposu, altyapı reposu ya da bu repo
-
-- [ ] **5. KVKK ve yedek gerçeğini oku**
-  - Sunucunun konumu (ülke) — TASK-1.15 yasal metni buna dayanır
-  - Talep kaydına Bunker'da kimler erişebiliyor (kiracı kullanıcıları)
-  - Yeni kayıtlar sunucunun veritabanı yedeğine giriyor mu, ve sunucu dışı kopya **bugün** var mı — ölçülür. Kaynak `../altyapi/vps/CLAUDE.md` → yedek tablosu; 2026-09-10 durum notu "sunucu dışında hiç yedek kopyası yok" diyor, `docs/DECISIONS.md` 2026-09-13 ise kurulu diyor (çelişki Gelen Kutusu'nda). `../altyapi/README.md` masaüstü makinenin yedeğini anlatır, sunucuyu değil
-
-- [ ] **6. Yerel prova ortamının girdilerini çıkar** (TASK-1.17 bunlarla kurar)
-  - Canlıdaki n8n ve Postgres **sürümleri** (imaj etiketleri)
-  - Bunker şemasının yerelde kurulabileceği kaynak: migration dosyaları mı, salt okunur şema dökümü mü? Canlı şema migration'larla birebir mi (elle yapılmış fark var mı)?
-  - Asgari tohum: `alpfit` kiracısı ve envanterdeki (a) sınıfı seçim sorgularını koşturmaya yeten kayıtlar — gerçek kişi verisi olmadan
-  - Yol Bunker giriş ucuysa Bunker uygulamasının yerelde nasıl koşacağı (reponun kendi komutu, bağımlılıklar)
-
-- [ ] **7. Kullanıcı onayı**
-  - Aday(lar), öneri ve gerekçe kullanıcıya sunulur; seçilen yol Oturum Kaydı'na ve `docs/DECISIONS.md`'ye yazılır
-
----
-
-## Etkilenen Dosyalar
-
-```
-_dev/
-├── docs/DECISIONS.md                              # giriş yolu kararı — zaten var
-└── memory/kendi-sunucu-n8n-bunker-umami.md        # giriş yolu ve izolasyon notu — zaten var
-```
-
-> Kod değişikliği yok. Bunker reposu, canlı veritabanı ve n8n **salt okunur** incelenir.
-
----
-
-## Dikkat Noktaları
-
-- **Hiçbir yazma işlemi yok.** Veritabanında yalnız `SELECT`, mümkünse salt okunur işlem içinde. n8n'de iş akışı açılır, düzenlenmez ya da çalıştırılmaz. Bunker reposunda dosya değişmez.
-- **Kişisel veri dökülmez.** Mevcut `leads` satırları ekrana basılmaz; şema, sayım ve seçim koşulları yeterli.
-- **Sır değeri ekrana basılmaz**, dokümana ya da commit'e yazılmaz. Yalnız anahtar adı ve konumu yazılır (`/opt/bunker/.env` ve benzeri; memory).
-- Sunucuya bağlanmanın kuralları `../altyapi/vps/CLAUDE.md`'dedir. Keşif salt okunur olsa da oradaki erişim yolu izlenir.
-- **Varsayılan tuzak:** "Ayrı `source` değeri yeterli" varsayımı kodla sınanmadan yazılmaz. Otomasyon `source`'a bakmıyorsa ayrı değer izolasyon sağlamaz.
-- Keşif alıcıyı **kurmaz** — yerel kurulum TASK-1.13, canlı kurulum TASK-1.18'dir. Bu task yalnız yolu, sözleşmeyi, izolasyonu ve yerel prova girdilerini belirler.
-- Umami, Bunker'ın "Web Trafik" paneline de besliyor (v1 `BaseLayout.astro` yorumu). Bu task'ın konusu değil, TASK-1.07'nin dikkat noktası.
-
----
-
-## Test Kriterleri
-
-- [ ] Seçilen giriş yolunun her ayağı (adres, kimlik, yazılan tablo/değer, yanıt) kaynağıyla (dosya:satır ya da sorgu çıktısı) Oturum Kaydı'nda yazılı
-- [ ] Tüketici envanteri üç sınıfıyla (gönderen/eylem yapan · rapor/metrik · KVKK silme/dışa aktarma) Oturum Kaydı'nda; (a) sınıfındaki her yolun seçim koşulu dosya:satır ile okunmuş ve önerilen kayıt biçiminin hiçbirine girmediği satır satır gösterilmiş; (b) ve (c) için karar ya da not yazılı
-- [ ] Yanıt sözleşmesi, `toWebhook`'un üç kapısıyla (HTTP durumu, JSON gövde, `ok === true`) karşılaştırılmış; site tarafında değişiklik gerekip gerekmediği yazılı
-- [ ] Yazma yapılmadığı kanıtlanmış: veritabanı oturumu salt okunur, n8n iş akışı listesi ve Bunker reposunun `git status`'u keşif öncesi ve sonrası aynı
-- [ ] Sunucu konumu, talep kaydına erişen hesaplar ve yedek durumu (sunucu içi yedek + sunucu dışı kopya, bugünkü ölçümle) yazılı (TASK-1.15 girdisi)
-- [ ] Yerel prova girdileri yazılı: canlı sürümler, şema kaynağı ve canlıyla farkı, asgari tohum tanımı (TASK-1.17 girdisi)
-- [ ] Kullanıcı seçilen yolu onayladı; karar `docs/DECISIONS.md`'de
-
----
-
-## Karar Noktaları
-
-- **Giriş yolu:** n8n iş akışı vs Bunker giriş ucu. Keşifte ölçülen kalıcılık, bakım ve arıza görünürlüğüne göre öneri yapılır; **karar kullanıcıya sorulur**.
-- **Kimlik doğrulama biçimi:** Token URL sorgusunda kalırsa site kodu değişmez. Başlıkla taşınması daha doğruysa TASK-1.14'te `toWebhook` değişir ve yeni bir sır anahtarı doğar. Öneri sözleşmeyle birlikte kullanıcıya sunulur.
-
----
-
-## Tamamlanma Kriterleri
-
-- [ ] Tüm alt görevler tamamlandı
-- [ ] Tüm test kriterleri karşılandı
-- [ ] Git commit & push yapıldı (conventional commits formatı)
-- [ ] Bu doküman güncellendi (oturum kaydı)
-- [ ] DURUM.md güncellendi
-
----
-
-## Oturum Kayıtları
-
-### Oturum — 2026-09-13
-
-**Durum:** 🔄 Devam edecek — alt görev 1-6 bitti, 7 (kullanıcı onayı) bekliyor. Kod değişikliği yok; keşif ilerlemesi commit'lendi. Task tabloda ⬜ kaldı ve orkestratör kararıyla 1.12'nin arkasına alındı.
-
-**Yapılanlar:**
+> Bu dosya parent'ın 2026-09-13 Oturum Kaydı'ndan bölündü (2026-09-14, parent tek okumaya sığsın diye). Burada anlatılan Bunker yolu **seçilmedi**: 2026-09-14'te hedef v1'in lead deposu oldu (parent → Oturum — 2026-09-14; `docs/DECISIONS.md` 2026-09-14). Kayıt tarihsel kanıt olarak durur; Bunker'a ileride yazılmak istenirse zemin budur. Alt görev 3'ün dosya:satır tabloları kardeş dosyada: `TASK-1.11-ENVANTER.md`.
 
 **0. Kaynak ve ölçüm zemini**
 
@@ -184,7 +35,7 @@ _dev/
 - **Alan eşlemesi (A seçilirse):** `name→contact_name`/`first_name` · `club→company` · `phone` · `email`. Kalan yedisi (`branches`, `segment`, `message`, `consent`, `ua`, `env`, `at`) `raw_data` jsonb'ye. Site segmenti `target_segment`'e yazılmamalı: o kolon kampanya anahtarı, yeni çip doğurur (`segments.ts:221-227`).
 - **Biçim beklentisi (TASK-1.12 girdisi):** Bunker'ın telefon/e-posta için dayattığı biçim yok. CHECK yok, normalizasyon yok. Yalnız uzunluk sınırı var: `leads.phone varchar(50)`, `email varchar(255)`; site `MAX` 40/160 zaten altında. `staged_leads` text.
 
-**3. Tüketici envanteri** — tam kayıt (dosya:satır tabloları) → `tasks/TASK-1.11-ENVANTER.md`
+**3. Tüketici envanteri** — tam kayıt (dosya:satır tabloları) → `tasks/archive/TASK-1.11-ENVANTER.md`
 
 - **Sayım:** dashboard'da `leads`'i SQL ile okuyan/yazan 56 dosya, `staged_leads` 17. Prod n8n'de `leads` geçen aktif iş akışı 23, pasif 1; `staged_leads` 1 (Alfred). crew-os yalnız sayım yapıyor.
 - **(a) gönderen/eylem yapan:** hiçbir yol C tablosunu okumuyor.
@@ -246,22 +97,8 @@ _dev/
   - C seçilirse tohum tenants + yeni tablodur. İzolasyon testi iki parçalı: "hiçbir tüketici tabloyu okumuyor" (grep + `workflow_entity`) ve yukarıdaki seçimlerin demo kaydını döndürmediği.
 - **(b) seçilirse:** yerel ortam "n8n + Postgres" değil "Postgres + Bunker dashboard" olur; n8n gerekmez.
 
-**7. Kullanıcı onayı** — bekliyor (↓ Kullanıcıya Sorular).
 
-**Sorunlar:**
-- Task dokümanı bayat Bunker klonunu gösteriyordu: kanonik kopyaya geçildi, iki kopyanın farkı ölçüldü.
-- Canlı DB/n8n okuması sunucu girişi ister ve bu makineden SSH `dangerouslyDisableSandbox` gerektiriyor (Bunker memory `prod-ssh-ve-komut-sekli`). Girilmedi; sunucu dışı yedekten okundu. Ölçülemeyenler: prod dashboard'un koşan commit'i ve env'i (`OUTREACH_REDIRECT_TO`), 2026-09-12 02:30 sonrası n8n değişiklikleri, sunucu içi yedek saklaması.
-
-**Kararlar:**
-- İcra kararları (tercih değil, yöntem): kanonik kod `../Bunker OS/bunker-dashboard`; canlı sistemlere oturum açılmadı; ölçüm kullanıcının geri yükleme testi deseniyle sunucu dışı dökümden alındı.
-- Giriş yolu, kayıt biçimi ve kimlik doğrulama biçimi **kullanıcı kararı**; öneri C + (b) + başlık.
-- Sıra (orkestratör kararı, 2026-09-13): kullanıcı kararı TASK-1.12'yi engellemediği için 1.11 tabloda ⬜ kaldı ve 1.12'nin arkasına alındı. ⏸️/🔴 ve `Adım=plan` rotası kullanılmadı; TASK-1.07 emsali.
-- docs/DECISIONS.md'ye eklendi: Hayır (onaydan sonra).
-
-**Kalan İşler:**
-- Kullanıcı onayı (alt görev 7).
-- Onaydan sonra: DECISIONS kaydı; memory `kendi-sunucu-n8n-bunker-umami` güncellemesi (kanonik Bunker yolu, sunucu dışı yedek konumu ve dökümden salt-okunur keşif yöntemi, giriş yolu, izolasyon yöntemi).
-- İzin verilirse salt-okunur sunucu teyidi.
+---
 
 **Kullanıcıya Sorular** (kendi kendine yeter; kanıt ve dosya:satır yukarıdaki 1-6. maddelerde):
 
@@ -307,21 +144,17 @@ _dev/
 - **(b) Bunker'da ayrı uç (önerim, C ile).**
   - Artısı: kod, migration ve smoke testi tek repoda versiyonlu; CI'da koşar.
   - Eksileri:
-    - Bunker OS ayrı bir DevFlow projesi (`NorthAIII/bunker-os`) ve Faz 24'ü açık (11/13); iş oranın sırasına girer.
+    - Bunker OS ayrı bir DevFlow projesi (`NorthAIII/bunker-os`); iş oranın sırasına girer. Faz 24 icrası 13/13 bitti, sırada verify var (Bunker OS `9aa4205`, 2026-09-13).
     - TASK-1.17'nin yerel ortamı "n8n + Postgres" yerine "Postgres + Bunker" olur, yani plan revizyonu gerekir.
 
-**Soru 3 — Token nerede taşınsın?**
-- **Başlıkta (önerim):** TASK-1.14'te `toWebhook`'a bir başlık ve yeni sır anahtarı eklenir (öneri `LEAD_WEBHOOK_TOKEN`).
-- **URL'de:** site kodu değişmez, ama token istek satırıyla sunucu günlüklerine düşer.
-- İki durumda da Bunker'ın ana `BUNKER_INTERNAL_TOKEN`'ı kullanılmaz, yalnız bu alıcıya ait yeni bir token üretilir.
+**Soru 3 — Token nerede taşınsın? → KARAR (run-task turu, 2026-09-13, duran yetkilendirmeyle): başlıkta.**
+- Gerekçe: URL'deki token istek satırıyla sunucu günlüklerine düşer (QUALITY → Güvenlik: sır yalnız env'de). Başlık iki alıcı yolunda da çalışır (n8n emsali `x-internal-token` başlığı okuyor). Site maliyeti küçük: TASK-1.14 zaten `toWebhook`'a dokunuyor.
+- Sonuç: TASK-1.14'te `toWebhook`'a bir başlık ve yeni sır anahtarı `LEAD_WEBHOOK_TOKEN` eklenir. Başlık adı TASK-1.13 sözleşmesinde kesinleşir. Bunker'ın ana `BUNKER_INTERNAL_TOKEN`'ı kullanılmaz; yalnız bu alıcıya ait yeni token üretilir.
 
-**Soru 4 — Canlı sunucuda salt-okunur teyit yapılsın mı, yoksa 2026-09-12 yedeği yeterli mi?**
-- Ölçülemeyenler:
-  - Prod'da koşan Bunker commit'i ve env'i (`OUTREACH_REDIRECT_TO` yönlendirmesi).
-  - Yedekten sonraki n8n değişiklikleri.
-  - Sunucudaki yedeklerin saklama süresi.
-- Bu makineden SSH `dangerouslyDisableSandbox` istiyor, yani kullanıcı izni gerekir.
-- C seçilirse izolasyon kanıtı koşan koda bağlı değil; teyit isteğe bağlı kalır.
+**Soru 4 — Canlı sunucuda salt-okunur teyit? → KARAR (aynı tur): bu task'ta yapılmaz, 2026-09-12 yedeği yeterli — Soru 1'e C cevabı gelirse.**
+- Gerekçe: ölçülemeyen üç kalem (prod'da koşan commit ve `OUTREACH_REDIRECT_TO`, yedek sonrası n8n değişiklikleri, sunucu içi yedek saklaması) C'nin izolasyon kanıtını değiştirmez. O kanıt kaynak koddaki ve dökümdeki okuyucu sayısına dayanır. Yapmamak geri alınabilir. Canlıya zaten dokunulacak an TASK-1.18'dir; koşan commit orada ölçülür.
+- A ya da B seçilirse karar düşer: izolasyon koşan koda ve yönlendirmeye bağlanır, canlı teyit gerekir. Bu teyit sandbox dışı SSH ister, yani kullanıcı izni gerekir.
+- Tur notu (2026-09-13): Bunker OS HEAD `99cf3ee` → `9aa4205`. Aradaki 2 commit `bunker-dashboard/src`, `migrations` ve `bunker-v2`'de dosya değiştirmedi. `demo_request` araması (büyük/küçük harf duyarsız) hâlâ 0; C'nin "okuyucu 0" kanıtı bu HEAD'de de tutuyor.
 
 **Soru 5 — (yalnız A ya da B seçilirse)** Demo talepleri ve önizleme test kayıtları panel raporlarına karışsın mı, yoksa Bunker'da filtre mi eklensin?
 
@@ -334,7 +167,7 @@ _dev/
 - (b) alıcıyı test edilebilir ve versiyonlu tek yerde tutar (ILKELER: kalıcılık, bakım kolaylığı, kümülatif test).
 - Yedek öneri C + (a): Bunker koduna dokunmadan kurulur ama iş akışı prod DB'de yaşar.
 
-**Sonraki Adım Detayı:** Kullanıcı ↑ Kullanıcıya Sorular 1-5'i cevaplayacak. Task sırası geldiğinde cevap hâlâ yoksa yeniden sor, varsayılan seçme.
+**Sonraki Adım Detayı:** Kullanıcı ↑ Kullanıcıya Sorular 1, 2 ve 5'i cevaplayacak. 3 ve 4 karara bağlandı; 4, Soru 1'e A/B gelirse yeniden kullanıcıya döner. Task sırası geldiğinde cevap hâlâ yoksa yeniden sor, varsayılan seçme.
 
 Cevaplar gelince:
 - Kararı `docs/DECISIONS.md`'ye yaz, memory'yi güncelle, bu kaydı ✅ yap ve arşivle.
@@ -344,28 +177,3 @@ Cevaplar gelince:
   - `../bunker-dashboard` referansları kanonik yola çevrilir.
   - C seçilirse TASK-1.13'ün "seçim sorgusu izolasyonu" kapsamı daralır.
 - TASK-1.12 bu karardan bağımsız (biçim beklentisi yok, ↑ 2).
-
-**Dosya Değişiklikleri:**
-- `_dev/tasks/TASK-1.11.md` → durum ve bu oturum kaydı
-- `_dev/tasks/TASK-1.11-ENVANTER.md` → yeni; alt görev 3'ün tam envanteri (parent tek okumaya sığsın diye bölündü — arşive parent'la birlikte taşınır)
-- `_dev/BULGULAR.md` → Gelen Kutusu'na üç `[TASK-1.11]` satırı: kullanıcı kararı + Bunker OS'a ait iki gözlem. `[verify-plan]` yedek çelişkisi satırı ölçümle çözüldüğü için silindi (bilgi ↑ 5. maddeye mezun)
-- `_dev/DURUM.md`, `_dev/phases/PHASE-1.md` → TASK-1.11 satırı 1.12'nin arkasına taşındı, Aktif Task TASK-1.12 (orkestratör kararı; tanım ve kriterler değişmedi)
-
-**Test Sonuçları:**
-- **Yazma yapılmadığı (kapsam: bu oturumun dokunduğu yüzeyler):**
-  - Canlı DB'ye ve n8n'e oturum açılmadı. Dışarıya giden istekler yalnız kimliksiz GET: n8n `/healthz` 200 · `/rest/settings` 200 · `ops /api/healthz` 200 · RIPE RDAP.
-  - Bunker OS HEAD `99cf3ee`, `git status --porcelain` 0 satır → 0 satır. Eski klon `a3ae17a`, 0 → 0.
-  - `~/vps-yedekler` dizin mtime'ı 2026-09-12 10:08, değişmedi.
-  - Geri yükleme konteyneri ağsızdı ve silindi.
-- **Test kriterleri:**
-  - Giriş yolu ayakları kaynağıyla: ✅ iki aday için, seçim bekliyor.
-  - Envanter üç sınıfıyla: ✅ dashboard + canlı n8n + crew-os. "Önerilen biçime girmez" C için satır satır gösterildi; A için yakalayan yollar ayrıca yazıldı.
-  - Yanıt sözleşmesi üç kapıyla karşılaştırıldı: ✅ öneri için.
-  - Yazma yok: ✅ yukarıdaki kapsamla.
-  - Konum / erişim / yedek: ✅; sunucu içi saklama devralındı.
-  - Yerel prova girdileri: ✅.
-  - Kullanıcı onayı: ⬜.
-
----
-
-**Oluşturulma:** 2026-09-13 (plan revizyonu)

@@ -128,7 +128,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 >
 > **Sıra değişikliği (2026-09-13, run-phase turu):** TASK-1.07 revizyonda başa alınmıştı, ağaçtaki commit'lenmemiş Umami farkını devralsın diye. Fark bu turda commit'lendi. Kapanış kullanıcı adımına (Umami'de site kaydı) bağlı kaldığı için task, orkestratör kararıyla 1.06'nın arkasına, bağımlıları 1.08 · 1.09 · 1.15'in önüne taşındı. Tanımı ve kriterleri değişmedi.
 >
-> **Sıra değişikliği (2026-09-13, run-phase turu):** TASK-1.11'in keşfi yapıldı, kapanışı kullanıcı kararına bağlı: kayıt biçimi, giriş yolu, token yeri, canlı teyit. Sorular `tasks/TASK-1.11.md` dosyasında. Karardan bağımsız olan TASK-1.12 öne alındı; 1.11 orkestratör kararıyla onun arkasına taşındı. Tanımı ve kriterleri değişmedi.
+> **Sıra değişikliği (2026-09-13, run-phase turu):** TASK-1.11'in keşfi yapıldı, kapanışı kullanıcı kararına bağlı: kayıt biçimi, giriş yolu, token yeri, canlı teyit. Sorular `tasks/archive/TASK-1.11-BUNKER-KESFI.md` dosyasında. Karardan bağımsız olan TASK-1.12 öne alındı; 1.11 orkestratör kararıyla onun arkasına taşındı. Tanımı ve kriterleri değişmedi.
 
 <!-- KURAL: Task Listesi yalnızca özet tablodur (#, Task, Durum, kısa açıklama). Task'ın icra detayı / oturum kaydı / çalışma notu buraya değil `tasks/TASK-N.md`'ye yazılır — bu bölüme sızan detay şişmedir, temizlenir (bölme değil). -->
 
@@ -141,7 +141,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.05 | TASK-1.05 | ✅ Tamamlandı | Demo ucunu sertleştir: JSON `ok` doğrulaması + lead `env` alanı |
 | 1.16 | TASK-1.16 | ✅ Tamamlandı | Test koşucusu Vitest; aşama ve `/api/demo` testleri kalıcı olur |
 | 1.12 | TASK-1.12 | ✅ Tamamlandı | İletişim biçimi doğrulaması (B-021) |
-| 1.11 | TASK-1.11 | ⬜ Bekliyor | Bunker keşfi: giriş yolu, sözleşme, tüketici envanteri ve izolasyon, yedek gerçeği, yerel prova girdileri (keşif ayağı) — keşif yapıldı, kapanış kullanıcı kararına bağlı |
+| 1.11 | TASK-1.11 | ✅ Tamamlandı | Bunker keşfi: giriş yolu, sözleşme, tüketici envanteri ve izolasyon, yedek gerçeği, yerel prova girdileri (keşif ayağı) — kapandı (2026-09-14): hedef v1'in lead deposu (PocketBase), Bunker değil; kalan lead task'ları plan revizyonunda (`docs/DECISIONS.md` 2026-09-14) |
 | 1.17 | TASK-1.17 | ⬜ Bekliyor | Yerel prova ortamı: compose profili, n8n + Postgres (Bunker şeması) |
 | 1.13 | TASK-1.13 | ⬜ Bekliyor | Alıcıyı yerelde kur; sözleşme paketi ve seçim sorgusu izolasyonu |
 | 1.14 | TASK-1.14 | ⬜ Bekliyor | Site bağlantısı (yerel): `toWebhook` kimlik biçimi, `.env.example`, `lead-sheet` kalıntısı silinir |

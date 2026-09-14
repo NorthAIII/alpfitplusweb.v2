@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-13 — TASK-1.12 tamamlandı: iletişim biçimi doğrulaması (B-021) sunucuda ve formda; sıradaki TASK-1.11 kullanıcı kararı bekliyor.
+**Son Güncelleme:** 2026-09-14 — TASK-1.11 kapandı: demo talebi Bunker yerine v1'in lead deposuna (PocketBase) yazılacak; lead task zinciri ve milestone plan revizyonuna gitti (Adım `plan`).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi Bunker'a otomasyon tetiklemeden düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** task
-**İlerleme:** 7/17 task tamamlandı (1 iptal: TASK-1.04)
+**Adım:** plan
+**İlerleme:** 8/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,12 +33,11 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.11 — Bunker keşfi — giriş yolu ve otomasyon dışı tutma
-**Durum:** ⬜ Bekliyor — kısmi ilerleme (keşif alt görev 1-6 tamam, commit'li)
-**İlerleme:** Alt görev 7 (kullanıcı onayı) bekliyor. Sorular `tasks/TASK-1.11.md` → Kullanıcıya Sorular, Gelen Kutusu satırı `[TASK-1.11]`. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
+**Task:** yok — plan revizyonu bekliyor
+**Durum:** TASK-1.11 keşif ayağı ✅ kapandı; bulgusu kalan lead task'larının doğruluğunu değiştirdi (run-task → "Keşif bulgusu plan hatası değildir").
+**İlerleme:** Revizyon girdisi `tasks/archive/TASK-1.11.md` → Oturum — 2026-09-14 → Sonraki Adım Detayı ve `docs/DECISIONS.md` 2026-09-14. Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
-- **TASK-1.12** tamamlandı (B-021 çözüldü); bu karardan bağımsızdı.
-- **TASK-1.11** kapanışı kullanıcı kararına bağlı; cevap gelene kadar 1.17 · 1.13 · 1.14 · 1.18 · 1.06 bekler.
+- **Lead hedefi değişti (2026-09-14):** Bunker değil v1'in PocketBase deposu (`lead.alpfitplus.com`). Etkilenen: 1.17 · 1.13 · 1.14 · 1.18 · 1.06 · 1.15 ve yukarıdaki Milestone cümlesi ("Bunker'a otomasyon tetiklemeden") — ikisi de plan revizyonunda yeniden yazılır.
 - **TASK-1.07:** kısmi ilerlemeyle 1.06'nın arkasında. Kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Gelen Kutusu `[TASK-1.07]`, `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 
 ---
@@ -54,7 +53,7 @@
 | 1.05 | Demo ucunu sertleştir — JSON doğrulaması ve `env` alanı | ✅ Tamamlandı |
 | 1.16 | Test koşucusu (Vitest) — mevcut elle testler kalıcı olur | ✅ Tamamlandı |
 | 1.12 | İletişim biçimi doğrulaması (B-021) | ✅ Tamamlandı |
-| 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ⬜ Bekliyor |
+| 1.11 | Bunker keşfi — giriş yolu ve otomasyon dışı tutma | ✅ Tamamlandı |
 | 1.17 | Yerel prova ortamı — n8n + Postgres (Bunker şeması) | ⬜ Bekliyor |
 | 1.13 | Alıcıyı yerel prova ortamında kur | ⬜ Bekliyor |
 | 1.14 | Site bağlantısı — alıcı sözleşmesi ve Apps Script kalıntısı | ⬜ Bekliyor |
@@ -74,15 +73,6 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-### TASK-1.16 — Test koşucusu (Vitest) — mevcut elle testler kalıcı olur (2026-09-13)
-
-**Özet:**
-- Vitest kuruldu (`vitest@4.1.11` — 5.x, projenin `@types/node@^20` sabitiyle ERESOLVE veriyordu), `npm test` (`vitest run`) kalıcı koşucu oldu; `tests/` kökte, `@` takma adı `resolve.alias` ile çözülüyor.
-- TASK-1.01'in 5 aşama-türetimi senaryosu ve TASK-1.05'in 13 `/api/demo` sözleşme/doğrulama senaryosu artık her oturumda tekrar koşuyor; Node tip-soyma workaround'u (memory) gereksiz kaldı, silindi.
-- Kapı bilerek bozulan bir beklentiyle kırmızıya döndü (çıkış kodu 1), geri alınca yeşile döndü (B-030 dersi karşılandı).
-
-**Test:** `docker compose exec web npm test` → **2 dosya, 18 test, TÜMÜ PASS, çıkış kodu 0**. Sözleşme bataryası TASK-1.05'in sonuçlarını birebir üretti (kontrol grubu 200 · beş bozuk yanıt 503 `no-sink` · 3× 422 · 1× 400 · 429 · kırpma 400 dönmedi). Log casusu hedef adres/ad/telefon/e-posta/mesaj sızıntısı bulmadı. Build (23 rota) ve `web-prod` imajı hatasız; eslint temiz. Kapsam dürüstlüğü: route handler doğrudan çağrıldı, gerçek Next sunucusu/başlıklar TASK-1.05'in 3200 ölçümünde kaldı. Detay: `tasks/archive/TASK-1.16.md`
-
 ### TASK-1.12 — İletişim biçimi doğrulaması (B-021) (2026-09-13)
 
 **Özet:**
@@ -91,6 +81,15 @@
 - B-021 çözüldü (kapanış teyidi verify-phase'te); B-020 ve B-036 kapsam dışı bırakıldı.
 
 **Test:** `docker compose exec web npm test` → **3 dosya, 43 test, TÜMÜ PASS** (20 yeni + TASK-1.16'nın 18'i + `stage.test.ts` 5'i, kırılma yok). Kapı sınaması: kod öncesi 3 senaryo kırmızıydı (2× bad-contact + reply_to), sonrası yeşil. `a11y.mjs` TOPLAM SORUN 0, `font-guard.mjs` temiz, `scan.mjs /demo` konsol temiz, build hatasız, eslint temiz (yeni dosyalarda 0 hata; `DemoForm.tsx`'te B-028'in 4 kalemi aynen kaldı). Tarayıcı doğrulaması (Playwright): iki yönde de (yalnız e-posta bozuk / yalnız telefon bozuk) doğru alan işaretlendi ve odaklandı. Detay: `tasks/archive/TASK-1.12.md`
+
+### TASK-1.11 — Bunker keşfi — giriş yolu ve otomasyon dışı tutma (2026-09-14)
+
+**Özet:**
+- Bunker'a giriş ölçüldü (3 kayıt biçimi × 2 alıcı yolu, tüketici envanteri, yedek/konum); `alpfit` canlı soğuk kampanyanın kiracısı, "ayrı `source` yeter" kodla çürüdü.
+- Kullanıcı "canlı sitenin yazdığı yere, basitçe" dedi; v1'in PocketBase deposu (`lead.alpfitplus.com`) seçildi — soğuk hattan ayrık (kural `null`, Bunker kodu ve n8n yedeğinde referans 0), sunucu işi yok.
+- Site tarafı yeni kayıt adaptörü ister (`201 {id}`, `ok:true` yok; `X-Lead-Token`, `ip_hash`); env adları v1'le aynı, alan adı geçişine kadar önizleme token'ı.
+
+**Test:** Yazma yok — v1 `git status` 24 → 24 (yabancı), Bunker OS'ta yalnız grep (araya giren yabancı commit ölçülen yolları değiştirmedi), canlıya tek istek kimliksiz `GET lead.alpfitplus.com/api/health` 200; n8n sayımı `bunker-20260914-023004.dump`'tan ağsız konteynerde. Kod değişikliği yok; `docker compose exec web npm test` → 3 dosya, 43 test PASS (regresyon yok). Detay: `tasks/archive/TASK-1.11.md`
 
 ---
 
@@ -114,7 +113,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.11.md`
+**Aktif Task:** yok (plan revizyonu) — son kapanan `tasks/archive/TASK-1.11.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

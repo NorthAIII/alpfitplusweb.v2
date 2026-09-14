@@ -2,7 +2,7 @@
 
 ← TASK-1.11.md · envanter (alt görev 3'ün tam kaydı; 2026-09-13 oturumu)
 
-> Ölçüm zemini ve kaynak ayrımı parent'ın Oturum Kaydı → 0. maddesindedir: dashboard kanonik kopya `../Bunker OS/bunker-dashboard` (HEAD `99cf3ee`), canlı n8n ve şema `~/vps-yedekler/bunker-20260912-023004.dump` geri yüklemesi. Satır numaraları kanonik kopyaya aittir. "C" parent'taki kayıt biçimi seçeneğidir (ayrı tablo).
+> Ölçüm zemini ve kaynak ayrımı `TASK-1.11-BUNKER-KESFI.md` → 0. maddesindedir: dashboard kanonik kopya `../Bunker OS/bunker-dashboard` (HEAD `99cf3ee`), canlı n8n ve şema `~/vps-yedekler/bunker-20260912-023004.dump` geri yüklemesi. Satır numaraları kanonik kopyaya aittir. "C" `TASK-1.11-BUNKER-KESFI.md` → 2. maddedeki kayıt biçimi seçeneğidir (ayrı tablo).
 
 ## Sayım
 

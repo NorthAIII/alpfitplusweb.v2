@@ -13,6 +13,37 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-14 — Lead hedefi (yeniden, 2): v1'in lead deposu (PocketBase, `lead.alpfitplus.com`), Bunker değil
+
+**Bağlam:** TASK-1.11 keşfi Bunker'a giriş için üç kayıt biçimi ve iki alıcı yolu ölçtü. `alpfit` canlı soğuk e-posta kampanyasının kiracısı; `leads`/`staged_leads`'e yazılan talep soğuk hatta düşebilir. Güvenli yol (ayrı tablo + Bunker ucu) Bunker OS reposunda iş, bir migration ve yerel prova ortamı istiyordu. Kullanıcı sorulara şöyle cevap verdi (2026-09-14): *"şu an mevcut canlı sitede nereye yazılıyor demo talebi basit bir şekilde yazılsın zaten mail de gelecek bu yeterli sonra değiştiririz gerekirse"*. Yönü verdi, seçimi devretti.
+
+Ölçüldü: v1 talebi Bunker'a değil, aynı sunucuda ayrı compose projesi olarak koşan PocketBase deposuna yazıyor. Kaynak: `../Alpfitplus-website.v1/api/demo.ts:233-256` (`POST ${LEAD_STORE_URL}/lead`, `X-Lead-Token`), e-posta `:324-346` (Resend, ekip + talep sahibi). Depo: `pocketbase/README.md:23-42,170-222`; `lead.alpfitplus.com/api/health` 200 (2026-09-14).
+
+**Seçenekler:**
+1. Bunker'da ayrı tablo + Bunker ucu (TASK-1.11 önerisi): izolasyon kodla kanıtlı. Bedeli Bunker OS'ta iş, canlı migration, yerel n8n/Postgres/Bunker ortamı.
+2. Bunker `leads` ya da `staged_leads`: panelde görünür. Talep soğuk otomasyona düşebilir, kullanıcı bu riski kabul ettiğini söylemedi.
+3. v1'in PocketBase deposu (`leads_preview` / `leads`) + site e-postası.
+4. Yalnız e-posta: kalıcı kayıt yok, ILKELER "gelen talep kaybolmaz" ile çelişir.
+
+**Karar:** 3 (kullanıcının yönüyle, run-task turu, orkestratör çerçevesi). Talep `lead.alpfitplus.com`'a `POST /lead` ile yazılır. Kimlik v1'in `X-Lead-Token` başlığı; token koleksiyonu da belirler. E-posta 2026-09-13 "E-posta kaynağı" kararındaki gibi siteden gider. Env anahtar adları v1'inkiyle aynı: `LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT`. 2026-09-13'te önerilen `LEAD_WEBHOOK_TOKEN` doğmaz. v2 önizleme aşamasında önizleme token'ını kullanır; üretim token'ına alan adı geçişinde (M7 F7.5) geçer.
+
+**Gerekçe:**
+- **(a) Soğuk otomasyona girmez.** Koleksiyonların beş API kuralı `null`, yani yalnız superuser (`pocketbase/pb_migrations/1785184594_…js:105-109`). Tek yazma kapısı `pb_hooks/lead.pb.js`, okuyan tek zamanlanmış iş 12 aylık saklama cron'u (`retention.pb.js:30`). Bunker kodunda (`bunker-dashboard/src`, `bunker-v2`) PocketBase ya da `lead.alpfitplus` referansı 0. Canlı n8n'in 2026-09-14 02:30 UTC yedeğindeki iş akışlarında `pocketbase` / `lead.alpfitplus` / `alpfitplus` / `X-Lead-Token` geçişi 0.
+- **(b) En az hareketli parça.** Depo iki aydır canlıda (2026-07-27), yedeği ve saklama politikası kurulu. Sunucuda, Bunker OS'ta, n8n'de iş yok; yerel prova ortamı gerekmez. Değişen yalnız sitenin kayıt adaptörü ve env'dir.
+- **(c) Sonradan değiştirmesi ucuz.** Hedef tek adaptör fonksiyonunun arkasında. Alan adı geçişinde v2, v1'in yerini alırken talepler aynı depoda kesintisiz kalır (Umami kararıyla aynı gerekçe). Yasal metin v1'deki "aynı sunucu, Almanya" beyanını korur.
+- **Bedel, bilerek kabul:**
+  - Talep Bunker panelinde görünmez; panel `lead.alpfitplus.com/_/` ve bildirim e-postasıdır.
+  - Depo kodu `../Alpfitplus-website.v1/pocketbase/` altında, yani bu projenin dokunulmazında. Şema ya da hook değişikliği gerekirse o repoda iş olur ve kullanıcı kararı gerekir.
+  - Şemada `segment`, `consent`, `ua`, `at` kolonu yok. Nereye düşeceği plan revizyonunda netleşir (öneri: `segment` mesajın başına etiket, gerisi e-postada).
+
+**Milestone değişikliği:** Faz 1 milestone'undaki "gerçek demo talebi Bunker'da `alpfit` kiracısına kayıt olarak düşüyor, hiçbir satış otomasyonunu tetiklemiyor" ifadesi "v1'in lead deposunda (`lead.alpfitplus.com`, önizleme koleksiyonu) kayıt olarak düşüyor" olur. E-posta, Umami, başlıklar ve "v1 projesine dokunulmadı" aynen kalır. Depo kullanılır ama v1 reposu ve Vercel projesi değişmez. Cümle metni ve task zinciri (TASK-1.17 · 1.13 · 1.14 · 1.18 · 1.06 · 1.15) plan revizyonunda yeniden yazılır.
+
+Bu kayıt 2026-09-13 "Lead hedefi (yeniden)" kararının hedef kısmını ve "Alıcı provası" kararının n8n + Postgres yerel ortamını geçersiz kılar. Sözleşme testinin nerede koşacağı plan revizyonunda netleşir: v1'in `pocketbase/` klasörünü salt okunur bağlayan yerel konteyner ya da canlı önizleme koleksiyonu. "E-posta kaynağı" kararı aynen geçerli.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.11 kapanışı (`tasks/archive/TASK-1.11.md` → Oturum — 2026-09-14), plan revizyonu
+
+---
+
 ### 2026-09-13 — Test koşucusu: Vitest, Faz 1'de ve lead task'larından önce
 
 **Bağlam:** ILKELER "Kümülatif test altyapısı" karşılanmıyordu. Repoda test koşucusu yoktu; TASK-1.01/1.02/1.05'in testleri scratchpad betikleriyle koşup kayboldu. Plan revizyonunda kullanıcı "container içinde ücretsiz kütüphanelerle çalışalım" dedi.
