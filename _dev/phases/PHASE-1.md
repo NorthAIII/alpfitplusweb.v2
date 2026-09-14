@@ -151,7 +151,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.11 | TASK-1.11 | ✅ Tamamlandı | Bunker keşfi: giriş yolu, sözleşme, tüketici envanteri ve izolasyon, yedek gerçeği, yerel prova girdileri (keşif ayağı) — kapandı (2026-09-14): hedef v1'in lead deposu (PocketBase), Bunker değil; kalan lead task'ları plan revizyonunda (`docs/DECISIONS.md` 2026-09-14) |
 | 1.17 | TASK-1.17 | ✅ Tamamlandı | Yerel lead deposu: compose profili `lead`, v1'in PocketBase'i salt okunur bağlı |
 | 1.13 | TASK-1.13 | ✅ Tamamlandı | Depo sözleşme paketi: adaptörün dayandığı davranış yerel depoya karşı kalıcı testte |
-| 1.14 | TASK-1.14 | ⬜ Bekliyor | Kayıt adaptörü: `toWebhook` → `toStore`, `ip_hash`, yerel uçtan uca tur, `lead-sheet` kalıntısı silinir |
+| 1.14 | TASK-1.14 | ✅ Tamamlandı | Kayıt adaptörü: `toWebhook` → `toStore`, `ip_hash`, yerel uçtan uca tur, `lead-sheet` kalıntısı silinir |
 | 1.18 | TASK-1.18 | ⬜ Bekliyor | Canlı depo bağlantısı: Vercel env (önizleme token'ı) ve token → `leads_preview` teyidi |
 | 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattını aç ve önizlemeden uçtan uca canlı tur (lead deposu + e-posta) |
 | 1.07 | TASK-1.07 | ⬜ Bekliyor | Kendi Umami'ye site kaydı ve tracker — kod commit'li, kapanış kullanıcının site kaydına bağlı |

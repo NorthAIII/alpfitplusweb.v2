@@ -78,7 +78,8 @@ Fiyat tek kaynaktan gelir: `src/content/pricing.ts`.
 
 ## Demo talep ucu
 
-`src/app/api/demo/route.ts`. Önce dayanıklı kayıt (`LEAD_WEBHOOK_URL` veya
+`src/app/api/demo/route.ts`. Önce dayanıklı kayıt (v1'in lead deposu —
+`LEAD_STORE_URL` + `LEAD_STORE_TOKEN` + `IP_HASH_SALT`, ya da yerel yedek
 `LEAD_FILE_PATH`), sonra e-posta (`RESEND_API_KEY`). Hiçbir hedef yapılandırılmamışsa
 uç **başarılı dönmez**; form kullanıcıyı WhatsApp'a yönlendirir. Bal küpü alanı ve
 IP başına 10 dakikada 5 istek sınırı vardır. Ayarlar için `.env.example`.

@@ -13,6 +13,23 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-14 — Bildirim durumu (notify_*): yalnız notify_team geri yazılır, notify_lead'e dokunulmaz
+
+**Bağlam:** TASK-1.14'ün depo adaptörü kayıt sonrası bildirim durumunu (`notify_team`/`notify_lead`) depoya `PATCH /lead/{id}` ile geri yazabilir (v1'in kendi ucu ikisini de yazıyor — ekip bildirimi + talep sahibine onay e-postası). v2'nin bugünkü tasarımı yalnız ekibe (`DEMO_TO`) tek e-posta gönderiyor (2026-09-13 "E-posta kaynağı"); talep sahibine ayrı bir onay e-postası bu fazın kapsamında değil (Gelen Kutusu'nda, "Alan adı geçişi" kapsam tartışmasına bırakıldı).
+
+**Seçenekler:**
+1. Yalnız `notify_team` PATCH edilir (e-posta sonucuyla `sent`/`failed`); `notify_lead` hiç yazılmaz, depo varsayılanı `pending` kalır.
+2. İkisi de `pending` bırakılır, hiç PATCH yapılmaz.
+3. `notify_lead` da `skipped` olarak yazılır (site talep sahibine e-posta göndermediği için).
+
+**Karar:** 1 (task dokümanının önerisiyle, run-task oturumunda). `notify_lead` alanı depo şemasında **rezerve** kalır: v1'de anlamı "ziyaretçi e-posta vermedi" (`skipped`) ya da onay e-postası sonucu (`sent`/`failed`); v2 bugün o e-postayı hiç göndermediği için alanı erken `skipped` yazmak, alan adı geçişinde v1'in yerini alınca gerçek anlamla çakışırdı.
+
+**Gerekçe:** Panelde "ekibe bildirim gitti mi" sorusu cevaplanır (asıl ihtiyaç). `notify_lead`'in anlamı ileride (onay e-postası özelliği eklenirse) tek elden, geriye dönük tutarlı biçimde doldurulabilsin diye bugün dokunulmaz — erken ve yanlış bir değerle doldurmak iki farklı anlamın aynı koleksiyonda karışmasına yol açardı.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.14
+
+---
+
 ### 2026-09-14 — Depo sözleşmesinin sınanması: v1'in PocketBase'inin yerel kopyası, canlıya tek teyit isteği
 
 **Bağlam:** "Lead hedefi (yeniden, 2)" kaydı sitenin yeni kayıt adaptörünün nerede sınanacağını plan revizyonuna bıraktı. Seçenekler yerel konteyner ya da canlı önizleme koleksiyonuydu. Depo kodu (`pb_hooks`, `pb_migrations`, Dockerfile) v1 reposunda, yani bu projenin dokunulmazında duruyor. Canlı depo v1'in üretim taleplerini de tutuyor ve `ip_hash` başına saatte 5 kayıtla sınırlı.

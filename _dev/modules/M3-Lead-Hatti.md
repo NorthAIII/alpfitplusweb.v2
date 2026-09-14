@@ -29,18 +29,19 @@
 
 ### F3.2: Dayanıklı kayıt hedefi → Phase 1
 
-**Açıklama:** `LEAD_WEBHOOK_URL` (JSON POST) veya `LEAD_FILE_PATH` (JSONL) yayın ortamında tanımlanır ve gerçek bir talep kayda düşer. Bugün ikisi de tanımsız; talep kaydedilmiyor. "Önizleme yayını, lead hattı ve analitik" faz konusunun parçası.
+**Açıklama:** `LEAD_STORE_URL` + `LEAD_STORE_TOKEN` + `IP_HASH_SALT` (v1'in lead deposu, PocketBase `POST /lead`) veya yerel yedek `LEAD_FILE_PATH` (JSONL) yayın ortamında tanımlanır ve gerçek bir talep kayda düşer. TASK-1.14'te bağlandı ve yerel depo kopyasına karşı uçtan uca sınandı (`leads_preview`); canlı env girişi ve tek teyit isteği TASK-1.18'de. "Önizleme yayını, lead hattı ve analitik" faz konusunun parçası.
 
 **Kabul Kriterleri:**
-- Önizleme ortamından gönderilen gerçek bir demo talebi hedefte (webhook alıcısı veya dosya) görünür
-- Webhook düşerse (5xx, zaman aşımı ya da sözleşme dışı yanıt) uç e-postaya geçmeden önce hatayı loglar; kayıt **ve** e-posta birlikte düşerse 503 döner ve form kullanıcıya WhatsApp yolunu gösterir
+- Önizleme ortamından gönderilen gerçek bir demo talebi hedefte (depo koleksiyonu veya dosya) görünür
+- Depo düşerse (5xx, zaman aşımı, `413`/`429` ya da sözleşme dışı yanıt — yalnız `201` kayıt sayılır) uç e-postaya geçmeden önce hatayı loglar; kayıt **ve** e-posta birlikte düşerse 503 döner ve form kullanıcıya WhatsApp yolunu gösterir
 - Sır değerleri repoda yok; `.env.example` yalnız anahtar adlarını taşır
 
 **Bağımlılık:** M7 F7.3 (Vercel projesi ve env)
 
 **Edge Case'ler:**
-- Vercel'de kalıcı disk yok — `LEAD_FILE_PATH` orada çalışmaz; hedef webhook olmalı (Google Apps Script, n8n, Make veya kendi ucu). Seçim discuss-phase'de kullanıcıya sorulur
-- Webhook alıcısı KVKK açısından kişisel veri tutar; yasal metinle tutarlı olmalı (M1 `legal.ts`)
+- Vercel'de kalıcı disk yok — `LEAD_FILE_PATH` orada çalışmaz; birincil hedef depodur (`LEAD_STORE_URL`). Depo kodu v1 reposunda (dokunulmaz), yerel kopyası compose profili `lead` ile kurulur (TASK-1.17)
+- Depo KVKK açısından kişisel veri tutar (12 ay saklama); yasal metinle tutarlı olmalı (M1 `legal.ts`, TASK-1.15)
+- `ip_hash` = HMAC-SHA256(ip, `IP_HASH_SALT`); tuz tanımsızsa depo hiç denenmez (fail-closed), ham IP hiçbir yere yazılmaz
 
 ---
 

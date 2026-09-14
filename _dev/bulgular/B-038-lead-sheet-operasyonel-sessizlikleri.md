@@ -71,4 +71,4 @@ Test ise betiğin **mutlu yolunu** ve token kapısını kapsıyor; sözleşmenin
 
 ## Çözüm Kaydı
 
-—
+**Taslak (TASK-1.14, 2026-09-14) — gerçek arşivleme verify-phase'in işi:** Konusuz kapandı. Lead hedefi Google Sheet'ten v1'in PocketBase lead deposuna değişti (`docs/DECISIONS.md` 2026-09-14 "Lead hedefi (yeniden, 2)"); Apps Script alıcısı (`research/lead-sheet.gs`) ve testi (`research/lead-sheet.test.mjs`) hiç dağıtılmadı ve TASK-1.14'te repodan silindi (git geçmişinde kalır). Bulgunun tarif ettiği üç operasyonel sessizlik ve test boşluğu artık var olmayan bir dosyaya ait — düzeltilecek kod yok, doğrulanacak sözleşme yok. Kapsanan yüzey: bulgunun tamamı (dosyalar kaldırıldı, konu ortadan kalktı).

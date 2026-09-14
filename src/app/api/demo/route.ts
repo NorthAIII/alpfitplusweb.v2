@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
+import { createHmac } from "node:crypto";
 
 import { checkContact, isValidEmail } from "@/lib/contact";
 import { DEPLOY_STAGE } from "@/lib/stage";
@@ -8,13 +9,19 @@ import { DEPLOY_STAGE } from "@/lib/stage";
 /**
  * Demo talebi ucu.
  *
- * v1 sitesinin denetimi (D-01, İ-08) iki seyi gosterdi:
- *  - Tek e-posta saglayicisina bagli bir uc, anahtar tanimli degilse HER talebi
- *    hata ekranina cevirdi ve lead kayboldu.
- *  - Talebin kalici hicbir kaydi yoktu.
- * Bu yuzden burada once DAYANIKLI KAYIT denenir, e-posta ikincildir. Hicbir
- * hedef yapilandirilmamissa uc BASARILI DONMEZ — kullaniciyi WhatsApp'a
- * yonlendiren durust bir hata doner (sessiz kayip yok).
+ * v1 sitesinin denetimi (D-01, İ-08) iki şey gösterdi:
+ *  - Tek e-posta sağlayıcısına bağlı bir uç, anahtar tanımlı değilse HER talebi
+ *    hata ekranına çevirdi ve lead kayboldu.
+ *  - Talebin kalıcı hiçbir kaydı yoktu.
+ * Bu yüzden burada önce DAYANIKLI KAYIT denenir, e-posta ikincildir. Hiçbir
+ * hedef yapılandırılmamışsa uç BAŞARILI DÖNMEZ — kullanıcıyı WhatsApp'a
+ * yönlendiren dürüst bir hata döner (sessiz kayıp yok).
+ *
+ * Kayıt hedefi v1'in lead deposudur (PocketBase, `lead.alpfitplus.com`), Bunker
+ * değil — karar: `_dev/docs/DECISIONS.md` 2026-09-14 "Lead hedefi (yeniden, 2)".
+ * Depo sözleşmesi: `../Alpfitplus-website.v1/pocketbase/README.md` → "Uç nokta
+ * sözleşmesi". Env anahtar adları v1'le AYNIDIR (alan adı geçişinde env taşıması
+ * tek hamle olsun diye): `LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT`.
  */
 
 export const runtime = "nodejs";
@@ -31,10 +38,10 @@ type Lead = {
   consent: boolean;
   at: string;
   /**
-   * Dagitim asamasi (`local` | `preview` | `production`) — onizlemeden gelen
-   * test talepleri e-tabloda ve gelen kutusunda boylece ayirt edilir, silinmek
-   * zorunda kalmaz. Deger `VERCEL_ENV`'den DEGIL `deployStage`'den gelir
-   * (gerekce: src/lib/stage.ts dosya yorumu).
+   * Dağıtım aşaması (`local` | `preview` | `production`) — önizlemeden gelen
+   * test talepleri e-postada böylece ayırt edilir. Depo KAYDINA girmez: kayda
+   * düşen ortam etiketi `LEAD_STORE_TOKEN`'dan türer (token hangi koleksiyona
+   * yazılacağını da belirler — aşağı bak → toStore).
    */
   env: string;
   ua: string;
@@ -42,8 +49,8 @@ type Lead = {
 
 const MAX = { name: 120, club: 160, phone: 40, email: 160, message: 2000, segment: 60, branches: 10 };
 
-// Basit bellek ici hiz siniri. Tek surec icin yeterli; olcek buyurse
-// paylasimli bir sayaca tasinir.
+// Basit bellek içi hız sınırı. Tek süreç için yeterli; ölçek büyürse
+// paylaşımlı bir sayaca taşınır.
 const HITS = new Map<string, number[]>();
 const WINDOW_MS = 10 * 60 * 1000;
 const LIMIT = 5;
@@ -62,69 +69,120 @@ function clean(v: unknown, max: number): string {
 }
 
 /**
- * Webhook yazimi SOZLESMEYE bagli dogrulanir; `res.ok` tek basina yetmez.
- *
- * Alici bir Apps Script web app'idir (kaynak: research/lead-sheet.gs) ve betik
- * hata firlatirsa Apps Script **200 + HTML** dondurur. Yalnizca `res.ok`'a
- * bakan bir uc bunu "kaydedildi" sayar, kullaniciya "gonderildi" der ve lead
- * sessizce kaybolur — v1'de yasanan hata sinifi tam olarak budur. Bu yuzden
- * sozlesme uc kapidir: HTTP durumu, govdenin JSON olmasi, ve `ok === true`.
- *
- * Loglama QUALITY 2'ye bagli: hedef adres, token ve kisisel veri loga GIRMEZ —
- * yalnizca durum kodu, alicinin kendi hata kodu ve `lead.at` damgasi yazilir.
+ * ip_hash = HMAC-SHA256(ip, IP_HASH_SALT) hex — ham IP hiçbir yere yazılmaz ya
+ * da loglanmaz, yalnız bu özet depoya gider (KVKK veri minimizasyonu; kayıt 12
+ * ay saklanır — depo README → Saklama politikası).
  */
-async function toWebhook(lead: Lead): Promise<boolean> {
-  const url = process.env.LEAD_WEBHOOK_URL;
-  if (!url) return false;
+function hashIp(ip: string, salt: string): string {
+  return createHmac("sha256", salt).update(ip).digest("hex");
+}
+
+type StoreResult = { stored: boolean; leadId: string; storeStatus: number };
+
+/**
+ * Depo yazımı SÖZLEŞMEYE bağlı doğrulanır; `res.ok` (200 dâhil) tek başına
+ * yetmez. Depo yalnız **201**'de kayıt oluşturur ve `{id, prior_count}` döner —
+ * eski `toWebhook`'un `ok === true` kapısının depoda karşılığı yok (TASK-1.11 →
+ * Oturum 2026-09-14, üç kapı karşılaştırması: HTTP durumu tutar, JSON gövde
+ * büyük ölçüde tutar — 413 istisna — ama `ok === true` tutmaz).
+ *
+ * Yapılandırma (URL + token + tuz) eksikse istek hiç GÖNDERİLMEZ — fail-closed
+ * (Karar Noktası: tuz eksikse depo denenmez). Tuzsuz IPv4 özeti kaba kuvvetle
+ * geri çevrilebilir, yani ham IP'yi saklamakla eşdeğerdir (12 ay saklanır);
+ * e-posta yolu açık kaldığı için talep yine kaybolmaz.
+ *
+ * Loglama QUALITY 2'ye bağlı: URL, token, ip_hash ve kişisel veri loga GİRMEZ —
+ * yalnızca durum kodu, deponun kendi hata kodu (40 karaktere kırpılı) ve
+ * `lead.at` yazılır. `catch` hata nesnesini loglamaz (hedef adresi taşıyabilir).
+ */
+async function toStore(lead: Lead, ip: string): Promise<StoreResult> {
+  const url = process.env.LEAD_STORE_URL;
+  const token = process.env.LEAD_STORE_TOKEN;
+  const salt = process.env.IP_HASH_SALT;
+
+  if (!url || !token || !salt) {
+    console.error("[demo] Depo yapılandırması eksik, kayıt denenmedi.", { at: lead.at });
+    return { stored: false, leadId: "", storeStatus: 0 };
+  }
+
+  // Karar Noktası (segment'in yeri — (a) seçildi): tek satır etiket mesajın
+  // başına eklenir. Depo şemasında segment kolonu yok (DECISIONS 2026-09-14 →
+  // Bedel); boş segmentte satır eklenmez. 2000 (MAX.message) + kısa etiket
+  // deponun kendi 5000 sınırının altında kalır, ayrıca kırpma gerekmez.
+  const message = lead.segment ? `Segment: ${lead.segment}\n${lead.message}` : lead.message;
+
   try {
-    const res = await fetch(url, {
+    const res = await fetch(`${url.replace(/\/+$/, "")}/lead`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(lead),
+      headers: { "content-type": "application/json", "X-Lead-Token": token },
+      // Gövde yalnız depo beyaz listesi: env/ua/consent/at gövdeye GİRMEZ.
+      // locale sabit "tr" (site tek dilli).
+      body: JSON.stringify({
+        name: lead.name,
+        club: lead.club,
+        phone: lead.phone,
+        email: lead.email,
+        branches: lead.branches,
+        message,
+        locale: "tr",
+        ip_hash: hashIp(ip, salt),
+      }),
       signal: AbortSignal.timeout(8000),
     });
 
-    if (!res.ok) {
-      console.error("[demo] Kayit hedefi HTTP hatasi dondurdu.", { status: res.status, at: lead.at });
-      return false;
+    if (res.status !== 201) {
+      let code = "";
+      try {
+        const parsed = (await res.json()) as { error?: unknown };
+        code = typeof parsed.error === "string" ? parsed.error.slice(0, 40) : "";
+      } catch {
+        // 413 gibi durumlarda gövde JSON değildir (depo sözleşmesi) — code boş kalır.
+      }
+      console.error("[demo] Depo kaydı oluşturmadı.", { status: res.status, code, at: lead.at });
+      return { stored: false, leadId: "", storeStatus: res.status };
     }
 
-    const text = await res.text();
-    let parsed: unknown;
+    let leadId = "";
     try {
-      parsed = JSON.parse(text);
+      const body = (await res.json()) as { id?: unknown };
+      leadId = typeof body.id === "string" ? body.id : "";
     } catch {
-      // Govde HTML ise buraya duser: betik hatasi ya da yetki/oturum sayfasi.
-      console.error("[demo] Kayit hedefi JSON yerine baska bir govde dondurdu.", {
-        status: res.status,
-        at: lead.at,
-      });
-      return false;
+      // Gövde okunamadı — kayıt yine geçerlidir (v1 davranışı), yalnız id boş
+      // kalır ve bildirim durumu geri yazılamaz (PATCH atlanır).
     }
 
-    if (typeof parsed !== "object" || parsed === null) {
-      console.error("[demo] Kayit hedefinin govdesi nesne degil.", { status: res.status, at: lead.at });
-      return false;
-    }
-
-    const body = parsed as { ok?: unknown; code?: unknown };
-    if (body.ok !== true) {
-      console.error("[demo] Kayit hedefi ok:true dondurmedi.", {
-        status: res.status,
-        // Alicinin kendi teshis kodu (bad-token, busy, no-token-configured…).
-        // Sir degil, ama yine de sinirlanir.
-        code: typeof body.code === "string" ? body.code.slice(0, 40) : undefined,
-        at: lead.at,
-      });
-      return false;
-    }
-
-    return true;
+    return { stored: true, leadId, storeStatus: res.status };
   } catch {
-    // Ag hatasi ya da 8 sn zaman asimi. Hata nesnesi hedef adresi tasiyabilir,
-    // bu yuzden loglanmaz.
-    console.error("[demo] Kayit hedefine ulasilamadi (ag hatasi ya da zaman asimi).", { at: lead.at });
-    return false;
+    console.error("[demo] Depoya ulaşılamadı (ağ hatası ya da zaman aşımı).", { at: lead.at });
+    return { stored: false, leadId: "", storeStatus: 0 };
+  }
+}
+
+/**
+ * Bildirim durumunu kayda geri yazar (Karar Noktası: `notify_*` — (a) seçildi).
+ * En fazla 3 sn; sonucu ziyaretçinin yanıtını DEĞİŞTİRMEZ, başarısızlık yalnız
+ * loglanır. `notify_lead` bilerek dokunulmaz — site talep sahibine ayrı bir
+ * onay e-postası göndermiyor, depo varsayılanı `pending` kalır (v1'deki gibi
+ * `skipped` yazılmaz: v1'de o değerin anlamı "ziyaretçi e-posta vermedi",
+ * alan adı geçişinde aynı koleksiyonda iki farklı anlam karışırdı).
+ */
+async function notifyStore(leadId: string, notifyTeam: "sent" | "failed"): Promise<void> {
+  const url = process.env.LEAD_STORE_URL;
+  const token = process.env.LEAD_STORE_TOKEN;
+  if (!leadId || !url || !token) return;
+
+  try {
+    const res = await fetch(`${url.replace(/\/+$/, "")}/lead/${encodeURIComponent(leadId)}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json", "X-Lead-Token": token },
+      body: JSON.stringify({ notify_team: notifyTeam }),
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) {
+      console.error("[demo] Bildirim durumu depoya yazılamadı.", { status: res.status });
+    }
+  } catch {
+    console.error("[demo] Bildirim durumu depoya yazılırken hata (ağ ya da zaman aşımı).");
   }
 }
 
@@ -166,7 +224,7 @@ async function toEmail(lead: Lead): Promise<boolean> {
           ``,
           `KVKK onayı: ${lead.consent ? "verildi" : "YOK"}`,
           `Zaman: ${lead.at}`,
-          // Onizleme testi gelen kutusunda ilk bakista ayrilsin.
+          // Önizleme testi gelen kutusunda ilk bakışta ayrılsın.
           `Ortam: ${lead.env}`,
         ].join("\n"),
       }),
@@ -198,7 +256,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, code: "bad-json" }, { status: 400 });
   }
 
-  // Bal kupu — bot doldurursa sessizce basarili gorunur, hicbir yere yazilmaz.
+  // Bal küpü — bot doldurursa sessizce başarılı görünür, hiçbir yere yazılmaz.
   if (clean(body.website, 100)) {
     return NextResponse.json({ ok: true });
   }
@@ -240,13 +298,31 @@ export async function POST(req: Request) {
     );
   }
 
-  // Once dayanikli kayit, sonra e-posta.
-  const stored = (await toWebhook(lead)) || (await toFile(lead));
+  // Önce dayanıklı kayıt (depo, sonra yerel dosya yedeği), sonra e-posta.
+  const store = await toStore(lead, ip);
+
+  // Hız sınırı istemciye KADAR taşınır (Karar Noktası: depo 429 — (a) seçildi,
+  // v1 davranışı). Burada e-postaya/dosyaya düşülürse zincir sessizce yanlış
+  // davranır: aynı IP'den saatte altıncı talep ya bot ya tekrar deneme.
+  if (store.storeStatus === 429) {
+    return NextResponse.json(
+      { ok: false, code: "rate-limited", message: "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin." },
+      { status: 429 },
+    );
+  }
+
+  const stored = store.stored || (await toFile(lead));
   const mailed = await toEmail(lead);
 
+  // Bildirim durumu kayda geri yazılır (Karar Noktası: notify_* — (a)).
+  // Yalnız depo gerçekten yazdıysa (id var) denenir; e-posta denemesinden SONRA.
+  if (store.stored && store.leadId) {
+    await notifyStore(store.leadId, mailed ? "sent" : "failed");
+  }
+
   if (!stored && !mailed) {
-    // Hicbir hedef yok ya da hepsi dustu. Basarili gibi gostermiyoruz.
-    console.error("[demo] Talep hicbir hedefe yazilamadi.", { club: lead.club, at: lead.at });
+    // Hiçbir hedef yok ya da hepsi düştü. Başarılı gibi göstermiyoruz.
+    console.error("[demo] Talep hiçbir hedefe yazılamadı.", { club: lead.club, at: lead.at });
     return NextResponse.json(
       {
         ok: false,

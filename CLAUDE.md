@@ -265,7 +265,7 @@ Başlangıç çizgisi (regresyon eşiği) `_dev/modules/M6-Kalite-Kapilari.md` �
 - **Metin bileşende değil `src/content/`'te.** Bileşenler içeriği okur, taşımaz; ton değişimi bileşene dokunmaz.
 - **Tailwind CSS 4, CSS-first** — tokenlar `src/app/globals.css` → `@theme`; v3 `tailwind.config` sözdizimi kullanılmaz.
 - **Tasarım kuralları ve tuzaklar** (Sora'da ₺ yok, sticky + `overflow-hidden`, `min-w-0`, kullanıcının reddettiği kalıplar) tek evde: `_dev/docs/STYLE-GUIDE.md`.
-- **Sırlar yalnız env'de** (`LEAD_WEBHOOK_URL`, `LEAD_FILE_PATH`, `RESEND_API_KEY`, `DEMO_TO`…); istemci paketine sızmaz.
+- **Sırlar yalnız env'de** (`LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT`, `LEAD_FILE_PATH`, `RESEND_API_KEY`, `DEMO_TO`…); istemci paketine sızmaz.
 - **Vercel'de Node.js runtime** (Fluid Compute); Edge runtime kullanılmaz.
 
 ---
