@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-14 — plan revizyonu: lead zinciri v1'in PocketBase deposuna göre yeniden yazıldı (1.17 yerel depo kopyası, 1.13 sözleşme paketi, 1.14 depo adaptörü, 1.18 Vercel env + token teyidi, 1.06 ve 1.15 hizalandı), milestone güncellendi; sırada verify-plan.
+**Son Güncelleme:** 2026-09-14 — verify-plan (revizyon review'u): sekiz mekanik düzeltme, yapısal değişiklik yok; sırada TASK-1.17.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,7 +10,7 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** verify-plan
+**Adım:** task
 **İlerleme:** 8/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
@@ -33,9 +33,9 @@
 
 ## Aktif Task
 
-**Task:** yok — verify-plan bekliyor (sıradaki task TASK-1.17)
-**Durum:** Plan revizyonu 2026-09-14'te bitti. Yeniden yazılan task'lar: 1.17 · 1.13 · 1.14 · 1.18 · 1.06; güncellenen: 1.15 (ve 1.08 bağımlılık notu). Sayı ve sıra değişmedi.
-**İlerleme:** Revizyon özeti `phases/PHASE-1.md` → Task Listesi notu; kararlar `docs/DECISIONS.md` 2026-09-14 (iki kayıt). Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
+**Task:** TASK-1.17 — Yerel lead deposu (compose profili `lead`)
+**Durum:** ⬜ Bekliyor — plan revizyonu ve verify-plan 2026-09-14'te bitti; task sayısı ve sırası değişmedi.
+**İlerleme:** Revizyon ve verify-plan özeti `phases/PHASE-1.md` → Task Listesi notu; kararlar `docs/DECISIONS.md` 2026-09-14 (iki kayıt). Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
 - **Lead hattı kullanıcı adımları:** TASK-1.18 önizleme depo token'ını ister (değer kullanıcıda: parola yöneticisi ya da sunucuda `/opt/alpfit-lead/.env`); TASK-1.06 `RESEND_API_KEY` ister ve Resend panel teyidini bekler. İkisinin de sırası gelmeden hazırlanabilir.
 - **TASK-1.07:** kısmi ilerlemeyle 1.06'nın arkasında. Kapanışı kullanıcı adımına bağlı: Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Gelen Kutusu `[TASK-1.07]`, `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
@@ -113,7 +113,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** yok (verify-plan bekliyor) — sıradaki `tasks/TASK-1.17.md`
+**Aktif Task:** `tasks/TASK-1.17.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

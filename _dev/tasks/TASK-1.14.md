@@ -66,7 +66,7 @@ v1'in kendi adaptörü referanstır: `../Alpfitplus-website.v1/api/demo.ts:226-2
 ## Alt Görevler
 
 - [ ] **1. Testleri önce çevir ve kırmızı gör**
-  - Sahte alıcı sahte **depoya** döner: `201 {id, prior_count}` kontrol grubu; `400`/`401`/`500` JSON; `429`; `200 {"ok":true}` (yanlış durum); `200` + HTML (vekil/hata sayfası); `201` + okunamayan gövde; bağlantı hatası/zaman aşımı
+  - Sahte alıcı sahte **depoya** döner: `201 {id, prior_count}` kontrol grubu; `400`/`401`/`500` JSON; `413` + JSON olmayan gövde (PocketBase'in kendi yanıtı, TASK-1.13 → Dikkat Noktaları); `429`; `200 {"ok":true}` (yanlış durum); `200` + HTML (vekil/hata sayfası); `201` + okunamayan gövde; bağlantı hatası/zaman aşımı
   - Yeni senaryolar kod değişmeden koşulur ve kırmızı görülür
   - Dosya: `tests/api-demo.test.ts`
 
@@ -138,7 +138,7 @@ research/
 
 - [ ] `docker compose exec web npm test` yeşil; `tests/api-demo.test.ts` yeni sözleşmeyle:
   - Kontrol grubu: sahte depo `201 {id, prior_count}` → uç 200 `stored:true`; depoya giden istekte `X-Lead-Token` var, gövde yalnız beyaz liste alanlarını taşıyor, `ip_hash` 64 hex, ham IP gövdede yok
-  - Bozuk yanıtlar (`400`, `401`, `500` JSON · `200 {"ok":true}` · `200` + HTML · ağ hatası) → e-posta kapalıyken 503 `no-sink`
+  - Bozuk yanıtlar (`400`, `401`, `500` JSON · `413` + JSON olmayan gövde · `200 {"ok":true}` · `200` + HTML · ağ hatası) → e-posta kapalıyken 503 `no-sink`
   - `201` + okunamayan gövde → 200 `stored:true` (kayıt geçerli), `PATCH` denenmedi
   - Depo `429` → uç `429 rate-limited`, e-posta denenmedi
   - Yapılandırma eksik (URL, token ya da tuz yok) → `fetch` depoya **çağrılmadı**

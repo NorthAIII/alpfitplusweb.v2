@@ -58,9 +58,9 @@ Depo sözleşmesinin tek evi `../Alpfitplus-website.v1/pocketbase/README.md` →
   - Dosya: `tests/lead-store.contract.test.ts` (YENİ)
 
 - [ ] **2. Senaryoları yaz** (test kriterleriyle birebir)
-  - Her senaryo kendi rastgele `ip_hash`'ini taşır. Hız sınırı senaryosu ayrı bir `ip_hash`'te altı istekle ölçülür
+  - Her senaryo kendi rastgele `ip_hash`'ini **ve** kendi benzersiz e-postasını taşır, telefon yalnız gerektiğinde ve yine benzersiz. Gerekçe: `countPrior` koleksiyon genelinde aynı e-posta **veya** telefonu sayar (`lead_lib.js:211-220`) ve hacim koşudan koşuya birikir; sabit adresle `prior_count` beklentileri ikinci koşuda kırılır. Hız sınırı senaryosu ayrı bir `ip_hash`'te altı istekle ölçülür
   - Gövdeler gerçek kişi verisi taşımaz (`example.com`, `Test Kulüp`)
-  - Kayıt sayımı ve koleksiyon teyidi için yöntem seçilir: yerel geçici superuser (`pocketbase superuser upsert`, rastgele parola yalnız o komutta) ya da `PATCH /lead/{id}`'nin koleksiyon kapsamı. Karar ve gerekçe Oturum Kaydı'na. Yeni bağımlılık eklenmez
+  - Kayıt okuma yöntemi: kriterlerin bir kısmı kaydın **alanlarını ve sayısını** okur (`env`, `notify_*`, 5000 karakter, "tam 5 kayıt", "kayıt sayısı değişmedi"). Koleksiyon kuralları `null` olduğu için bunlar yalnız superuser okumasıyla ölçülür: yerel geçici superuser (`pocketbase superuser upsert`, rastgele parola yalnız o komutta ve env'de, çıktıya basılmaz). `PATCH /lead/{id}`'nin koleksiyon kapsamı yalnız "hangi koleksiyonda" sorusuna yeter, sayıma değil. Uygulama ayrıntısı ve gerekçe Oturum Kaydı'na. Yeni bağımlılık eklenmez
   - Dosya: `tests/lead-store.contract.test.ts` (YENİ)
 
 - [ ] **3. Koşum komutunu belgele**
@@ -103,7 +103,7 @@ tests/
   - Token'sız ve yanlış token → `401 {"error":"unauthorized"}`, kayıt sayısı değişmedi
   - `name`, `club` ya da `ip_hash` eksik → `400 {"error":"invalid-payload"}`, kayıt yok
   - Aynı `ip_hash` ile altı istek → `[201,201,201,201,201,429]`, o `ip_hash` için tam 5 kayıt
-  - Aynı e-postayla ikinci istek → `prior_count: 1`
+  - O senaryoya özgü yeni bir e-postayla ilk istek `prior_count: 0`, aynı e-postayla ikinci istek → `prior_count: 1`
   - 5000'i aşan `message` → `201` ve kayıtta 5000 karakter (kırpıldı, reddedilmedi)
   - `PATCH /lead/{id}` `{"notify_team":"sent"}` → `200 {"ok":true}`; önizleme token'ıyla üretim kaydına `PATCH` → `404`
 - [ ] Env tanımsızken `docker compose exec web npm test` sözleşme paketini atladığını raporluyor, diğer 43 test yeşil, çıkış 0

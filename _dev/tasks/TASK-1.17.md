@@ -66,7 +66,7 @@ Bu task ortamı kurar. Sözleşme paketi TASK-1.13'tür, sitenin bağlantısı T
 
 - [ ] **3. Ayağa kaldır ve dokunarak doğrula**
   - Sağlık ucu, koleksiyonların varlığı (kimliksiz `GET /api/collections/leads/records` → `403`, olmayan koleksiyon → `404`), token'lı ve token'sız birer `POST /lead`
-  - `web` konteynerinden aynı istek (compose ağı). TASK-1.13 ve TASK-1.14 buna dayanır
+  - `web` konteynerinden aynı istek (compose ağı). TASK-1.13 ve TASK-1.14 buna dayanır. `web` imajında (`node:24-bookworm-slim`) `wget` ve `curl` **yok** (verify-plan ölçümü 2026-09-14); istek `node -e "fetch(…)"` ile atılır
   - Depoyu kaldırma, durdurma ve silme komutları memory kaydına yazılır
 
 ---
@@ -88,6 +88,7 @@ Bu task ortamı kurar. Sözleşme paketi TASK-1.13'tür, sitenin bağlantısı T
 - **v1 dokunulmaz** (CLAUDE.md → Dokunulmazlar). Derleme bağlamı dosya yazmaz, bağlamalar `:ro`. v1'de `git status --porcelain` oturum başında ve sonunda sayılır. Bugün başka bir oturumun 24 yabancı satırı var, `pocketbase/` temiz (TASK-1.11 ölçümü). `pocketbase/` altında fark çıkmamalı.
 - **Compose interpolasyonu tüm dosyayı okur:** v1'in `${LEAD_TOKEN_PREVIEW:?…}` deseni burada **kullanılmaz**. Yoksa `.env`'i olmayan biri `docker compose up -d web` bile koşamaz. Boş token'la kalkan depo zaten kapalıdır: `resolveTarget` boş slotu eşleştirmez, her istek `401` alır (`lead_lib.js:99-108`). Bu fail-closed davranış ölçülerek yazılır.
 - **`down` kullanılmaz:** `docker compose down` profil verilse de projenin **tüm** servislerini (`web` dâhil) kaldırır. `-v` ise `node_modules` ve `next_cache` hacimlerini de siler. Depo servis adıyla indirilir (`docker compose rm -sf lead-store`), hacmi adıyla silinir (`docker volume rm <proje>_lead_store_data`).
+- **Token değişikliği `restart` ile gelmez** (v1 README → Tuzaklar 11): `.env`'deki token değişince depo `docker compose --profile lead up -d lead-store` ile yeniden yaratılır. TASK-1.13'ün "token boş bırakılarak yeniden kaldırma" sınaması bu komutla yapılır.
 - **Hook değişikliği kendiliğinden yeniden başlatır** (`--hooksWatch` varsayılan açık; v1 README → Tuzaklar 9). Bağlama `:ro` olduğu için yerelde tetiklenmez. v1'de hook değişirse konteyner yeniden başlatılır; not memory kaydına.
 - **Superuser yok, gerekmez.** Kimliksiz ilk açılış log'a installer bağlantısı basar (v1 README → Adım 7); bu beklenen davranıştır. Kayıt sayımı gerekirse (TASK-1.13) yöntem orada seçilir.
 - Resmî PocketBase imajı yok; Dockerfile binary'yi GitHub release'inden çeker. İlk derleme ağ ister.
@@ -97,9 +98,9 @@ Bu task ortamı kurar. Sözleşme paketi TASK-1.13'tür, sitenin bağlantısı T
 
 ## Test Kriterleri
 
-- [ ] `docker compose --profile lead up -d lead-store` → konteyner sağlıklı; `web` içinden `wget -qO- http://lead-store:8090/api/health` → `{"code":200,…}`
+- [ ] `docker compose --profile lead up -d lead-store` → konteyner sağlıklı; `web` içinden `node -e "fetch('http://lead-store:8090/api/health').then(r=>r.text()).then(console.log)"` → `{"code":200,…}`
 - [ ] Koleksiyonlar migration'la doğdu: kimliksiz `GET /api/collections/leads/records` ve `…/leads_preview/records` → `403`, `…/olmayan/records` → `404`
-- [ ] Yerel önizleme token'ıyla `POST /lead` (geçerli gövde, sahte `ip_hash`, `example.com`) → `201 {"id":…,"prior_count":0}`; token'sız → `401 {"error":"unauthorized"}`
+- [ ] Yerel önizleme token'ıyla `POST /lead` (geçerli gövde, sahte `ip_hash`, her koşuda benzersiz `…@example.com` ve telefonsuz — `prior_count` koleksiyon genelinde aynı e-posta/telefonu saydığı için hacim biriktikçe sabit adres `0` vermez) → `201 {"id":…,"prior_count":0}`; token'sız → `401 {"error":"unauthorized"}`
 - [ ] **Ürettiğim kapıyı sınadım — boş kapsam:** token env'leri tanımsızken kalkan depoda doğru olması gereken token'lı istek bile `401`. Kapı boş slotu açık saymıyor
 - [ ] Varsayılan `docker compose up -d web` `lead-store`'u **başlatmıyor**; `.env` yokken de hatasız koşuyor; geliştirme sunucusu 3000'de 200
 - [ ] Depo adıyla indirildikten sonra (`docker compose rm -sf lead-store`) `web` ayakta, `node_modules` / `next_cache` hacimleri yerinde (`docker volume ls`)

@@ -106,7 +106,7 @@ _dev/
 - [ ] `vercel env ls`: `LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT` Production **ve** Preview'de var, değer basılmadan — kanal: UAT
 - [ ] Canlı `GET /api/health` → 200 ve token'sız `POST /lead` → `401 {"error":"unauthorized"}` — kanal: UAT
 - [ ] Yerelden (dev, 3000) canlı depoya gönderilen tek test talebi → uç `200 stored:true`; kayıt panelde `leads_preview`'da, `env=preview`, alanlar doğru eşlenmiş; `leads`'te aynı kayıt yok (TASK-1.05'ten devralınan) — kanal: UAT
-- [ ] Yerel `.env` task sonunda yerel depoya dönmüş: `docker compose exec web` içinden bir test talebi yerel `lead-store` kaydı üretiyor, canlı panelde ikinci kayıt yok
+- [ ] Yerel `.env` task sonunda yerel depoya dönmüş: `docker compose exec web` içinden bir test talebi yerel `lead-store` kaydı üretiyor; canlı panelde ikinci kayıt yok — kanal (panel ayağı): UAT
 - [ ] Task dokümanı, commit ve `_dev/` altında token ya da tuz değeri yok (`git diff` + `grep` ile)
 
 ---
