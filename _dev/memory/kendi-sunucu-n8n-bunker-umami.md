@@ -23,6 +23,7 @@ Sunucunun kendisi bu projenin değil — ayrıntı, erişim ve değişiklik kura
   - `LEAD_STORE_URL` (Config).
   - `LEAD_STORE_TOKEN` (Secret) — **önizleme token'ı**. Vercel'den geri okunamaz; okunabilir kaynağı sunucuda `/opt/alpfit-lead/.env` → `LEAD_TOKEN_PREVIEW` ve parola yöneticisi.
   - `IP_HASH_SALT` (Secret) — v2'ye özel rastgele; hiçbir yerde saklanmadı.
+  - `RESEND_API_KEY` (Secret, TASK-1.06 2026-09-21) — v2'ye özel Resend **sending_access** anahtarı (`alpfitplus-web-v2`, `alpfitplus.com`'a bağlı), oturum tarafından API ile üretildi; üreten yönetim anahtarı [anahtar kasasında](anahtar-kasasi-config-alpfit.md).
   - v2'nin `main`'i Vercel production env'inde ama aşaması `preview`, bu yüzden alan adı geçişine kadar önizleme token'ı kalır. Geçişte (M7 F7.5) Production'a üretim token'ı ve v1'in tuzu girer.
 
 ## Bunker — tuzak
@@ -37,7 +38,11 @@ Canlı Bunker DB/n8n okumak sandbox dışı SSH ister. Onun yerine masaüstünde
 **Lead deposunda kayıt teyidi — panel yerine salt-okunur DB okuması.** Kullanıcı panele bakamıyor (2026-09-14) ve superuser kimliği projede yok. TASK-1.18'de koşulan yol:
 - **Araç:** `ssh root@178.104.140.36 'python3 -B -'` ve betik stdin'den. Hostta `sqlite3` CLI yok; stdlib sqlite var.
 - **Dosya:** DB `/var/lib/docker/volumes/alpfit_pb_data/_data/data.db`, WAL modunda. Bağlantı boşta kapanınca `-wal`/`-shm` dosyaları silinir.
-- **Açma yöntemi:** `-wal` yokken `mode=ro` o dosyaları yaratabilir (yazma olur). Bu yüzden `file:…?mode=ro&immutable=1` kullanılır ve önce/sonra `stat` alınır; değişmediyse okuma tutarlıdır. `-wal` varsa `immutable` son yazıları görmez.
+- **Açma yöntemi yan dosyalara bakılarak SEÇİLİR** — tek bir doğru mod yok, betik önce `-wal`/`-shm` var mı diye bakar:
+  - **`-wal` YOKKA:** `file:…?mode=ro&immutable=1`. Burada `mode=ro`'yu tek başına kullanma — yan dosyalar yokken SQLite onları **yaratır**, bu sunucuda yazmadır.
+  - **`-wal` VARKEN:** `immutable=1` WAL'ı **görmez** ve son yazıları "yok" diye okur (TASK-1.06'da ölçüldü: yeni kayıt sonrası sayım eski değerde kaldı, iki ayrı denemede). Doğru mod `file:…?mode=ro` (immutable'sız) — yan dosyalar zaten var olduğu için yaratma riski yok; bu, PocketBase'in kendi okuyucularıyla aynı eşzamanlı-okuyucu yoludur.
+- **Her iki modda `PRAGMA query_only=ON` + önce/sonra `stat`.** TASK-1.06 ölçümü: `data.db` ve `-wal` **bayt bayt değişmedi**, yalnız `-shm` mtime'ı ilerledi — okuma-kilidi izi, veri yazımı değil. Betiğe kapı koy: yan dosyalar beklenen hâlde değilse çık, kör deneme yapma.
+- **Yeni yazıdan hemen sonra okuyacaksan** WAL'ın checkpoint'lenmesini bekleme — PocketBase bağlantısını açık tutar, `-wal` dakikalarca durur.
 - **PII:** gerçek talepler için yalnız `count(*)`; alanlar yalnız test kaydı için basılır.
 - **Sınır:** DB'yi kopyalamak ya da superuser açmak yazmadır ve kullanıcı kararı gerektirir.
 

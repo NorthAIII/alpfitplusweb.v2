@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-14 — TASK-1.18 (run-phase): Gelen Kutusu'na UI 🔴 bulgularını "Yayın öncesi düzeltmeler" fazına alma önerisi satırı. Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
+**Son Güncelleme:** 2026-09-21 — TASK-1.06 (run-phase): B-037(1) yayın yüzeyinde ölçülerek 🟢'ye indi, B-011'in `DEMO_TO` kalemi kapandı (apex MX bugün yeniden ölçüldü, hâlâ yok); Gelen Kutusu'na dört satır. Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -43,6 +43,11 @@
 - [TASK-1.11] Bunker OS'a ait: canlı n8n `lead-intake-agent` (aktif, `/webhook/lead-intake`) canlı şemayla uyumsuz INSERT taşıyor (`tenant_id` yok, `ON CONFLICT (email)` karşılıksız) ve Outreach Agent'a (GHL+Instantly) zincirli — çalışmaz görünen ama açık bir giriş kapısı; kapatılması Bunker OS triyajı (bkz. `tasks/archive/TASK-1.11-BUNKER-KESFI.md` → 1. madde tablosu)
 - [TASK-1.18 / run-phase] UI 🔴 bulgularını (B-032 kontrast, B-033 320 px Kurucu Programı, B-034 mobil fiyat CTA 24 px, B-031 a11y.mjs kontrast kör noktası) "Yayın öncesi düzeltmeler" fazına alma önerisi — kullanıcı 2026-09-14: "önce Faz 1 bitsin, arayüz sonra"; faz kapsamı kararı o fazın discuss-phase'inde. Not: `docs/DECISIONS.md` 2026-09-13 «Faz sırası (yeniden)» B-032/033/034'ü aday küme olarak tartıp kilitleyen kümeye almamıştı — öneri o seçimi yeniden açar
 
+- [TASK-1.06 / run-phase] Alan adı geçişinden önce v1'in gerçek adres envanteri ve Umami'deki en çok gezilen sayfaları 301 haritasıyla (20 adres) karşılaştırılmalı — liste daha önce çıkarıldı, bugünkü canlıya karşı doğrulanmadı
+- [TASK-1.06] Lead deposunun sunucu dışı yedeği yok; `../altyapi/vps/CLAUDE.md`'nin `alpfit-pocketbase` gerekçesi ("0 istek, dosya değişmiyor") bayat — depo 15 kayıt taşıyor ve v2 buraya yazıyor
+- [TASK-1.06] Uçtan uca tur fiziksel telefonla değil mobil profilli tarayıcıyla koşuldu (gerekçe: `tasks/archive/TASK-1.06.md`) — fiziksel cihaz gözlemi "Görsel ve mobil iyileştirme" UAT'ına
+- [TASK-1.06] 412 px'te gönderim sonrası sayfa başlığı yapışkan başlığın arkasından okunuyor gibi görünüyor (ölçülmedi, doğrulanmalı); yatay kaydırma yok, konsol temiz
+
 - [audit-product SORU] `DemoForm.tsx:103` `noValidate` ve hız sınırının doğrulamadan önce sayması bilinçli mi? İkisi birlikte M3 F3.1 kriteriyle çelişiyor ve geçerli talebi 429'a düşürüyor (bkz. B-020; TASK-1.12 sonrası yeni tetikleyici B-054) — önerim: kota yalnız doğrulamayı geçen isteği saysın, istemci doğrulaması açılsın
 - [audit-product SORU] Footer'daki "Giriş Yap" bilinçli mi? Bilinçli Tercihler kaydı yalnız **header**'ın yokluğunu kapsıyor ("footer'a, ürün canlıya çıkınca"), ama bağlantı bugün footer'da ve `app.alpfitplus.com` çözümlenmiyor — önerim: ürün canlıya çıkana dek gizlensin, kayıt gerçeği yansıtsın
 - [audit-product SORU] `mobile-audit.mjs`'in raporladığı 157 küçük dokunma hedefi kabul mü? M2 F2.3 kriteri "≥ 44 px" diyor ama CLAUDE.md geçme şartı yalnız "yatay kaydırma: yok" — kriter mi bayat, kapı mı dar? (bkz. B-015) — önerim: kriter hedef olarak kalsın, kapı kademeli sıkılsın
@@ -73,7 +78,7 @@
 - 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — ürünün kendi paneli "Yakında" diyor; dördünde ürün kaydı v1.5/W8 yazıyor
 - 🔴 [B-018 — Ürün görselinde gerçek kişi adı, ciro projeksiyonu ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — "Gizem Ö." ana sayfada gösteriliyor; yasal metnin "gerçek kişi verisi yok" beyanı çürüyor
 - 🔴 [B-054 — İletişim kuralı ters eksende gevşek](bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md) — `+90 0532…`, Mac Rehber yapıştırması 422 (5 denemede 429); tek hane hatalı numara hedefe 200
-- 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; `DEMO_TO` de aynı alan adına kurulursa lead sessizce kaybolur
+- 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok. `DEMO_TO` kalemi kapandı (`kiwiailab.com`, teslim kanıtlı)
 - 🔴 [B-032 — Ana sayfada ve segment sayfalarında ölçülmüş AA kontrast ihlalleri](bulgular/B-032-olculmus-aa-ihlalleri.md) — ürün turu soluk kartları 2,54:1, kapanış paragrafı 3,48:1; ILKELER pazarlıksız diyor
 - 🔴 [B-033 — 320 px'te Kurucu Programı bölümü içerik ve işlev kaybediyor](bulgular/B-033-320px-kurucu-programi-icerik-kaybi.md) — 18 metin düğümü 70 px kesiliyor, CTA etiketi dâhil; sayfa yatay kaydırma üretmediği için kapı temiz diyor
 - 🔴 [B-034 — Mobilde fiyat sayfasının ana çağrısı 52 px yerine 24 px](bulgular/B-034-mobilde-ana-cagri-24px.md) — kırılımsız `flex-1`; 6 rotada 12 örnek, doğru deyim `DemoForm`'da zaten var
@@ -85,7 +90,7 @@
 - 🔴 [B-014 — Chat ağacı pilot cümlesini tek kaynaktan değil elle yazıyor](bulgular/B-014-chat-agaci-pilot-cumlesini-yeniden-yaziyor.md) — `PRODUCT_STATUS` değişince asistan eski iddiada kalır; `faq.ts` doğru deseni zaten taşıyor
 - 🟡 [B-036 — Dört ayrı yol talebi "başarılı" gösterip sessizce kaybediyor](bulgular/B-036-lead-kaybi-yollari.md) — bal küpü parola yöneticisine açık, JS'siz gönderim kişisel veriyi URL'ye yazıyor
 - 🟡 [B-056 — Umami açıldığı gün hidrasyonsuz gönderimde form verisi analitiğe gidiyor](bulgular/B-056-umami-hidrasyonsuz-gonderimde-kisisel-veri.md) — `data-exclude-search` yok; site kimliğinden önce kapatılmalı
-- 🟡 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — kota istemcinin başlığıyla anahtarlanıyor (yerelde bypass ölçüldü), `null` gövde 500, `content-type` hiç bakılmıyor
+- 🟡 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — `null` gövde 500, `content-type` hiç bakılmıyor; kota bypass'ı **yayında kapalı** (Vercel başlıkları eziyor — TASK-1.06'da ölçüldü), yalnız Docker yüzeyinde açık
 - 🟡 [B-055 — Demo formunun hata akışı mobilde görünmüyor](bulgular/B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md) — 320'de 6/6 hata metni ekran dışında, alanda işaret yok; `missing` odağı dolu alana
 - 🟡 [B-038 — `lead-sheet.gs` üç operasyonel sessizlik, testi `catch` dalını hiç koşturmuyor](bulgular/B-038-lead-sheet-operasyonel-sessizlikleri.md) — Google Sheet hedefi düştü; dosya siliniyor, bulgu konusuz kapanacak → TASK-1.14
 - 🟡 [B-041 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor](bulgular/B-041-yasal-sayfalar-noindex-eziyor.md) — canlı önizlemede `index, follow` servis ediliyor; faz ölçüm tablosu bunu yeşil gösteriyor

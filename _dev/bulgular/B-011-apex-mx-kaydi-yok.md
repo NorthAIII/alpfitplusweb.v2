@@ -10,6 +10,8 @@
 
 **Gözlenen:** Apex alan adının **hiç MX kaydı yok**. İki bağımsız çözümleyici NOERROR + boş cevap (NODATA) döndürüyor; yalnız SOA geliyor. `@alpfitplus.com` ile biten hiçbir adres posta alamaz.
 
+**Tazelik:** yeniden ölçüldü **2026-09-21** (TASK-1.06, DoH) — apex MX hâlâ **NODATA**; apex TXT'te SPF ve site doğrulaması duruyor, `_dmarc` `p=reject; sp=reject; adkim=s; aspf=s` değişmedi. Bulgu 10 gündür aynı hâlde.
+
 Bunun bir unutma olduğunu gösteren üç işaret var — gönderim tarafı kurulmuş, **alım tarafı kurulmamış**:
 - `v=spf1 include:_spf.google.com -all` → Google Workspace gönderimi yetkilendirilmiş
 - `google._domainkey.alpfitplus.com` → Workspace DKIM anahtarı yayında
@@ -59,7 +61,8 @@ Google Workspace kurulumu yarım kalmış: doğrulama, SPF ve DKIM girilmiş, **
 
 ## Koruma Önerisi
 
-- `DEMO_TO` değeri belirlenirken (TASK-1.06) **alıcı adresin postayı gerçekten aldığı** uçtan uca doğrulanır — kutuya düşen gerçek bir test iletisiyle. Bugünkü hâliyle `DEMO_TO` bir `@alpfitplus.com` adresine ayarlanırsa **lead bildirimi sessizce kaybolur**; bu doğrudan "Gelen talep kaybolmaz" ilkesinin ihlali olur, üstelik webhook hedefi de (TASK-1.04) henüz kurulu değilken.
+- **`DEMO_TO` doğrulaması yapıldı — bu kalem kapandı (TASK-1.06, 2026-09-21):** `DEMO_TO` = `kivanc@kiwiailab.com`, yani `@alpfitplus.com` **değil**; `kiwiailab.com` beş Google MX kaydı taşıyor (bugün ölçüldü) ve uçtan uca tur Resend'de **`last_event: delivered`** verdi. Lead bildirimi bu yüzden apex MX eksikliğinden etkilenmiyor. **Bulgunun kendisi açık kalır** — sorun gelen postada: `destek@alpfitplus.com` hâlâ posta alamıyor.
+- Kalite kapıları otomatikleşirken `DEMO_TO`'nun alan adı da MX kontrolüne girer — bugün doğru değer elle seçildi, kapı yok.
 - Kalite kapıları otomatikleşirken (M6 F6.3/F6.4) `src/content/site.ts` → `CONTACT` içindeki her e-posta alan adı için MX varlığı kontrol edilir. Tek DNS sorgusu, kırmızıya düşerse yayın kapısını durdurur — sızıntı denetimiyle aynı kapıya girer.
 
 ## Çözüm Kaydı

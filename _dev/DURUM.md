@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-14 — TASK-1.18 tamamlandı: Vercel'e canlı lead deposu env'i (önizleme token'ı) girildi, token → `leads_preview` canlı DB okumasıyla teyitli; sırada TASK-1.06.
+**Son Güncelleme:** 2026-09-21 — TASK-1.06 tamamlandı: `RESEND_API_KEY` (v2'ye özel, dar yetkili) üretilip Vercel'e girildi ve lead hattı önizlemeden uçtan uca kanıtlandı (depo 12→13, e-posta `delivered`); sırada TASK-1.07.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 12/17 task tamamlandı (1 iptal: TASK-1.04)
+**İlerleme:** 13/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,15 +33,15 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.06 — E-posta hattını aç ve önizlemeden uçtan uca canlı tur (lead deposu + e-posta)
-**Durum:** ⬜ Bekliyor — TASK-1.18 tamamlandı: depo env'i Vercel'de (Production + Preview), token → `leads_preview` canlıda teyitli; task sayısı ve sırası değişmedi.
+**Task:** TASK-1.07 — Kendi Umami'ye site kaydı ve tracker bağlantısı
+**Durum:** ⬜ Bekliyor — kısmi ilerleme var (kod ve yerel ölçüm commit'li); kapanışı Umami'de v2 site kaydına ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID`'ye bağlı (`tasks/TASK-1.07.md` → Sonraki Adım Detayı).
 **İlerleme:** Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
-- **Kullanıcı adımı gerekiyor — TASK-1.06:** `RESEND_API_KEY` ve Resend panelinde alan adı teyidi (`tasks/TASK-1.06.md` → alt görev 1).
-- **Önizleme adresi artık depoya yazıyor:** TASK-1.18'in push'u env'li ilk dağıtım. Önizleme formu `leads_preview`'a kayıt düşer, e-posta 1.06'ya kadar gitmez.
-- **Canlı kayıt teyidi kanalı:** 1.06'nın kriteri "kullanıcı panelde görür" diyor, ama kullanıcı panele bakamıyor (2026-09-14). Salt-okunur SSH + DB yolu `memory/kendi-sunucu-n8n-bunker-umami.md` → Canlıya dokunmadan ölçüm; sunucuya dokunmadan önce `../altyapi/vps/CLAUDE.md`.
+- **Lead hattı uçtan uca yeşil (TASK-1.06):** önizlemeden gelen gerçek talep `leads_preview`'a düştü (`notify_team=sent`) ve e-posta Resend'de `delivered`. Faz milestone'unun lead ayağı kapandı.
+- **Anahtar kasası açıldı** (`docs/DECISIONS.md` 2026-09-21): yönetim anahtarları `~/.config/alpfit/secrets.env` (600, repo dışı), oturum panel işini API ile yapıyor — detay `memory/anahtar-kasasi-config-alpfit.md`. **1.07'nin Umami adımı aynı yolu bekliyor:** kasada henüz Umami anahtarı yok; eklenirse site kaydı da kullanıcısız açılabilir.
+- **B-056 kapısı 1.07'den önce:** Umami site kimliği girilmeden `data-exclude-search="true"` konmalı (Gelen Kutusu `[audit-product SORU]`).
 - **Yerel lead deposu hâlâ ayakta** (`docker compose --profile lead up -d lead-store`; komutlar/tuzaklar `_dev/memory/yerel-lead-deposu-docker-profili.md`).
-- **TASK-1.07** kısmi ilerlemeyle 1.06'nın arkasında; kapanışı Umami'de v2 site kaydı ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID`'ye bağlı (Gelen Kutusu `[TASK-1.07]`, `tasks/TASK-1.07.md` → Sonraki Adım Detayı).
+- **BULGULAR ~19,8k token** — rehber kırmızı çizgiye (20k) dayandı ve açık bulgu 49 (eşik ~30). Yapısal sorun değil, **triyaj borcu**: supap `audit-product` uzlaştırmasıdır (CLAUDE.md → Boyut ve Bölünme, kanvas dokümanı bölünmez).
 
 ---
 
@@ -61,7 +61,7 @@
 | 1.13 | Depo sözleşme paketi — yerel depoya karşı kalıcı test | ✅ Tamamlandı |
 | 1.14 | Kayıt adaptörü — `toStore`, `.env.example`, Apps Script kalıntısı | ✅ Tamamlandı |
 | 1.18 | Canlı depo bağlantısı — Vercel env ve token → koleksiyon teyidi | ✅ Tamamlandı |
-| 1.06 | E-posta hattını aç ve uçtan uca canlı tur (depo + e-posta) | ⬜ Bekliyor |
+| 1.06 | E-posta hattını aç ve uçtan uca canlı tur (depo + e-posta) | ✅ Tamamlandı |
 | 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ⬜ Bekliyor |
 | 1.08 | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` | ⬜ Bekliyor |
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ⬜ Bekliyor |
@@ -76,6 +76,15 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-1.06 — E-posta hattı açıldı, lead hattı önizlemeden uçtan uca kanıtlandı (2026-09-21)
+
+**Özet:**
+- v2'ye özel Resend anahtarı **oturum tarafından API ile üretildi** (`alpfitplus-web-v2`, `sending_access`, `alpfitplus.com`'a bağlı) ve `RESEND_API_KEY` olarak Vercel Production + Preview'e `--sensitive` girildi; yeniden dağıtım `alpfitplus-web-v2-hz8zkhm2t`. Kullanıcı panel adımı gerekmedi — anahtar kasası kararı (`docs/DECISIONS.md` 2026-09-21).
+- Önizleme `/demo` gerçek tarayıcıdan (mobil profil) gönderildi: uç `200 {stored:true, mailed:true}`; canlı depo `leads_preview` 12 → **13** (`env=preview`, `notify_team=sent`, `Segment:` öneki, `branches=2`), `leads` 2'de kaldı.
+- Resend kaydı **`last_event: delivered`**; gövde dokuz alan + `KVKK onayı` + **`Ortam: preview`**, `reply_to` lead'in adresi. Alan adı `verified`/`eu-west-1` API'den ölçüldü.
+
+**Test:** `npm test` 3 dosya/**53 PASS** + 1 skipped (taban aynı). `vercel env ls` altı anahtar × iki ortam. Depo okuması salt-okunur (`data.db` ve `-wal` bayt bayt değişmedi). B-037(1) yayın yüzeyinde ölçülüp 🟢'ye indi; B-011 bugün yeniden ölçüldü (apex MX hâlâ yok), `DEMO_TO` kalemi kapandı. Detay: `tasks/archive/TASK-1.06.md`
+
 ### TASK-1.18 — Canlı depo bağlantısı: Vercel env ve token → koleksiyon teyidi (2026-09-14)
 
 **Özet:**
@@ -84,15 +93,6 @@
 - Umami site kaydı kararı DECISIONS'a, F7.5 env taşıma listesi M7'ye, canlı teyit yolu memory'ye yazıldı.
 
 **Test:** Canlı `health` 200, token'sız `POST /lead` 401. Canlıya gidiş kanıtı: yerel sayım 57/57; geri dönüş kanıtı: yerel 58, canlıda `geri donus` 0. `vercel env ls` üç anahtar × iki ortam. `npm test` 3 dosya/53 PASS + 1 skipped. Diff'te 64-hex 0. Detay: `tasks/archive/TASK-1.18.md`
-
-### TASK-1.14 — Kayıt adaptörü `toStore`, yerel uçtan uca doğrulama (2026-09-14)
-
-**Özet:**
-- `src/app/api/demo/route.ts`: `toWebhook`/`LEAD_WEBHOOK_URL` kaldırıldı; `toStore` (yalnız `201` kayıt sayar, `ip_hash` HMAC-SHA256, beyaz liste gövde, depo `429`'u uca taşır) ve `notifyStore` (`PATCH` ile bildirim durumu) eklendi. Dört Karar Noktası task'ın kendi önerileriyle, kod yazılmadan karara bağlandı.
-- `tests/api-demo.test.ts` tamamen yeniden yazıldı (28 test, sahte depo); `.env.example`/`README.md`/kök `CLAUDE.md` yeni anahtarlara (`LEAD_STORE_URL`/`_TOKEN`/`IP_HASH_SALT`) çevrildi; `research/lead-sheet.gs` + `.test.mjs` silindi.
-- Yerel uçtan uca 3 yöntemle doğrulandı: curl, gerçek tarayıcı (Playwright), depo-durdur/geri-getir — kayıt `leads_preview`'a düşüyor, depo düşünce dürüst 503+WhatsApp.
-
-**Test:** Kırmızı→yeşil: eski kod 8/28 kırmızı, yeni kod 28/28 yeşil. Tam suite (gerçek depoya karşı, geçici superuser): 4 dosya/**63 PASS** (TASK-1.13'ün 10 sözleşme testi dahil). Kapı sınaması: boş kapsam (`it.each` ile URL/token/tuz ayrı ayrı silinip depoya istek gitmediği doğrulandı) ve bozuk girdi (8 senaryo kod değişmeden kırmızı). `eslint` temiz, `npm run build` hatasız (23 rota). Detay: `tasks/archive/TASK-1.14.md`
 
 ---
 
@@ -116,7 +116,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.06.md`
+**Aktif Task:** `tasks/TASK-1.07.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

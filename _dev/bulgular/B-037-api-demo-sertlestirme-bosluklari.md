@@ -18,7 +18,11 @@ her istek farklı XFF      : 422 422 422 422 422 422 422 422    ← 8/8 kabul, k
 tükenmiş IP'nin önüne çöp : 10.99.9.1, 10.99.7.7 → 422  ← kova sıfırlandı
 öncelik kanıtı            : XFF=temiz + x-real-ip=tükenmiş → 422 ·  XFF=tükenmiş → 429
 ```
-Bu, ucun **tek** kötüye kullanım kontrolü. **Belirsizlik açıkça kaydedilir:** Vercel'in istemciden gelen `x-forwarded-for`'u değiştirip mi zincire mi eklediği **ölçülmedi** (önizlemeye yazan istek atılmadı). Platform onu üzerine yazıyorsa yayın yüzeyinde bugün sömürülemez ve kalem 🟢'ye iner; yazmıyorsa kota yayında da etkisiz. Sıra yine terstir: doğru kaynak platformun kendi başlığıdır (`x-real-ip` / `x-vercel-forwarded-for`). Docker yüzeyi (3000/3100) her hâlde tamamen bypass edilebilir.
+Bu, ucun **tek** kötüye kullanım kontrolü. Sıra terstir: doğru kaynak platformun kendi başlığıdır (`x-real-ip` / `x-vercel-forwarded-for`).
+
+> **ÖLÇÜLDÜ (TASK-1.06, 2026-09-14 20:37Z) — belirsizlik kapandı, kalem yayın yüzeyinde 🟢'ye indi.** Önizlemeye altı `POST /api/demo` atıldı, her biri farklı sahte `X-Forwarded-For` (`203.0.113.1-6`) **ve** `X-Real-IP` (`198.51.100.1-6`) taşıyor; gövde `{}` seçildi ki istek 422'de kalsın ve canlı depoya kayıt düşmesin. Sonuç **`422 ×5` sonra `429`** — yani altı istek **tek** kovada sayıldı. Anahtarlar istemcinin başlığından gelseydi altısı ayrı kovada olurdu ve `429` hiç gelmezdi. Pencerede başka istek yok (log: 15 dk'da 6 kayıt).
+> **Hüküm:** Vercel iki başlığı da istemciden almıyor, **üzerine yazıyor**. Kota yayın yüzeyinde sahte başlıkla atlatılamaz. **Docker yüzeyi (3000/3100) hâlâ tamamen bypass edilebilir** — kalem orada 🟡 kalır. Planlanan "istek logundaki gerçek IP ile karşılaştırma" yapılamadı (`vercel logs --json` alanlarında IP yok), yan kanal (kova paylaşımı) kullanıldı.
+> **İkincil sonuç:** `toStore` adaptörü `ip_hash`'i aynı başlıktan üretiyor (TASK-1.14), yani canlı deponun saatlik `ip_hash` kotası da yayında taklit edilemiyor.
 
 **(2) Kota veri yapısı iki ayrı arıza taşıyor** (`route.ts:50-57`, izole ölçüm):
 ```
@@ -68,7 +72,7 @@ Uç, **güvenilmeyen girdiyi doğrulama** konusunda özenli (tip, uzunluk, rıza
 
 ## Koruma Önerisi
 
-- Kota anahtarı platformun kendi başlığından okunur (`x-real-ip`, Vercel'de `x-vercel-forwarded-for`); `x-forwarded-for` yalnız ikincil ve **son** kaynak olur. **TASK-1.06'nın canlı turunda** Vercel'in gerçek davranışı bir istekle teyit edilir (istek logundaki gerçek IP ile karşılaştırılarak) ve bu kalem ona göre kapanır ya da derecesi düşer.
+- Kota anahtarı platformun kendi başlığından okunur (`x-real-ip`, Vercel'de `x-vercel-forwarded-for`); `x-forwarded-for` yalnız ikincil ve **son** kaynak olur. **Ölçüldü (TASK-1.06):** yayın yüzeyinde platform başlıkları eziyor, yani bu düzeltme artık yalnız **Docker/self-hosted** yüzeyi için gerekli — aciliyeti düştü, gerekçesi durdu.
 - `list.push` yalnız kabul edilen isteği sayar; dizi pencere boyunca **sınırlanır** (ör. son N damga) ve `HITS.clear()` yerine süresi geçmiş anahtarlar budanır.
 - `if (!body || typeof body !== "object" || Array.isArray(body))` → 400 `bad-json`; `body` tipi `unknown` yapılır. Alıcı betiğin zaten yaptığı kontrol route'a taşınır.
 - `content-type` zorunlu tutulur (`application/json`) **ve** `Sec-Fetch-Site: same-origin` ya da `Origin` allow-list kontrolü eklenir. Bu, **hedef bağlanmadan önce** yapılmalı — sonrası e-tablo kirlenmesi demek.

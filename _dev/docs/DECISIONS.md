@@ -13,6 +13,25 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-21 — Anahtar kasası: yönetim düzeyi anahtarlar repo dışında dosyada, panel adımları API'ye taşınır
+
+**Bağlam:** Faz 1'in son üç task'ı (1.06 Resend, 1.07 Umami, 1.18 depo) kullanıcının bir web paneline girip değer üretmesini bekliyordu. Kullanıcı panel adımlarında zorlanıyor (2026-09-14 ve 2026-09-21) ve her adım koşumu durduruyordu: TASK-1.06 bir tam tur boyunca `RESEND_API_KEY` bekledi.
+
+**Seçenekler:**
+1. Her serviste kullanıcı panele girer, değeri üretir, oturuma verir (bugüne kadarki hâl).
+2. Yönetim düzeyinde bir anahtar bir kez alınır, repo dışında dosyada tutulur; oturumlar panel işini o servisin API'siyle yapar.
+3. Anahtarlar repo içinde şifreli bir kasada tutulur (`sops`, `git-crypt` vb.).
+
+**Karar:** 2 (kullanıcı, 2026-09-21). Kasa `~/.config/alpfit/secrets.env`, izin `600`, repo dışında — git görmez. Bugünkü içeriği: `RESEND_ADMIN_KEY` (Resend Full access). Oturumlar bu anahtarla servis API'sini çağırır ve **dar yetkili** iş anahtarlarını kendileri üretip Vercel'e `--sensitive` girer (TASK-1.06: `alpfitplus-web-v2`, `sending_access`, tek alan adına bağlı).
+
+**Gerekçe:** Panel adımı tek kişilik ekipte gerçek bir darboğaz; API yolu hem kullanıcıyı serbest bırakıyor hem **ölçülebilir** oluyor (alan adı doğrulaması artık ekran görüntüsü değil `GET /domains` → `verified`). Yönetim anahtarı siteye hiç girmiyor, üretim yüzeyinde yalnız dar yetkili anahtar duruyor — sızıntı yüzeyi büyümüyor, küçülüyor. Seçenek 3 reddedildi: şifreli kasa da bir parola/anahtar ister ve onu yine repo dışında tutmak gerekir, yani bir katman ekler ama sorunu taşımaz.
+
+**Sınır:** Kasa **yönetim** anahtarı tutar, çalışma zamanı sırrı değil — sitenin sırları Vercel env'inde ve `.env`'de kalır. Değer hiçbir dokümana, commit'e, log'a yazılmaz; yalnız anahtar adı ve konum yazılır (`CLAIMS`/`CLAUDE.md` sır disiplini değişmedi). İleride Umami ve başka servislerin yönetim anahtarları da aynı dosyaya girer.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.06 (ilk kullanım), TASK-1.07 (Umami adımı aynı yolu bekliyor)
+
+---
+
 ### 2026-09-14 — Umami site kaydı: önizlemede yeni v2 kaydı, alan adı geçişinde v1'in `alpfitplus.com` kaydına geçilir
 
 **Bağlam:** TASK-1.07 v2 için kendi Umami'de yeni bir site kaydı açıyor (`Alpfit Plus v2 (önizleme)`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`). Alan adı geçişinde hangi kaydın kullanılacağını geçiş fazına bırakmıştı (`tasks/TASK-1.07.md` → Dikkat Noktaları; `PHASES.md` → Alan adı geçişi). Kullanıcı yönü verdi (2026-09-14, run-phase turu, orkestratör aracılığıyla).

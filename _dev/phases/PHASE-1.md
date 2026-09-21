@@ -153,7 +153,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.13 | TASK-1.13 | ✅ Tamamlandı | Depo sözleşme paketi: adaptörün dayandığı davranış yerel depoya karşı kalıcı testte |
 | 1.14 | TASK-1.14 | ✅ Tamamlandı | Kayıt adaptörü: `toWebhook` → `toStore`, `ip_hash`, yerel uçtan uca tur, `lead-sheet` kalıntısı silinir |
 | 1.18 | TASK-1.18 | ✅ Tamamlandı | Canlı depo bağlantısı: Vercel env (önizleme token'ı) ve token → `leads_preview` teyidi |
-| 1.06 | TASK-1.06 | ⬜ Bekliyor | E-posta hattını aç ve önizlemeden uçtan uca canlı tur (lead deposu + e-posta) |
+| 1.06 | TASK-1.06 | ✅ Tamamlandı | E-posta hattını aç ve önizlemeden uçtan uca canlı tur — `RESEND_API_KEY` üretildi ve girildi, tek talep depoya + gelen kutusuna ulaştı |
 | 1.07 | TASK-1.07 | ⬜ Bekliyor | Kendi Umami'ye site kaydı ve tracker — kod commit'li, kapanış kullanıcının site kaydına bağlı |
 | 1.08 | TASK-1.08 | ⬜ Bekliyor | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
 | 1.09 | TASK-1.09 | ⬜ Bekliyor | Global tıklama dinleyicisi, `data-surface` çapaları, analitik yükü ölçümü |
@@ -166,60 +166,17 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 
 ## Ölçümler
 
-> Fazın yayın zinciri üzerinden alınmış ölçümleri. Rakam ve başlık listesi burada durur (QUALITY 6); icra detayı task dokümanlarında.
+> Fazın yayın zinciri üzerinden alınmış ölçümleri (QUALITY 6). **Tam tablolar ve gerekçeler → `PHASE-1-OLCUMLER.md`** (ölçüm-detayı); icra detayı task dokümanlarında. Yeni ölçüm çocuğa yazılır, aşağıdaki satır birlikte güncellenir.
+>
+> **Bölme çocukları:** `PHASE-1-ARASTIRMA.md` (araştırma-detayı) · `PHASE-1-OLCUMLER.md` (ölçüm-detayı).
 
-### Güvenlik başlıkları — Vercel yayın zinciri (TASK-1.03, 2026-09-11)
-
-Adres `https://alpfitplus-web-v2.vercel.app`, dağıtım `1b1e464` (git kaynaklı, dal `main`). F7.2'nin F7.3'e devredilmiş kabul kriteri: başlıklar uygulamadan çıkıyor ve platform onları soymuyor.
-
-| Başlık | Değer | Sonuç |
+| Ölçüm | Ne zaman | Sonuç (özet) |
 |---|---|---|
-| `X-Content-Type-Options` | `nosniff` | ✅ |
-| `X-Frame-Options` | `SAMEORIGIN` | ✅ |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | ✅ |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), interest-cohort=()` | ✅ |
-| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | ✅ tek değer |
-| `X-Powered-By` | yok | ✅ (`poweredByHeader: false`) |
-
-**Çift HSTS yok** — araştırmada beklenen çakışma gerçekleşmedi, Vercel kendi değerini eklemedi.
-
-**Başlıklar önbellekten de geçiyor:** aynı beş başlık hem `x-vercel-cache: PRERENDER` (ilk istek) hem `HIT` (ikinci istek) yanıtında tam. QUALITY 2'nin "platform başlığı soyuyor, cache'ten baypas ettiriyor mu" sorusu ölçülerek kapandı.
-
-### noindex üç katman — yayın zincirinde (TASK-1.03)
-
-| Katman | Ölçüm | Sonuç |
-|---|---|---|
-| Başlık | `X-Robots-Tag: noindex, nofollow` — `/` ve `/sitemap.xml` | ✅ HTML-dışı yanıtta da var |
-| `robots.txt` | `User-Agent: *` + `Disallow: /` | ✅ tam kapalı |
-| HTML meta | `<meta name="robots" content="noindex, nofollow"/>` | ✅ |
-
-Aşama `preview` türedi (üretim alan adı `.vercel.app` ile bitiyor). **Aşamanın `local` değil `preview` olduğunun kanıtı dağıtımın kendisidir:** `output` koşulu `VERCEL` sistem değişkenine bakıyor, o değişken tanımsız olsaydı standalone çıktı üretilir ve derleme yine ENOENT ile kırılırdı. Derlemenin geçmesi sistem env'lerinin derleme anında görünür olduğunu kanıtlıyor; proje ayarı da doğrudan okundu (`autoExposeSystemEnvs: true`). noindex'in açık olması bu ayrımı **tek başına gösteremez** — iki aşamada da kapalı olurdu (task dokümanının risk maddesindeki varsayım bu yönden eksikti).
-
-### Diğer kalemler (TASK-1.03)
-
-| Kalem | Ölçüm | Sonuç |
-|---|---|---|
-| Rota erişimi | `/`, `/ozellikler`, `/fiyat`, `/segmentler`, `/demo`, `/destek`, `/kvkk`, `/sitemap.xml` | 8/8 → 200 |
-| Font önbelleği | `/fonts/inter-400-tr.woff2` → `public, max-age=31536000, immutable` | ✅ |
-| `/api/demo` boş POST | 422 · `{"ok":false,"code":"missing",…}` | ✅ uç ayakta |
-| TTFB (soğuk, ana sayfa) | 0,619 s | kayıt — eşik F7.4'te `perf.mjs` ile |
-| v1 dokunulmadı | `https://alpfitplus.com/` → 200, `X-Robots-Tag` yok | ✅ |
-
-### Canlı lead deposu bağlantısı (TASK-1.18, 2026-09-14)
-
-Canlı depo `https://lead.alpfitplus.com` (v1'in PocketBase'i). Kayıt yazan istek yalnız yerel geliştirme sunucusundan, önizleme token'ıyla gitti; önizleme adresinden gerçek tur TASK-1.06'da.
-
-| Kalem | Ölçüm | Sonuç |
-|---|---|---|
-| Sağlık | `GET /api/health` | ✅ 200 |
-| Token kapısı | token'sız `POST /lead` | ✅ `401 {"error":"unauthorized"}`, kayıt yok |
-| Uç yanıtı | `/demo` formu → `/api/demo` (yerel dev, canlı URL + önizleme token'ı) | ✅ `200 stored:true mailed:false`, 358 ms |
-| Token → koleksiyon | canlı `data.db` salt-okunur okuma (SSH, `immutable=1`) | ✅ kayıt `leads_preview`'da, `env=preview`, `notify_team=failed`, `notify_lead=pending`, `ip_hash` 64 hex |
-| Üretim koleksiyonu temiz | `leads`: bugünkü kayıt · `TASK-1.18%` · `test@example.com` | ✅ 0 · 0 · 0 |
-| Yerel geri dönüş | yerel `leads_preview` sayımı canlı talep öncesi/sonrası 57/57; geri dönüş talebi sonrası 58; canlıda `geri donus` 0 | ✅ |
-| Vercel env | `vercel env ls` | ✅ `LEAD_STORE_URL` (Config) · `LEAD_STORE_TOKEN` (Secret) · `IP_HASH_SALT` (Secret) — üçü Production + Preview |
-
-**Canlıda iki test kaydı var:** 16:48:16Z'de başka bir oturumun kayıt bırakmadan koştuğu aynı test ve 20:09:03Z'de bu task'ın talebi. İkisi de `leads_preview`'da ve kalıyor; 12 aylık saklama cron'u siler. Vercel'deki token değeri geri okunamaz; önizleme adresinden ilk canlı kanıt TASK-1.06'nın turudur.
+| Güvenlik başlıkları — Vercel yayın zinciri | TASK-1.03, 2026-09-11 | ✅ altı başlık uygulamadan çıkıyor, platform soymuyor; çift HSTS yok; önbellekten de geçiyor |
+| noindex üç katman | TASK-1.03, 2026-09-11 | ✅ başlık + `robots.txt` + meta; aşama `preview` türedi |
+| Diğer kalemler (rota, font önbelleği, uç, TTFB, v1) | TASK-1.03, 2026-09-11 | ✅ 8/8 rota 200; TTFB 0,619 s (soğuk); v1'e dokunulmadı |
+| Canlı lead deposu bağlantısı | TASK-1.18, 2026-09-14 | ✅ token → `leads_preview`; `leads` temiz; env üç anahtar × iki ortam |
+| **Uçtan uca lead hattı — önizleme yüzeyinden** | **TASK-1.06, 2026-09-21** | ✅ tek talep: uç `200 stored:true mailed:true` · depo `leads_preview` 12→**13** (`notify_team=sent`) · Resend **`delivered`** · `Ortam: preview` |
 
 ---
 
