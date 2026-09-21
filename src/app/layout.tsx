@@ -36,6 +36,16 @@ const isPublished = DEPLOY_STAGE === "production";
  * `data-domains` KULLANILMAZ — v1'den bilincli fark: v1 yalniz canli alan adini
  * sayar; v2 bugun yalniz onizleme adresinde yasiyor ve orada da saymali. Yerel
  * ve onizleme trafigi alan adiyla kesilmez, `data-tag` ile ayrilir.
+ *
+ * `data-exclude-search="true"` ZORUNLU (B-056) — izleyicinin varsayilani URL'yi
+ * sorgu dizesiyle birlikte saymaktir. Demo formunun JS'siz (hidrasyonsuz) native
+ * GET yolu kisisel veriyi adrese yaziyor
+ * (`/demo?name=…&phone=…&email=…`, bkz. B-036); o adres varis sayfasinda once
+ * `url`, sonraki ic gezinmede `referrer` olarak gonderilir ve Umami 3.1.0 bunu
+ * `url_query` / `referrer_query` sutunlarinda SAKLAR. Yayindaki yasal metin
+ * (`legal.ts`) "ölçüme gönderilmez" diyor — bu oznitelik o cumleyi dogru tutar.
+ * Olcum kaybi yok: projede UTM/kampanya baglantisi plani yok. UTM gerekirse
+ * `data-before-send` kancasiyla yalniz form alan adlari ayiklanir.
  */
 const UMAMI_SCRIPT_SRC = "https://umami.kiwiailab.com/script.js";
 const umamiWebsiteId = (process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ?? "").trim();
@@ -162,6 +172,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             strategy="afterInteractive"
             data-website-id={umamiWebsiteId}
             data-tag={DEPLOY_STAGE}
+            data-exclude-search="true"
           />
         ) : null}
       </body>

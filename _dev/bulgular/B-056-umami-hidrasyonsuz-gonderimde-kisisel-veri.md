@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** hata / KVKK-iddia uyumu (latent) + test geçerliliği | **Alan:** M7 — F7.4 Analitik (`src/app/layout.tsx`) · M3 (`DemoForm.tsx`) · M1 (`legal.ts`)
 **Kaynak:** audit-product (TASK-1.07 sonrası denetim) | **Tarih:** 2026-09-13
-**Durum:** Açık
+**Durum:** Açık — izleyici tarafı çözüldü (2026-09-21, TASK-1.07); kaynak tarafı (B-036 native GET) ve (b) ölçüm kriteri açık
 
 ## Gözlem
 
@@ -116,4 +116,12 @@ Yasal metin (TASK-1.10) izleyicinin **tasarlanan** davranışını anlatıyor, a
 
 ## Çözüm Kaydı
 
-—
+**2026-09-21 (TASK-1.07) — izleyici tarafı kapandı, bulgu açık kalıyor.**
+
+- `src/app/layout.tsx` izleyici etiketine `data-exclude-search="true"` eklendi; gerekçe dosyanın kendi yorumunda (hangi zincir, hangi yasal cümle, UTM alternatifi).
+- Ölçüm: yalıtılmış üretim derlemesi (repo kopyası, scratchpad, 3200; `VERCEL_ENV=production` + `…vercel.app` ara hâli) → `/` ve `/demo` RSC yükünde `data-exclude-search":"true"` ve `data-tag":"preview"`, `data-domains` 0. Kontrol grubu: env tanımsız dev sunucusu (3000) → HTML'de `umami` 0. Canlı `script.js` (200, 4595 bayt) gövdesinde `exclude-search` geçiyor, yani sunulan sürüm özniteliği hâlâ okuyor.
+- **Kimlikten önce yapıldı:** `NEXT_PUBLIC_UMAMI_WEBSITE_ID` hâlâ hiçbir ortamda tanımlı değil, yani zincir hiç kurulmadan kesildi.
+
+**Açık kalan iki ayak:**
+1. **Kaynak tarafı** — formun native GET yolu hâlâ kişisel veriyi adrese yazıyor ([B-036](B-036-lead-kaybi-yollari.md) (2)). Tarayıcı geçmişi ve sunucu/Vercel günlüğü izleri bu bulguyla kapanmadı.
+2. **(b) ölçüm kriteri** — bot kontrolünün sahte yeşili. Not TASK-1.07'nin 2026-09-21 kaydı → Sonraki Adım Detayı md. 4'e işlendi; kapanış turu orada uyarılıyor.

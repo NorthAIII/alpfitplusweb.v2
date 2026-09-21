@@ -26,6 +26,14 @@ Sunucunun kendisi bu projenin değil — ayrıntı, erişim ve değişiklik kura
   - `RESEND_API_KEY` (Secret, TASK-1.06 2026-09-21) — v2'ye özel Resend **sending_access** anahtarı (`alpfitplus-web-v2`, `alpfitplus.com`'a bağlı), oturum tarafından API ile üretildi; üreten yönetim anahtarı [anahtar kasasında](anahtar-kasasi-config-alpfit.md).
   - v2'nin `main`'i Vercel production env'inde ama aşaması `preview`, bu yüzden alan adı geçişine kadar önizleme token'ı kalır. Geçişte (M7 F7.5) Production'a üretim token'ı ve v1'in tuzu girer.
 
+## Umami — sürüm ve kimlik biçimi (ölçüldü 2026-09-21)
+
+- **Sürüm 3.1.0**, `data-tag` destekli (yükte `tag` alanı, şemada `website_event.tag`).
+- **API anahtarı YOK.** `x-umami-api-key` Umami **Cloud** özelliğidir; self-hosted 3.1.0'ın `src/lib/auth.ts` → `checkAuth` fonksiyonu yalnız `Authorization: Bearer <token>` ve paylaşım token'ını (`x-umami-share-token`) tanır. Canlı teyit: `GET /api/me` + sahte api-key başlığı → **401**.
+- **Tek kimlik yolu:** `POST /api/auth/login` gövde `{username, password}` → `{token}`; sonra `Authorization: Bearer <token>`. Canlı sunucu boş gövdeye 400 + iki alanın "expected string" hatasıyla cevap veriyor, yani şema bu.
+- **Site kaydı açma:** `POST /api/websites`, gövde `{name, domain}` (ops. `id`, `teamId`, `shareId`); yanıt website nesnesi, içindeki `id` = Website ID (sır değil, sayfa kaynağında görünür). Kayıt açmadan önce `GET /api/websites` ile mevcutlar listelenir — **v1'in `alpfitplus.com` kaydına dokunulmaz** ve takım (`teamId`) yerleşimi oradan görülür.
+- Tracker `data-exclude-search="true"` özniteliğini okuyor (sunulan `script.js` gövdesinde geçiyor) — v2 bunu **zorunlu** kullanır, gerekçe `BULGULAR.md` B-056.
+
 ## Bunker — tuzak
 
 - Kanonik kod `../Bunker OS/bunker-dashboard` (`NorthAIII/bunker-os` monoreposu). `../bunker-dashboard` klonu bayat ve GitHub'da arşivli.
