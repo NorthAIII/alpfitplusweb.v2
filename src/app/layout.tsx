@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Assistant } from "@/components/layout/Assistant";
+import { ClickTracker } from "@/components/layout/ClickTracker";
 import { SITE, CONTACT } from "@/content/site";
 import { PRICING } from "@/content/pricing";
 import { DEPLOY_STAGE } from "@/lib/stage";
@@ -170,6 +171,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="icerik">{children}</main>
         <Footer />
         <Assistant />
+        <ClickTracker />
         {/* `afterInteractive`: olcum LCP'yi geciktirmez (QUALITY 4). */}
         {umamiWebsiteId ? (
           <Script

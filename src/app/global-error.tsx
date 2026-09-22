@@ -1,9 +1,14 @@
 "use client";
 
+import { SURFACES } from "@/lib/analytics";
+
 /**
  * Kok hata siniri. Kok layout'un YERINE gecer, o yuzden kendi <html> ve <body>
  * etiketlerini tasir ve yonlendirici baglami isteyen hicbir bilesen kullanmaz
- * (Header usePathname cagiriyor — burada render edilemez).
+ * (Header usePathname cagiriyor — burada render edilemez). `ClickTracker` da
+ * kok layout'un parcasi oldugu icin burada CALISMAZ (bilincli bosluk,
+ * TASK-1.09 Dikkat Noktalari) -- `data-surface` yine de eklendi ki ileride
+ * bu ekran kapsanirsa hazir olsun.
  */
 export default function GlobalError({ reset }: { error: Error; reset: () => void }) {
   return (
@@ -20,7 +25,7 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
           padding: "24px",
         }}
       >
-        <main style={{ maxWidth: "32rem", textAlign: "center" }}>
+        <main data-surface={SURFACES.notFound} style={{ maxWidth: "32rem", textAlign: "center" }}>
           <p style={{ fontSize: "2.5rem", fontWeight: 800, color: "#dfeddd", margin: 0 }}>Hata</p>
           <h1 style={{ fontSize: "1.75rem", fontWeight: 800, margin: "8px 0 0" }}>
             Beklenmedik bir sorun oluştu

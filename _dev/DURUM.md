@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — TASK-1.08 tamamlandı: `src/lib/analytics.ts` (olay+yüzey sözlüğü, `track()`) yazıldı, olay adları v1 ile hizalandı (`whatsapp-click`→`whatsapp` vb., `docs/DECISIONS.md`), `demo-submit` gerçek Umami'ye uçtan uca doğrulandı. Sırada TASK-1.09.
+**Son Güncelleme:** 2026-09-22 — TASK-1.09 tamamlandı: `ClickTracker.tsx` (global tıklama dinleyicisi) yazıldı, 10 dosyaya `data-surface` çapası kondu; analitik yükü baseline'la birebir (`perf.mjs`), Umami betiği 2,56 KB + olay isteği 0,74 KB (CDP ağ kaydı, B-035 kapsam notuyla). Sırada TASK-1.15.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 15/17 task tamamlandı (1 iptal: TASK-1.04)
+**İlerleme:** 16/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,17 +33,16 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.09 — Global tıklama dinleyicisi ve yüzey etiketleri
+**Task:** TASK-1.15 — Yasal metin hizası (lead deposu + kendi Umami)
 **Durum:** ⬜ Bekliyor
-**İlerleme:** Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
+**İlerleme:** Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil. TASK-1.09 fazın son KOD task'ıydı — 1.15 kapanınca faz koddan tamamdır, Adım `verify` olur.
 **Not:**
-- **Analitik sözlüğü ayakta (TASK-1.08):** `src/lib/analytics.ts` yazıldı — `EVENTS` (`demo-submit`/`whatsapp`/`phone`), `SURFACES` (19 etiket, tip daraltmalı), `track()` sarmalayıcısı. `demo-submit` gerçek Umami'ye uçtan uca doğrulandı (`sessionId`/`visitId` ile 200).
-- **⚠️ TASK-1.09'un kendi plan metni hizasız — çalıştırmadan önce düzelt:** `tasks/TASK-1.09.md` ve `phases/PHASE-1-ARASTIRMA.md` hâlâ `whatsapp-click`/`phone-click` yazıyor; TASK-1.08'de olay adları v1 ile hizalandı (`whatsapp`/`phone`, `docs/DECISIONS.md` 2026-09-22). `BULGULAR.md` → Gelen Kutusu'nda kayıtlı.
-- **B-056 (b) uyarısı 1.09 ölçümlerinde de geçerli:** araştırma konteynerinin varsayılan UA'sı `HeadlessChrome` ve Umami bot kontrolü **200 `{"beep":"boop"}`** dönüp kaydı yazmaz. Olay ölçerken bot olmayan UA ver, yoksa sahte yeşil okursun.
+- **Global dinleyici ayakta (TASK-1.09):** `src/components/layout/ClickTracker.tsx` yazıldı, `src/app/layout.tsx`'e bağlandı; 10 dosyaya `data-surface` çapası kondu. Panelde yüzey etiketlerinin (`hero`/`footer`/`fiyat`) ve üçüncü olayın görünürlüğü **UAT'a kaldı** — kod tarafı izole konteynerde uçtan uca doğrulandı (`whatsapp` olayı `/api/send` `200`).
 - **Umami paneline giriş kasada** (`UMAMI_USERNAME`/`UMAMI_PASSWORD`). ⚠️ Bu parola kaybedilirse giriş kalıcı kaybolur — 3.1.0 sıfırlama aracı taşımıyor (`memory/kendi-sunucu-n8n-bunker-umami.md`).
+- **B-056 (b) uyarısı gelecekte Umami ölçen her tura geçerli:** araştırma konteynerinin varsayılan UA'sı `HeadlessChrome` ve Umami bot kontrolü **200 `{"beep":"boop"}`** dönüp kaydı yazmaz. Olay ölçerken bot olmayan UA ver, yoksa sahte yeşil okursun.
 - **Yerel lead deposu hâlâ ayakta** (`docker compose --profile lead up -d lead-store`; komutlar/tuzaklar `_dev/memory/yerel-lead-deposu-docker-profili.md`).
-- **⚠️ BULGULAR kırmızı çizgiyi (20k token) geçti** (TASK-1.08'in tek pointer satırı bile 19,9k → 20,0k'ya taşıdı). Yapısal sorun değil, **triyaj borcu**: supap `audit-product` uzlaştırmasıdır — artık ertelenemez sinyal.
-- **`docker compose exec web npm run build` sonrası ihtiyaten `docker compose restart web` yap** (TASK-1.08'de gözlemlendi, gerekçe `memory/alternatif-env-ile-uretim-derlemesi.md`).
+- **⚠️ BULGULAR kırmızı çizgiyi (20k token) geçmiş durumda** (~20,1k). Yapısal sorun değil, **triyaj borcu**: supap `audit-product` uzlaştırmasıdır — TASK-1.15 sonrası planlı, ertelenemez sinyal.
+- **`docker compose exec web npm run build` sonrası ihtiyaten `docker compose restart web` yap** (TASK-1.08/1.09'da gözlemlendi, gerekçe `memory/alternatif-env-ile-uretim-derlemesi.md`).
 
 ## Task Durumu (Aktif Faz)
 
@@ -64,7 +63,7 @@
 | 1.06 | E-posta hattını aç ve uçtan uca canlı tur (depo + e-posta) | ✅ Tamamlandı |
 | 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ✅ Tamamlandı |
 | 1.08 | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` | ✅ Tamamlandı |
-| 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ⬜ Bekliyor |
+| 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ✅ Tamamlandı |
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
 | 1.15 | Yasal metin hizası — lead deposu (12 ay) ve kendi Umami | ⬜ Bekliyor |
 
@@ -76,6 +75,15 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-1.09 — Global tıklama dinleyicisi ve yüzey etiketleri (2026-09-22)
+
+**Özet:**
+- `src/components/layout/ClickTracker.tsx` (YENİ): tek `document` `click` dinleyicisi (bubble+`passive`), `wa.me`/`tel:` desenini yakalayıp yüzeyi `[data-surface]` → `section[id]` → sayfa yolu sırasıyla türetir, sözlükte yoksa `SURFACES.other`'a düşer.
+- On dosyaya `data-surface` çapası kondu (Header, Footer, Assistant, Hero, FinalCta, DemoForm, demo/destek sayfaları, not-found, global-error); `Section` bileşeni prop forward etmediği için sayfa çapaları onun içindeki `div`'e kondu.
+- Analitik yükü iki kaynaktan ölçüldü (B-035 kapsam notuyla): `perf.mjs` baseline'la **birebir aynı** (144/133 KB, LCP 96 ms); Umami betiği **2,56 KB** + bir olay isteği **0,74 KB** (CDP ağ kaydı, izole konteyner, gerçek website id).
+
+**Test:** `npm test` 5 dosya/**61 PASS** + 1 skipped (yeni: `tests/click-tracker.test.ts` 5/5). `tsc --noEmit` 0. `docker compose exec web npm run build` + `--build web-prod` ikisi de temiz (23 rota). `a11y.mjs` TOPLAM SORUN: 0, `mobile-audit.mjs` yatay kaydırma: yok, `scan.mjs` (ana sayfa/`/demo`/`/destek`) konsol temiz, `font-guard.mjs` eksik karakter yok. Detay: `tasks/archive/TASK-1.09.md`
+
 ### TASK-1.08 — Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` (2026-09-22)
 
 **Özet:**
@@ -84,15 +92,6 @@
 - `DemoForm.tsx` başarı dalına `track("demo-submit", "demo-form")` bağlandı; gerçek Umami'ye (izole konteyner, gerçek website id) uçtan uca doğrulandı — `/api/send` **200** + gerçek `sessionId`/`visitId`.
 
 **Test:** `npm test` 4 dosya/**56 PASS** + 1 skipped (yeni: `tests/analytics.test.ts` 3/3). TS kapı sınaması pozitif+negatif kontrolle doğrulandı. `docker compose exec web npm run build` temiz (23 rota). `scan.mjs /demo` konsol temiz. Detay: `tasks/archive/TASK-1.08.md`
-
-### TASK-1.07 — Kendi Umami'ye site kaydı ve tracker bağlantısı (2026-09-22)
-
-**Özet:**
-- v2'nin **kendi** Umami site kaydı oturum tarafından **API ile** açıldı (`POST /api/websites`): `Alpfit Plus v2 (önizleme)` / `alpfitplus-web-v2.vercel.app`, kimlik `640b05f1-41aa-4ba0-985b-f30145e49983`, `teamId` null. Kurulum 2 → 3 kayıt; v1'in `alpfitplus.com` ve `kiwiailab.com` kayıtları **bayt bayt değişmedi** (önce/sonra diff boş). Kullanıcıya panel adımı kalmadı.
-- `NEXT_PUBLIC_UMAMI_WEBSITE_ID` Vercel Production + Preview'e Config olarak girildi, yeniden dağıtıldı (Ready 40 s). Yayın yüzeyi: `data-tag="preview"`, `data-exclude-search="true"`, `data-domains` yok, noindex bozulmadı.
-- Tur iki kez kullanıcı kararında durdu (parola geçersiz → 3.1.0'da sıfırlama aracı yok); ikisi de kayda geçti. Task dokümanı 21,0k token'a çıktığı için **faz hâlâ aktifken** bölündü → `TASK-1.07-OTURUM-KAYITLARI.md` (parent 8,7k).
-
-**Test:** Yerel: `/api/send` **200** ve gövde `sessionId`/`visitId` — `{"beep":"boop"}` değil (bot kontrolü bot-olmayan UA ile aşıldı, B-056 (b) sahte yeşili engellendi); `data-tag="local"`, çerez **0**. **B-056 canlıda kanıtlandı:** `/demo?name=…&phone=…` açıldı, yükte `url` sorgusuz. `npm test` 3 dosya/**53 PASS** + 1 skipped (taban aynı), eslint 0, `cloud.umami.is` 0. Bunker "Web Trafik" paneli **koddan** elendi (share-URL/env deseni, API'den saymıyor). Detay: `tasks/archive/TASK-1.07.md`
 
 <!-- KURAL: Sadece son 2 task özeti tutulur, daha eskileri silinir (gerçek silme — HTML comment yasak). -->
 <!-- KURAL: Sadece aktif fazın task'leri gösterilir. Geçmiş fazların bilgileri phases/ klasöründedir. -->
@@ -114,7 +113,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.09.md`
+**Aktif Task:** `tasks/TASK-1.15.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

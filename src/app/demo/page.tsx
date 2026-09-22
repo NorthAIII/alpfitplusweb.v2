@@ -5,6 +5,7 @@ import { Section } from "@/components/ui/Section";
 import { DemoForm } from "@/components/sections/DemoForm";
 import { CONTACT } from "@/content/site";
 import { PRICING } from "@/content/pricing";
+import { SURFACES } from "@/lib/analytics";
 
 export const metadata: Metadata = {
   title: "Demo İste",
@@ -37,7 +38,10 @@ export default function DemoPage() {
       />
 
       <Section tone="canvas" size="sm">
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14">
+        <div
+          data-surface={SURFACES.demo}
+          className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-14"
+        >
           <DemoForm />
 
           <aside className="flex flex-col gap-6">

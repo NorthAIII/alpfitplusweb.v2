@@ -53,6 +53,12 @@ export const SURFACES = {
   sorun: "sorun",
   nasilCalisir: "nasil-calisir",
   cozum: "cozum",
+  /**
+   * ClickTracker'in (TASK-1.09) yedek degeri -- turetilen yuzey (data-surface
+   * atasi / section id / sayfa yolu) sozlukte yoksa olay YINE gonderilir ama
+   * etiket buraya duser, boylece panelde cop ad birikmez.
+   */
+  other: "other",
 } as const;
 
 export type Surface = (typeof SURFACES)[keyof typeof SURFACES];

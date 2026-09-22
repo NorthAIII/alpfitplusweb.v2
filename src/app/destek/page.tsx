@@ -5,6 +5,7 @@ import { PageHero } from "@/components/sections/PageHero";
 import { Section, SectionHead } from "@/components/ui/Section";
 import { InstagramIcon } from "@/components/ui/BrandIcons";
 import { CONTACT, SITE } from "@/content/site";
+import { SURFACES } from "@/lib/analytics";
 
 export const metadata: Metadata = {
   title: "Destek",
@@ -56,7 +57,7 @@ export default function SupportPage() {
       />
 
       <Section tone="canvas" size="sm">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div data-surface={SURFACES.destek} className="grid gap-4 sm:grid-cols-2">
           {CHANNELS.map((c) => (
             <a
               key={c.title}

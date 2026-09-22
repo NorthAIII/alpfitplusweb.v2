@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { CONTACT } from "@/content/site";
 import { PRICING } from "@/content/pricing";
+import { SURFACES } from "@/lib/analytics";
 
 export function FinalCta({
   title = "Kulübünüzü 20 dakikada gösterelim",
@@ -12,7 +13,7 @@ export function FinalCta({
   lead?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-canvas py-20 sm:py-24">
+    <section data-surface={SURFACES.finalCta} className="relative overflow-hidden bg-canvas py-20 sm:py-24">
       <Container>
         <div className="relative overflow-hidden rounded-xl bg-linear-to-br from-sage-deep via-sage to-sage-br px-7 py-12 shadow-xl sm:px-12 sm:py-16">
           <div

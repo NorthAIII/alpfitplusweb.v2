@@ -7,6 +7,7 @@ import { Menu, X, MessageCircle, ArrowRight } from "lucide-react";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/Button";
 import { CONTACT, NAV } from "@/content/site";
+import { SURFACES } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 export function Header() {
@@ -57,6 +58,7 @@ export function Header() {
 
   return (
     <header
+      data-surface={SURFACES.header}
       // Zemin HER ZAMAN opak. Seffaf birakildiginda koyu fotograf kahraman
       // bolumu tasiyan sayfalarda (segment sayfalari) koyu logo ve koyu nav
       // metni okunmuyordu. Ana sayfanin kahraman zemini zaten canvas oldugu

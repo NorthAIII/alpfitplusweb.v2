@@ -5,6 +5,7 @@ import { Logo } from "./Logo";
 import { Container } from "@/components/ui/Container";
 import { CONTACT, SITE } from "@/content/site";
 import { SEGMENTS } from "@/content/segments";
+import { SURFACES } from "@/lib/analytics";
 import { KiwiBand } from "./KiwiBand";
 
 const COLS = [
@@ -38,7 +39,7 @@ const COLS = [
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-ink-deep text-canvas">
+    <footer data-surface={SURFACES.footer} className="relative overflow-hidden bg-ink-deep text-canvas">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-64 opacity-40 bg-[radial-gradient(60%_100%_at_20%_0%,rgba(116,179,111,.28),transparent_70%)]" />
       <Container className="relative">
         <div className="grid gap-12 py-16 lg:grid-cols-[1.35fr_repeat(3,1fr)] lg:gap-10 lg:py-20">

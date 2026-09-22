@@ -85,3 +85,19 @@ Dağıtım `alpfitplus-web-v2-hz8zkhm2t` (`e35ede8` kodunun `RESEND_API_KEY` son
 **Resend hesabı v1 ile ortak:** aynı hesapta v1'in iki `alpfitplus-website-prod` anahtarı var, yani ücretsiz kota (100/gün, 3.000/ay) paylaşılıyor. v2'nin anahtarı ayrı ve dar yetkili: `alpfitplus-web-v2`, `sending_access`, `alpfitplus.com`'a bağlı.
 
 **Canlıda üç test kaydı var** (`leads_preview`): 2026-09-14'ün ikisi ve bugünün TASK-1.06 turu. Üçü de kalıyor; 12 aylık saklama cron'u siler.
+
+### Analitik yükü — ClickTracker + Umami betiği (TASK-1.09, 2026-09-22)
+
+F7.4'ün "sayfa ağırlığı artışı ölçüldü" kabul kriteri. İki ayrı kaynaktan ölçüldü çünkü `perf.mjs`'in kendi ağırlık muhasebesi JS/CSS'e kör (B-035) — B-035 bu task'ta düzeltilmedi, kapsam notuyla etrafından dolaşıldı.
+
+| Kalem | Yöntem | Sonuç |
+|---|---|---|
+| Ana sayfa ağırlığı (masaüstü) | `perf.mjs`, üretim konteyneri (3100), Umami tanımsız | 144 KB — başlangıç çizgisiyle (`M6-Kalite-Kapilari.md`) **birebir aynı** |
+| Ana sayfa ağırlığı (mobil) | aynı | 133 KB — **birebir aynı** |
+| LCP (masaüstü) | aynı | 96 ms — başlangıç çizgisiyle (96 ms) **birebir aynı** |
+| CLS | aynı | 0,005 — başlangıç aralığında (0–0,005) |
+| Umami betiği (`script.js`) | CDP `Network.loadingFinished` → `encodedDataLength`, gerçek website id'li izole konteyner (port 3200, `docker run` — repoya/dev sunucusuna dokunmayan rsync-scratchpad yolu), gerçek Chrome UA (B-056 (b)) | **2,56 KB** gzip, tel üzerinde |
+| Bir olay isteği (`POST /api/send`) | aynı | **0,74 KB** gzip, tel üzerinde |
+| CORS ön-uçuşu (`OPTIONS`, yalnız ilk istekte) | aynı | 0 B |
+
+**Yöntem notu:** `performance.getEntriesByType("resource")`'ın `transferSize`'ı `umami.kiwiailab.com` çapraz-kökenli olduğu ve `Timing-Allow-Origin` başlığı taşımadığı için sessizce **0** döndü — bu yüzden CDP `Network` alanına geçildi (`encodedDataLength`, gerçek tel-üzeri bayt, başlıklar dahil). İzole konteynerdeki tek tıklama DOM sırasında **Header**'ın WhatsApp bağlantısına denk geldi (1440 px masaüstü görünümde `a[href^="https://wa.me"]` seçicisinin ilk eşleşmesi), `hero` değil — ölçümün amacı uçtan uca ileti + bayt boyutuydu, hangi yüzeyin panelde doğru etiketlendiğinin görsel teyidi hâlâ UAT'ın işi. İki `/api/send` isteği gözlendi: biri Umami'nin otomatik sayfa-görüntüleme olayı, biri `track()`'in gönderdiği `whatsapp` olayı — ikisi de 0,74 KB (gövde küçük ve sabit alan sayısı aynı). Konteyner ölçüm biter bitmez `docker rm -f` ile silindi, port 3200'ün boşaldığı pozitif kontrolle doğrulandı; dev sunucusuna (`.env`, `web` konteyneri) hiç dokunulmadı.

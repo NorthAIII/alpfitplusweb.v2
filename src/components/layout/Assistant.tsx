@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, MessageCircle, MessagesSquare, X } from "lucide-react";
 import { LogoMark } from "./Logo";
 import { CONTACT } from "@/content/site";
+import { SURFACES } from "@/lib/analytics";
 import {
   CHAT_INTRO,
   CHAT_ROOT,
@@ -84,6 +85,7 @@ export function Assistant() {
     <>
       {/* ── yuzen dugmeler ── */}
       <div
+        data-surface={SURFACES.assistant}
         className={cn(
           "fixed bottom-5 right-5 z-40 flex flex-col items-end gap-2.5 transition-all duration-300",
           showFabs || open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
@@ -137,6 +139,7 @@ export function Assistant() {
         <div
           ref={panelRef}
           id="asistan-panel"
+          data-surface={SURFACES.assistant}
           role="dialog"
           aria-label="Alpfit Plus asistanı"
           className="fixed inset-x-3 bottom-24 z-40 flex max-h-[min(34rem,calc(100dvh-8rem))] flex-col overflow-hidden rounded-lg bg-surface shadow-xl ring-1 ring-line sm:inset-x-auto sm:right-5 sm:w-96"

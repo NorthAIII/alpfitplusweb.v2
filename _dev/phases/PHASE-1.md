@@ -156,7 +156,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.06 | TASK-1.06 | ✅ Tamamlandı | E-posta hattını aç ve önizlemeden uçtan uca canlı tur — `RESEND_API_KEY` üretildi ve girildi, tek talep depoya + gelen kutusuna ulaştı |
 | 1.07 | TASK-1.07 | ✅ Tamamlandı | Kendi Umami'ye site kaydı ve tracker — v2 kaydı API ile açıldı (`640b05f1-…`), yayın yüzeyi `data-tag="preview"` ile sayıyor; panel görünümü UAT'a |
 | 1.08 | TASK-1.08 | ✅ Tamamlandı | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
-| 1.09 | TASK-1.09 | ⬜ Bekliyor | Global tıklama dinleyicisi, `data-surface` çapaları, analitik yükü ölçümü |
+| 1.09 | TASK-1.09 | ✅ Tamamlandı | Global tıklama dinleyicisi, `data-surface` çapaları — panelde yüzey görünürlüğü UAT'a |
 | 1.10 | TASK-1.10 | ✅ Tamamlandı | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
 | 1.15 | TASK-1.15 | ⬜ Bekliyor | Yasal metin hizası: kayıt yeri kendi sunucudaki lead deposu (12 ay), ölçüm kendi Umami |
 
@@ -177,6 +177,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | Diğer kalemler (rota, font önbelleği, uç, TTFB, v1) | TASK-1.03, 2026-09-11 | ✅ 8/8 rota 200; TTFB 0,619 s (soğuk); v1'e dokunulmadı |
 | Canlı lead deposu bağlantısı | TASK-1.18, 2026-09-14 | ✅ token → `leads_preview`; `leads` temiz; env üç anahtar × iki ortam |
 | **Uçtan uca lead hattı — önizleme yüzeyinden** | **TASK-1.06, 2026-09-21** | ✅ tek talep: uç `200 stored:true mailed:true` · depo `leads_preview` 12→**13** (`notify_team=sent`) · Resend **`delivered`** · `Ortam: preview` |
+| Analitik yükü — ClickTracker + Umami betiği | TASK-1.09, 2026-09-22 | ✅ `perf.mjs` ana sayfa 144/133 KB, LCP 96 ms, CLS 0,005 — baseline'la birebir, regresyon yok; Umami betiği 2,56 KB gzip + bir olay isteği 0,74 KB gzip (CDP ağ kaydı, izole konteyner) |
 
 ---
 

@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-22 — TASK-1.07 kapandı: Umami atomuna v2 site kaydının kimliği ve Bunker panelinin etkilenmediği (share-URL deseni) yazıldı; kasa atomunda Umami parolası artık geçerli, sıfırlama aracının olmadığı uyarısı kaldı.
+**Son Güncelleme:** 2026-09-22 — TASK-1.09 kapandı: "Araştırma konteynerinde tarayıcı ölçümü" atomuna çapraz-kökenli isteklerde Resource Timing API'nin `transferSize`'ı sessizce 0 döndüğü ve gerçek boyutun CDP `Network.loadingFinished` → `encodedDataLength`'ten alındığı eklendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 

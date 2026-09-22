@@ -3,10 +3,11 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { NAV, CONTACT } from "@/content/site";
+import { SURFACES } from "@/lib/analytics";
 
 export default function NotFound() {
   return (
-    <section className="relative overflow-hidden bg-canvas py-24 sm:py-32">
+    <section data-surface={SURFACES.notFound} className="relative overflow-hidden bg-canvas py-24 sm:py-32">
       <div className="pointer-events-none absolute inset-0 bg-glow-soft" aria-hidden />
       <div className="pointer-events-none absolute inset-0 bg-dotgrid opacity-40 mask-fade-b" aria-hidden />
       <Container size="narrow" className="relative text-center">

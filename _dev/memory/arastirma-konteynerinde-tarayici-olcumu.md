@@ -60,3 +60,9 @@ timeout 900 docker compose --profile research run --rm --name audit-<etiket> \
 - **Hidrasyon öncesi davranış sınanırken yalnız `.js` geciktirilir.** `**/_next/static/chunks/**`
   deseni dev'de CSS'i de tutar, boyama ve DCL bekler. "Görünür ama hidrate değil" hâli yerine
   boyanmamış sayfa ölçülür, tıklama hidrasyondan sonraya düşer.
+- **Çapraz-kökenli isteğin gerçek boyutu `Resource Timing API`'den ÇIKMAZ.** `umami.kiwiailab.com`
+  gibi başka bir kökene giden istekte `performance.getEntriesByType("resource")`'ın `transferSize`/
+  `encodedBodySize` alanları, yanıt `Timing-Allow-Origin` başlığı taşımadığı sürece **sessizce 0**
+  döner (hata yok, sadece yanlış rakam). Gerçek tel-üzeri bayt için CDP `Network` alanına geçilir:
+  `ctx.newCDPSession(page)` + `Network.enable`, `Network.loadingFinished` olayının
+  `encodedDataLength`'i (TASK-1.09, Umami betiği + olay isteği ağırlığı ölçümü).

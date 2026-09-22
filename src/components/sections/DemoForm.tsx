@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { CONTACT } from "@/content/site";
 import { SEGMENTS } from "@/content/segments";
 import { cn } from "@/lib/cn";
-import { track } from "@/lib/analytics";
+import { SURFACES, track } from "@/lib/analytics";
 
 type State = "idle" | "sending" | "ok" | "error";
 
@@ -81,6 +81,7 @@ export function DemoForm() {
       <div
         role="status"
         aria-live="polite"
+        data-surface={SURFACES.demoForm}
         className="rounded-lg bg-sage-wash p-8 text-center ring-1 ring-sage/30"
       >
         <span className="mx-auto grid size-12 place-items-center rounded-full bg-sage text-ink-deep">
@@ -105,7 +106,12 @@ export function DemoForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="rounded-lg bg-surface-2 p-6 ring-1 ring-line sm:p-8" noValidate>
+    <form
+      onSubmit={onSubmit}
+      data-surface={SURFACES.demoForm}
+      className="rounded-lg bg-surface-2 p-6 ring-1 ring-line sm:p-8"
+      noValidate
+    >
       {/* bal kupu — gorunmez, gercek kullanici doldurmaz */}
       <div className="absolute left-[-9999px]" aria-hidden>
         <label htmlFor="website">Web siteniz</label>

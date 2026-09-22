@@ -5,6 +5,7 @@ import { BrowserFrame, PhoneFrame } from "@/components/ui/Frames";
 import { CONTACT } from "@/content/site";
 import { PRICING, tl } from "@/content/pricing";
 import { SHOTS } from "@/content/shots";
+import { SURFACES } from "@/lib/analytics";
 
 const TRUST = [
   `${PRICING.trialDays} gün ücretsiz deneme`,
@@ -14,7 +15,10 @@ const TRUST = [
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-canvas pt-8 pb-24 sm:pt-12 sm:pb-32 lg:pt-16">
+    <section
+      data-surface={SURFACES.hero}
+      className="relative overflow-hidden bg-canvas pt-8 pb-24 sm:pt-12 sm:pb-32 lg:pt-16"
+    >
       {/* zemin dokusu */}
       <div className="pointer-events-none absolute inset-0 bg-glow-sage" aria-hidden />
       <div
