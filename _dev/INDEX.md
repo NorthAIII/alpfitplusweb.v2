@@ -69,7 +69,8 @@ Bu projede PRD yok (kullanıcı kararı, kickoff 2026-09-11). Feature davranış
 
 | Doküman | İçerik |
 |---------|--------|
-| `docs/DECISIONS.md` | Karar günlüğü — fiyat sunumu, tek dil, chatbot sırası, fotoğraf, faz sırası, modül yapısı, rakip adsızlığı (tarihli) |
+| `docs/DECISIONS.md` | Karar günlüğü — **giriş noktası**: aktif karar serisi (2026-09-14'ten bugüne) + kapanan aralıkların pointer listesi. Kararı ararken önce burası okunur |
+| `docs/DECISIONS-2026-09-10..2026-09-13.md` | Kapanan karar aralığı (22 kayıt) — tek dil, fiyat sunumu, fotoğraf ve görsel ton, chatbot sırası, modül yapısı, rakip adsızlığı, faz sırası, Vercel ortam modeli, analitik, lead hedefinin ilk iki turu, Vitest |
 | `../README.md` (repo kökü) | Yığın, çalıştırma komutları, araştırma konteyneri, ürün görseli hattı — ayrı TECH-STACK yazılmadı |
 | `../CLAUDE.md` (repo kökü) | DevFlow parent (doktrin çocukları `claude/` altından `@import` edilir); ölçüm betikleri tablosu ve geçme şartları, Docker uyarıları, dokunulmazlar, kod kuralları |
 
@@ -200,7 +201,8 @@ proje-repo/
     └── docs/
         ├── CLAIMS.md
         ├── STYLE-GUIDE.md
-        └── DECISIONS.md
+        ├── DECISIONS.md              # giriş noktası: aktif seri + arşiv pointer'ları
+        └── DECISIONS-<ilk>..<son>.md # kapanan karar aralıkları (kırmızı çizgi aşılınca doğar)
 ```
 
 ---
@@ -213,7 +215,7 @@ proje-repo/
 
 ---
 
-**Son Güncelleme:** 2026-09-11 — kickoff-verify: GIT-STRATEJI doğdu, kök CLAUDE.md DevFlow parent'ı oldu, `claude/` doktrin çocukları hiyerarşiye eklendi.
+**Son Güncelleme:** 2026-09-22 — audit-docs: `docs/DECISIONS.md` kırmızı çizgiyi aştığı için kapanan 2026-09-10..2026-09-13 aralığı arşiv çocuğuna taşındı; iki satır Bilgi Havuzu tablosuna ve hiyerarşi ağacına işlendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 <!-- KURAL: Tamamlanmış fazların task arşiv listesini INDEX'e ekleme — `ls _dev/tasks/archive/` zaten görür. INDEX yalnızca aktif klasör konumlarını gösterir; statik liste dokümanı değildir. -->
