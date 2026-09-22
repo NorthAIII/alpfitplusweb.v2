@@ -26,7 +26,7 @@ Bu task'ın kapsamı, depo içinden doğrulanabilen yedi olgu:
 
 | # | Beyan | Dayanağının evi |
 |---|---|---|
-| 1 | "soru işaretinden sonrası ölçüme gitmez" | `src/app/layout.tsx:181` → `data-exclude-search="true"` |
+| 1 | "soru işaretinden sonrası ölçüme gitmez" | `src/app/layout.tsx:182` → `data-exclude-search="true"` |
 | 2 | "adınız, telefonunuz, e-postanız ve mesajınız ölçüme gönderilmez" | `src/lib/analytics.ts` → `track()` yükü |
 | 3 | "gerçek bir kişinin verisi gösterilmemektedir" | `research/lib/screen-cleanup-v2.mjs` temizlik + denetim dalları |
 | 4 | "sitenin anahtarı yalnız yeni kayıt oluşturabilir, var olan kayıtları okuyamaz" + "dışarıya açık okuma kuralları kapalı" | `route.ts`'in depo kullanımı (yalnız `POST` + hedefli `PATCH`) |

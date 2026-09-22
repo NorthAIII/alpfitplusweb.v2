@@ -33,7 +33,7 @@ WCAG 3.3.1'in "metinle tanımla" ayağı bugün sağlanıyor (kutu metni hangi a
 **Okunması Gereken:**
 - `_dev/bulgular/B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md` → (a) ayağı ve koruma önerisi
 - `_dev/docs/STYLE-GUIDE.md` — `neg` / `neg-wash` tokenları, "yeni renk eklerken kontrastı ölç, rakamı yoruma yaz"
-- `src/components/sections/DemoForm.tsx:195-200` (`field` sınıf dizgesi), `:270-310` (alan bileşeni, `describedBy` kurulumu)
+- `src/components/sections/DemoForm.tsx:14` (`field` sınıf dizgesi), `:266-311` (alan bileşeni, `describedBy` kurulumu), `:197-214` (rıza kutusu)
 - `src/app/globals.css` → `@theme` (token değerleri; çelişkide CSS kazanır)
 
 **Güncellenmesi Gereken (Task Sonunda):**

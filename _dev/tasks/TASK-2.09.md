@@ -79,7 +79,7 @@ src/content/
 ## Dikkat Noktaları
 
 - **Ton değişmez, doğruluk düzelir.** Metin tonu işi (F1.2) bilinçli olarak **başka bir fazda** (`phases/PHASE-2.md` → Kapsam Dışı). Cümleyi yeniden yazarken üslubu koru.
-- **Silmek tek seçenek değil:** bir yetenek "yolda" ise o işaretle kalabilir — `legal.ts:263`'ün taahhüdü tam da bunu istiyor (*"ayrı ayrı belirtilir"*). Kaldırmakla işaretlemek arasında seçim kalem bazında yapılır ve gerekçesi task kaydına yazılır.
+- **Silmek tek seçenek değil:** bir yetenek "yolda" ise o işaretle kalabilir — `legal.ts:271`'in taahhüdü tam da bunu istiyor (*"ayrı ayrı belirtilir"*). Kaldırmakla işaretlemek arasında seçim kalem bazında yapılır ve gerekçesi task kaydına yazılır.
 - **Gerçek değer yazmak yeni bir iddiadır.** "İptal eşiği 24 saattir" cümlesi ürün kodundan geliyor ama ürün değişirse bayatlar; yazılacaksa kaynağı anılır.
 - **Ürün kodu salt okunurdur** (`../Alpfit.v1`) — orada hiçbir şey düzeltilmez.
 - **Beş kalem bir taban, tavan değil.** Sınıfın tamamı ~124 present-tense yetenek cümlesi; tarama TASK-2.12'de. Burada kapsamı kendiliğinden genişletme.

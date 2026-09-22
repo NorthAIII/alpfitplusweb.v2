@@ -24,7 +24,7 @@ Task, gerçek bir talepte hem ekibe hem talep sahibine e-posta gittiğinde, `not
 
 **`notify_lead` kararı geçersiz kılındı** (kullanıcı kararı, research 2026-09-22): 2026-09-14 «Bildirim durumu» kararının dayanağı *"v2 talep sahibine e-posta göndermiyor"* idi; onay e-postası açıldığı için dayanak düştü. Alanın kalıcı `pending` kalması alan adı geçişinden sonra iki dönemin kaydını okunamaz kılardı — geçişten sonra v1 ve v2 **aynı koleksiyonu** paylaşacak. Yeni karar `docs/DECISIONS.md`'ye **yeni kayıt** olarak yazılır, eskisi geçersiz kılınır (append-only).
 
-**v1'in karşılığı** (referans, salt okunur): `../Alpfitplus-website.v1/api/demo.ts:314-321` (`LEAD_CONFIRMATION`, `leadHtml`), `:339-345` (`to: [email]`, `reply_to: mailer.to`), `:358-360` (`notifyLead = !email ? 'skipped' : leadMailed ? 'sent' : 'failed'`), `:363-371` (PATCH gövdesi).
+**v1'in karşılığı** (referans, salt okunur): `../Alpfitplus-website.v1/api/demo.ts:314-321` (`LEAD_CONFIRMATION`, `leadHtml`), `:338-341` (`to: [email]`, `reply_to: mailer.to`), `:353` (`notifyLead = !email ? 'skipped' : leadMailed ? 'sent' : 'failed'`), `:364` (PATCH gövdesi).
 
 **B-059'un kalan iki ayağı bu fazda değil** — yasal metnin v1'den az bilgi vermesi ve depo alanlarının pariteler listesi alan adı geçişi fazında kalır.
 
@@ -36,7 +36,7 @@ Task, gerçek bir talepte hem ekibe hem talep sahibine e-posta gittiğinde, `not
 - `_dev/bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md` — üç ayak, v1 satır çapaları
 - `_dev/modules/M3-Lead-Hatti.md` → F3.3 kabul kriterleri ve edge case'ler
 - `_dev/docs/CLAIMS.md` — e-posta metni de bir iddia yüzeyidir (pilot cümlesi ve fiyat tek kaynaktan)
-- `src/app/api/demo/route.ts:140-230` — depo yazımı, `notifyStore`, `toEmail`
+- `src/app/api/demo/route.ts:140-240` — depo yazımı, `notifyStore` (`:190`), `toEmail` (`:222`)
 - `tests/api-demo.test.ts` — sözleşme bataryasının bugünkü deseni
 - `_dev/memory/hiz-sinirli-uca-test-bataryasi.md` — senaryo başına ayrı IP
 
@@ -58,7 +58,7 @@ Task, gerçek bir talepte hem ekibe hem talep sahibine e-posta gittiğinde, `not
 
 - [ ] **2. `notify_lead`'i gerçek sonuçla yaz**
   - PATCH gövdesi `{notify_team, notify_lead}` olur; `notify_lead` ∈ `sent` / `failed` / `skipped` (ziyaretçi e-posta vermediyse)
-  - `route.ts:161-167`'deki bugünkü gerekçe yorumu **silinmez, güncellenir** — neden değiştiğini (dayanağın düşmesini) yanında taşır
+  - `route.ts:182-189`'daki bugünkü gerekçe yorumu **silinmez, güncellenir** — neden değiştiğini (dayanağın düşmesini) yanında taşır
 
 - [ ] **3. Sözleşme bataryasını genişlet**
   - `tests/api-demo.test.ts`: e-postalı talep → `notify_lead: "sent"` (gönderim başarılıysa), e-postasız talep → `"skipped"`, sağlayıcı reddederse → `"failed"`

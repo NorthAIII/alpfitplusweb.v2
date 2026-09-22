@@ -22,8 +22,8 @@ Task, üç kalem de metinde düzeldiğinde ve form onayı işlenen kategorileri 
 
 Ölçülmüş hâl (audit-product 2026-09-22, `legal.ts` 315 satır kalem kalem okundu):
 
-- **(1) IP / `ip_hash` — açık ve ağırlaşmış.** KVKK'nın işlenen-veri listesi (`legal.ts:59-63`) IP'yi saymıyor. Ama `route.ts:128` `ip_hash: hashIp(ip, salt)` **depo gövdesine yazıyor** ve kayıt 12 ay saklanıyor. IP'den türetilmiş kalıcı bir tanımlayıcı, metinde hiç anılmadan bir yıl saklanıyor. Ayrıca hız sınırı için ham IP on dakika bellekte tutuluyor.
-- **(3) Ters yön de kırık.** `legal.ts:63` "tarayıcı bilgisi"ni işlenen veri sayıyor; `route.ts:118` yorumu *"env/ua/consent/at gövdeye GİRMEZ"* diyor, e-posta gövdesi de `ua` taşımıyor. `ua` yalnız `LEAD_FILE_PATH` yolunda kalıcılaşıyor, o da yayında tanımlı değil. **Liste fazlasını söylüyor.** Gizlilik'in topladığı-veri listesi (`legal.ts:182-185`) ise "işlem güvenliği verisi" satırını hiç taşımıyor — iki metin ayrışık.
+- **(1) IP / `ip_hash` — açık ve ağırlaşmış.** KVKK'nın işlenen-veri listesi (`legal.ts:59-63`) IP'yi saymıyor. Ama `route.ts:149` `ip_hash: hashIp(ip, salt)` **depo gövdesine yazıyor** ve kayıt 12 ay saklanıyor. IP'den türetilmiş kalıcı bir tanımlayıcı, metinde hiç anılmadan bir yıl saklanıyor. Ayrıca hız sınırı için ham IP on dakika bellekte tutuluyor.
+- **(3) Ters yön de kırık.** `legal.ts:63` "tarayıcı bilgisi"ni işlenen veri sayıyor; `route.ts:139` yorumu *"env/ua/consent/at gövdeye GİRMEZ"* diyor, e-posta gövdesi de `ua` taşımıyor. `ua` yalnız `LEAD_FILE_PATH` yolunda kalıcılaşıyor, o da yayında tanımlı değil. **Liste fazlasını söylüyor.** Gizlilik'in topladığı-veri listesi (`legal.ts:182-185`) ise "işlem güvenliği verisi" satırını hiç taşımıyor — iki metin ayrışık.
 - **(4) Onay kapsamı — hiç dokunulmamış.** `DemoForm.tsx:211-212` hâlâ yalnız *"İletişim bilgilerimin…"* diyor; uç ayrıca `club`, `branches`, `segment`, `message`, `at`, `env` ve `ip_hash` işliyor.
 
 **Bu task'ın dışında kalanlar:** ölçüm (Umami/nginx) beyanları ve yurt dışı aktarım olgusu → TASK-2.17. Yurt dışı aktarımın **hukuki dayanağı** → hukukçu (B-008), bu fazda uydurulmaz.

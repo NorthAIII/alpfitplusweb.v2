@@ -22,7 +22,7 @@ Task, 320/360/390/412 px'te iki butonun da ≥ 52 px ölçüldüğünde ve 640 p
 
 Ölçüm (B-034, 2026-09-12): 320/390/639 px'te `cssH 24px`, 640 px'te `52px` — `sm:` kırılımında kap satıra dönünce basis genişliğe geçiyor ve yükseklik geri geliyor. Etki **6 rota × 2 buton = 12 örnek** (`/`, `/fiyat`, dört segment sayfası); bu sitenin ana dönüşüm yüzeyi ve ölçüsü tasarlananın **%46'sı**, aynı zamanda sitedeki en ağır dokunma-hedefi ihlali (eşik 44 px).
 
-**Doğru deyim kod tabanında zaten var:** `DemoForm.tsx:177` ve `:190` aynı deseni `sm:flex-1` ile yazıyor.
+**Doğru deyim kod tabanında zaten var:** `DemoForm.tsx:240` ve `:253` aynı deseni `sm:flex-1` ile yazıyor.
 
 Bugüne dek görünmemesinin sebebi ölçüm kapsamı: `mobile-audit.mjs` dokunma hedefini `h < 40 && w < 200` kuralıyla arıyor, buton **302 px geniş** olduğu için muafiyete takılıyor. **Kapı tarafının düzeltilmesi bu fazın kapsamı dışında** — `mobile-audit.mjs`'in muafiyeti ve eşiği B-015/B-031 ile birlikte "Kalite kapıları otomatik" fazına ait (`phases/PHASE-2.md` → Kapsam Dışı).
 
@@ -33,7 +33,7 @@ Bugüne dek görünmemesinin sebebi ölçüm kapsamı: `mobile-audit.mjs` dokunm
 **Okunması Gereken:**
 - `_dev/bulgular/B-034-mobilde-ana-cagri-24px.md` — ölçüm tablosu ve mekanizma
 - `_dev/docs/STYLE-GUIDE.md` → Düzen Tuzakları — aynı sınıfın kardeşleri
-- `src/components/sections/DemoForm.tsx:177,190` — doğru deyimin kod tabanındaki örneği
+- `src/components/sections/DemoForm.tsx:240,253` — doğru deyimin kod tabanındaki örneği
 - `_dev/memory/arastirma-konteynerinde-tarayici-olcumu.md` — Playwright ölçümü nasıl koşturulur
 
 **Güncellenmesi Gereken (Task Sonunda):**
@@ -71,7 +71,7 @@ src/components/sections/
 ## Dikkat Noktaları
 
 - **Yalnız iki satır.** `h-13`'e, kap sınıflarına, buton bileşenine dokunma — B-033 (320 px'te `ui/Button` temel sınıfı) bilinçli olarak **başka bir faza** ait ve o dosyaya dokunmak kapsamı genişletir.
-- **Mekanik kural bu task'ta eklenmiyor.** Research ölçtü: depoda yedi `flex-1` var, beşi kırılımsız ve **dördü meşru** (`SegmentsGrid.tsx:50,54`, `Assistant.tsx:167,150`, `ProductStory.tsx:200`). Ayırt edici imza dar — sabit yükseklik (`h-*`) + `flex-1` + kolon kabı; imzasız yazılan bir kural dört yanlış alarm verir.
+- **Mekanik kural bu task'ta eklenmiyor.** Research ölçtü: depoda dokuz `flex-1` kullanımı var, yedisi kırılımsız ve **beşi meşru** (`SegmentsGrid.tsx:50,54`, `Assistant.tsx:167,150`, `ProductStory.tsx:200`). Ayırt edici imza dar — sabit yükseklik (`h-*`) + `flex-1` + kolon kabı; imzasız yazılan bir kural beş yanlış alarm verir.
 - **`mobile-audit.mjs` bu düzeltmeyi göremez** (genişlik muafiyeti). "Kapı yeşil" bir kanıt değildir; ölçümü doğrudan yükseklik okuyarak yap.
 - Değişiklik CSS sınıfı düzeyinde; `a11y.mjs` ve `scan.mjs` yine koşturulur ama beklenen etki yok.
 

@@ -31,7 +31,7 @@ Task, sabit kurulduğunda, `PRODUCT_STATUS.modules` ondan türediğinde ve `shor
 | `src/app/fiyat/page.tsx:29-34` | 2 kalem, "(yol haritasında)" ekiyle |
 | `src/content/site.ts:38-44` (kısmî) | `PRODUCT_STATUS.modules` — sekiz modülü düzyazı sayıyor |
 
-"Kurumsal üyelik" dört kopyanın **yalnız birinde**; "Apple Health ve Google Fit" ikisinde. Hiçbiri `src/content/` sabiti değil. `legal.ts:263` ziyaretçiye *"Yolda olan ve yol haritasında bulunan özellikler ayrı ayrı belirtilir"* taahhüdünü veriyor.
+"Kurumsal üyelik" dört kopyanın **yalnız birinde**; "Apple Health ve Google Fit" ikisinde. Hiçbiri `src/content/` sabiti değil. `legal.ts:271` ziyaretçiye *"Yolda olan ve yol haritasında bulunan özellikler ayrı ayrı belirtilir"* taahhüdünü veriyor.
 
 **Seçilen yaklaşım (a) + (c)** (kullanıcı kararı, research 2026-09-22): liste kurulur ve beş ev ondan okur; ayrıca ürünün kendi "bugün yok" işaretlerinden türeyen bir tarama yapılır (TASK-2.12). **(b) reddedildi** — 124 içerik maddesinin tamamını yetenek kimliğine bağlamak bu fazın sınırını aşar; bu faz iddianın **doğruluğunu** düzeltir, içerik mimarisini yeniden kurmaz.
 
@@ -91,6 +91,7 @@ src/content/
 - **Granülerlik tuzağı:** "Diyetisyen modülü" bugün **var**; "ölçüm grafiği ve diyetisyen notu tek ekranda" (Üye 360, W8) **yok**. Kademe kalemleri bu ayrımı taşıyacak kadar ince yazılmalı, yoksa TASK-2.09 düzeltmeyi listeye dayandıramaz.
 - **Pilot cümlesi ve fiyat bu sabite girmez** — onların evi `PRODUCT_STATUS.sentence` ve `PRICING` (`docs/CLAIMS.md` → Tek Kaynaklar). İkinci bir ev açma.
 - **Araştırma konteyneri `src/`'i görmüyor** — bu sabit görsel temizliğe (TASK-2.13) besleme yapamaz; o liste `research/lib/` içinde elle tutulur (bilinçli, `phases/PHASE-2.md` → Dikkat Edilecekler).
+- **Kalemler tek tek adreslenebilir olmalı** (verify-plan 2026-09-22, TASK-2.11'in genişleyen kapsamı): beş düzyazı cümle yol haritasındaki **tek bir kalemi** adıyla anıyor ("QR ve turnike", "Online ödeme") ve o adı sabitten okuyacak. Kademe düz bir dizi olursa çağrı yeri kalemi indeksle aramak zorunda kalır — kalemin kendi anahtarı olsun (ör. `{ id: "qr-turnike", label: "QR ve turnike ile giriş" }`), liste türetmesi yine aynı yapıdan çıksın.
 - **Rakip adı ve pilot sınırı** sabitin içinde de geçerli (`docs/CLAIMS.md`).
 
 ---

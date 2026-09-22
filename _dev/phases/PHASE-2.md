@@ -109,7 +109,7 @@ Tam karşılaştırma (elenenler, artı/eksi, ölçüm çıktıları) → `PHASE
 
 - **"Beş karşılıksız yetenek iddiası" bir taban, tavan değil** — sınıf ~124 present-tense yetenek cümlesi (`product.ts` + `segments.ts`). B-029 beşini yanlış buldu, dördünü doğruladı, **kalanı hiç kontrol edilmedi**. Kapsam kararı: riskli alt küme taranır.
 - **"Üç yasal beyan" da taban** — `legal.ts`'te koda/konfige bağlı **en az sekiz** olgu iddiası var. Faz sekizinin tamamını bağlar (kullanıcı kararı); **milestone'un "dört beyan" ifadesi alt sınırdır.**
-- **B-034 sınıfı tek gerçek örnek** ama mekanik kural yanlış kurulursa dört yanlış alarm verir; ayırt edici imza dar: sabit yükseklik (`h-*`) + `flex-1` + kolon kabı.
+- **B-034 sınıfı tek gerçek örnek** ama mekanik kural yanlış kurulursa beş yanlış alarm verir; ayırt edici imza dar: sabit yükseklik (`h-*`) + `flex-1` + kolon kabı.
 - **Anahtar sızıntısının kapsamı ölçüldü** — `.env`'in beş değeri parmak izlendi, üçü birlikte **imaja giren hiçbir değerin canlı olmadığını** söylüyor. Kesin teyit sunucudaki `/opt/alpfit-lead/.env` karşılaştırmasıdır; milestone'un "iki anahtar döndürülmüş" ayağı o sonuca bağlı (kullanıcı kararı → `docs/DECISIONS.md`).
 - **Tarayıcı katmanı bu fazda otomatik ölçülmüyor — bilinçli.** Projenin otomatik katmanı (`vitest`, `environment: "node"`) B-055 ve B-034'ün belirleyici katmanını ölçmüyor; `mobile-audit.mjs` etkileşim durumuna hiç bakmıyor. **Bu fazda doğrulama kanalı:** düzeltme sırasında scratchpad'e yazılan geçici Playwright betiğiyle rakamlı ölçüm, UAT'ta manuel kol. **Task test kriterleri bu kanala göre `kanal: UAT` işaretlidir.**
 
@@ -136,7 +136,7 @@ Gerekçelerin tam metni → `PHASE-2-ARASTIRMA.md` → Teknik Kararlar.
 | Yasaklı iddia sözlüğü dosyası | **yeni** — `research/lib/` altında |
 | `RETENTION_MONTHS` | **dış** — `../Alpfitplus-website.v1/pocketbase/pb_hooks/lead_lib.js:37` |
 | Yasal beyan testinin env kapısı | **yeni** — `.env.example`'a slot adı eklenir, değer yazılmaz |
-| `data-exclude-search` | tanımlı — `src/app/layout.tsx:181` |
+| `data-exclude-search` | tanımlı — `src/app/layout.tsx:182` |
 | `scroll-padding-top: 5.5rem` | tanımlı — `src/app/globals.css:124` |
 | `ERROR_ID` (`demo-form-error`), `FIELD_ERRORS`, `aria-invalid` | tanımlı — `src/components/sections/DemoForm.tsx:20-28, 203-204, 286-301` |
 | `SURFACES.demoForm`, `track()` | tanımlı — `src/lib/analytics.ts` |
@@ -167,7 +167,7 @@ Gerekçelerin tam metni → `PHASE-2-ARASTIRMA.md` → Teknik Kararlar.
 | 2.08 | TASK-2.08 | ⬜ Bekliyor | Yetenek ve yol haritası tek kaynağı: `product.ts`'te üç kademeli sabit, `PRODUCT_STATUS` ondan türer (B-029, B-040) |
 | 2.09 | TASK-2.09 | ⬜ Bekliyor | Ürünün karşılamadığı beş yetenek cümlesi düzeltilir (B-029) |
 | 2.10 | TASK-2.10 | ⬜ Bekliyor | `/ozellikler` üç kolonu ve Kurucu Programı satırları sabitten okur (B-040) |
-| 2.11 | TASK-2.11 | ⬜ Bekliyor | Chat ağacı, SSS ve fiyat sayfası sabitten okur; B-040 kapanır (B-040, B-014) |
+| 2.11 | TASK-2.11 | ⬜ Bekliyor | Chat, SSS, fiyat ve karşılaştırma sayfası sabitten okur — üç liste + beş tekil kalem cümlesi; B-040 kapanır (B-040, B-014) |
 | 2.12 | TASK-2.12 | ⬜ Bekliyor | Riskli alt küme taraması: ürünün kendi "bugün yok" işaretlerinden türeyen tarama ve düzeltmeler; B-029 kapanır |
 | 2.13 | TASK-2.13 | ⬜ Bekliyor | Ürün görsellerinde "Gizem Ö.", "Kampanyalar" menüsü ve "Yenileme & Churn" kartı temizlenir (B-018) |
 | 2.14 | TASK-2.14 | ⬜ Bekliyor | Denetimin ad dalı regex yerine temizlik tablosundan beslenir (B-018) |

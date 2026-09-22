@@ -42,7 +42,7 @@ Google Workspace'in **yarısı zaten kurulu** — gönderim tarafı çalışıyo
 **Okunması Gereken:**
 - `_dev/bulgular/B-011-apex-mx-kaydi-yok.md` — ölçüm yöntemi (DoH), adresin sitedeki beş yeri, SPF/DKIM/DMARC durumu
 - `_dev/phases/PHASE-2.md` → Değerlendirilen Yaklaşımlar #6 — seçilen küme ve gerekçesi
-- `src/content/site.ts:22` (`CONTACT.support` tek kaynağı) · `src/content/legal.ts:133, 198, 273`
+- `src/content/site.ts:22` (`CONTACT.support` tek kaynağı) · `src/content/legal.ts:48, 157, 234, 309` (adresin yasal metindeki dört yeri: başvuru kanalı `:157`, silme talebi `:234`) · `src/app/destek/page.tsx:35-36`
 - `_dev/tasks/archive/TASK-1.06.md` — `DEMO_TO` doğrulaması ve DoH ölçüm deseni
 
 **Güncellenmesi Gereken (Task Sonunda):**

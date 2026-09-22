@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — plan-phase: Faz 2'nin 20 task dokümanı yazıldı (dokuz bulgu → ölçüm ayağı, sır sızıntısı, iki arayüz kalemi, onay e-postası, yetenek tek kaynağı, görsel hat, yasal metin, beyan testi, MX). TASK-2.03 koşullu (TASK-2.01'in parmak izi karşılaştırmasına bağlı). Faz dokümanı kırmızı çizgiyi aştığı için `PHASE-2-ARASTIRMA.md`'ye bölündü. Sıradaki adım: plan doğrulama.
+**Son Güncelleme:** 2026-09-22 — verify-plan: 20 task doğrulandı; şablon, sıra ve bağımlılıklar temiz. Üç düzeltme uygulandı (kullanıcı onayı): dokuz bayat satır çapası ölçülen numaralara çekildi, TASK-2.11 beş tekil yol-haritası cümlesini de kapsayacak şekilde genişletildi (B-040'ın kapanışı onlar bağlanmadan ölçülemiyordu), `flex-1` sayımı üç dokümanda düzeltildi. Sıradaki adım: TASK-2.01.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
-**Adım:** verify-plan
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu). Plan doğrulama bekliyor.
+**Adım:** task
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅. Task çalıştırma başlıyor.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,10 +35,11 @@
 
 ## Aktif Task
 
-**Task:** — yok (Faz 2 planı yazıldı; task çalıştırma plan doğrulamasından sonra)
-**Durum:** ✅ Faz 2 task yazımı tamamlandı — 20 task dokümanı
-**İlerleme:** Sıradaki adım `/devflow:verify-plan` — planın milestone, gereksinim ve tutarlılık kontrolü.
+**Task:** TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058)
+**Durum:** ⬜ Bekliyor
+**İlerleme:** Plan doğrulandı; sıradaki adım `/devflow:run-task` — fazın ilk task'ı bir **keşif ayağıdır**, kod değiştirmez.
 **Not:**
+- **Plan doğrulamasının değiştirdikleri (verify-plan 2026-09-22):** TASK-2.11 üç yerine **dört** dosyaya dokunuyor — `karsilastirma.ts` de kapsama girdi ve beş tekil yol-haritası cümlesi (turnike/online ödeme) sabite bağlanıyor; buna bağlı olarak TASK-2.08'in kurduğu sabitin kalemleri **tek tek adreslenebilir** olmak zorunda. Bayat satır çapaları düzeltildi — task oturumları artık doğru satıra bakıyor.
 - **TASK-2.03 koşulludur:** TASK-2.01'in sunucu parmak izi karşılaştırması eşleşme bulursa koşar; bulmazsa ❌ İptal edilir ve milestone'un "iki anahtar döndürülmüş" ayağı kullanıcıyla yeniden yazılır (kullanıcı kararı, research 2026-09-22).
 - **TASK-2.20 (MX kayıtları) kullanıcı eliyle ilerler** — DNS adımı Squarespace'te kullanıcıdadır; faz yönergeyi yazar, ölçer ve gerçek test postasıyla doğrular. Kullanıcı kaydı girmezse task ⏸️ duraklar, faz kilitlenmez.
 - **Tarayıcı katmanlı kriterler `kanal: UAT` işaretli** (TASK-2.04 · 2.05 · 2.06 · 2.20): projenin otomatik katmanı gerçek tarayıcı yerleşimini ve odağını ölçmüyor; kalıcı tarayıcı betiği bilinçli olarak "Kalite kapıları otomatik" fazına bırakıldı.
@@ -65,7 +66,7 @@
 | 2.08 | TASK-2.08 — Yetenek ve yol haritası tek kaynağı (B-029, B-040) | ⬜ Bekliyor |
 | 2.09 | TASK-2.09 — Beş karşılıksız yetenek cümlesi düzeltilir (B-029) | ⬜ Bekliyor |
 | 2.10 | TASK-2.10 — `/ozellikler` ve Kurucu Programı sabitten okur (B-040) | ⬜ Bekliyor |
-| 2.11 | TASK-2.11 — Chat, SSS ve fiyat sayfası sabitten okur (B-040, B-014) | ⬜ Bekliyor |
+| 2.11 | TASK-2.11 — Chat, SSS, fiyat ve karşılaştırma sayfası sabitten okur (B-040, B-014) | ⬜ Bekliyor |
 | 2.12 | TASK-2.12 — Riskli alt küme taraması (B-029 kapanır) | ⬜ Bekliyor |
 | 2.13 | TASK-2.13 — Ürün görseli temizliği: ad, Kampanyalar, Churn kartı (B-018) | ⬜ Bekliyor |
 | 2.14 | TASK-2.14 — Denetimin ad dalı tablodan beslenir (B-018) | ⬜ Bekliyor |
@@ -113,7 +114,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok (Faz 2 planı yazıldı — sıradaki adım `/devflow:verify-plan`)
+**Aktif Task:** `tasks/TASK-2.01.md` ⬜ — sunucudaki iki gerçeğin salt-okunur ölçümü (keşif ayağı)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
