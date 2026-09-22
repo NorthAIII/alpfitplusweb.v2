@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — TASK-1.15 tamamlandı: `legal.ts`'in veri akışı anlatımı gerçeğe hizalandı (kayıt kendi sunucumuzda — Almanya/Nürnberg, yalnız yetkili yönetici okur, **12 ay**; ölçüm aynı sunucudaki kendi Umami'miz). Google adı veri akışı bağlamında kalmadı. Fazın tüm task'ları bitti — sıradaki adım `verify-phase`.
+**Son Güncelleme:** 2026-09-22 — audit-docs turu: doktrin kanonu (kök CLAUDE.md + dört çocuk) motorun güncel sürümüne hizalandı ve DECISIONS'ın kapanan 2026-09-10..2026-09-13 aralığı arşive bölündü.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -27,9 +27,11 @@
 <!-- - içerik_fazları: Normal faz döngüsü devam ediyor -->
 <!-- - teknik_borç: Teknik borç kapatma fazı aktif -->
 <!-- - senaryo_testi: Senaryo testi fazı aktif -->
-<!-- - prd_review_bekliyor: Her iki sabit faz tamamlandı; prd-review bekleniyor / yarım kalmış (prd-save ile bölünmüş) / bilinçli ertelenmiş (teslim DevFlow-dışıysa go-live sonrasına) — üçünde de next prd-review'u önerir, çalıştırmaz -->
+<!-- - prd_review_bekliyor: Her iki sabit faz tamamlandı; prd-review bekleniyor / yarım kalmış (prd-save ile bölünmüş) / bilinçli ertelenmiş (teslim DevFlow-dışıysa go-live sonrasına) — üçünde de sıradaki komut /devflow:prd-review olarak önerilir, çalıştırılmaz -->
 
 ---
+
+<!-- KURAL: Aşağıdaki üç bölüm (Aktif Task · Task Durumu · Son Task Özetleri) ilk kickoff'ta doldurulamaz — henüz task yoktur. O hâlde içerikleri `— yok` kalır ve **bölümler SİLİNMEZ**; ilk task'le dolarlar. Bu bir template kalıntısı DEĞİLDİR — audit'in "placeholder sızıntısı" kalemi bu üç bölüme boşken uygulanmaz (kanon: .claude/commands/devflow/lib/audit-mekanik.md → Placeholder sızıntısı, koşullu kalem). -->
 
 ## Aktif Task
 
@@ -38,11 +40,9 @@
 **İlerleme:** Faz koddan ve metinden tamamdır. Sıradaki adım `/devflow:verify-phase`.
 **Not:**
 - **UAT'a devredilen iki kalem:** (1) Umami panelinde v2 kaydı altında sayfaların, yüzey etiketlerinin (`hero`/`footer`/`fiyat`) ve üç olayın gözle teyidi — kod tarafı uçtan uca ölçüldü (TASK-1.07/1.08/1.09); (2) TASK-1.06 e-postasının gelen kutusu/spam yerleşimi — gönderim tarafı `delivered` ölçüldü.
-- **Umami paneline giriş kasada** (`UMAMI_USERNAME`/`UMAMI_PASSWORD`). ⚠️ Bu parola kaybedilirse giriş kalıcı kaybolur — 3.1.0 sıfırlama aracı taşımıyor (`memory/kendi-sunucu-n8n-bunker-umami.md`).
-- **B-056 (b) uyarısı gelecekte Umami ölçen her tura geçerli:** araştırma konteynerinin varsayılan UA'sı `HeadlessChrome` ve Umami bot kontrolü **200 `{"beep":"boop"}`** dönüp kaydı yazmaz. Olay ölçerken bot olmayan UA ver, yoksa sahte yeşil okursun.
-- **Yerel lead deposu hâlâ ayakta** (`docker compose --profile lead up -d lead-store`; komutlar/tuzaklar `_dev/memory/yerel-lead-deposu-docker-profili.md`).
-- **⚠️ BULGULAR kırmızı çizgiyi (20k token) geçti** (2026-09-22 ölçümü: **20,6k**; TASK-1.15 iki pointer satırı ekledi). Yapısal sorun değil, **triyaj borcu**: supap `audit-product` uzlaştırmasıdır — ertelenemez sinyal.
-- **`docker compose exec web npm run build` sonrası ihtiyaten `docker compose restart web` yap** (TASK-1.08/1.09/1.15'te gözlemlendi, gerekçe `memory/alternatif-env-ile-uretim-derlemesi.md`).
+- **Yerel `lead-store` konteyneri hâlâ ayakta** (ölçüldü 2026-09-22: `Up`, healthy) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
+
+---
 
 ## Task Durumu (Aktif Faz)
 
@@ -77,26 +77,37 @@
 
 ### TASK-1.15 — Yasal metin hizası: lead deposu ve kendi Umami (2026-09-22)
 
+**Durum:** ✅ Tamamlandı
 **Özet:**
 - KVKK **Aktarım** maddesi gerçeğe hizalandı: "Kayıt tutma — Google elektronik tablo" kalemi düştü; yeni giriş paragrafı kaydın **kendi sunucumuzda** olduğunu, Almanya'da (Nürnberg) bir veri merkezinde durduğunu ve yalnız yetkili yönetici hesabının okuyabildiğini yazıyor (sitenin anahtarı yalnız kayıt oluşturur). Listeye `Sunucu barındırma` kalemi girdi — kayıt aktarılmıyor, veri merkezi bir tedarikçi.
 - KVKK **Saklama süresi** "en fazla iki yıl"dan v1 desenine geçti: depo kaydı **12 ay** (günlük temizlik işi, `RETENTION_MONTHS=12` ile ölçüldü) + "talebiniz üzerine daha erken" korundu; ekip posta kutusu ve gönderim sağlayıcısındaki kopyalar **süre iddiası kurulmadan** sayıldı.
 - **Gizlilik** iki başlıkta hizalandı: ölçüm yazılımı kendi sunucumuzda (Umami; `umami.kiwiailab.com` deponun IP'siyle aynı — ölçüldü), "IP saklamaz" ölçülen kapsama **daraltıldı** ("kayıtlarında IP adresinizi tutmaz"), sorgu dizesi olgusu eklendi; "elektronik tablo hizmetinde (Google)" → kendi sunucudaki kayıt veritabanı.
 
-**Test:** `npm test` 5 dosya/**61 PASS** + 1 skipped (taban birebir). `tsc --noEmit` 0, eslint 0. `npm run build` temiz (23 rota). Üç yasal sayfa 200 + yeni metin; `Google`/"elektronik tablo"/"en fazla iki yıl" **0** eşleşme. `a11y.mjs` TOPLAM SORUN: 0 (kapsam `/kvkk`, B-012), `font-guard.mjs` eksik karakter yok (16 sayfa/80.487 krk), `scan.mjs` üç yasal sayfada konsol temiz, `mobile-audit.mjs` yatay kaydırma yok. İddia taraması eşleşmesiz. Detay: `tasks/archive/TASK-1.15.md`
+**Test:** `npm test` 5 dosya/**61 PASS** + 1 skipped (taban birebir). `tsc --noEmit` 0, eslint 0. `npm run build` temiz (23 rota). Üç yasal sayfa 200 + yeni metin; `Google`/"elektronik tablo"/"en fazla iki yıl" **0** eşleşme. `a11y.mjs` TOPLAM SORUN: 0 (kapsam `/kvkk`, B-012), `font-guard.mjs` eksik karakter yok (16 sayfa/80.487 krk), `scan.mjs` üç yasal sayfada konsol temiz, `mobile-audit.mjs` yatay kaydırma yok. İddia taraması eşleşmesiz.
+**Detay:** `tasks/archive/TASK-1.15.md`
+
+<!-- KURAL: **Detay:** yolu task'ın DURUMUNA bağlıdır. ✅ Tamamlandı ise task arşive taşınmıştır (run-task Adım 7) ve yol `tasks/archive/…`'dır; task hâlâ `_dev/tasks/` altındaysa (🔄 / ⏸️ / 🔴) canlı yol yazılır. Özet Adım 5'te yazılır, taşıma Adım 7'de yapılır — sırayı izleyip tamamlanan task'a canlı yol yazmak, commit anında kırık bir referans bırakır ve bir sonraki audit turu onu "kırık dosya referansı" kalemi olarak açar. -->
+
+---
 
 ### TASK-1.09 — Global tıklama dinleyicisi ve yüzey etiketleri (2026-09-22)
 
+**Durum:** ✅ Tamamlandı
 **Özet:**
 - `src/components/layout/ClickTracker.tsx` (YENİ): tek `document` `click` dinleyicisi (bubble+`passive`), `wa.me`/`tel:` desenini yakalayıp yüzeyi `[data-surface]` → `section[id]` → sayfa yolu sırasıyla türetir, sözlükte yoksa `SURFACES.other`'a düşer.
 - On dosyaya `data-surface` çapası kondu (Header, Footer, Assistant, Hero, FinalCta, DemoForm, demo/destek sayfaları, not-found, global-error); `Section` bileşeni prop forward etmediği için sayfa çapaları onun içindeki `div`'e kondu.
 - Analitik yükü iki kaynaktan ölçüldü (B-035 kapsam notuyla): `perf.mjs` baseline'la **birebir aynı** (144/133 KB, LCP 96 ms); Umami betiği **2,56 KB** + bir olay isteği **0,74 KB** (CDP ağ kaydı, izole konteyner, gerçek website id).
 
-**Test:** `npm test` 5 dosya/**61 PASS** + 1 skipped (yeni: `tests/click-tracker.test.ts` 5/5). `tsc --noEmit` 0. `docker compose exec web npm run build` + `--build web-prod` ikisi de temiz (23 rota). `a11y.mjs` TOPLAM SORUN: 0, `mobile-audit.mjs` yatay kaydırma: yok, `scan.mjs` (ana sayfa/`/demo`/`/destek`) konsol temiz, `font-guard.mjs` eksik karakter yok. Detay: `tasks/archive/TASK-1.09.md`
+**Test:** `npm test` 5 dosya/**61 PASS** + 1 skipped (yeni: `tests/click-tracker.test.ts` 5/5). `tsc --noEmit` 0. `docker compose exec web npm run build` + `--build web-prod` ikisi de temiz (23 rota). `a11y.mjs` TOPLAM SORUN: 0, `mobile-audit.mjs` yatay kaydırma: yok, `scan.mjs` (ana sayfa/`/demo`/`/destek`) konsol temiz, `font-guard.mjs` eksik karakter yok.
+**Detay:** `tasks/archive/TASK-1.09.md`
+
+---
 
 <!-- KURAL: Sadece son 2 task özeti tutulur, daha eskileri silinir (gerçek silme — HTML comment yasak). -->
 <!-- KURAL: Sadece aktif fazın task'leri gösterilir. Geçmiş fazların bilgileri phases/ klasöründedir. -->
 <!-- KURAL: "Son Tamamlanan Faz", "Son Tamamlanan Sprint" gibi ek özet bölümleri EKLEME — faz durum özeti PHASES.md'de, faz detayları PHASE-N.md'de. DURUM yalnızca aktif durum + son 2 task özeti. -->
 <!-- KURAL: Faz alt-fazlarının (verify-plan/plan/research/discuss) ayrı oturum özetlerini DURUM'a yazma — onlar faz dokümanına ait. -->
+<!-- KURAL: Üç proje-özgü yerleşim (bilinçli, audit-docs 2026-09-22 — template'e çekilmez): (1) task ADI `###` başlığında durur, ayrı `**Konu:**` alanı AÇILMAZ — alan eklemek adı iki yerde tutar ve drift doğurur; (2) `**Test:**` alanı ilk task'ten beri (TASK-1.01, 011b8ac) her özette var ve yerleşik proje desenidir — ölçüm rakamı kapanışın kanıtıdır, silinmez; (3) Hızlı Erişim dört satırdır, dördüncüsü `BULGULAR.md`'dir (template üç satır tanımlar). -->
 
 ## Duraklatma Notu
 
