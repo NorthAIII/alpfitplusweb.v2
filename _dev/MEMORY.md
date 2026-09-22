@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-22 — verify-phase (2. tur): üç ölçüm notu atomlara işlendi — üretim konteynerinin (3100) bayatlığı ölçülmeden güvenilmez ve taze imaj tarifi, `vercel inspect`'in commit SHA basmaması (dağıtım↔commit bağı zaman/davranış eşlemesiyle kurulur), ve `data-exclude-search` iddiasının Umami'ye kayıt yazmadan ters çevrilmesi.
+**Son Güncelleme:** 2026-09-22 — review-phase (Faz 1 kapanışı): yeni süreç disiplini — tek kaynağı **atlayan** çağrı siteleri kapanışta sayılır (TASK-1.20'nin kanıtı: beş yeşil saf-fonksiyon testi, üç sayfa türevi hiç çağırmıyordu). Ara-hâl atomunun faza bağlı uygulama listesi tükendiği için budandı.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -49,6 +49,7 @@
 
 - [Aşamaya bağlı davranışta "ara hâl" ayrıca sınanır](memory/asama-bagimli-davranis-ara-hal-sinamasi.md) — `deployStage`'e göre davranan her task `VERCEL_ENV=production` + `…vercel.app` hâlini de koşar (projenin F7.5'e kadarki gerçek hâli); iki uçlu test bu fail-open'ı göremez
 - [Hız sınırlı uca test bataryası — her senaryo kendi IP'sini taşır](memory/hiz-sinirli-uca-test-bataryasi.md) — `/api/demo` IP başına 10 dk / 5 istek sayar ve doğrulamadan **önce** çalışır; çok senaryolu batarya senaryo başına ayrı `X-Forwarded-For` göndermezse 6. istekten sonra sahte kırmızı okur
+- [Tek kaynağı atlayan çağrı siteleri kapanışta sayılır](memory/tek-kaynak-atlayan-cagri-sitesi-supurmesi.md) — tek kaynak tanıtan/değiştiren task, kapanışta kaynağı **atlayan** yazımları grep'ler; saf fonksiyon testi bu sınıfı göremez (TASK-1.20)
 
 ---
 

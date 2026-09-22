@@ -19,7 +19,7 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 
 | Faz | Konu | Milestone | Durum |
 |-----|------|-----------|-------|
-| 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı | 🔄 Devam ediyor |
+| 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı | ✅ Tamamlandı |
 
 **Durum simgeleri:**
 - 🔄 **Devam ediyor** — discuss-phase başladı (aktif faz)
@@ -81,11 +81,12 @@ Dış aktöre bağlı işler (hukukçu onayı, logo, kurucu programı kontenjan�
 | Geçiş | Tarih | Not |
 |--------|-------|-----|
 | → Faz 1 | 2026-09-11 | İlk faza girildi; sıra değişti (DECISIONS 2026-09-11) |
+| Faz 1 ✅ | 2026-09-22 | 19/19 task sonuçlandı (18 ✅ + 1 iptal); UAT 32/34; milestone kısmen — bkz. PHASE-1 |
 
 <!-- KURAL: Her geçiş için TEK satır + kısa not. Geçiş gerekçesi/detayı PHASE-N.md retrospektifindedir, burada tekrar edilmez. "Önceki:" prefix veya HTML comment ile detay yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---
 
-**Son Güncelleme:** 2026-09-14 — TASK-1.18 (run-phase): Alan adı geçişi satırındaki açık Umami site kaydı seçimi kullanıcı kararına bağlandı (v1'in `alpfitplus.com` kaydına geçilir); sıra değişmedi.
+**Son Güncelleme:** 2026-09-22 — review-phase: Faz 1 ✅ tamamlandı (19/19 task, UAT 34 senaryodan 32'si geçti, düzeltme task'ı doğmadı); milestone'un iki doğrulama ayağı kullanıcı gözünde kaldığı için geçiş notuna "kısmen" ibaresi girdi. Sıradaki Fazlar değişmedi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

@@ -50,7 +50,7 @@
 **Açıklama:** `RESEND_API_KEY` ile `DEMO_TO`'ya bildirim. İkincil; tek başına yeterli sayılır ama tercih edilmez. Aynı faz konusunda.
 
 **Kabul Kriterleri:**
-- Gerçek talep `DEMO_TO` adresine e-posta olarak gelir; gövde tüm alanları taşır
+- Gerçek talep `DEMO_TO` adresine e-posta olarak gelir; gövde tüm alanları taşır — **karşılandı:** canlı turda Resend `delivered`, dokuz alan + `KVKK onayı` + `Ortam:` satırı ölçüldü (`phases/PHASE-1-UAT.md` #9); **gelen kutusu/spam yerleşimi** API'den ölçülemez, kullanıcı gözüne kaldı (#10)
 - E-posta başarısız olsa bile dayanıklı kayıt yazıldıysa uç 200 döner
 
 **Bağımlılık:** F3.2

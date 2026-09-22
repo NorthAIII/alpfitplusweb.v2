@@ -21,5 +21,12 @@ Dördüncü senaryo fail-safe'i sınar: alan adı env'i **hiç tanımsız** → 
 düzeyinde değil — kusur yanıtın kendisinde doğar. Kurulumu:
 [Alternatif env ile üretim derlemesi](alternatif-env-ile-uretim-derlemesi.md).
 
-Bu fazda uygulanacak yerler: noindex üç katmanı (TASK-1.02 ✅), lead `env` alanı
-(TASK-1.05), Umami `data-tag` (TASK-1.07).
+Faz 1'de üç tüketicinin üçü de bu sınamadan geçti: noindex üç katmanı
+(TASK-1.02), lead `env` alanı (TASK-1.05), Umami `data-tag` (TASK-1.07) —
+üçü de canlı önizlemede ara hâlde ölçüldü. Kural **F7.5'e (alan adı geçişi)
+kadar geçerlidir**; o gün aşama kendiliğinden `production`'a döner ve ara hâl
+projenin gerçek hâli olmaktan çıkar.
+
+⚠️ Bu sınama **çağıranı** ölçer, **atlayanı** değil: bir yüzey türevi hiç
+çağırmıyorsa üç senaryo da onu göremez →
+[Tek kaynağı atlayan çağrı siteleri](tek-kaynak-atlayan-cagri-sitesi-supurmesi.md).

@@ -53,17 +53,17 @@
 **Bağımlılık:** M6 F6.1 yeşil
 
 **Edge Case'ler:**
-- Vercel'de kalıcı disk yok → `LEAD_FILE_PATH` çalışmaz, M3 F3.2 webhook ister
-- Önizleme adresi arama motoruna açılmamalı: `robots` önizlemede `noindex` veya Vercel koruması — discuss'ta karar
+- Vercel'de kalıcı disk yok → `LEAD_FILE_PATH` çalışmaz; M3 F3.2 birincil hedef olarak **depoyu** (`LEAD_STORE_URL`) ister
+- Önizleme adresi arama motoruna açılmamalı — **karar: açık adres + üç katmanlı `noindex`** (başlık + `robots.txt` + meta, hepsi `deployStage`'den), Vercel koruması kullanılmaz (`phases/PHASE-1-KAPSAM.md`)
 
 ---
 
 ### F7.4: Analitik olay sayımı → Phase 1
 
-**Açıklama:** v1'de olay sayımı vardı; v2'de hiçbir izleme yok (kickoff boşluğu). Demo gönderimi, WhatsApp ve telefon tıklaması **yüzey etiketiyle** (hero, fiyat, footer, asistan…) sayılır. Sağlayıcı seçimi (Vercel Analytics, Plausible, Umami…) ve KVKK etkisi discuss'ta karar. Aynı faz konusu.
+**Açıklama:** v1'de olay sayımı vardı; v2'de hiçbir izleme yok (kickoff boşluğu). Demo gönderimi, WhatsApp ve telefon tıklaması **yüzey etiketiyle** (hero, fiyat, footer, asistan…) sayılır. Sağlayıcı **kendi Umami kurulumumuz** (`umami.kiwiailab.com`), çerezsiz — seçim ve KVKK değerlendirmesi `docs/DECISIONS.md` 2026-09-13; olay adları v1 hizalı (`demo-submit`/`whatsapp`/`phone`), ortam ayrımı `data-tag={deployStage}`. Faz 1'de kapandı.
 
 **Kabul Kriterleri:**
-- Üç olay (demo gönderimi, WhatsApp tıklama, telefon tıklama) yüzey etiketiyle sağlayıcı panelinde görünür
+- Üç olay (demo gönderimi, WhatsApp tıklama, telefon tıklama) yüzey etiketiyle sağlayıcı panelinde görünür — **karşılandı:** olay/yüzey/ortam-etiketi kırılımı panelin kendi okuma API'siyle canlıda ölçüldü (`phases/PHASE-1-UAT.md` #11-15); panel **arayüzünün** gözle görülmesi kullanıcı gözüne kaldı (#16)
 - Çerezsiz ya da rıza gerektirmeyen model tercih edilir; gerekiyorsa yasal metin güncellenir (M1)
 - Sayfa ağırlığı artışı ölçüldü, eşik `perf.mjs`'te
 

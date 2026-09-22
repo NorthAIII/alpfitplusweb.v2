@@ -58,3 +58,27 @@
 - **Yasal metin:** `src/content/legal.ts:171` "üçüncü taraf takip pikseli kullanmıyoruz… gerekli olmayan hiçbir çerez yerleştirmez" cümlesi Umami ile hâlâ doğru (çerez yok) ama **eksik** — çerezsiz, kimlik tanımlamayan ölçüm ve sağlayıcısı yazılır; Aktarım maddesine (`legal.ts:100`) e-tablo tedarikçisi (Google) ve ölçüm sağlayıcısı (Umami) eklenir. Örnek ton v1'de var (`../Alpfitplus-website.v1/src/i18n/legal.ts` Resend maddesi: "gönderim İrlanda'dan, sağlayıcı verisi ABD'de"). B-008 (hukukçu onayı) açık kalır. **Revizyon (2026-09-13):** TASK-1.10 metni Google e-tablo ve Umami'ye göre yazdı; kayıt yeri kendi sunucudaki lead deposu (12 ay saklama), ölçüm kendi Umami olduğu için TASK-1.15 hizalar (v1 tonu: "Kendi sunucumuzdaki lead deposu (PocketBase) — Almanya (Hetzner, Nürnberg)").
 - **Hız sınırı Fluid Compute'ta örnek başına** — bilinçli tercih (BULGULAR), değişmez.
 - **İlk dağıtım her zaman production'dır** (Vercel kuralı) — model buna dayanıyor, sürpriz yok.
+
+---
+
+### Kullanılacak Araçlar/Kütüphaneler
+
+- **Umami tracker (kendi kurulum)** — `https://umami.kiwiailab.com/script.js` (v1 aynı adresi kullanıyor), `next/script` ile `strategy="afterInteractive"`; öznitelikler `data-website-id` (yeni env `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, sır değil), `data-tag={deployStage}`. `data-domains` **kullanılmaz** (önizlemede saymalı). Yeni npm bağımlılığı yok.
+- **PocketBase lead deposu (kendi sunucu, v1'in)** — sözleşme `../Alpfitplus-website.v1/pocketbase/README.md` → Uç nokta sözleşmesi (salt okunur); adres ve env adları memory → Kendi sunucu. Yerel kopya: compose profili `lead`, imaj v1'in Dockerfile'ı (`0.39.9`), `pb_hooks`/`pb_migrations` `:ro` (TASK-1.17). Yeni npm bağımlılığı yok; `ip_hash` `node:crypto` HMAC.
+- **Vitest** — tek devDependency, kök `tests/`, `npm test` konteynerde (TASK-1.16).
+- **Resend HTTP API** — mevcut `fetch` kullanımı korunur, SDK yok; alan `reply_to` doğru (API böyle). `Idempotency-Key` başlığı isteğe bağlı (tekrar gönderimde çift e-posta önler; 24 saat, ≤256 karakter) — `lead.at + club` türevi kullanılabilir.
+- **Vercel sistem env'leri** — `VERCEL`, `VERCEL_ENV`, `VERCEL_PROJECT_PRODUCTION_URL` (üçü de derleme ve çalışma anında; projede "Enable access to System Environment Variables" kutusu açık olmalı — F7.3'te teyit).
+- **Next.js 16 `next.config.ts` → `env`** — aşama tek yerde hesaplanır ve `NEXT_PUBLIC_DEPLOY_STAGE` olarak koda gömülür; `src/lib/stage.ts` (yeni) yalnız okur. Aynı değer `headers()` içinde noindex'i belirler.
+
+---
+
+### Teknik Kararlar
+
+- **Aşama türetimi tek yerde:** `next.config.ts` `deployStage`'i hesaplar (`local | preview | production`), `env.NEXT_PUBLIC_DEPLOY_STAGE` ile gömer ve aynı değerle `headers()`'da noindex'i verir; `src/lib/stage.ts` yalnız okur. Gerekçe: iki ayrı yerde iki koşul drift'tir; `VERCEL_ENV` tek başına yanlış (yukarıda ölçüldü). Kayıt `docs/DECISIONS.md` (2026-09-11).
+- **Lead hedefi v1'in lead deposu (revizyon 2026-09-14):** e-posta site kaynaklı kalır; site adaptörü yerel depo kopyasında sınanır, sözleşme paketi yalnız yerelde koşar, canlıya tek teyit isteği gider. Gerekçe: soğuk otomasyondan kanıtlı ayrık, sunucu/Bunker/n8n işi yok, alan adı geçişinde talepler aynı depoda kesintisiz. Kayıtlar `docs/DECISIONS.md` 2026-09-14.
+- **Analitik kendi Umami + global dinleyici:** olay adları `demo-submit` / `whatsapp` / `phone` (v1 hizası — `docs/DECISIONS.md` 2026-09-22; plandaki `-click` ekli adlar alan adı geçişinde seriyi ikiye bölerdi), tek özellik `surface`, etiket `data-tag=deployStage`; kişisel veri girmez. Kayıtlar `docs/DECISIONS.md` (2026-09-11 dinleyici, 2026-09-13 sağlayıcı, 2026-09-22 ad hizası).
+- **noindex üç katman aynı kaynaktan:** başlık + robots.txt + metadata; F7.5'te alan adı bağlanınca üçü birden açılır, elle adım yok.
+- **`.env.example` anahtar seti:** `LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT` (v1'le aynı adlar; `LEAD_WEBHOOK_URL` kalkar — TASK-1.14), `LEAD_FILE_PATH` (yalnız yerel), `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, yerel depo token'ları (TASK-1.17) ve sözleşme paketi adresi (TASK-1.13). Değer yok.
+- **Milestone cümlesi iki revizyonda değişti:** 2026-09-13'te "Google Sheet'e satır" → "Bunker'da kayıt, otomasyon tetiklenmeden" ve "analitik paneli" → "kendi Umami paneli"; 2026-09-14'te "Bunker'da kayıt, otomasyon tetiklenmeden" → "v1'in lead deposunda kayıt (önizleme koleksiyonu)".
+
+---

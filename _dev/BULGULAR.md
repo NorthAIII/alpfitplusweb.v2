@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-22 — verify-phase (2. tur): faza dokunan sekiz Gelen Kutusu notu süpürüldü, hiçbiri inceleme sonucu çözülmüş çıkmadı (mezuniyet yok); 1c faz-penceresi taraması yeni bulgu üretmedi (gözlenen iki zayıflık B-037 (2) ve B-020'de zaten kayıtlı, çift kayıt açılmadı); bağımlılık tazeliği için bir kutu notu eklendi. Açık bulgu 51 (değişmedi).
+**Son Güncelleme:** 2026-09-22 — review-phase (Faz 1 kapanışı): kapsam triyajı **düzeltme task'ı üretmedi** (tüm ⚠️ kalemler faz-öncesi ve kapsam kararıyla dışarıda); Gelen Kutusu'na iki `[PHASE-1]` notu düştü — ziyaretçi onayının iki kanalda birden kapalı olabilmesi (B-055 + B-059 birleşimi) ve dört atomun `toWebhook`/`LEAD_WEBHOOK_URL` kanıt atıflarının bayatlaması. Açık bulgu 51 (değişmedi).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -45,6 +45,9 @@
 - [PHASE-1] Yerel `lead-store` konteyneri iki gündür ayakta (`Up 2 days`, healthy) — kaldırma komutu `memory/yerel-lead-deposu-docker-profili.md`; içindeki test kayıtları hâlâ duruyor (üstteki `[audit-product]` satırı)
 
 - [PHASE-1] `npm outdated` dokuz paketi geride gösteriyor (Next 16.3.4→16.3.5, React 19.2.8→19.3.0, Vitest 4→5, TS 5.9→7); `npm audit` **0 açık** — aciliyet yok ama güncelleme kararı verilmemiş, kurulu bağımlılık botu da yok
+
+- [PHASE-1] **Ziyaretçi onayı iki kanalda birden kapalı olabiliyor:** ekran onayı mobilde görünmüyor (B-055) **+** talep sahibine onay e-postası yok (B-059, v1'de var). İkisi ayrı ayrı kayıtlı ama **birleşimi hiçbir atomda yazılı değil** — üst üste geldiğinde ziyaretçi talebinin ulaştığını hiçbir kanaldan öğrenemez. Bugün risk önizlemeyle sınırlı (canlıyı v1 sunuyor), alan adı geçişinde gerçek olur
+- [PHASE-1] **Dört açık bulgunun kanıt atıfları bu fazın yeniden adlandırmasıyla bayatladı** (B-024 · B-036 · B-037 · B-054): `toWebhook` → `toStore`, `LEAD_WEBHOOK_URL` → `LEAD_STORE_URL`, "e-tablo/Google" → kendi sunucudaki PocketBase; `route.ts` satır numaraları da kaydı (dosya 68 → 359 satır). Atomları kimse yanlış okumasın — evi audit-product uzlaştırması (M3 alanı), review-phase kanvasa yazmaz
 
 - [audit-product] Yerel `lead-store`'da bu denetim turunun **25 test kaydı** duruyor (`Ayse/Pilates`, `Deneme Kisi/Deneme Studyo`, `CSRF/K`, `Zemin/Kontrol`) — silinmedi; sonraki ölçüm bunları gerçek lead sanmasın
 - [audit-docs] Kök `CLAUDE.md` → `### Oturum Kapanışı:` gövdesi motorun güncel şablonundan eski (2 satırlık blok ↔ 4 satırlık blok + Terfi kuralı · Ön-hazırlık · dört özel durum · `engel:`/`önerilir:` önek kümesi). Göç ÖLÇÜLDÜ: +7.901 token, parent'ı 15.857 → ~23,8k yapıp kırmızı çizgiyi aşırıyor ve kanonun çaresi ("önce bölme") bu projede tükenmiş — karar gerekiyor; erteleme kaydı `CLAUDE.md` → Oturum Disiplini KURAL yorumunda
