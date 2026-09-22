@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — TASK-1.07 hâlâ açık: B-056 koruma kapısı kapatıldı (ölçüldü, commit `5dfa017`); Umami kimliği kasaya girdi ama **parola geçersiz** (401) ve 3.1.0'da **parola sıfırlama aracı yok** — kullanıcı kararı bekleniyor.
+**Son Güncelleme:** 2026-09-22 — TASK-1.07 tamamlandı: v2'nin Umami site kaydı API ile açıldı (`640b05f1-…`), tracker gerçek kimlikle uçtan uca ölçüldü ve yayın yüzeyi `data-tag="preview"` ile sayıyor; B-056 koruması da kapandı. Sırada TASK-1.08.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 13/17 task tamamlandı (1 iptal: TASK-1.04)
+**İlerleme:** 14/17 task tamamlandı (1 iptal: TASK-1.04)
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -33,18 +33,16 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.07 — Kendi Umami'ye site kaydı ve tracker bağlantısı
-**Durum:** ⬜ Bekliyor — kısmi ilerleme var (kod, B-056 koruması ve yerel ölçüm commit'li); kapanışı Umami'de v2 site kaydına ve `NEXT_PUBLIC_UMAMI_WEBSITE_ID`'ye bağlı (`tasks/TASK-1.07.md` → 2026-09-21 kaydı → Sonraki Adım Detayı).
+**Task:** TASK-1.08 — Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit`
+**Durum:** ⬜ Bekliyor
 **İlerleme:** Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
-- **Lead hattı uçtan uca yeşil (TASK-1.06):** önizlemeden gelen gerçek talep `leads_preview`'a düştü (`notify_team=sent`) ve e-posta Resend'de `delivered`. Faz milestone'unun lead ayağı kapandı.
-- **🔴 1.07 BLOKE — Umami paneline giriş yok:** kasadaki `admin` parolası `401` veriyor (taşıma temiz olduğu ölçüldü) ve Umami 3.1.0 **parola sıfırlama aracı taşımıyor** (`scripts/change-password.js` hem kaynakta hem konteynerde yok; `POST /api/me/password` mevcut parolayı istiyor; konteynerde `bcryptjs` yok). Kalan tek yol DB'ye doğrudan yazma → **kullanıcı kararı**. Detay: `tasks/TASK-1.07.md` → 2026-09-22 kaydı.
-- **Anahtar kasası açıldı** (`docs/DECISIONS.md` 2026-09-21): yönetim anahtarları `~/.config/alpfit/secrets.env` (600, repo dışı), oturum panel işini API ile yapıyor — detay `memory/anahtar-kasasi-config-alpfit.md`. **1.07'nin Umami adımı aynı yolu bekliyor ve biçimi artık ölçüldü** (2026-09-21): self-hosted Umami 3.1.0'da **API anahtarı yok** — `checkAuth` yalnız `Authorization: Bearer` kabul ediyor, token `POST /api/auth/login` ile **kullanıcı adı + paroladan** çıkıyor. Kasaya `UMAMI_USERNAME` + `UMAMI_PASSWORD` girerse site kaydı kullanıcısız açılabilir.
-- **B-056 kapısı KAPANDI** (2026-09-21): `data-exclude-search="true"` izleyici etiketine eklendi ve ölçüldü; kimlik girildiği an kişisel veri sızdıran zincir artık kurulmuyor. Kalan: B-036'nın native GET yolu (kaynak tarafı) ve 1.07'nin 3. kriterinin bot-kontrolü sahte yeşili (B-056 (b)).
+- **Analitik hattı ayakta (TASK-1.07):** v2'nin kendi Umami kaydı açıldı — `Alpfit Plus v2 (önizleme)` / `alpfitplus-web-v2.vercel.app`, kimlik `640b05f1-41aa-4ba0-985b-f30145e49983` (sır değil). `NEXT_PUBLIC_UMAMI_WEBSITE_ID` Vercel Production + Preview'de; yayın yüzeyi `data-tag="preview"` ile sayıyor. v1'in `alpfitplus.com` kaydı bayt bayt değişmedi.
+- **⚠️ TASK-1.08'i bağlayan kullanıcı yönü (2026-09-14):** alan adı geçişinde v2 v1'in kaydına geçeceği için **olay adları v1 ile hizalanacak** — v1: `demo-submit`, `whatsapp`, `phone`, `email`, `instagram`, `cta`; v2'nin eski planındaki `-click` eki **kullanılmayacak**.
+- **B-056 (b) uyarısı 1.08/1.09 ölçümlerinde de geçerli:** araştırma konteynerinin varsayılan UA'sı `HeadlessChrome` ve Umami bot kontrolü **200 `{"beep":"boop"}`** dönüp kaydı yazmaz. Olay ölçerken bot olmayan UA ver, yoksa sahte yeşil okursun.
+- **Umami paneline giriş kasada** (`UMAMI_USERNAME`/`UMAMI_PASSWORD`). ⚠️ Bu parola kaybedilirse giriş kalıcı kaybolur — 3.1.0 sıfırlama aracı taşımıyor (`memory/kendi-sunucu-n8n-bunker-umami.md`).
 - **Yerel lead deposu hâlâ ayakta** (`docker compose --profile lead up -d lead-store`; komutlar/tuzaklar `_dev/memory/yerel-lead-deposu-docker-profili.md`).
-- **BULGULAR ~19,8k token** — rehber kırmızı çizgiye (20k) dayandı ve açık bulgu 49 (eşik ~30). Yapısal sorun değil, **triyaj borcu**: supap `audit-product` uzlaştırmasıdır (CLAUDE.md → Boyut ve Bölünme, kanvas dokümanı bölünmez).
-
----
+- **BULGULAR ~19,9k token** — rehber kırmızı çizgiye (20k) dayandı. Yapısal sorun değil, **triyaj borcu**: supap `audit-product` uzlaştırmasıdır.
 
 ## Task Durumu (Aktif Faz)
 
@@ -63,7 +61,7 @@
 | 1.14 | Kayıt adaptörü — `toStore`, `.env.example`, Apps Script kalıntısı | ✅ Tamamlandı |
 | 1.18 | Canlı depo bağlantısı — Vercel env ve token → koleksiyon teyidi | ✅ Tamamlandı |
 | 1.06 | E-posta hattını aç ve uçtan uca canlı tur (depo + e-posta) | ✅ Tamamlandı |
-| 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ⬜ Bekliyor |
+| 1.07 | Kendi Umami'ye site kaydı ve tracker bağlantısı | ✅ Tamamlandı |
 | 1.08 | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` | ⬜ Bekliyor |
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ⬜ Bekliyor |
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
@@ -77,6 +75,15 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-1.07 — Kendi Umami'ye site kaydı ve tracker bağlantısı (2026-09-22)
+
+**Özet:**
+- v2'nin **kendi** Umami site kaydı oturum tarafından **API ile** açıldı (`POST /api/websites`): `Alpfit Plus v2 (önizleme)` / `alpfitplus-web-v2.vercel.app`, kimlik `640b05f1-41aa-4ba0-985b-f30145e49983`, `teamId` null. Kurulum 2 → 3 kayıt; v1'in `alpfitplus.com` ve `kiwiailab.com` kayıtları **bayt bayt değişmedi** (önce/sonra diff boş). Kullanıcıya panel adımı kalmadı.
+- `NEXT_PUBLIC_UMAMI_WEBSITE_ID` Vercel Production + Preview'e Config olarak girildi, yeniden dağıtıldı (Ready 40 s). Yayın yüzeyi: `data-tag="preview"`, `data-exclude-search="true"`, `data-domains` yok, noindex bozulmadı.
+- Tur iki kez kullanıcı kararında durdu (parola geçersiz → 3.1.0'da sıfırlama aracı yok); ikisi de kayda geçti. Task dokümanı 21,0k token'a çıktığı için **faz hâlâ aktifken** bölündü → `TASK-1.07-OTURUM-KAYITLARI.md` (parent 8,7k).
+
+**Test:** Yerel: `/api/send` **200** ve gövde `sessionId`/`visitId` — `{"beep":"boop"}` değil (bot kontrolü bot-olmayan UA ile aşıldı, B-056 (b) sahte yeşili engellendi); `data-tag="local"`, çerez **0**. **B-056 canlıda kanıtlandı:** `/demo?name=…&phone=…` açıldı, yükte `url` sorgusuz. `npm test` 3 dosya/**53 PASS** + 1 skipped (taban aynı), eslint 0, `cloud.umami.is` 0. Bunker "Web Trafik" paneli **koddan** elendi (share-URL/env deseni, API'den saymıyor). Detay: `tasks/archive/TASK-1.07.md`
+
 ### TASK-1.06 — E-posta hattı açıldı, lead hattı önizlemeden uçtan uca kanıtlandı (2026-09-21)
 
 **Özet:**
@@ -85,17 +92,6 @@
 - Resend kaydı **`last_event: delivered`**; gövde dokuz alan + `KVKK onayı` + **`Ortam: preview`**, `reply_to` lead'in adresi. Alan adı `verified`/`eu-west-1` API'den ölçüldü.
 
 **Test:** `npm test` 3 dosya/**53 PASS** + 1 skipped (taban aynı). `vercel env ls` altı anahtar × iki ortam. Depo okuması salt-okunur (`data.db` ve `-wal` bayt bayt değişmedi). B-037(1) yayın yüzeyinde ölçülüp 🟢'ye indi; B-011 bugün yeniden ölçüldü (apex MX hâlâ yok), `DEMO_TO` kalemi kapandı. Detay: `tasks/archive/TASK-1.06.md`
-
-### TASK-1.18 — Canlı depo bağlantısı: Vercel env ve token → koleksiyon teyidi (2026-09-14)
-
-**Özet:**
-- Vercel `alpfitplus-web-v2` Production + Preview'e `LEAD_STORE_URL` (Config), `LEAD_STORE_TOKEN` (Secret, önizleme token'ı) ve `IP_HASH_SALT` (Secret, v2'ye özel rastgele) girildi; değerler hiçbir çıktıya düşmedi. Kapanış push'u env'li ilk dağıtım.
-- Yerel dev'den canlı depoya tek talep (`200 stored:true`). Canlı `data.db` SSH ile salt-okunur okundu: kayıt `leads_preview`'da, `env=preview`; `leads`'te 0. Önceki bir oturumun kayıtsız aynı testi de (16:48Z) önizlemede; iki kayıt kalıyor.
-- Umami site kaydı kararı DECISIONS'a, F7.5 env taşıma listesi M7'ye, canlı teyit yolu memory'ye yazıldı.
-
-**Test:** Canlı `health` 200, token'sız `POST /lead` 401. Canlıya gidiş kanıtı: yerel sayım 57/57; geri dönüş kanıtı: yerel 58, canlıda `geri donus` 0. `vercel env ls` üç anahtar × iki ortam. `npm test` 3 dosya/53 PASS + 1 skipped. Diff'te 64-hex 0. Detay: `tasks/archive/TASK-1.18.md`
-
----
 
 <!-- KURAL: Sadece son 2 task özeti tutulur, daha eskileri silinir (gerçek silme — HTML comment yasak). -->
 <!-- KURAL: Sadece aktif fazın task'leri gösterilir. Geçmiş fazların bilgileri phases/ klasöründedir. -->
@@ -117,7 +113,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.07.md`
+**Aktif Task:** `tasks/TASK-1.08.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-21 — TASK-1.07: "Kendi sunucu" atomuna Umami bölümü eklendi — 3.1.0'da **API anahtarı yok**, site kaydı yalnız `login` → Bearer ile açılıyor; uç ve gövde şemaları ölçüldü.
+**Son Güncelleme:** 2026-09-22 — TASK-1.07 kapandı: Umami atomuna v2 site kaydının kimliği ve Bunker panelinin etkilenmediği (share-URL deseni) yazıldı; kasa atomunda Umami parolası artık geçerli, sıfırlama aracının olmadığı uyarısı kaldı.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
