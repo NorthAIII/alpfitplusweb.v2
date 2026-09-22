@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-22 — audit-product: "Alternatif env ile üretim derlemesi" atomuna `.env`'i kimin okuduğu eklendi — `docker compose exec … printenv` çalışan Next sürecinin env'ini göstermiyor, dev bind-mount'tan, üretim imajı kendi katmanından `.env`'i okuyor; yerel uca POST atmadan önce hedef `503 no-sink` sondasıyla ölçülür.
+**Son Güncelleme:** 2026-09-22 — verify-phase: "Kendi sunucu" atomuna Umami'nin **okuma API'si** ölçüm kanalı olarak yazıldı (panele bakmadan olay/yüzey/etiket teyidi; uç listesi, ms-epoch ve `type=path` tuzağı, `tag` metriğinin ziyaret düzeyinde sayması) ve `next/script` `afterInteractive` etiketinin ilk HTML'de düz öznitelik olarak görünmediği notu eklendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -32,7 +32,7 @@
 - [Vercel proje kimlikleri ve CLI erişimi](memory/vercel-proje-kimlikleri.md) — CLI kurulu ve oturum açık (`northaiii`), kimlik `$XDG_DATA_HOME/com.vercel.cli` altında; proje `alpfitplus-web-v2` / takım `north-ai` / plan `hobby`; `vercel project add` çerçeve tespiti yapmaz, `framework` ve `autoExposeSystemEnvs` elle doğrulanır
 - [Alternatif env ile üretim derlemesi ve `.env`'i kim okuyor](memory/alternatif-env-ile-uretim-derlemesi.md) — `.next` paylaşılan isimli hacim; üretim env'ini taklit eden derleme **ayrı** konteynerde (3200), sonra `docker compose restart web` (3001 kullanılmaz). **`docker compose exec … printenv` çalışan uygulamanın env'ini GÖSTERMEZ** — dev de üretim imajı da `.env`'i görüyor; yerel uca POST atmadan önce hedefi tek `{}` POST'unun `503 no-sink` verip vermediğiyle ölç
 - [Araştırma konteynerinde tarayıcı ölçümü](memory/arastirma-konteynerinde-tarayici-olcumu.md) — Playwright yalnız araştırma konteynerinde; betik scratchpad'e yazılıp `-v` ile mount edilir, `research/`'e yazılmaz ve `--name` her koşumda farklı olur
-- [Kendi sunucu: lead deposu, n8n, Bunker ve Umami](memory/kendi-sunucu-n8n-bunker-umami.md) — demo talebi v1'in PocketBase'ine yazılır, Bunker'a değil (soğuk e-posta tabloları); canlı kayıt teyidi panelle değil SSH + salt-okunur DB ile (kullanıcı panele bakamıyor). **Okuma modu yan dosyaya göre seçilir:** `-wal` yoksa `immutable=1`, varsa `mode=ro` — ters seçim ya sunucuya yazar ya son kaydı "yok" gösterir
+- [Kendi sunucu: lead deposu, n8n, Bunker ve Umami](memory/kendi-sunucu-n8n-bunker-umami.md) — demo talebi v1'in PocketBase'ine yazılır, Bunker'a değil (soğuk e-posta tabloları); canlı kayıt teyidi panelle değil SSH + salt-okunur DB ile (kullanıcı panele bakamıyor). **Okuma modu yan dosyaya göre seçilir:** `-wal` yoksa `immutable=1`, varsa `mode=ro` — ters seçim ya sunucuya yazar ya son kaydı "yok" gösterir. **Umami'de "panelde görünüyor mu" sorusu da panelsiz ölçülür:** kurulumun kendi okuma API'si (login → Bearer) olay, yüzey ve ortam-etiketi kırılımını döndürür
 - [Anahtar kasası — `~/.config/alpfit/secrets.env`](memory/anahtar-kasasi-config-alpfit.md) — yönetim anahtarları repo dışında `600` bir dosyada (bugün `RESEND_ADMIN_KEY`); oturum panel adımını API ile yapar ve üretim için **dar yetkili** anahtarı kendisi üretir — değer hiçbir yere yazılmaz
 - [Yerel lead deposu — Docker profili `lead`](memory/yerel-lead-deposu-docker-profili.md) — `docker compose --profile lead up -d lead-store`; indirme/silme servis+hacim adıyla (`down` YASAK); token değişimi `restart` değil `up -d` ile gelir; `.env`'deki `LEAD_TOKEN_*` tamamen yerel/rastgele
 

@@ -39,6 +39,29 @@ Sunucunun kendisi bu projenin değil — ayrıntı, erişim ve değişiklik kura
 - **Bunker "Web Trafik" paneli yeni kayıttan etkilenmez** (koddan ölçüldü, panele girilmedi): `bunker-dashboard/src/app/web-traffic/page.tsx` Umami'nin **paylaşım (share) URL'lerini** `UMAMI_SITES` env'inden okuyup iframe'liyor — API'den site **saymıyor**, sekme listesi env'de sabit. Yani yeni kayıt ne görünür ne bozar. v2'yi oraya eklemek istenirse: Umami'de kayda share URL üret + Bunker'ın `UMAMI_SITES` env'ine bir satır (kod değişmez) — Bunker OS tarafının işi.
 - Tracker `data-exclude-search="true"` özniteliğini okuyor (sunulan `script.js` gövdesinde geçiyor) — v2 bunu **zorunlu** kullanır, gerekçe `BULGULAR.md` B-056.
 
+### Panel yerine okuma API'si — "panelde görünüyor mu" sorusunun ölçülebilir hâli (verify-phase, 2026-09-22)
+
+Kullanıcı panele bakamadığı için "olay panelde görünüyor mu" sorusu uzun süre UAT'a devredilen bir kalem oldu. Umami'nin kendi **okuma API'si panelin render ettiği veriyi aynen döndürür**, yani soru kullanıcı gözü olmadan da cevaplanır. Giriş yolu yukarıdaki `login` → Bearer; hepsi `GET`, hiçbiri yazmaz:
+
+| Uç | Ne verir |
+|---|---|
+| `/api/websites` | kayıtlar (id, ad, alan adı) |
+| `/api/websites/{id}/stats?startAt=&endAt=` | sayfa görüntülemesi, ziyaretçi, ziyaret |
+| `/api/websites/{id}/metrics?type=event\|tag\|path\|browser` | olay adı, ortam etiketi, sayfa yolu kırılımı |
+| `/api/websites/{id}/event-data/fields` | **özellik kırılımı** — `surface=hero` gibi yüzey etiketleri sayılarıyla |
+| `/api/websites/{id}/events?pageSize=` | ham kayıtlar: `hostname`, `urlPath`, **`urlQuery`**, `referrerQuery`, `eventName` |
+| yukarıdakilere `&tag=preview` | ortama göre süzme (`local` / `preview` ayrımı burada görülür) |
+
+- `startAt`/`endAt` **milisaniye** epoch ister; aralık verilmezse `400 bad-request` döner.
+- `type=url` geçersizdir, doğru değer **`type=path`**.
+- `event-data/fields` yüzey teyidinin en doğrudan kanıtıdır; `events` çıktısındaki `urlQuery` boşluğu `data-exclude-search`'ün çalıştığını gösterir (B-056).
+- `tag` metriği **ziyaret** düzeyinde sayar, olay düzeyinde değil — "üç olay `preview` etiketiyle sayıldı" iddiası için `metrics?type=event&tag=preview` kullan, çıplak `type=tag` sayısını yorumlama.
+- Geriye kalan tek kullanıcı-gözü kalemi panel **arayüzünün** görülmesidir; verinin varlığı bu uçlarla kapanır.
+
+### Tracker etiketi HTML'de düz öznitelik olarak aranmaz
+
+`next/script` + `strategy="afterInteractive"` betiği ilk HTML'e `<script data-tag="preview">` olarak **yazmaz**; öznitelikler RSC flight payload'ında kaçışlı durur. Yayın yüzeyinde ölçerken `grep -o 'data-tag[^,}]*'` gibi bir kalıp kullan (`data-tag\":\"preview\"` döner); `data-tag="..."` araması sessizce boş döner ve "tracker yok" yanılgısı üretir.
+
 ## Bunker — tuzak
 
 - Kanonik kod `../Bunker OS/bunker-dashboard` (`NorthAIII/bunker-os` monoreposu). `../bunker-dashboard` klonu bayat ve GitHub'da arşivli.
