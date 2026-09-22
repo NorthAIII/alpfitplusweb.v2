@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-21 — TASK-1.07 açıldı ama kapanmadı: B-056 koruma kapısı kapatıldı (`data-exclude-search="true"`, ölçüldü) ve Umami 3.1.0'ın **API anahtarı desteklemediği** kanıtlandı — site kaydı için kullanıcı adı + parola gerekiyor, kullanıcıdan istendi.
+**Son Güncelleme:** 2026-09-22 — TASK-1.07 hâlâ açık: B-056 koruma kapısı kapatıldı (ölçüldü, commit `5dfa017`); Umami kimliği kasaya girdi ama **parola geçersiz** (401) ve 3.1.0'da **parola sıfırlama aracı yok** — kullanıcı kararı bekleniyor.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -38,6 +38,7 @@
 **İlerleme:** Çalıştırma sırası Task Durumu tablosundaki satır sırasıdır, numara sırası değil.
 **Not:**
 - **Lead hattı uçtan uca yeşil (TASK-1.06):** önizlemeden gelen gerçek talep `leads_preview`'a düştü (`notify_team=sent`) ve e-posta Resend'de `delivered`. Faz milestone'unun lead ayağı kapandı.
+- **🔴 1.07 BLOKE — Umami paneline giriş yok:** kasadaki `admin` parolası `401` veriyor (taşıma temiz olduğu ölçüldü) ve Umami 3.1.0 **parola sıfırlama aracı taşımıyor** (`scripts/change-password.js` hem kaynakta hem konteynerde yok; `POST /api/me/password` mevcut parolayı istiyor; konteynerde `bcryptjs` yok). Kalan tek yol DB'ye doğrudan yazma → **kullanıcı kararı**. Detay: `tasks/TASK-1.07.md` → 2026-09-22 kaydı.
 - **Anahtar kasası açıldı** (`docs/DECISIONS.md` 2026-09-21): yönetim anahtarları `~/.config/alpfit/secrets.env` (600, repo dışı), oturum panel işini API ile yapıyor — detay `memory/anahtar-kasasi-config-alpfit.md`. **1.07'nin Umami adımı aynı yolu bekliyor ve biçimi artık ölçüldü** (2026-09-21): self-hosted Umami 3.1.0'da **API anahtarı yok** — `checkAuth` yalnız `Authorization: Bearer` kabul ediyor, token `POST /api/auth/login` ile **kullanıcı adı + paroladan** çıkıyor. Kasaya `UMAMI_USERNAME` + `UMAMI_PASSWORD` girerse site kaydı kullanıcısız açılabilir.
 - **B-056 kapısı KAPANDI** (2026-09-21): `data-exclude-search="true"` izleyici etiketine eklendi ve ölçüldü; kimlik girildiği an kişisel veri sızdıran zincir artık kurulmuyor. Kalan: B-036'nın native GET yolu (kaynak tarafı) ve 1.07'nin 3. kriterinin bot-kontrolü sahte yeşili (B-056 (b)).
 - **Yerel lead deposu hâlâ ayakta** (`docker compose --profile lead up -d lead-store`; komutlar/tuzaklar `_dev/memory/yerel-lead-deposu-docker-profili.md`).

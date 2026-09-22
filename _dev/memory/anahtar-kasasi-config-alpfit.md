@@ -12,6 +12,7 @@ Yönetim düzeyi servis anahtarları **repo dışında**, bu dosyada durur. Kara
 ## İçindeki anahtarlar
 
 - **`RESEND_ADMIN_KEY`** — Resend **Full access**. Alan adı durumu okumak (`GET /domains`), gönderim kaydı/gövdesi okumak (`GET /emails`, `GET /emails/:id`) ve **dar yetkili gönderim anahtarı üretmek** (`POST /api-keys`) için. Siteye hiç girmez.
+- **`UMAMI_USERNAME`** / **`UMAMI_PASSWORD`** — `umami.kiwiailab.com` panel hesabı (`admin`; kurulumdaki tek hesap). Umami 3.1.0'da API anahtarı olmadığı için tek kimlik yolu budur → `POST /api/auth/login` → Bearer. ⚠️ **2026-09-22 itibarıyla parola GEÇERSİZ** (`401 incorrect-username-password`; taşıma temiz olduğu ölçüldü — CR yok, tırnak yok, 9 karakter). Sıfırlama yolu tıkalı: aşağıya bak.
 
 Umami ve başka servislerin yönetim anahtarları da zamanla **bu aynı dosyaya** girer — her servis için ayrı kasa açılmaz.
 

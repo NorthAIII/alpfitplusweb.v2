@@ -246,6 +246,40 @@ Değişiklik commit'lendi; ağaçta bu turun yarım işi bırakılmadı. Gerekç
 - **Ağaç ve servisler:** ölçüm konteyneri (`t107b-serve`) silindi — `docker ps -a` sayım **0**, port 3200 **boş**. `web` · `web-prod` · `lead-store` (bu oturumun başlatmadıkları) dokunulmadan ayakta, 3000 → 200. Canlı Umami'ye **yazan** istek atılmadı; atılan istekler `GET /api/heartbeat`, `GET script.js` ve üç yetkisiz şekil probu (401/400).
 - UAT kriterleri ve 3. kriterin 2xx ayağı hâlâ sınanmadı — site kaydını bekliyor.
 
+### Oturum — 2026-09-22 (run-phase turu, alt ajan — aynı turun devamı)
+
+**Durum:** ⬜ Bekliyor (değişmedi) — kimlik geldi ama **parola geçersiz çıktı**, sıfırlama yolu da tıkalı. Kullanıcı kararı bekleniyor.
+
+**Yapılanlar:**
+- **Giriş denendi, 401.** Kasadaki `admin` + 9 karakterlik parolayla `POST /api/auth/login` → `401 {"code":"incorrect-username-password"}`. **Tek deneme yapıldı**, varyant/tahmin denenmedi.
+- **Taşıma temiz olduğu ölçüldü** (sorun parolanın kendisinde): kasa dosyasında toplam CR **0 bayt**; `UMAMI_PASSWORD=` ham satırı 24 bayt = 15 (ad+`=`) + 9 (değer), kabuk da 9 karakter okudu → tırnak yok, CR yok, çok baytlı karakter yok; gönderilen gövde `{"username":"admin","password":<9>}`, tam iki anahtar. `admin` hesabının varlığı orkestratörün DB okumasından devralındı.
+- **Sıfırlama yolu ÖLÇÜLDÜ ve TIKALI.** Kullanıcı "Umami'nin kendi aracıyla sıfırla" iznini vermişti; **araç yok**:
+  - `package.json:40` → `change-password: node scripts/change-password.js`, ama betik **iki bağımsız kaynakta da yok**: v3.1.0 GitHub ağacında `scripts/` 13 dosya taşıyor, aralarında değil; çalışan `bunker-umami` konteynerinde `test -f /app/scripts/change-password.js` → **YOK**. Yani `npm run change-password` "Cannot find module" ile düşerdi.
+  - Tek parola-değiştirme ucu **`POST /api/me/password`** ve gövdesi `currentPassword` + `newPassword` istiyor, üstelik kimlik doğrulaması gerektiriyor — parolayı bilmeyen kullanamaz (döngüsel). Yönetici rotası `users/[userId]/password` **yok** (404).
+  - Konteynerde **`bcryptjs` yok** (`MODULE_NOT_FOUND`; `node_modules`'te ve `/app` altında iz yok — standalone derlemeye gömülü), yani hash'i konteyner içinde Umami'nin kendi kütüphanesiyle üretmek de mümkün değil. `node_modules/.bin`: `npm-run-all prisma run-p run-s semver` — `umami` CLI'si yok.
+- **Ek kalıcı kayıtlar yazıldı** (kullanıcının istediği): BULGULAR Gelen Kutusu'na giriş ucunda hız sınırı/kilitlenme olmadığı pointer satırı; kasa atomuna `UMAMI_USERNAME`/`UMAMI_PASSWORD` (yalnız adlar + parolanın geçersiz olduğu notu); Umami atomuna sıfırlama yolunun tıkalı olduğu ve yedek serisi.
+
+**Sorunlar:**
+- Verilen yetkinin **nesnesi yok**: "Umami'nin kendi aracıyla değiştir" izni, var olmayan bir araca veriliyordu. Geriye kalan tek teknik yol **veritabanına doğrudan yazma** ve o açıkça yasaklı — yeni bir kullanıcı kararı gerekiyor.
+
+**Kararlar:**
+- **Uygulamadım, soruyla döndüm.** Koşum talimatının koşulu birebir gerçekleşti ("araç beklediğinden farklı davranırsa — *komut yok* — uygulama, soruyla dön"). Prisma CLI konteynerde var, yani DB'ye yazmak teknik olarak mümkündü; yetki olmadığı için denenmedi.
+- **Parola tahmini yapılmadı.** Umami'nin kurulum varsayılanı bilinen bir değerdir ama denemek tahmindir ve yasaklı.
+- **Sunucuya yalnız okuma yapıldı:** `docker inspect`, `docker exec ... ls/test/node -e`, `ls /opt/bunker/backups`. Hiçbir yazma, restart, imaj indirme yok. VPS kural 1 açısından: Umami DB yedeği **günlük ve taze** (`umami-20260922-023007.dump`, 02:30 UTC, seri kesintisiz) — olası bir sıfırlama geri alınabilir durumda.
+
+**Kalan İşler:**
+- Kullanıcı kararı: (A) tarayıcıda kayıtlı parola var mı · (B) DB'ye yazarak sıfırlamaya izin · (C) başka.
+- İzin gelirse: bcrypt hash'i konteyner **dışında** (rounds=10, `bcryptjs` uyumlu) üretilir, yalnız `admin` satırının `password` sütunu güncellenir, yeni değer kasaya yazılır, restart gerekmez (hash her girişte okunur).
+
+**Son Yaklaşım:**
+Kod tarafı hâlâ hazır ve commit'li; eksik olan tek şey Website ID. Zincirin kalanı (site kaydı → Vercel env → dağıtım → tarayıcı ölçümü → Bunker paneli → kapanış) değişmedi; yalnız girişi açacak anahtar yok.
+
+**Sonraki Adım Detayı:** 2026-09-21 kaydındaki adımlar aynen geçerli — yalnız 1. maddedeki giriş, geçerli bir parolayla koşulmalı. B-056 (b) bot-kontrolü uyarısı (4. madde) hâlâ geçerli ve kapanış turunda uygulanmalı.
+
+**Dosya Değişiklikleri:** kod değişmedi. `_dev/BULGULAR.md` (+1 pointer satır), `_dev/memory/anahtar-kasasi-config-alpfit.md`, `_dev/memory/kendi-sunucu-n8n-bunker-umami.md`, `_dev/DURUM.md`, bu kayıt.
+
+**Test Sonuçları:** kod değişmediği için regresyon koşulmadı (son ölçüm 2026-09-21 kaydında: `npm test` 53 PASS + 1 skipped, eslint 0). Bu oturumun ölçümleri kimlik/araç tespitine yönelikti ve yukarıda satır satır yazılı. Canlıya **yazan istek atılmadı**; atılan tek istek bir başarısız `POST /api/auth/login`.
+
 ---
 
 **Oluşturulma:** 2026-09-11 · **Yeniden yazıldı:** 2026-09-13 (plan revizyonu — kendi Umami, ağaçtaki yarım işi devralır)
