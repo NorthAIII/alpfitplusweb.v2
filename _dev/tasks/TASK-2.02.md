@@ -25,7 +25,7 @@ Bulgu iki ayrı zarar ölçtü (`_dev/bulgular/B-058-env-uretim-imajina-gomulu.m
 1. **Sır taşınabilir hâle geliyor** — `docker save` / `docker history` / registry push beş değeri imajla birlikte taşır. Bugün CI yok, registry yok, imaj bu makineden çıkmadı; risk **potansiyel**.
 2. **Yerel üretim provası (3100) sessizce bir hedefe bağlı** — compose'da `web-prod` için `environment`/`env_file` olmamasına rağmen konteyner imajdan gelen `.env`'i okuyor ve `POST /api/demo` `{"ok":true,"stored":true}` dönüyor. Bugün hedef yerel `lead-store`; ama `.env`'in hedefi bir gün canlıya çevrilirse **her prova isteği canlı depoya yazar** ve bunu söyleyen hiçbir işaret yok. Ölçüm turları 3100'ü rutin hedef alıyor (`perf.mjs`, `font-guard.mjs`).
 
-Anahtar **döndürme** ayağı bu task'ın konusu değil — o TASK-2.03'te ve TASK-2.01'in ölçümüne bağlı (kullanıcı kararı, research 2026-09-22). Buradaki iki düzeltme koşulsuzdur.
+**Anahtar döndürme ayağı düştü ve B-058'in kalan tek işi bu task oldu** (plan revizyonu, 2026-09-23). TASK-2.01 sunucudaki `/opt/alpfit-lead/.env` ile yereldeki değerleri parmak iziyle karşılaştırdı: **eşleşme yok** — imaja giren hiçbir değer canlı bir sır değil, dolayısıyla döndürme gerekmiyor ve TASK-2.03 ❌ iptal edildi (`tasks/archive/TASK-2.03.md`). Buradaki iki düzeltme zaten koşulsuzdu; artık **atomu da bu task kapatıyor**.
 
 ---
 
@@ -41,6 +41,7 @@ Anahtar **döndürme** ayağı bu task'ın konusu değil — o TASK-2.03'te ve T
 - `_dev/DURUM.md` — task durumu ve özet
 - `_dev/phases/PHASE-2.md` — Task Listesi tablosunda durum
 - `_dev/modules/M7-Yayin-ve-Altyapi.md` → F7.1 Edge Case'ler — `web-prod`'un env'i artık bilinçli (tek satır)
+- `_dev/BULGULAR.md` + `_dev/bulgular/B-058-*.md` — **atom bu task'ta kapanır**. Kapanış kaydı üç şeyi birlikte yazar: iki düzeltme yapıldı · döndürme ayağı ölçümle düştü (TASK-2.01, eşleşme yok) · kalıcı kapı (her derlemeden sonra `ls /app/.env`) **M6 F6.2 tek komutuna devredildi**, bu fazda kurulmadı
 
 ---
 
@@ -79,6 +80,7 @@ _dev/modules/M7-Yayin-ve-Altyapi.md   # F7.1 edge case tek satır — zaten var
 - **`printenv` yanıltır.** `docker compose exec web-prod printenv LEAD_STORE_URL` boş dönse de uç `stored:true` verebilir — Next `.env`'i `/app`'ten kendi dotenv'iyle okur. Ölçümü **uç davranışıyla** yap (`memory/alternatif-env-ile-uretim-derlemesi.md`).
 - **3100 bayat olabilir.** Aynı memory notu: `perf.mjs`/`font-guard.mjs` oraya bakar; bu task zaten yeniden derliyor, ama ölçmeden güvenme.
 - **`lead-store` profili ayrı kalkar** (`--profile lead`) ve host portu yayınlamaz; `web-prod`'a hedef verilecekse adres compose ağı içinden (`http://lead-store:8090`) yazılır.
+- **Kalıcı kapı bu fazda kurulmuyor.** Atomun koruma önerisindeki *"derleme sonrası tek komut"* kapısı M6 F6.2'nin (tek komut) işidir; burada aynı komut **bir kerelik** ölçüm olarak koşar ve sonucu dokümana yazılır. Kapanış kaydı bu devri açıkça söyler, yoksa atom kapanırken kapı sessizce kaybolur.
 - **Dev tarafı (`web`, 3000) bu task'ın konusu değil** — bind-mount üzerinden `.env`'i okuması beklenen davranıştır.
 
 ---

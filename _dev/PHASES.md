@@ -20,7 +20,7 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 | Faz | Konu | Milestone | Durum |
 |-----|------|-----------|-------|
 | 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı | ✅ Tamamlandı |
-| 2 | Yayın öncesi düzeltmeler | Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px | 🔄 Devam ediyor |
+| 2 | Yayın öncesi düzeltmeler | Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px | 🔄 Devam ediyor |
 
 **Durum simgeleri:**
 - 🔄 **Devam ediyor** — discuss-phase başladı (aktif faz)
@@ -82,6 +82,6 @@ Dış aktöre bağlı işler (hukukçu onayı, logo, kurucu programı kontenjan�
 
 ---
 
-**Son Güncelleme:** 2026-09-22 — discuss-phase: Faz 2 "Yayın öncesi düzeltmeler" tabloya 🔄 olarak girdi (dokuz bulgu: B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-059 e-posta ayağı · B-060). Sıradaki Fazlar'da konu mezun edildi ve **görsel ve mobil iyileştirme alan adı geçişinin önüne alındı** — ölçülmüş AA kontrast ihlalleri canlıya çıkmasın (kullanıcı kararı).
+**Son Güncelleme:** 2026-09-23 — plan revizyonu (Faz 2): milestone'un *"iki anahtar döndürülmüş"* ayağı yeniden yazıldı — TASK-2.01'in ölçümü imaja giren hiçbir değerin canlı olmadığını gösterdi, döndürme düştü ve ayak artık ölçümün kendisini anıyor (kullanıcı kararı).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

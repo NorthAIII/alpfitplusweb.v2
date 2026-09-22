@@ -6,7 +6,7 @@
 **Modül:** M1 — İçerik ve İddia Kaynağı (`modules/M1-Icerik-ve-Iddia-Kaynagi.md`)
 **Feature:** F1.1 (yasal içerik) · M7 F7.4 (analitik gerçeği)
 **Faz:** Phase 2 (`phases/PHASE-2.md`)
-**Bağımlılıklar:** TASK-2.01 (nginx ölçümü — metin ona göre yazılır) · TASK-2.16 (aynı dosya, listeler önce hizalanır)
+**Bağımlılıklar:** TASK-2.01 ✅ (nginx ölçümü **yapıldı** — sonucu aşağıda; metin ona göre yazılır) · TASK-2.16 (aynı dosya, listeler önce hizalanır)
 
 ---
 
@@ -16,15 +16,23 @@ Yasal metnin **ölçüm** ve **aktarım** beyanlarını ölçülmüş gerçeğe 
 
 Aynı turda aktarım maddesinin **olgu** tarafı tamamlanır: tedarikçilerin hangi ülkede veri işlediği yazılır (e-posta sağlayıcısı bir aktarım hedefidir).
 
-Task, üç ölçüm cümlesi TASK-2.01'in bulgusuna göre yeniden yazıldığında ve tedarikçi ülkeleri olgu olarak anıldığında tamamlanmış sayılır.
+Task, üç ölçüm cümlesi TASK-2.01'in **ölçülmüş** bulgusuna göre yeniden yazıldığında ve tedarikçi ülkeleri olgu olarak anıldığında tamamlanmış sayılır.
 
 ---
 
 ## Bağlam
 
-**Ölçümün zemini** (B-024, 2026-09-22): v1 tarafında 2026-07-28'de ölçüldü — `bunker-nginx` erişim kaydı `/dev/stdout` → Docker `json-file`, `daemon.json` yok, rotasyon yok, log sınırsız büyüyor (o gün 188 MB), içinde **her isteğin ham IP'si ve user-agent'ı** duruyor. Umami veritabanında IP sütunu olmaması bunu değiştirmiyor. O kaydın kendi cümlesi: *"Yasal metinde 'IP saklanmaz' cümlesi bu yüzden olduğu gibi yazılamaz; süre de yazılamaz, çünkü bugün sınırlı değil."*
+**Ölçüm yapıldı — metnin dayanağı artık tahmin değil rakam** (TASK-2.01, 2026-09-22; tam dökümü `tasks/archive/TASK-2.01.md`). Üç sorunun da cevabı ölçüldü:
 
-**Bugünkü hâli TASK-2.01 ölçüyor.** Metin ona göre yazılır — uydurma süre vaadi verilmez (kullanıcı kararı, discuss 2026-09-22).
+| Soru | Ölçülen cevap |
+|---|---|
+| Ham IP tutuluyor mu? | **Evet.** `umami.kiwiailab.com`'un önündeki `bunker-nginx` gömülü `combined` biçimini işliyor; 592.375 satırın 592.183'ü ham IPv4 ile başlıyor, **5.580 benzersiz IP**, 490.980 satır ayrıca user-agent taşıyor |
+| Ne kadar süre tutuluyor? | **Bugün sınır yok.** 155 MB / 603.025 satır / 31 günlük pencere ve büyüyor; rotasyon dosyası 0, logrotate ve kesen cron yok. Pencerenin başlangıcı bir rotasyon değil, 2026-08-23 elle disk temizliği |
+| Başka bir tarafa gidiyor mu? | **Hayır.** Log gönderici ajan yok, hiçbir konteyner log dizinini bağlamıyor, Umami'nin şemasında IP sütunu yok (`session` yalnız türetilmiş ülke/bölge/şehir tutuyor) |
+
+**Ölçümün ikinci bulgusu metnin süre yazmasını engelliyor:** sunucuda `daemon.json` bugün rotasyon **tanımlıyor** (`50m × 3`) ama `bunker-nginx` ondan önce oluşturulduğu için kural konteynere **inmiyor** — Docker'ın log ayarı geriye dönük değildir. Yani "rotasyon tanımlı" demek "rotasyon işliyor" demek değil; bugün geçerli bir saklama penceresi **yok**. Konteyner yeniden oluşturulursa ≈ 30 günlük bir pencere doğar, ama o iş `altyapi/vps` tarafındadır ve bu fazın kapsamı dışıdır (aşağı bak).
+
+**Sonuç, metin için:** `legal.ts:199`'un *"IP adresinizi tutmaz"* cümlesi olduğu gibi yazılamaz **ve hiçbir süre vaadi verilemez**. "Bugün bir saklama sınırı yok" demek, uydurma bir süre yazmaktan dürüsttür (kullanıcı kararı, discuss 2026-09-22).
 
 **Sunucu düzeltmesi (rotasyon / IP maskeleme) bu fazın işi değil** — altyapı tarafı (`altyapi/vps`), bu repo değil; fazı **kilitlemez** (`ILKELER.md` → proje-dışı iş faz bitişini kilitlemez). Faz yalnız ölçer ve metni ölçülene göre yazar.
 
@@ -35,7 +43,7 @@ Task, üç ölçüm cümlesi TASK-2.01'in bulgusuna göre yeniden yazıldığın
 ## Referans Dokümanlar
 
 **Okunması Gereken:**
-- `_dev/tasks/TASK-2.01.md` → Oturum Kaydı — **bugünkü nginx gerçeği**; metin bundan yazılır
+- `_dev/tasks/archive/TASK-2.01.md` → Oturum Kaydı — ölçümün tam dökümü (özeti yukarıdaki tabloda); metin bundan yazılır
 - `_dev/bulgular/B-024-*.md` → "🔴 gerekçesi" ve "Yeniden ölçüm" blokları
 - `../Alpfitplus-website.v1/_dev/memory/bunker-ortami.md:84-104` (salt okunur) — v1'in ölçümü, sağlayıcı veri konumu
 - `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` — Umami kurulumunun gerçeği
@@ -54,7 +62,8 @@ Task, üç ölçüm cümlesi TASK-2.01'in bulgusuna göre yeniden yazıldığın
 
 - [ ] **1. Üç ölçüm cümlesini yeniden yaz**
   - `:199` "IP adresinizi tutmaz" · `:116` "kişisel verileriniz aktarılmaz" · `:68` "yalnızca gezdiğinizde … toplanmaz"
-  - Yeni metin TASK-2.01'in ölçümünü anlatır: ölçüm sisteminin **ön kapısındaki** erişim kaydı, ne tutuluyor, ne kadar süre (ölçüldüyse; ölçülmediyse süre **yazılmaz**)
+  - Yeni metin ölçüleni anlatır: ölçüm sisteminin **ön kapısındaki** erişim kaydında ziyaretçinin IP'si ve tarayıcı bilgisi tutuluyor, bugün bir **saklama sınırı yok** ve kayıt üçüncü bir tarafa gitmiyor
+  - **Süre yazılmaz** — ölçüm bir pencere bulmadı; "şu kadar süre saklanır" cümlesi kurulmaz
   - Umami'nin kendi veritabanında IP tutmaması doğru bir olgudur ve korunur — ama "ölçüm" kelimesinin kapsamı daraltılır
 
 - [ ] **2. Aktarım maddesinin olgu tarafı**
@@ -81,7 +90,7 @@ _dev/BULGULAR.md                # gerekirse altyapı satırı — zaten var
 
 ## Dikkat Noktaları
 
-- **Ölçülmemiş şey yazılmaz.** TASK-2.01 bir süre ölçmediyse metin süre vaat etmez; "bugün sınırlı değil" demek, uydurma bir süre yazmaktan dürüsttür.
+- **Ölçülmemiş şey yazılmaz — ve ölçüm bir süre bulmadı.** Metin saklama süresi vaat etmez; "bugün bir sınır yok" der. Sunucuda rotasyon **tanımlı** olması yanıltmasın: kural o konteynere inmiyor (ölçüldü), yani yazıya dökülebilecek bir pencere yok.
 - **Sağlayıcı veri konumu bayatlayabilir** — v1'in ölçümü 2026 tarihli; metin sağlayıcıyı adıyla ve ülkesiyle anarken kaynağı task kaydında durur. Emin olunamayan bir konum yazılmaz.
 - **Hukuki sebep boşluğu bilinçlidir ve gizlenmez.** Metin olguyu söyler; dayanak hukukçu onayıyla gelir (B-008). Uydurma bir madde numarası yazma.
 - **v1'den gerileme olmasın** (B-059 kalem 3): v1'in canlı metni aktarım dökümünü yazıyor — v2 geçiş gününde **daha az** bilgi vermemeli.
@@ -93,7 +102,7 @@ _dev/BULGULAR.md                # gerekirse altyapı satırı — zaten var
 ## Test Kriterleri
 
 - [ ] Üç ölçüm cümlesi TASK-2.01'in bulgusuyla **çelişmiyor**; her cümlenin dayanağı ölçüm çıktısına çapalı (eşleme dokümana)
-- [ ] Hiçbir cümlede ölçülmemiş süre ya da ölçülmemiş sağlayıcı davranışı yok
+- [ ] Ölçüm kayıtları için **hiçbir saklama süresi** yazılmıyor (ölçüm bir pencere bulmadı); hiçbir cümlede ölçülmemiş sağlayıcı davranışı yok
 - [ ] Tedarikçi listesi her sağlayıcının veri işleme ülkesini söylüyor; e-posta sağlayıcısı yurt dışı aktarım hedefi olarak anılıyor
 - [ ] Hukuki sebep bölümü değişmedi ve eksikliği metinde dürüstçe duruyor (uydurma madde yok)
 - [ ] v1'in canlı metniyle karşılaştırma yapıldı: v2 hiçbir kalemde **daha az** bilgi vermiyor (B-059 kalem 3 çapası)

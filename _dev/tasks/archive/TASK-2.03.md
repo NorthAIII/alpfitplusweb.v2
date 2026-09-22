@@ -1,6 +1,6 @@
 # TASK-2.03: İki anahtarın döndürülmesi — koşullu (B-058)
 
-**Durum:** ⬜ Bekliyor
+**Durum:** ❌ İptal
 
 <!-- KURAL: Durum alanı tek değer taşır ve değer kümesinin TEK KAYNAĞI TASKS-README → Durum Kodları'dır (⬜ Bekliyor · 🔄 Devam ediyor · ⏸️ Duraklatıldı · ✅ Tamamlandı · 🔴 Bloke · ❌ İptal). Buraya kısaltılmış bir menü kopyalama: kopya bir kez eksik yazıldı (⏸️/🔴/❌ düşmüştü) ve iki ev sessizce ayrıştı. -->
 **Modül:** M7 — Yayın ve Altyapı (`modules/M7-Yayin-ve-Altyapi.md`)
@@ -127,13 +127,23 @@ Sunucu ve Vercel tarafı repo dışıdır; komutlar ve sonuçları Oturum Kaydı
 
 ## Oturum Kayıtları
 
-<!-- run-task dolduracak -->
+### Plan revizyonu — 2026-09-23
+
+**Durum:** ❌ İptal — ön koşul ölçümle düştü; task hiç çalıştırılmadı, kod yazılmadı.
+
+TASK-2.01'in parmak izi karşılaştırması (2026-09-22) sunucudaki `/opt/alpfit-lead/.env` ile yereldeki `.env` arasında **eşleşme bulmadı**: `LEAD_TOKEN_PREVIEW` ve `LEAD_TOKEN_PRODUCTION`'ın ikisi de canlı değerden farklı. Ölçülen dosyanın canlı kaynak olduğu, çalışan `alpfit-pocketbase` konteynerinin env'iyle ayrıca doğrulandı; yöntem iki kontrol grubuyla sınandı (çapraz makine + makine içi eşitlik), yani "eşleşmedi" sahte bir kırmızı değil.
+
+Dolayısıyla **döndürülecek canlı anahtar yok** — bu task'ın varlık sebebi düştü. Sızmamış bir anahtarı döndürmek koruma değil, sunucuda bedeli olan bir işlem olurdu. `IP_HASH_SALT` de kapsamda değil: TASK-1.18 canlı tuzun boru içinde kalıp hiçbir yere kaydedilmediğini yazıyor, karşılaştırılacak kaynak yok.
+
+**Kalan iş nereye gitti:** B-058'in koşulsuz ayağı (`.dockerignore` düzeltmesi ve `web-prod`'a bilinçli env) **TASK-2.02**'dedir; atom orada kapanır ve kapanış kaydı bu ölçümü anar. Milestone'un *"iki anahtar döndürülmüş"* ayağı, ölçümü de içerecek şekilde yeniden yazıldı (kullanıcı kararı, 2026-09-23). Ölçümün tamamı `tasks/archive/TASK-2.01.md`, kararlar `docs/DECISIONS.md` 2026-09-22.
+
+**İptal bir eksiklik değil, ölçümün sonucudur** — bu task tam da bu ihtimal için koşullu yazılmıştı.
 
 ---
 
 ## Sonuç Özeti
 
-<!-- Task tamamlanınca doldurulacak -->
+**İptal Tarihi:** 2026-09-23 — kod yazılmadı; sunucuda, Vercel'de ve yerel `.env`'de hiçbir değer değişmedi.
 
 ---
 

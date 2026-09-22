@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — TASK-2.01 ✅ (keşif ayağı, kod değişmedi): ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **saklama sınırı yok** (155 MB / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. İki token'ın sunucu↔yerel parmak izi **eşleşmedi** → döndürme düşer, TASK-2.03 iptal edilecek ve milestone'un o ayağı yeniden yazılacak. `Adım` → `plan`; sıradaki adım `/devflow:plan-phase` (revizyon).
+**Son Güncelleme:** 2026-09-23 — plan revizyonu (Faz 2): TASK-2.03 ❌ iptal edilip arşive taşındı (sunucu↔yerel parmak izi eşleşmedi, döndürülecek canlı anahtar yok), B-058'in kalan işi ve atom kapanışı TASK-2.02'ye geçti, TASK-2.17'nin zemini ölçülmüş rakamlarla sabitlendi ve milestone'un anahtar ayağı ölçümü anacak şekilde yeniden yazıldı (kullanıcı kararı). `Adım` → `task`; sıradaki adım `/devflow:run-task` (TASK-2.02).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -9,9 +9,9 @@
 ## Aktif Faz
 
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
-**Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
-**Adım:** plan
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · task çalıştırma 1/20 (TASK-2.01 ✅). Keşif ayağı TASK-2.03'ün ön koşulunu düşürdü — sırada plan revizyonu var, sonra TASK-2.02.
+**Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
+**Adım:** task
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 1/19 (TASK-2.01 ✅, TASK-2.03 ❌ iptal). Sıra TASK-2.02'de.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,14 +35,13 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058)
-**Durum:** ⬜ Bekliyor — **önce plan revizyonu var** (aşağı bak)
-**İlerleme:** TASK-2.01 ✅ kapandı. Sıradaki adım `/devflow:run-task` **değil**: `Adım` alanı `plan`'a çekildi, çünkü TASK-2.01'in ölçümü TASK-2.03'ün ön koşulunu düşürdü ve milestone'un bir ayağı kullanıcıyla yeniden yazılacak. Revizyon oturumundan sonra sıra TASK-2.02'ye döner — o task'ın kendi içeriği bu ölçümden **etkilenmedi** (koşulsuz yapısal düzeltme).
+**Task:** TASK-2.02 — `.env` üretim imajından çıkar, yerel prova hedefini açıkça söyler (B-058 kapanır)
+**Durum:** ⬜ Bekliyor
+**İlerleme:** Plan revizyonu bitti; sıradaki adım `/devflow:run-task`. TASK-2.02'nin kendi içeriği TASK-2.01'in ölçümünden **etkilenmedi** (koşulsuz yapısal düzeltme) — değişen tek şey B-058'in atom kapanışının artık bu task'a ait olması.
 **Not:**
-- **TASK-2.01 ölçtü, iki kalem kapandı (2026-09-22):**
-  - **Parmak izi eşleşmedi** — sunucudaki `/opt/alpfit-lead/.env`'in iki token'ı yereldeki değerlerle **aynı değil** (ölçülen dosyanın canlı kaynak olduğu çalışan konteynerin env'iyle ayrıca doğrulandı). Yani imaja giren hiçbir değer canlı bir sır değil; **döndürme düşer**. → **TASK-2.03 iptal edilecek** ve milestone'un *"iki anahtar döndürülmüş"* ayağı yeniden yazılacak — ikisi de plan revizyonunun işi (`docs/DECISIONS.md` 2026-09-22).
-  - **Ölçüm sunucusu ham IP tutuyor ve saklama sınırı yok** — 592.183/592.375 erişim satırı ham IPv4 ile başlıyor, 5.580 benzersiz IP, 155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0, log gönderici ajan yok. Yani yasal metin *"IP tutulmaz"* diyemez ve bir **süre vaadi veremez**; cümlenin son hâli TASK-2.17'nin işi, dayanağı sabitlendi.
-- **Rotasyon aslında tanımlı ama konteynere inmiyor:** `daemon.json` `50m × 3` diyor, ancak `bunker-nginx` ondan önce oluşturulduğu için kural uygulanmıyor. Düzeltme **bu reponun işi değil** (evi `altyapi/vps`) — `BULGULAR.md` → Gelen Kutusu'na düştü. Yapılırsa ≈ 30 günlük bir pencere doğar ve metin o gün bir süre yazabilir hâle gelir.
+- **Plan revizyonu (2026-09-23) üç şey yaptı:** TASK-2.03 ❌ iptal edilip arşive taşındı (döndürülecek canlı anahtar yok) · B-058'in kalan işi ve atom kapanışı TASK-2.02'ye geçti, kalıcı kapı M6 F6.2'ye devredildi · TASK-2.17'nin zemini ölçülmüş rakamlarla sabitlendi. Milestone'un anahtar ayağı ölçümü anacak şekilde yeniden yazıldı (kullanıcı kararı).
+- **Yasal metin için bağlayıcı ölçüm (TASK-2.01, 2026-09-22):** ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **bugün hiçbir saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. Yani metin *"IP tutulmaz"* diyemez ve **hiçbir süre yazamaz** — cümlenin son hâli TASK-2.17'nin işi.
+- **Rotasyon tanımlı ama konteynere inmiyor:** `daemon.json` `50m × 3` diyor, `bunker-nginx` ondan önce oluşturulduğu için kural uygulanmıyor. Düzeltme **bu reponun işi değil** (evi `altyapi/vps`) — `BULGULAR.md` → Gelen Kutusu'nda. Yapılırsa ≈ 30 günlük bir pencere doğar ve metin o gün bir süre yazabilir hâle gelir.
 - **TASK-2.20 (MX kayıtları) kullanıcı eliyle ilerler** — DNS adımı Squarespace'te kullanıcıdadır; faz yönergeyi yazar, ölçer ve gerçek test postasıyla doğrular. Kullanıcı kaydı girmezse task ⏸️ duraklar, faz kilitlenmez.
 - **Tarayıcı katmanlı kriterler `kanal: UAT` işaretli** (TASK-2.04 · 2.05 · 2.06 · 2.20): projenin otomatik katmanı gerçek tarayıcı yerleşimini ve odağını ölçmüyor; kalıcı tarayıcı betiği bilinçli olarak "Kalite kapıları otomatik" fazına bırakıldı.
 - **Faz 2 kapsamı dokuz bulgu:** B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-060 · B-059'un onay-e-postası ayağı (yan kazanç B-040). Tam gerekçe ve kapsam dışı listesi `phases/PHASE-2.md` → Kapsam Tartışması.
@@ -59,7 +58,7 @@
 |---|------|-------|
 | 2.01 | TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058) | ✅ Tamamlandı |
 | 2.02 | TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058) | ⬜ Bekliyor |
-| 2.03 | TASK-2.03 — **Koşullu** — iki anahtarın döndürülmesi (B-058) | ⬜ Bekliyor — ⚠️ ön koşul düştü, iptal plan revizyonunda |
+| 2.03 | TASK-2.03 — İki anahtarın döndürülmesi (B-058) | ❌ İptal — ön koşul ölçümle düştü (2026-09-23) |
 | 2.04 | TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034) | ⬜ Bekliyor |
 | 2.05 | TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g) | ⬜ Bekliyor |
 | 2.06 | TASK-2.06 — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a) | ⬜ Bekliyor |
@@ -125,7 +124,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.01.md` ⬜ — sunucudaki iki gerçeğin salt-okunur ölçümü (keşif ayağı)
+**Aktif Task:** `tasks/TASK-2.02.md` ⬜ — `.env` üretim imajından çıkar, yerel prova hedefi açık söylenir (B-058 kapanır)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
