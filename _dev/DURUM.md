@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — discuss-phase: Faz 2 "Yayın öncesi düzeltmeler" açıldı ve kapsamı dokuz bulgu olarak kararlaştırıldı; görsel ve mobil iyileştirme fazı alan adı geçişinin önüne alındı; iki karar `docs/DECISIONS.md`'ye yazıldı (tek yetenek listesi, iki anahtarın döndürülmesi). Sıradaki adım: teknik araştırma.
+**Son Güncelleme:** 2026-09-22 — research-phase: Faz 2 teknik araştırması tamamlandı; üç devralınan daralma ölçülüp genişledi (yetenek iddiası sınıfı ~124 cümle, yasal beyan sınıfı sekiz olgu, `flex-1` sınıfı tek gerçek örnek + dört yanlış alarm), `.env` sızıntısının hiçbir canlı değer taşımadığı ölçüldü ve döndürme sunucu karşılaştırmasına bağlandı, `notify_lead` kararı geçersiz kılındı. Sıradaki adım: task yazımı.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
-**Adım:** research
-**İlerleme:** Kapsam tartışması ✅ (dokuz bulgu kapsamda, üçü görsel/mobil faza). Teknik araştırma bekliyor.
+**Adım:** plan
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ (altı yaklaşım değerlendirildi, dört kapsam kararı alındı, yeni bağımlılık yok). Task yazımı bekliyor.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,13 +35,13 @@
 
 ## Aktif Task
 
-**Task:** — yok (Faz 2 kapsamı kararlaştı; task'lar henüz yazılmadı)
-**Durum:** ✅ Faz 2 kapsam tartışması tamamlandı
-**İlerleme:** Sıradaki adım `/devflow:research-phase` — Faz 2 teknik araştırması.
+**Task:** — yok (Faz 2 araştırması bitti; task'lar henüz yazılmadı)
+**Durum:** ✅ Faz 2 teknik araştırması tamamlandı
+**İlerleme:** Sıradaki adım `/devflow:plan-phase` — Faz 2 task yazımı.
 **Not:**
 - **Faz 2 kapsamı dokuz bulgu:** B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-060 · B-059'un onay-e-postası ayağı (yan kazanç B-040). Tam gerekçe ve kapsam dışı listesi `phases/PHASE-2.md` → Kapsam Tartışması.
 - **Sıra değişti:** "Görsel ve mobil iyileştirme" fazı alan adı geçişinin **önüne** alındı (kullanıcı kararı) — ölçülmüş AA kontrast ihlalleri (B-032) canlıya çıkmasın. B-032 · B-033 · B-031 o faza atandı.
-- **B-058'in ölçülmemiş ayağı, fazın ilk işlerinden biri:** `.env`'deki `LEAD_TOKEN_PRODUCTION` gerçekten yerel depo kopyasının token'ı mı (`.env.example` §3 böyle beyan ediyor) yoksa canlı üretim token'ı mı? Canlı değer oradaysa döndürme kapsamı üçe çıkar ve v1'in canlı lead akışı da ilgilenir (`docs/DECISIONS.md` 2026-09-22).
+- **B-058 ölçüldü, döndürme koşula bağlandı:** `.env`'in beş değeri değer basılmadan parmak izlendi — depo adresi yerel konteyneri gösteriyor, iki token bu makinede üretilmiş (TASK-1.17 kaydı), canlı IP tuzu Vercel'e boru içinden girilip hiçbir yere kaydedilmemiş (TASK-1.18). Yani **imaja giren hiçbir değer canlı değil**. Kesin teyit sunucudaki `/opt/alpfit-lead/.env` ile parmak izi karşılaştırmasıdır; milestone'un "iki anahtar döndürülmüş" ayağı o sonuca bağlı (kullanıcı kararı, `docs/DECISIONS.md` 2026-09-22 research kaydı).
 - **Kullanıcı gözü bekleyen iki kalem (Faz 1 milestone'unun doğrulama ayakları, kapanışı engellemedi):** (1) `DEMO_TO`'ya giden e-postanın **gelen kutusunda mı spam'de mi** olduğu; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi. İkisinin de ürün tarafı ölçüldü; kayıt `phases/PHASE-1.md` → Milestone kapanış notu.
 - **Canlı depodaki test kayıtları:** `leads_preview` 15 kayıt (Faz 1'in bilinçli test turları; `leads` 2 → değişmedi). 12 aylık saklama işi siler. ⚠️ IP tuzu döndürülünce bu kayıtların `ip_hash`'i yeni kayıtlarla karşılaştırılamaz olur (bilinçli, `docs/DECISIONS.md`).
 - **Yerel `lead-store` konteyneri hâlâ ayakta** (25 test kaydıyla) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
@@ -91,7 +91,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok (Faz 2 kapsamı kararlaştı — sıradaki adım `/devflow:research-phase`)
+**Aktif Task:** — yok (Faz 2 araştırması bitti — sıradaki adım `/devflow:plan-phase`)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

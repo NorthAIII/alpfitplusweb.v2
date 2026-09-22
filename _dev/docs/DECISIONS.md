@@ -19,6 +19,51 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-22 — `.env` sızıntısının kapsamı ölçüldü: imajdaki beş değerin hiçbiri canlı değil; döndürme bir karşılaştırmaya bağlandı
+
+**Bağlam:** Aynı gün alınan «`.env`'in imaja sızması» kararı iki anahtarın döndürülmesine hükmetti ve dayanağı şu cümleydi: *"Beş anahtarın ikisi canlı: `LEAD_STORE_TOKEN` (v1'in lead deposunun önizleme token'ı) ve `IP_HASH_SALT`."* O cümle ölçülmemişti; kaydın kendisi de bunu *"açık kalem (fazın ilk işlerinden biri)"* diye işaretliyordu. Research oturumunda ölçüldü (2026-09-22, değer basılmadan — SHA-256 önekleriyle):
+
+- `LEAD_STORE_URL` **yerel konteyneri** gösteriyor (`http://lead-store:8090`), canlı depoyu (`lead.alpfitplus.com`) değil.
+- `LEAD_STORE_TOKEN` ile `LEAD_TOKEN_PREVIEW` **bayt bayt aynı** — yani sitenin kullandığı token, yerel depo kopyasının önizleme token'ı.
+- `tasks/archive/TASK-1.17.md:146`: bu iki token bu makinede `openssl rand -hex 32` ile üretildi, canlı değer değil.
+- `tasks/archive/TASK-1.18.md:150,184`: canlı `IP_HASH_SALT` Vercel'e bir **boru içinden** girildi ve *"değer hiçbir yerde saklanmadı"* — yerel `.env`'deki tuz o değer değil.
+- Tek üretim imajı bugün 15:30'da, TASK-1.18'den sonra derlendi; makineden çıkmadı (`docker images`, kayıt deposu izi yok).
+
+Üçü birlikte şunu söylüyor: **imaj katmanına giren beş değerin hiçbiri canlı bir sır değil.** Sızıntı gerçek ve yapısal hata gerçek, ama döndürmeyi gerektiren "canlı anahtar taşındı" olgusu ölçümle desteklenmiyor.
+
+**Seçenekler:**
+1. Önce kesinleştir: sunucudaki `/opt/alpfit-lead/.env` → `LEAD_TOKEN_PREVIEW` / `LEAD_TOKEN_PRODUCTION` değerlerinin parmak izi yerel değerlerle karşılaştırılır (tek satır, hiçbir değer görünmez); sonuca göre döndürülür ya da iptal edilir.
+2. Kararı koru: ölçümden bağımsız, ikisi de döndürülsün.
+3. Döndürmeyi tamamen iptal et; yalnız yapısal düzeltme kalsın.
+
+**Karar:** 1 (kullanıcı, research-phase 2026-09-22). Yapısal düzeltmeler **koşulsuz** yapılır: `.dockerignore`'a `.env` ve `.env.*` (`!.env.example` istisnasıyla) ve `web-prod`'a bilinçli `environment:`/`env_file:`. Döndürme yalnız karşılaştırma canlı değer gösterirse yapılır.
+
+**Gerekçe:** Sızmamış bir anahtarı döndürmek koruma değil, sunucuda bedeli olan bir işlemdir; buna karşılık ölçüm dolaylı kanıtlara (task kayıtları + yerel parmak izleri) dayanıyor ve tek doğrudan kaynak sunucunun kendi ayar dosyası. Karşılaştırmanın bedeli tek bir salt-okuma bağlantısıdır (sunucu kuralları `../altyapi/vps/CLAUDE.md`), kazancı ise kararın tahmine değil olguya dayanması — `ILKELER.md` → *"Kanıtsız iddia yayınlanmaz"* disiplininin kendi kararlarımıza uygulanmış hâli. Bu kayıt 2026-09-22 «`.env`'in imaja sızması» kararının **döndürme hükmünü** koşula bağlar; aynı kararın yapısal düzeltme hükmü ve `IP_HASH_SALT`'ın F7.5'te v1'in değerine çevrilmesi sınırı **aynen geçerlidir**.
+
+**Milestone etkisi:** Faz 2 milestone'unun *"iki anahtar döndürülmüş"* ayağı bu karşılaştırmaya bağlıdır. Eşleşme çıkmazsa ayak düşer ve milestone o gün yeniden yazılır — sessizce daraltılmaz.
+
+**İlgili Task/Faz:** Faz 2 (`phases/PHASE-2.md` → Araştırma Bulguları). Bulgu: B-058.
+
+---
+
+### 2026-09-22 — Onay e-postası açılınca `notify_lead` gerçek sonucu taşır; 2026-09-14 kararı geçersiz kılındı
+
+**Bağlam:** 2026-09-14 «Bildirim durumu (`notify_*`)» kararı `notify_lead` alanına **hiç dokunulmamasını** hükmetti. Gerekçesi tek bir olguydu: *"v2 bugün o e-postayı hiç göndermediği için alanı erken `skipped` yazmak, alan adı geçişinde v1'in yerini alınca gerçek anlamla çakışırdı."* Faz 2, B-059'un e-posta ayağını kapsama aldı — talep sahibine onay e-postası bu fazda açılıyor. Kararın dayandığı olgu böylece düşüyor. Kodun kendi yorumu da bu dayanağı yazıyor (`src/app/api/demo/route.ts` → `notifyStore` başlığı).
+
+**Seçenekler:**
+1. Alan bugünkü gibi hiç yazılmasın; depo varsayılanı `pending` kalsın.
+2. Gerçek sonuç yazılsın: gönderildiyse `sent`, gönderilemediyse `failed`, ziyaretçi e-posta vermediyse `skipped` — v1'in bugünkü davranışının aynısı (`../Alpfitplus-website.v1/api/demo.ts:358-360`).
+
+**Karar:** 2 (kullanıcı, research-phase 2026-09-22).
+
+**Gerekçe:** 2026-09-14 kararının koruduğu şey alanın **anlamının karışmamasıydı**; onay e-postası açıldıktan sonra o anlam artık v1'inkiyle aynıdır, yani karışma riski tersine döndü: alanı `pending` bırakmak, geçişten sonra aynı koleksiyonda v2 kayıtlarını kalıcı olarak "bildirim beklemede" gösterir ve alanın kendisini okunamaz kılar. Biriken verinin yorumu geri alınamaz olduğu için karar burada yazılıdır. v1 ile aynı davranışı yazmak ayrıca B-059'un gerileme listesinin ikinci kalemini de kapatır.
+
+**Sınır:** Değer yazımı ziyaretçinin yanıtını **değiştirmez** ve başarısızlığı yalnız loglanır — `notifyStore`'un bugünkü sözleşmesi (en fazla 3 sn, sonuç yanıta yansımaz) aynen korunur.
+
+**İlgili Task/Faz:** Faz 2 (`phases/PHASE-2.md`). Bulgular: B-059 (e-posta ayağı), B-060 ile aynı fazda. Geçersiz kılınan: 2026-09-14 «Bildirim durumu (`notify_*`)».
+
+---
+
 ### 2026-09-22 — Yetenek iddiaları tek bir yetenek listesinden türer; cümle bazlı düzeltme reddedildi
 
 **Bağlam:** B-029 ölçtü: site ürünün bugün karşılamadığı **beş** yeteneği "var" diye anlatıyor (ölçüm grafiği + diyetisyen notu · "iptal eşiğini siz belirlersiniz" · üyelik bitişi bildirimi · yetkinin geri alınması · kampanya) ve dördünde ürünün **kendi kaydı** bunu açıkça söylüyor ("Yakında", "v1.5 adayı", "ertelendi", "W8"). Kök neden: sitedeki yetenek iddialarını ürün deposuna karşı doğrulayan hiçbir kapı yok; tek mekanizma `/ozellikler` sayfasının "Yolda" kolonu ve o kolon **elle** tutuluyor — nitekim beşinci kalemde aynı sayfanın iki kolonu birbirini kesiyor. İkinci katman B-040: ürün yol haritası bugün **dört ayrı evde** ve 5/4/3/3 ayrışmış. Aynı sayfa (`src/app/ozellikler/page.tsx:86`) ziyaretçiye *"Yolda olan bir şeyi bugün varmış gibi anlatmıyoruz"* diye taahhüt veriyor.
