@@ -69,6 +69,21 @@ function clean(v: unknown, max: number): string {
 }
 
 /**
+ * Tek satırlık alanlar için `clean()` (TASK-1.19, UAT #26). `clean()` yalnız
+ * trim + uzunluk kırpması yapıyordu — kulüp adına konan `\n`/`\r`, Resend'in
+ * JSON gövdesindeki `subject`'i ("Demo talebi — Form Spor\nBcc: ...") ve depo
+ * e-posta metnindeki `Ad:`/`Şube:`/`Telefon:` alan satırlarını sahteleyebiliyordu.
+ * Tüm C0 kontrol karakterleri (`\x00-\x1f`, `\r`/`\n`/`\t` dâhil) ve DEL
+ * (`\x7f`) boşluğa çevrilir — KIRPMADAN ÖNCE, ki uzunluk sınırı ayıklanmış
+ * metne uygulansın. Çoklu boşluk bilinçli olarak birleştirilmez ("Form
+ * Spor\nStüdyo" → "Form Spor Stüdyo", kelimeler yapışmaz). `message` bu
+ * fonksiyonu KULLANMAZ — form `<textarea>` sunuyor, satır sonu orada meşru.
+ */
+function cleanLine(v: unknown, max: number): string {
+  return typeof v === "string" ? v.replace(/[\x00-\x1f\x7f]/g, " ").trim().slice(0, max) : "";
+}
+
+/**
  * ip_hash = HMAC-SHA256(ip, IP_HASH_SALT) hex — ham IP hiçbir yere yazılmaz ya
  * da loglanmaz, yalnız bu özet depoya gider (KVKK veri minimizasyonu; kayıt 12
  * ay saklanır — depo README → Saklama politikası).
@@ -107,9 +122,15 @@ async function toStore(lead: Lead, ip: string): Promise<StoreResult> {
 
   // Karar Noktası (segment'in yeri — (a) seçildi): tek satır etiket mesajın
   // başına eklenir. Depo şemasında segment kolonu yok (DECISIONS 2026-09-14 →
-  // Bedel); boş segmentte satır eklenmez. 2000 (MAX.message) + kısa etiket
-  // deponun kendi 5000 sınırının altında kalır, ayrıca kırpma gerekmez.
-  const message = lead.segment ? `Segment: ${lead.segment}\n${lead.message}` : lead.message;
+  // Bedel); boş segmentte satır eklenmez. 2000 (MAX.message) + kısa etiket +
+  // ayırıcı deponun kendi 5000 sınırının altında kalır, ayrıca kırpma gerekmez.
+  //
+  // TASK-1.19 (UAT #26, Karar Noktası — (b) seçildi): etiketle mesaj arasına
+  // `---` ayırıcı satırı girer. Ziyaretçi kendi mesajına sahte bir "Segment:"
+  // satırı yazsa bile (enjeksiyon denemesi) o satır ayırıcının ALTINDA kalır —
+  // gerçek etiket her zaman ayırıcıdan hemen önceki tek satırdır. `message`
+  // KIRPILMAZ/DEĞİŞTİRİLMEZ (dikkat notu) — yalnız önüne etiket + ayırıcı eklenir.
+  const message = lead.segment ? `Segment: ${lead.segment}\n---\n${lead.message}` : lead.message;
 
   try {
     const res = await fetch(`${url.replace(/\/+$/, "")}/lead`, {
@@ -262,12 +283,12 @@ export async function POST(req: Request) {
   }
 
   const lead: Lead = {
-    name: clean(body.name, MAX.name),
-    club: clean(body.club, MAX.club),
-    branches: clean(body.branches, MAX.branches),
-    phone: clean(body.phone, MAX.phone),
-    email: clean(body.email, MAX.email),
-    segment: clean(body.segment, MAX.segment),
+    name: cleanLine(body.name, MAX.name),
+    club: cleanLine(body.club, MAX.club),
+    branches: cleanLine(body.branches, MAX.branches),
+    phone: cleanLine(body.phone, MAX.phone),
+    email: cleanLine(body.email, MAX.email),
+    segment: cleanLine(body.segment, MAX.segment),
     message: clean(body.message, MAX.message),
     consent: body.consent === true,
     at: new Date().toISOString(),

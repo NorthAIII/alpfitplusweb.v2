@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — verify-phase (Faz 1 UAT): 33 senaryonun 29'u geçti; iki düzeltme task'ı açıldı (TASK-1.19 e-posta konusu satır sonu, TASK-1.20 yasal sayfaların noindex meta katmanı), iki senaryo otonom kolda ölçülemedi ve kullanıcı gözü bekliyor.
+**Son Güncelleme:** 2026-09-22 — run-task TASK-1.19 tamamlandı: `cleanLine()` tek satırlık lead alanlarını kontrol karakterlerinden ayıklıyor, segment etiketi mesajdan `---` ayırıcısıyla ayrıldı (UAT #26 kapandı); 66 PASS + 1 skipped.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
 **Adım:** task
-**İlerleme:** 17/19 task tamamlandı (1 iptal: TASK-1.04); UAT'tan iki düzeltme task'ı doğdu
+**İlerleme:** 18/19 task tamamlandı (1 iptal: TASK-1.04); UAT'tan doğan iki düzeltme task'ından biri (TASK-1.19) bitti, TASK-1.20 sırada
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -35,9 +35,9 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.19 — Satır sonu ayıklama: e-posta konusu ve depo mesajı sahtelenemesin
+**Task:** TASK-1.20 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor (B-041)
 **Durum:** ⬜ Bekliyor (Adım `task`)
-**İlerleme:** UAT 33 senaryonun 29'unu geçti. İki düzeltme task'ı sırada: TASK-1.19, sonra TASK-1.20. İkisi bitince `/devflow:verify-phase` **baştan** koşar.
+**İlerleme:** UAT 33 senaryonun 29'unu geçti. TASK-1.19 tamamlandı, TASK-1.20 sırada — bitince `/devflow:verify-phase` **baştan** koşar.
 **Not:**
 - **Kullanıcı gözü bekleyen iki kalem (UAT'ta otonom kolda kapanmadı):** (1) TASK-1.06 ve UAT turunun e-postalarının **gelen kutusunda mı spam'de mi** olduğu — gönderim tarafı iki turda da Resend `delivered`; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi — verinin kendisi panelin okuma API'siyle teyitli (sayfa görüntülemesi 7 → 10, `whatsapp` 3 → 5, `phone` 0 → 1, `demo-submit` 1 → 2; yüzeyler `hero`/`sss`/`footer`/`demo-form`).
 - **UAT turu canlı depoya bir kayıt bıraktı:** `leads_preview`'da `UAT Test Kulubu` (2026-09-22 14:15:52Z) — bilinçli, milestone'un kendi şartını ölçmek için; 12 aylık saklama işi siler.
@@ -67,7 +67,7 @@
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ✅ Tamamlandı |
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
 | 1.15 | Yasal metin hizası — lead deposu (12 ay) ve kendi Umami | ✅ Tamamlandı |
-| 1.19 | Satır sonu ayıklama — e-posta konusu ve depo mesajı (UAT #26) | ⬜ Bekliyor |
+| 1.19 | Satır sonu ayıklama — e-posta konusu ve depo mesajı (UAT #26) | ✅ Tamamlandı |
 | 1.20 | Yasal sayfaların noindex meta katmanı (UAT #33, B-041) | ⬜ Bekliyor |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
@@ -77,6 +77,17 @@
 ## Son Task Özetleri
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
+
+### TASK-1.19 — Satır sonu ayıklama: e-posta konusu ve depo mesajı (2026-09-22)
+
+**Durum:** ✅ Tamamlandı
+**Özet:**
+- `clean()` ikiye ayrıldı: yeni `cleanLine()` tek satırlık lead alanlarında (`name`, `club`, `phone`, `email`, `segment`, `branches`) tüm C0 kontrol karakterlerini (`\r`/`\n`/`\t` dâhil) ve DEL'i kırpmadan önce boşluğa çevirip tekrar `trim`+`slice` yapıyor; `message` (textarea) dokunulmadan çok satırlı kalıyor.
+- `toStore()`'da segment etiketiyle mesaj arasına `---` ayırıcı satırı girdi (Karar Noktası (b)) — gerçek `Segment: X` etiketi her zaman ayırıcıdan hemen önceki tek satır, ziyaretçinin mesajına yazdığı sahte `Segment:` satırı ayırıcının altında kalıyor.
+- UAT #26 kapandı: kulüp adına konan `\n`/`\r` artık Resend `subject`'ini ya da depo `Ad:`/`Şube:`/`Telefon:` satırlarını sahteleyemiyor.
+
+**Test:** Bozuk girdi sınaması: `route.ts` geçici olarak eski hâline döndürüldü, 5 yeni senaryo kırmızı görüldü (28 diğer senaryo yeşil kaldı), düzeltme geri konunca 33/33 yeşil. `docker compose exec web npm test` tüm paket → 5 dosya/**66 PASS** + 1 skipped (taban 61+1'den +5). `tsc --noEmit` 0, eslint temiz. `npm run build` hatasız, 23 rota.
+**Detay:** `tasks/archive/TASK-1.19.md`
 
 ### TASK-1.15 — Yasal metin hizası: lead deposu ve kendi Umami (2026-09-22)
 
@@ -90,19 +101,6 @@
 **Detay:** `tasks/archive/TASK-1.15.md`
 
 <!-- KURAL: **Detay:** yolu task'ın DURUMUNA bağlıdır. ✅ Tamamlandı ise task arşive taşınmıştır (run-task Adım 7) ve yol `tasks/archive/…`'dır; task hâlâ `_dev/tasks/` altındaysa (🔄 / ⏸️ / 🔴) canlı yol yazılır. Özet Adım 5'te yazılır, taşıma Adım 7'de yapılır — sırayı izleyip tamamlanan task'a canlı yol yazmak, commit anında kırık bir referans bırakır ve bir sonraki audit turu onu "kırık dosya referansı" kalemi olarak açar. -->
-
----
-
-### TASK-1.09 — Global tıklama dinleyicisi ve yüzey etiketleri (2026-09-22)
-
-**Durum:** ✅ Tamamlandı
-**Özet:**
-- `src/components/layout/ClickTracker.tsx` (YENİ): tek `document` `click` dinleyicisi (bubble+`passive`), `wa.me`/`tel:` desenini yakalayıp yüzeyi `[data-surface]` → `section[id]` → sayfa yolu sırasıyla türetir, sözlükte yoksa `SURFACES.other`'a düşer.
-- On dosyaya `data-surface` çapası kondu (Header, Footer, Assistant, Hero, FinalCta, DemoForm, demo/destek sayfaları, not-found, global-error); `Section` bileşeni prop forward etmediği için sayfa çapaları onun içindeki `div`'e kondu.
-- Analitik yükü iki kaynaktan ölçüldü (B-035 kapsam notuyla): `perf.mjs` baseline'la **birebir aynı** (144/133 KB, LCP 96 ms); Umami betiği **2,56 KB** + bir olay isteği **0,74 KB** (CDP ağ kaydı, izole konteyner, gerçek website id).
-
-**Test:** `npm test` 5 dosya/**61 PASS** + 1 skipped (yeni: `tests/click-tracker.test.ts` 5/5). `tsc --noEmit` 0. `docker compose exec web npm run build` + `--build web-prod` ikisi de temiz (23 rota). `a11y.mjs` TOPLAM SORUN: 0, `mobile-audit.mjs` yatay kaydırma: yok, `scan.mjs` (ana sayfa/`/demo`/`/destek`) konsol temiz, `font-guard.mjs` eksik karakter yok.
-**Detay:** `tasks/archive/TASK-1.09.md`
 
 ---
 
@@ -127,7 +125,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.19.md` (sonraki: `tasks/TASK-1.20.md`)
+**Aktif Task:** `tasks/TASK-1.20.md`
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

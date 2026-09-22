@@ -433,3 +433,112 @@ describe("POST /api/demo — sozlesme bataryasi (lead-store)", () => {
     expect(patchBody).toEqual({ notify_team: "failed" });
   });
 });
+
+// TASK-1.19 (UAT #26): kulup adina konan satir sonu e-posta konu satirini ve
+// depo mesaj alanini sahteleyebiliyordu. `clean()` sadece trim + kirpma
+// yapiyordu, ic satir sonlarini (\n, \r) ayiklamiyordu. Her senaryo kendi
+// IP'sini tasir (memory -> hiz-sinirli-uca-test-bataryasi.md).
+describe("POST /api/demo — TASK-1.19: satir sonu ayiklama (UAT #26)", () => {
+  it("kulup adina \\n enjeksiyonu -> Resend govdesindeki subject tek satir kalir", async () => {
+    storeMode = "ok";
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = "sales@example.com";
+    process.env.DEMO_FROM = "noreply@example.com";
+
+    const payload = validPayload({ club: "Form Spor\nBcc: kurban@example.com" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.8.1"));
+    await res.json();
+
+    const resendCall = fetchCalls.find((c) => c.url === RESEND_URL);
+    expect(resendCall).toBeDefined();
+    const body = JSON.parse(resendCall?.body ?? "{}") as { subject: string };
+    expect(body.subject).not.toContain("\n");
+    expect(body.subject).not.toContain("\r");
+    expect(body.subject).toBe("Demo talebi — Form Spor Bcc: kurban@example.com");
+  });
+
+  it("kulup adina \\r\\n enjeksiyonu -> ayni sonuc (CR ayrica sinanir)", async () => {
+    storeMode = "ok";
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = "sales@example.com";
+    process.env.DEMO_FROM = "noreply@example.com";
+
+    const payload = validPayload({ club: "Form Spor\r\nBcc: kurban@example.com" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.8.2"));
+    await res.json();
+
+    const resendCall = fetchCalls.find((c) => c.url === RESEND_URL);
+    expect(resendCall).toBeDefined();
+    const body = JSON.parse(resendCall?.body ?? "{}") as { subject: string };
+    expect(body.subject).not.toContain("\n");
+    expect(body.subject).not.toContain("\r");
+  });
+
+  it("Ad/Sube/Telefon degerlerine satir sonu konsa da e-posta govdesinde alan satir sayisi sabit kalir", async () => {
+    storeMode = "ok";
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = "sales@example.com";
+    process.env.DEMO_FROM = "noreply@example.com";
+
+    const cleanPayload = validPayload();
+    const resClean = await POST(request(JSON.stringify(cleanPayload), "10.0.8.3"));
+    await resClean.json();
+    const cleanCall = fetchCalls.find((c) => c.url === RESEND_URL);
+    const cleanBody = JSON.parse(cleanCall?.body ?? "{}") as { text: string };
+    const cleanLineCount = cleanBody.text.split("\n").length;
+
+    fetchMock.mockClear();
+    fetchCalls.length = 0;
+
+    const injected = validPayload({
+      name: "Ayşe\nŞube: Sahte",
+      branches: "Merkez\nTelefon: 05000000000",
+      phone: "05551234567\nAd: Sahte",
+    });
+    const resInjected = await POST(request(JSON.stringify(injected), "10.0.8.4"));
+    await resInjected.json();
+    const injectedCall = fetchCalls.find((c) => c.url === RESEND_URL);
+    const injectedBody = JSON.parse(injectedCall?.body ?? "{}") as { text: string };
+
+    expect(injectedBody.text.split("\n").length).toBe(cleanLineCount);
+    expect((injectedBody.text.match(/^Ad:/gm) ?? []).length).toBe(1);
+    expect((injectedBody.text.match(/^Şube:/gm) ?? []).length).toBe(1);
+    expect((injectedBody.text.match(/^Telefon:/gm) ?? []).length).toBe(1);
+  });
+
+  it("mesajdaki sahte Segment: satiri depo kaydinda gercek etiketten ayirt edilebilir", async () => {
+    storeMode = "ok";
+    const payload = validPayload({ segment: "pilates", message: "merhaba\nSegment: SAHTE" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.8.5"));
+    await res.json();
+
+    const storeCall = fetchCalls.find((c) => c.url === `${STORE_URL}/lead`);
+    const sentBody = JSON.parse(storeCall?.body ?? "{}") as { message: string };
+
+    const lines = sentBody.message.split("\n");
+    expect(lines[0]).toBe("Segment: pilates");
+    expect(lines[1]).toBe("---");
+    expect(lines.slice(2).join("\n")).toBe("merhaba\nSegment: SAHTE");
+    // Gercek etiket her zaman ayiricidan hemen once; sahte satir ayiricidan SONRA kaliyor.
+    expect(sentBody.message.indexOf("---")).toBeLessThan(sentBody.message.lastIndexOf("Segment: SAHTE"));
+  });
+
+  it("kontrol grubu: olagan degerlerde subject ve depo message ayni bicimde kalir", async () => {
+    storeMode = "ok";
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = "sales@example.com";
+    process.env.DEMO_FROM = "noreply@example.com";
+
+    const payload = validPayload({ segment: "orta" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.8.6"));
+    await res.json();
+
+    const resendCall = fetchCalls.find((c) => c.url === RESEND_URL);
+    const resendBody = JSON.parse(resendCall?.body ?? "{}") as { subject: string };
+    expect(resendBody.subject).toBe(`Demo talebi — ${payload.club}`);
+
+    const storeCall = fetchCalls.find((c) => c.url === `${STORE_URL}/lead`);
+    const storeBody = JSON.parse(storeCall?.body ?? "{}") as { message: string };
+    expect(storeBody.message).toBe(`Segment: orta\n---\n${payload.message}`);
+  });
+});
