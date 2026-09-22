@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — research-phase: Faz 2 teknik araştırması tamamlandı; üç devralınan daralma ölçülüp genişledi (yetenek iddiası sınıfı ~124 cümle, yasal beyan sınıfı sekiz olgu, `flex-1` sınıfı tek gerçek örnek + dört yanlış alarm), `.env` sızıntısının hiçbir canlı değer taşımadığı ölçüldü ve döndürme sunucu karşılaştırmasına bağlandı, `notify_lead` kararı geçersiz kılındı. Sıradaki adım: task yazımı.
+**Son Güncelleme:** 2026-09-22 — plan-phase: Faz 2'nin 20 task dokümanı yazıldı (dokuz bulgu → ölçüm ayağı, sır sızıntısı, iki arayüz kalemi, onay e-postası, yetenek tek kaynağı, görsel hat, yasal metin, beyan testi, MX). TASK-2.03 koşullu (TASK-2.01'in parmak izi karşılaştırmasına bağlı). Faz dokümanı kırmızı çizgiyi aştığı için `PHASE-2-ARASTIRMA.md`'ye bölündü. Sıradaki adım: plan doğrulama.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,9 +10,9 @@
 
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
-**Adım:** plan
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ (altı yaklaşım değerlendirildi, dört kapsam kararı alındı, yeni bağımlılık yok). Task yazımı bekliyor.
-**Faz Dokümanı:** `phases/PHASE-2.md` 🔄 · önceki faz: `phases/PHASE-1.md` ✅
+**Adım:** verify-plan
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu). Plan doğrulama bekliyor.
+**Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
 
@@ -35,10 +35,13 @@
 
 ## Aktif Task
 
-**Task:** — yok (Faz 2 araştırması bitti; task'lar henüz yazılmadı)
-**Durum:** ✅ Faz 2 teknik araştırması tamamlandı
-**İlerleme:** Sıradaki adım `/devflow:plan-phase` — Faz 2 task yazımı.
+**Task:** — yok (Faz 2 planı yazıldı; task çalıştırma plan doğrulamasından sonra)
+**Durum:** ✅ Faz 2 task yazımı tamamlandı — 20 task dokümanı
+**İlerleme:** Sıradaki adım `/devflow:verify-plan` — planın milestone, gereksinim ve tutarlılık kontrolü.
 **Not:**
+- **TASK-2.03 koşulludur:** TASK-2.01'in sunucu parmak izi karşılaştırması eşleşme bulursa koşar; bulmazsa ❌ İptal edilir ve milestone'un "iki anahtar döndürülmüş" ayağı kullanıcıyla yeniden yazılır (kullanıcı kararı, research 2026-09-22).
+- **TASK-2.20 (MX kayıtları) kullanıcı eliyle ilerler** — DNS adımı Squarespace'te kullanıcıdadır; faz yönergeyi yazar, ölçer ve gerçek test postasıyla doğrular. Kullanıcı kaydı girmezse task ⏸️ duraklar, faz kilitlenmez.
+- **Tarayıcı katmanlı kriterler `kanal: UAT` işaretli** (TASK-2.04 · 2.05 · 2.06 · 2.20): projenin otomatik katmanı gerçek tarayıcı yerleşimini ve odağını ölçmüyor; kalıcı tarayıcı betiği bilinçli olarak "Kalite kapıları otomatik" fazına bırakıldı.
 - **Faz 2 kapsamı dokuz bulgu:** B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-060 · B-059'un onay-e-postası ayağı (yan kazanç B-040). Tam gerekçe ve kapsam dışı listesi `phases/PHASE-2.md` → Kapsam Tartışması.
 - **Sıra değişti:** "Görsel ve mobil iyileştirme" fazı alan adı geçişinin **önüne** alındı (kullanıcı kararı) — ölçülmüş AA kontrast ihlalleri (B-032) canlıya çıkmasın. B-032 · B-033 · B-031 o faza atandı.
 - **B-058 ölçüldü, döndürme koşula bağlandı:** `.env`'in beş değeri değer basılmadan parmak izlendi — depo adresi yerel konteyneri gösteriyor, iki token bu makinede üretilmiş (TASK-1.17 kaydı), canlı IP tuzu Vercel'e boru içinden girilip hiçbir yere kaydedilmemiş (TASK-1.18). Yani **imaja giren hiçbir değer canlı değil**. Kesin teyit sunucudaki `/opt/alpfit-lead/.env` ile parmak izi karşılaştırmasıdır; milestone'un "iki anahtar döndürülmüş" ayağı o sonuca bağlı (kullanıcı kararı, `docs/DECISIONS.md` 2026-09-22 research kaydı).
@@ -52,7 +55,26 @@
 
 | # | Task | Durum |
 |---|------|-------|
-| — | Faz 2'nin task'ları henüz yazılmadı (araştırma → planlama bekliyor) | — |
+| 2.01 | TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058) | ⬜ Bekliyor |
+| 2.02 | TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058) | ⬜ Bekliyor |
+| 2.03 | TASK-2.03 — **Koşullu** — iki anahtarın döndürülmesi (B-058) | ⬜ Bekliyor |
+| 2.04 | TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034) | ⬜ Bekliyor |
+| 2.05 | TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g) | ⬜ Bekliyor |
+| 2.06 | TASK-2.06 — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a) | ⬜ Bekliyor |
+| 2.07 | TASK-2.07 — Talep sahibine onay e-postası + `notify_lead` (B-059) | ⬜ Bekliyor |
+| 2.08 | TASK-2.08 — Yetenek ve yol haritası tek kaynağı (B-029, B-040) | ⬜ Bekliyor |
+| 2.09 | TASK-2.09 — Beş karşılıksız yetenek cümlesi düzeltilir (B-029) | ⬜ Bekliyor |
+| 2.10 | TASK-2.10 — `/ozellikler` ve Kurucu Programı sabitten okur (B-040) | ⬜ Bekliyor |
+| 2.11 | TASK-2.11 — Chat, SSS ve fiyat sayfası sabitten okur (B-040, B-014) | ⬜ Bekliyor |
+| 2.12 | TASK-2.12 — Riskli alt küme taraması (B-029 kapanır) | ⬜ Bekliyor |
+| 2.13 | TASK-2.13 — Ürün görseli temizliği: ad, Kampanyalar, Churn kartı (B-018) | ⬜ Bekliyor |
+| 2.14 | TASK-2.14 — Denetimin ad dalı tablodan beslenir (B-018) | ⬜ Bekliyor |
+| 2.15 | TASK-2.15 — Yasaklı iddia sözlüğü + denetimin iddia dalı (B-018 kapanır) | ⬜ Bekliyor |
+| 2.16 | TASK-2.16 — Yasal metinde işlenen veri gerçeği + onay kapsamı (B-024) | ⬜ Bekliyor |
+| 2.17 | TASK-2.17 — Ölçüm ve aktarım beyanları (B-024 kapanır) | ⬜ Bekliyor |
+| 2.18 | TASK-2.18 — Yasal beyan testi — depo içi yedi olgu (B-060) | ⬜ Bekliyor |
+| 2.19 | TASK-2.19 — Yasal beyan testi — çapraz depo "12 ay" dalı (B-060 kapanır) | ⬜ Bekliyor |
+| 2.20 | TASK-2.20 — KVKK başvuru adresi: MX kayıtları ve test postası (B-011) | ⬜ Bekliyor |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -91,7 +113,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok (Faz 2 araştırması bitti — sıradaki adım `/devflow:plan-phase`)
-**Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler · son kapanan: `phases/PHASE-1.md` ✅
+**Aktif Task:** — yok (Faz 2 planı yazıldı — sıradaki adım `/devflow:verify-plan`)
+**Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
