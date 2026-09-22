@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-22 — review-phase (Faz 1 kapanışı): kapsam triyajı **düzeltme task'ı üretmedi** (tüm ⚠️ kalemler faz-öncesi ve kapsam kararıyla dışarıda); Gelen Kutusu'na iki `[PHASE-1]` notu düştü — ziyaretçi onayının iki kanalda birden kapalı olabilmesi (B-055 + B-059 birleşimi) ve dört atomun `toWebhook`/`LEAD_WEBHOOK_URL` kanıt atıflarının bayatlaması. Açık bulgu 51 (değişmedi).
+**Son Güncelleme:** 2026-09-22 — discuss-phase (Faz 2): on bulgu `→ Faz 2` işaretini aldı (B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-060, artı kısmî ikisi: B-059 yalnız onay e-postası ayağıyla, B-040 yetenek listesi kapsamında); `[TASK-1.18 / run-phase]` UI kümesi sorusu cevaplandı (B-032 · B-033 · B-031 görsel ve mobil faza, o faz geçişin önüne alındı). Açık bulgu 51 (değişmedi — işaret mezuniyet değil).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -38,7 +38,7 @@
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px, referans rakip de benzer — kısaltılsın mı? Karar kullanıcıda (`modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
 - [TASK-1.07 / run-phase] Umami giriş ucunda hız sınırı ve kilitlenme yok, panel internete açık — evi `altyapi/vps` projesi, kayıp olmasın diye burada
 - [TASK-1.11] Bunker OS'un canlı n8n `lead-intake-agent`'ı çalışmaz ama açık bir giriş kapısı — evi Bunker OS triyajı (`tasks/archive/TASK-1.11-BUNKER-KESFI.md`)
-- [TASK-1.18 / run-phase] UI 🔴 bulgularını (B-032 · B-033 · B-034 · B-031) "Yayın öncesi düzeltmeler" fazına alma önerisi — kullanıcı 2026-09-14: "önce Faz 1 bitsin, arayüz sonra"; karar o fazın discuss-phase'inde. `docs/DECISIONS.md` 2026-09-13 bunları kilitleyen kümeye almamıştı, öneri o seçimi yeniden açar
+- [TASK-1.18 / run-phase] ✅ **CEVAPLANDI** (Kıvanç, discuss-phase 2026-09-22) — kümeden **B-034 Faz 2'ye alındı** (B-055 ile birlikte, ikisi de dönüşüm eksenine dokunuyor ve küçük); **B-032 · B-033 · B-031 "Görsel ve mobil iyileştirme" fazına atandı** ve o faz alan adı geçişinin **önüne alındı** (`PHASES.md`). Özgün öneri: UI 🔴 bulgularını (B-032 · B-033 · B-034 · B-031) "Yayın öncesi düzeltmeler" fazına alma — kullanıcı 2026-09-14: "önce Faz 1 bitsin, arayüz sonra". `docs/DECISIONS.md` 2026-09-13 bunları kilitleyen kümeye almamıştı, öneri o seçimi yeniden açtı
 - [TASK-1.06] Uçtan uca tur fiziksel telefonla değil mobil profilli tarayıcıyla koşuldu — fiziksel cihaz gözlemi "Görsel ve mobil iyileştirme" UAT'ına
 - [PHASE-1] `mobile-audit.mjs` bal küpünün bilinçli `left-[-9999px]` konumunu "taşan eleman" sayıyor (`/demo`'da 3 kalem) ve TOPLAM SORUN'u şişiriyor — kapı-kalitesi kümesiyle aynı ev (B-030 · B-031 · B-035)
 - [PHASE-1] `tasks/archive/TASK-1.09.md`'nin UAT kriteri "fiyat bölümündeki bir bağlantı `surface=fiyat` üretir" ölçülemez: `PricingBlock`'ta hiç `wa.me`/`tel:` bağlantısı yok. `section[id]` yedeği UAT'ta `sss` üzerinden ölçüldü; `fiyat` etiketi sözlükte tüketicisiz duruyor
@@ -81,17 +81,17 @@
      Bu index bir kanvas dokümandır: BÖLÜNMEZ. Liste yönetilemeyecek kadar uzadıysa (rehber eşik ~30 açık bulgu —
      işaret fişeği, mahkûmiyet değil) bu bir triyaj çağrısıdır: stok eritilir/elenir, yapı değiştirilmez. -->
 
-- 🔴 [B-058 — `.env` üretim Docker imajına gömülü](bulgular/B-058-env-uretim-imajina-gomulu.md) — `.dockerignore` `.env`'i eşlemiyor; beş sır imaj katmanında, 3100 provası sessizce hedefe bağlı
+- 🔴 [B-058 — `.env` üretim Docker imajına gömülü](bulgular/B-058-env-uretim-imajina-gomulu.md) — `.dockerignore` `.env`'i eşlemiyor; beş sır imaj katmanında, 3100 provası sessizce hedefe bağlı → Faz 2
 - 🔴 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — `content-type` kontrolsüz çapraz-site POST **artık depoya satır yazıyor**; `null` gövde 500; 5 MB gövde kabul
-- 🔴 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — dört kalem açık; "IP saklamaz" beyanı ölçülen nginx logu gerçeğiyle çelişiyor, `ip_hash` 12 ay saklanıyor
-- 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — 5/5 hâlâ açık; ürün ilerledi ama hiçbirinin karşılığı doğmadı
-- 🔴 [B-018 — Ürün görselinde gerçek kişi adı ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — `sube` kalemi kapandı; "Gizem Ö." ana sayfada duruyor, yasal metnin beyanı çürüyor
+- 🔴 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — dört kalem açık; "IP saklamaz" beyanı ölçülen nginx logu gerçeğiyle çelişiyor, `ip_hash` 12 ay saklanıyor → Faz 2
+- 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — 5/5 hâlâ açık; ürün ilerledi ama hiçbirinin karşılığı doğmadı → Faz 2
+- 🔴 [B-018 — Ürün görselinde gerçek kişi adı ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — `sube` kalemi kapandı; "Gizem Ö." ana sayfada duruyor, yasal metnin beyanı çürüyor → Faz 2
 - 🔴 [B-054 — İletişim kuralı ters eksende gevşek](bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md) — meşru yazımlar 422; `0532111223`/`0000000000` **200 `stored:true`** — ulaşılamaz numara artık kayda geçiyor
-- 🔴 [B-055 — Demo formunun gönderim sonrası hâli mobilde görünmüyor](bulgular/B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md) — 320/360'ta **başarı onayı da** ekran dışında; 412'de h1 yapışkan başlığın arkasında
-- 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok
+- 🔴 [B-055 — Demo formunun gönderim sonrası hâli mobilde görünmüyor](bulgular/B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md) — 320/360'ta **başarı onayı da** ekran dışında; 412'de h1 yapışkan başlığın arkasında → Faz 2
+- 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok → Faz 2
 - 🔴 [B-032 — Ana sayfada ve segment sayfalarında ölçülmüş AA kontrast ihlalleri](bulgular/B-032-olculmus-aa-ihlalleri.md) — ürün turu soluk kartları 2,54:1, kapanış paragrafı 3,48:1; ILKELER pazarlıksız diyor
 - 🔴 [B-033 — 320 px'te Kurucu Programı bölümü içerik ve işlev kaybediyor](bulgular/B-033-320px-kurucu-programi-icerik-kaybi.md) — 18 metin düğümü 70 px kesiliyor, CTA etiketi dâhil; kapı yatay kaydırma görmediği için temiz diyor
-- 🔴 [B-034 — Mobilde fiyat sayfasının ana çağrısı 52 px yerine 24 px](bulgular/B-034-mobilde-ana-cagri-24px.md) — kırılımsız `flex-1`; 6 rotada 12 örnek, doğru deyim `DemoForm`'da zaten var
+- 🔴 [B-034 — Mobilde fiyat sayfasının ana çağrısı 52 px yerine 24 px](bulgular/B-034-mobilde-ana-cagri-24px.md) — kırılımsız `flex-1`; 6 rotada 12 örnek, doğru deyim `DemoForm`'da zaten var → Faz 2
 - 🔴 [B-020 — Hız sınırı doğrulamadan önce sayıyor, geçerli talep reddediliyor](bulgular/B-020-hiz-siniri-gecerli-talebi-reddediyor.md) — beş kez hata yapan kullanıcının düzeltilmiş talebi 429; 2026-09-22'de yeniden üretildi
 - 🔴 [B-030 — Beş kalite kapısının dördü eşik altında bile çıkış kodu 0 döndürüyor](bulgular/B-030-kapilar-kirmiziya-donemiyor.md) — tek `exitCode` `font-guard:52`; betikler 09-13'ten beri hiç değişmedi; depo şema kapısı da varsayılanda kapalı
 - 🔴 [B-031 — `a11y.mjs`'in kontrast yöntemi üç kör nokta taşıyor](bulgular/B-031-a11y-kontrast-yontemi-kor-noktalari.md) — dördü de satır satır yerinde; kökte tek gradyan ölçüleni 157'den 0'a düşürüyor
@@ -100,8 +100,8 @@
 - 🔴 [B-014 — Chat ağacı pilot cümlesini tek kaynaktan değil elle yazıyor](bulgular/B-014-chat-agaci-pilot-cumlesini-yeniden-yaziyor.md) — `site.ts` importu hâlâ yok; `faq.ts` doğru deseni zaten taşıyor
 - 🟡 [B-036 — Dört ayrı yol talebi "başarılı" gösterip sessizce kaybediyor](bulgular/B-036-lead-kaybi-yollari.md) — üçü açık; kırpılan e-posta hâlâ 200 `stored:true` alıyor, bal küpü tek log satırı taşımıyor
 - 🟡 [B-056 — Umami açıldığı gün hidrasyonsuz gönderimde form verisi analitiğe gidiyor](bulgular/B-056-umami-hidrasyonsuz-gonderimde-kisisel-veri.md) — izleyici tarafı kapandı ve canlıda doğrulandı; zincir artık **aktif**, kaynak tarafı (B-036) ve (b) bot sahte yeşili açık
-- 🟡 [B-060 — Yayındaki yasal beyanları koruyan test yok](bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) — "12 ay", `data-exclude-search` ve görsel beyanı tek satıra bağlı; v1'de çalışan kapı v2'ye taşınmadı
-- 🟡 [B-059 — Alan adı geçişinde v1'in lead hattı ve yasal metin davranışları geriler](bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md) — onay e-postası kaybolur, `notify_lead` kalıcı `pending`, metin bugünkünden az bilgi verir
+- 🟡 [B-060 — Yayındaki yasal beyanları koruyan test yok](bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) — "12 ay", `data-exclude-search` ve görsel beyanı tek satıra bağlı; v1'de çalışan kapı v2'ye taşınmadı → Faz 2
+- 🟡 [B-059 — Alan adı geçişinde v1'in lead hattı ve yasal metin davranışları geriler](bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md) — onay e-postası kaybolur, `notify_lead` kalıcı `pending`, metin bugünkünden az bilgi verir → Faz 2 (yalnız onay e-postası ayağı; kalanı alan adı geçişi fazında)
 - 🟡 [B-061 — Lead deposunun tek yedeği aynı sunucuda ve aynı hacimde](bulgular/B-061-lead-deposu-yedegi-ayni-sunucuda.md) — S3 kapalı, yedekler `pb_data/` içinde; geçişten sonra tek dayanıklı hedef orası
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — 15/15 rotada yok; Umami artık gerçekten yüklendiği için yazma penceresi tam şimdi açık
 - 🟡 [B-025 — Çalışma zamanı için hiçbir alarm yok](bulgular/B-025-calisma-zamani-alarm-yok.md) — v1'in `⚠ KAYIT EDİLEMEDİ` e-posta öneki v2'de yok; depo düşerse ekip ayırt edilemeyen bir posta alır
@@ -109,7 +109,7 @@
 - 🟡 [B-042 — Paylaşım kartı sayfa başına türemiyor, `/foto` önbelleksiz](bulgular/B-042-paylasim-karti-ve-yayin-yuzeyi.md) — `canonical`/`<title>` kapandı, `FAQPage` eklendi; `og:url` hâlâ 15/15 ana sayfa
 - 🟡 [B-043 — F7.5 geçiş yüzeyi tabloda yazandan geniş](bulgular/B-043-f75-gecis-yuzeyi-tablodan-genis.md) — altı varlık adresi 404'e düşecek, `www` haritada yok, 20 adreslik harita bugünkü canlıya karşı doğrulanmadı
 - 🟡 [B-039 — Metin bileşende: `SectionHead`/`PageHero`'nun 103 değerinden yalnız 3'ü içerikten](bulgular/B-039-metin-bilesende.md) — "Metin tonu" fazının ön koşulu; eski kanıt komutu geçersizdi, yeni yöntem atomda
-- 🟡 [B-040 — Ürün yol haritası dört evde ve zaten ayrışmış](bulgular/B-040-urun-yol-haritasi-dort-evde.md) — 5/4/3/3 ayrışması birebir duruyor; "Kurumsal üyelik" dördün birinde
+- 🟡 [B-040 — Ürün yol haritası dört evde ve zaten ayrışmış](bulgular/B-040-urun-yol-haritasi-dort-evde.md) — 5/4/3/3 ayrışması birebir duruyor; "Kurumsal üyelik" dördün birinde → Faz 2 (yetenek listesi kapsamında)
 - 🟡 [B-050 — Dört segment sayfasında pilot nitelemesi hiç geçmiyor](bulgular/B-050-segment-sayfalarinda-pilot-nitelemesi-yok.md) — kaynakta 0, yayındaki HTML'de 0; `PRODUCT_STATUS`'un tek tüketicisi ana sayfa
 - 🟡 [B-023 — Fiyat ve iletişim değerleri tek kaynak dışında](bulgular/B-023-fiyat-ve-iletisim-tek-kaynak-disinda.md) — 8 fiyat + 4 iletişim + yeni `Frames.tsx:10`; `CONTACT.phone.display` hâlâ hiç kullanılmıyor
 - 🟡 [B-012 — Erişilebilirlik ve mobil kapıları rotaların yarısını gezmiyor](bulgular/B-012-olcum-betikleri-rota-kapsami-eksik.md) — 16 rotadan `a11y` 8, `mobile-audit` 9; üç yasal sayfa ikisinde de yok

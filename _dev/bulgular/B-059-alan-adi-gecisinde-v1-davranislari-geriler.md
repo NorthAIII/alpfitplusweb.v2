@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** tutarsızlık / gerileme | **Alan:** M7 — F7.5 Alan adı geçişi / M3 — Lead hattı / M1 — Yasal metin
 **Kaynak:** audit-product (Gelen Kutusu mezuniyeti: `[PHASE-1 plan revizyonu]` + `[TASK-1.15]`) | **Tarih:** 2026-09-22
-**Durum:** Açık
+**Durum:** → Faz 2 (yalnız onay e-postası ayağı; kalanı alan adı geçişi fazında)
 
 ## Gözlem
 

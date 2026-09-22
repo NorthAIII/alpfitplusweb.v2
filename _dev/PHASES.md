@@ -20,6 +20,7 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 | Faz | Konu | Milestone | Durum |
 |-----|------|-----------|-------|
 | 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı | ✅ Tamamlandı |
+| 2 | Yayın öncesi düzeltmeler | Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px | 🔄 Devam ediyor |
 
 **Durum simgeleri:**
 - 🔄 **Devam ediyor** — discuss-phase başladı (aktif faz)
@@ -36,16 +37,9 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 
 **v2.0** (alan adı geçişiyle biter):
 
-- **Yayın öncesi düzeltmeler** — Alan adı geçişini kilitleyen dört bulgu kapandı ve UAT'ten geçti (`docs/DECISIONS.md` 2026-09-13):
-  - B-029: site ürünün karşılamadığı hiçbir yeteneği "var" demiyor; iddialar ürün deposuna karşı yeniden sınandı.
-  - B-018: ürün görsellerinde gerçek kişi adı, ciro projeksiyonu ve yol haritası özelliği yok; render hattının denetimi bu sınıfı yakalıyor.
-  - B-024: yasal metin gerçek veri akışını eksiksiz anlatıyor (IP, aktarım, onay kapsamı).
-  - B-011: KVKK başvuru adresi posta alıyor (MX ölçüldü) ya da metin posta alan bir adrese çevrildi.
-
-  Hukukçu onayına bağlı kalem (B-008, B-024'ün yurt dışı aktarım dayanağı) fazı kilitlemez.
-- **Alan adı geçişi** — `alpfitplus.com` v2'ye bakıyor; v1'in 20 adresinin (10 TR + 10 `/en/*`) hepsi 301 ile karşılığına gidiyor; v1 Vercel projesi arşivde ama silinmemiş; sitemap ve canonical tutarlı. Geçişten önce yayın kapısı (çalışma/yayın ayrımı, doğrulama) `GIT-STRATEJI.md`'ye yazıldı — bu sırada CI henüz yok. M7 F7.5'in "M6 F6.3 yeşil" bağımlılığı bu sırayla karşılanmıyor, faza girerken güncellenir; Umami'de v2 bu fazda v1'in `alpfitplus.com` site kaydına geçer — Production `NEXT_PUBLIC_UMAMI_WEBSITE_ID` v1 kaydının kimliğine çevrilir (`docs/DECISIONS.md` 2026-09-14 «Umami site kaydı»).
-- **Görsel ve mobil iyileştirme** — Site gerçek telefonda ve en az üç viewport'ta (küçük telefon, 390 px, tablet) bölüm bölüm gözle incelendi; bulgular BULGULAR'a düştü ve triyajı yapıldı; ana sayfa mobil uzunluğu kararı verildi (Gelen Kutusu sorusu); düzeltmeler sonrası beş ölçüm yeşil.
-- **Kalite kapıları otomatik** — Beş ölçüm tek komutla koşuyor; GitHub Actions her push'ta çalışıyor; eşik altı değişiklik (kontrast, yatay kaydırma, font kümesi, iddia sızıntısı) kırmızı.
+- **Görsel ve mobil iyileştirme** — Site gerçek telefonda ve en az üç viewport'ta (küçük telefon, 390 px, tablet) bölüm bölüm gözle incelendi; bulgular BULGULAR'a düştü ve triyajı yapıldı; ana sayfa mobil uzunluğu kararı verildi (Gelen Kutusu sorusu); düzeltmeler sonrası beş ölçüm yeşil. Faz 2'nin kapsam tartışması (2026-09-22) bu konuyu **alan adı geçişinin önüne aldı** — ölçülmüş AA kontrast ihlalleri canlıya çıkmasın (ILKELER pazarlıksız maddesi) — ve şu kümeyi buraya atadı: B-032 (beş yüzeyde AA ihlali) · B-033 (320 px'te içerik ve işlev kaybı) · B-031 (`a11y.mjs`'in kontrast yönteminin kör noktaları). B-031'in atomu düzeltmenin B-030 ile aynı turda yapılmasını istiyor; B-030'un bugünkü evi "Kalite kapıları otomatik" — ikisinin birlikte mi yürüyeceği bu fazın kapsam tartışmasının kararı.
+- **Alan adı geçişi** — `alpfitplus.com` v2'ye bakıyor; v1'in 20 adresinin (10 TR + 10 `/en/*`) hepsi 301 ile karşılığına gidiyor; v1 Vercel projesi arşivde ama silinmemiş; sitemap ve canonical tutarlı. Geçişten önce yayın kapısı (çalışma/yayın ayrımı, doğrulama) `GIT-STRATEJI.md`'ye yazıldı — bu sırada CI henüz yok. M7 F7.5'in "M6 F6.3 yeşil" bağımlılığı bu sırayla karşılanmıyor, faza girerken güncellenir; Umami'de v2 bu fazda v1'in `alpfitplus.com` site kaydına geçer — Production `NEXT_PUBLIC_UMAMI_WEBSITE_ID` v1 kaydının kimliğine çevrilir (`docs/DECISIONS.md` 2026-09-14 «Umami site kaydı»). Faz 2 kararı: B-059'un kalan ayakları (depo alanlarının kalıcı `pending` hâli, yasal metnin v1'den az bilgi vermesi) bu fazın v1 parite listesinde kalır.
+- **Kalite kapıları otomatik** — Beş ölçüm tek komutla koşuyor; GitHub Actions her push'ta çalışıyor; eşik altı değişiklik (kontrast, yatay kaydırma, font kümesi, iddia sızıntısı) kırmızı. Faz 2 kararı: demo formunun kalıcı tarayıcı ölçüm betiği (320/390/1440 × hata türleri × odak × onay) tek komutun parçası olarak buraya girer.
 - **Metin tonu** — Kullanıcıdan fazla samimi bulduğu örnek cümleler alındı (M1 F1.2'deki üç şüpheli yer soruldu); tek sayfada örnek gösterildi ve onaylandı; ton `src/content/` geneline yayıldı (bileşenlerde gömülü metin de oraya taşındı); a11y/scan/font-guard yeşil. Alan adı geçişinden sonra gelir.
 - Teknik borç kapatma (versiyon sonu sabit fazı)
 - Senaryo testi (versiyon sonu sabit fazı) → ardından `/devflow:prd-review`
@@ -82,11 +76,12 @@ Dış aktöre bağlı işler (hukukçu onayı, logo, kurucu programı kontenjan�
 |--------|-------|-----|
 | → Faz 1 | 2026-09-11 | İlk faza girildi; sıra değişti (DECISIONS 2026-09-11) |
 | Faz 1 ✅ | 2026-09-22 | 19/19 task sonuçlandı (18 ✅ + 1 iptal); UAT 32/34; milestone kısmen — bkz. PHASE-1 |
+| → Faz 2 | 2026-09-22 | Yayın öncesi düzeltmeler; kapsama sır sızıntısı (B-058) ve iki dönüşüm kalemi (B-034, B-055) eklendi. Sıradaki Fazlar'da **sıra değişti**: görsel ve mobil iyileştirme alan adı geçişinin önüne alındı |
 
 <!-- KURAL: Her geçiş için TEK satır + kısa not. Geçiş gerekçesi/detayı PHASE-N.md retrospektifindedir, burada tekrar edilmez. "Önceki:" prefix veya HTML comment ile detay yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---
 
-**Son Güncelleme:** 2026-09-22 — review-phase: Faz 1 ✅ tamamlandı (19/19 task, UAT 34 senaryodan 32'si geçti, düzeltme task'ı doğmadı); milestone'un iki doğrulama ayağı kullanıcı gözünde kaldığı için geçiş notuna "kısmen" ibaresi girdi. Sıradaki Fazlar değişmedi.
+**Son Güncelleme:** 2026-09-22 — discuss-phase: Faz 2 "Yayın öncesi düzeltmeler" tabloya 🔄 olarak girdi (dokuz bulgu: B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-059 e-posta ayağı · B-060). Sıradaki Fazlar'da konu mezun edildi ve **görsel ve mobil iyileştirme alan adı geçişinin önüne alındı** — ölçülmüş AA kontrast ihlalleri canlıya çıkmasın (kullanıcı kararı).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

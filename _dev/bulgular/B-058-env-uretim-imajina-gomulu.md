@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** güvenlik / hata | **Alan:** M7 — Yayın ve altyapı (`.dockerignore`, `Dockerfile`, `docker-compose.yml`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-22
-**Durum:** Açık
+**Durum:** → Faz 2
 
 ## Gözlem
 

@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** test-kapsamı / gerileme | **Alan:** M1 — İçerik (`src/content/legal.ts`) / M6 — Kalite kapıları
 **Kaynak:** audit-product (Gelen Kutusu mezuniyeti: `[TASK-1.15]`) | **Tarih:** 2026-09-22
-**Durum:** Açık
+**Durum:** → Faz 2
 
 ## Gözlem
 

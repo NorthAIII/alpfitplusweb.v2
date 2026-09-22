@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / iddia sızıntısı | **Alan:** M5 — Görsel varlık hattı / M1 — İddia sınırı
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → Faz 2
 
 ## Gözlem
 

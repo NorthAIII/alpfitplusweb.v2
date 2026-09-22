@@ -19,6 +19,41 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-22 — Yetenek iddiaları tek bir yetenek listesinden türer; cümle bazlı düzeltme reddedildi
+
+**Bağlam:** B-029 ölçtü: site ürünün bugün karşılamadığı **beş** yeteneği "var" diye anlatıyor (ölçüm grafiği + diyetisyen notu · "iptal eşiğini siz belirlersiniz" · üyelik bitişi bildirimi · yetkinin geri alınması · kampanya) ve dördünde ürünün **kendi kaydı** bunu açıkça söylüyor ("Yakında", "v1.5 adayı", "ertelendi", "W8"). Kök neden: sitedeki yetenek iddialarını ürün deposuna karşı doğrulayan hiçbir kapı yok; tek mekanizma `/ozellikler` sayfasının "Yolda" kolonu ve o kolon **elle** tutuluyor — nitekim beşinci kalemde aynı sayfanın iki kolonu birbirini kesiyor. İkinci katman B-040: ürün yol haritası bugün **dört ayrı evde** ve 5/4/3/3 ayrışmış. Aynı sayfa (`src/app/ozellikler/page.tsx:86`) ziyaretçiye *"Yolda olan bir şeyi bugün varmış gibi anlatmıyoruz"* diye taahhüt veriyor.
+
+**Seçenekler:**
+1. Beş cümleyi ürün deposuna karşı tek tek doğrula ve düzelt; yapı değişmez.
+2. "Bugün var / yolda" ayrımını `src/content/` içinde **tek bir yetenek listesinden** türet; beş cümle o listeye göre düzelsin.
+
+**Karar:** 2 (kullanıcı teyidi, discuss-phase 2026-09-22). Listenin somut şekli (adı, şeması, hangi dosyada durduğu, tüketicilerin onu nasıl okuduğu) research-phase'in konusudur; burada kararlaştırılan, iddianın **tek kaynaktan türemesi**.
+
+**Gerekçe:** ILKELER → "Kalıcılık önceliği" ve "Kanıtsız iddia yayınlanmaz". Ürün ilerlemeye devam ediyor, iddialar ise 2026-09-09/10'da yazıldı; cümle bazlı düzeltme (seçenek 1) aynı sınıfı bir sonraki ürün sürümünde yeniden doğurur ve yine elle bulunur — bu bulgu fiilen **iki denetim turunda da elle** bulundu. Tek liste üç işi birden yapar: beş cümlenin dayanağı olur · yol haritasının dört evde ayrışmasını (B-040) kapatır · M6 F6.4'ün (iddia sızıntı denetimi) ürün deposuna karşı kontrol edeceği listeyi doğurur. Doğrulama için gereken kaynak zaten mevcut — ürün deposu bu bilgiyi adıyla aranabilir notlarda taşıyor ("Yakında", "v1.5", "W8") — eksik olan tek şey bağdı. Karşı ağırlık: faz bir task büyür; kabul edildi.
+
+**İlgili Task/Faz:** Faz 2 — kapsam kararı (`phases/PHASE-2.md` → Kapsam Tartışması). Bulgular: B-029, B-040. İleride bağlanacağı kapı: M6 F6.4 (`modules/M6-Kalite-Kapilari.md`).
+
+---
+
+### 2026-09-22 — `.env`'in imaja sızması: iki canlı anahtar döndürülür (IP tuzu + önizleme depo token'ı)
+
+**Bağlam:** B-058 ölçtü: `.dockerignore:6` yalnız `.env*.local` yazıyor ve bu kalıp `.env`'i **eşlemiyor**; üretim Docker imajı `/app/.env`'i beş anahtarın **değeriyle** taşıyor (`Dockerfile:27` `COPY . .` → standalone çıktı → `:35` runner katmanı). `docker save`, `docker history` ya da bir registry push'u bu değerleri imajla birlikte taşır. Hafifletici: bugün CI yok, registry yok, imaj bu makineden çıkmadı (ölçüldü) — risk **potansiyel**. Kullanıcı `.env`'in üretim değerleri taşıdığını teyit etti (discuss-phase 2026-09-22). Beş anahtarın **ikisi canlı**: `LEAD_STORE_TOKEN` (v1'in lead deposunun **önizleme** token'ı) ve `IP_HASH_SALT`. Kalan üçü beyana göre yerel ya da gizli değil — `LEAD_TOKEN_PREVIEW`/`LEAD_TOKEN_PRODUCTION` yerel depo kopyasının token'larıdır (`.env.example` §3 bunu adıyla beyan ediyor: *"YALNIZ YEREL: canli deger BURADA ASLA kullanilmaz"*), `LEAD_STORE_URL` bir adres.
+
+**Seçenekler:**
+1. `.dockerignore`'u düzelt, anahtarlara dokunma — imajın hiç dışarı çıkmadığı ölçümüne güvenilir.
+2. Yalnız `IP_HASH_SALT` döndürülsün; depo token'ı alan adı geçişinde üretim token'ıyla birlikte yenilenir (o gece sunucuya zaten bakılacak).
+3. İkisi de döndürülsün.
+
+**Karar:** 3 (kullanıcı, discuss-phase 2026-09-22). Yanında iki yapısal düzeltme: `.dockerignore`'a `.env` ve `.env.*` (`!.env.example` istisnasıyla), ve `web-prod`'a **bilinçli** `environment:`/`env_file:` — yerel üretim provası neye bağlandığını açıkça söylesin.
+
+**Gerekçe:** `IP_HASH_SALT`'ın döndürülmesi ölçülerek **bedelsiz** bulundu: değer v1'in değil, TASK-1.18'de v2 için `openssl rand -hex 32` ile üretildi ve hiçbir yere kaydedilmedi (`tasks/archive/TASK-1.18.md` → Karar Noktası (b)), yani v1'in lead kayıtlarıyla `ip_hash` sürekliliği bugün **zaten yok**. Tek etkisi: v2'nin `leads_preview`'daki 15 test kaydının `ip_hash`'i yeni kayıtlarla **karşılaştırılamaz** hâle gelir — o kayıtlar bilinçli test turlarıdır ve 12 aylık saklama işi siler. Depo token'ı sunucuda bir işlem gerektiriyor ama v1'in canlı lead akışı **üretim** token'ını kullandığı için etkilenmiyor; buna karşılık seçenek 2, sızmış sayılan bir token'la geçişe kadar yaşamayı gerektiriyordu ve bunun gerekçesi yoktu. **F7.5'e taşınan sınır değişmedi:** alan adı geçişinde `IP_HASH_SALT` v1'in değerine çevrilir (`modules/M7-Yayin-ve-Altyapi.md` → F7.5 Edge Case'leri); bugünkü döndürme o adımı etkilemez, yalnız aradaki değeri tazeler.
+
+**Açık kalem (fazın ilk işlerinden biri):** `.env`'deki `LEAD_TOKEN_PRODUCTION` gerçekten yerel depo kopyasının token'ı mı, yoksa canlı üretim token'ı mı? `.env.example` §3 "yalnız yerel" diye beyan ediyor ama bu beyan **ölçülmedi**. Canlı değer oradaysa döndürme kapsamı üçe çıkar ve v1'in canlı lead akışı da ilgilenir.
+
+**İlgili Task/Faz:** Faz 2 — kapsam kararı (`phases/PHASE-2.md`). Bulgu: B-058. Env taşıma listesi: M7 F7.5.
+
+---
+
 ### 2026-09-22 — Analitik olay adları v1 ile hizalandı: `whatsapp-click`/`phone-click` yerine `whatsapp`/`phone`
 
 **Bağlam:** TASK-1.08 `src/lib/analytics.ts`'i (olay sözlüğü + `track()`) yazarken 2026-09-13 «Analitik (yeniden)» kararı olay adlarını `demo-submit` / `whatsapp-click` / `phone-click` olarak sabitlemişti. 2026-09-14 «Umami site kaydı» kararı v2'nin alan adı geçişinde **v1'in Umami kaydına** devralınacağını netleştirdi — bu, geçmiş ve yeni verinin panelde **aynı seride** kalması gerektiği anlamına gelir. v1'in olay adları (salt-okunur, `../Alpfitplus-website.v1/src/config/analytics.ts:20-42`, doğrulandı 2026-09-22): `demo-submit`, `whatsapp`, `phone`, `email`, `instagram`, `cta` — `-click` eki yok. Aynı kayıtta iki farklı adlandırma birikirse geçiş günü seri ikiye böler, geçmiş veri geri toparlanamaz.

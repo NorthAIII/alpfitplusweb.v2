@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / altyapı | **Alan:** M7 — Yayın ve altyapı / M1 — Yasal metin
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → Faz 2
 
 ## Gözlem
 

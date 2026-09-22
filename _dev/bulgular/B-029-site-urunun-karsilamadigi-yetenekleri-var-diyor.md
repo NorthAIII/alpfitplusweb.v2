@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / iddia uyumu | **Alan:** M1 — İçerik ve iddia kaynağı (M2 render yüzeyleri)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → Faz 2
 
 ## Gözlem
 

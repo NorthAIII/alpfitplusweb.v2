@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** tutarsızlık / uyum | **Alan:** M1 — İçerik (`src/content/legal.ts`) / M3 — Lead hattı
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → Faz 2
 
 ## Gözlem
 

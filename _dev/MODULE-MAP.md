@@ -115,5 +115,6 @@ M6 ═══ hepsini kapılar
 - ✅ **Tamamlandı** — Tüm kabul kriterleri karşılandı, UAT'tan geçti (review-phase'de set edilir)
 
 > ✅ işaretli feature'ların çoğu **kickoff öncesi, DevFlow dışında** tamamlandı (2026-09-09 → 09-11); kanıt git log + başlangıç ölçümü (`modules/M6-Kalite-Kapilari.md` → Teknik Notlar). **Faz 1'in dört feature'ı (F3.2, F3.3, F7.3, F7.4) 2026-09-22'de review-phase ile ✅ oldu** — kabul kriterleri `phases/PHASE-1-UAT.md`'de senaryo senaryo ölçülü; iki senaryonun (#10 e-posta yerleşimi, #16 panel arayüzü) doğrulama kanalı kullanıcı gözüdür, kriterin ürün tarafı ölçüldü.
+> **Faz 2 ("Yayın öncesi düzeltmeler") bu matrisi değiştirmez** — bir bulgu fazıdır: yeni yetenek getirmez, tamamlanmış feature'ların ziyaretçiye yanlış görünen yerlerini düzeltir (Faz 1'in destek-işi deseninin aynısı). Hangi feature'a hangi bulguyla dokunulduğu `phases/PHASE-2.md` → Feature Listesi'nde; Faz sütununa yazılmaz ve ✅ durumları 🔄'ya çevrilmez. Eksik atama değildir.
 > Modül detayları (sorumluluk, feature kabul kriterleri, edge case'ler) → `modules/MX-ModulAdi.md`
 > Versiyon sütunu PRD'den değil, kickoff versiyon planından (v2.0 = alan adı geçişiyle biter; v2.1 = asistan) aktarıldı — `docs/DECISIONS.md` 2026-09-11. Faz sütunu sadece planlanmış fazlar için doldurulur, henüz planlanmamış feature'lar "—" kalır.

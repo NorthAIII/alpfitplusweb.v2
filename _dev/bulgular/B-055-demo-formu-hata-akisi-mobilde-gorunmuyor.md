@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / erişilebilirlik + dönüşüm | **Alan:** M3 — Lead hattı (`src/components/sections/DemoForm.tsx`, F3.1)
 **Kaynak:** audit-product (TASK-1.12 sonrası denetim) | **Tarih:** 2026-09-13
-**Durum:** Açık
+**Durum:** → Faz 2
 
 ## Gözlem
 

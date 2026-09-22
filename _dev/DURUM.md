@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — review-phase: Faz 1 ✅ tamamlandı (retrospektif + 10 kalite ekseni PHASE-1'e yazıldı, UAT detayı `PHASE-1-UAT.md`'ye bölündü, düzeltme task'ı doğmadı); milestone'un iki doğrulama ayağı kullanıcı gözünde. Sıradaki adım: Faz 2 kapsam tartışması.
+**Son Güncelleme:** 2026-09-22 — discuss-phase: Faz 2 "Yayın öncesi düzeltmeler" açıldı ve kapsamı dokuz bulgu olarak kararlaştırıldı; görsel ve mobil iyileştirme fazı alan adı geçişinin önüne alındı; iki karar `docs/DECISIONS.md`'ye yazıldı (tek yetenek listesi, iki anahtarın döndürülmesi). Sıradaki adım: teknik araştırma.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -8,11 +8,11 @@
 
 ## Aktif Faz
 
-**Faz:** Phase 2 — Yayın öncesi düzeltmeler *(geçici ad; faz PHASES'e discuss-phase'de girer)*
-**Milestone:** — henüz yok (kapsam tartışmasında yazılacak)
-**Adım:** discuss
-**İlerleme:** Faz 1 ✅ kapandı (19/19 task, UAT 32/34). Faz 2 henüz başlamadı.
-**Faz Dokümanı:** — (discuss-phase oluşturacak) · önceki faz: `phases/PHASE-1.md` ✅
+**Faz:** Phase 2 — Yayın öncesi düzeltmeler
+**Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
+**Adım:** research
+**İlerleme:** Kapsam tartışması ✅ (dokuz bulgu kapsamda, üçü görsel/mobil faza). Teknik araştırma bekliyor.
+**Faz Dokümanı:** `phases/PHASE-2.md` 🔄 · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
 
@@ -35,14 +35,15 @@
 
 ## Aktif Task
 
-**Task:** — yok (Faz 1 kapandı; Faz 2 henüz planlanmadı)
-**Durum:** ✅ Faz 1 review tamamlandı
-**İlerleme:** Sıradaki adım `/devflow:discuss-phase` — Faz 2 kapsam tartışması.
+**Task:** — yok (Faz 2 kapsamı kararlaştı; task'lar henüz yazılmadı)
+**Durum:** ✅ Faz 2 kapsam tartışması tamamlandı
+**İlerleme:** Sıradaki adım `/devflow:research-phase` — Faz 2 teknik araştırması.
 **Not:**
-- **Kullanıcı gözü bekleyen iki kalem (Faz 1 milestone'unun iki doğrulama ayağı, iki UAT turunda da otonom kolda kapanmadı):** (1) `DEMO_TO`'ya giden e-postanın **gelen kutusunda mı spam'de mi** olduğu — gönderim tarafı üç turda da Resend `delivered`, DKIM hizalı, yerleşim API'den ölçülemez; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi — verinin kendisi panelin kendi okuma API'siyle teyitli (sayfa görüntülemesi 13, `whatsapp` 7, `phone` 2, `demo-submit` 3; yüzeyler `hero`/`sss`/`footer`/`demo-form`). İkisi de faz kapanışını engellemedi; kayıt `phases/PHASE-1.md` → Milestone kapanış notu.
-- **Karar bekleyen 🔴 B-058:** `.dockerignore` `.env`'i dışlamıyor, beş sır üretim imajı katmanında. Soru kullanıcıda: bu makinedeki `.env` üretim değerlerini mi taşıyor, imaj dışarı çıktıysa anahtarlar döndürülmeli mi? Faz 1 retrospektifi bunu **alan adı geçişinden önce** kapanacak kalem olarak işaretledi.
-- **Faz 2 kapsamına önerilen küme (karar o fazın discuss-phase'inde):** UI 🔴'leri B-032 · B-033 · B-034 · B-031 **+ B-055** (demo formunun gönderim sonrası hâli mobilde görünmüyor). Gerekçe `phases/PHASE-1.md` → Sonraki Faz İçin Öneriler.
-- **Canlı depodaki test kayıtları:** `leads_preview` 15 kayıt (Faz 1'in bilinçli test turları; `leads` 2 → değişmedi). 12 aylık saklama işi siler.
+- **Faz 2 kapsamı dokuz bulgu:** B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-060 · B-059'un onay-e-postası ayağı (yan kazanç B-040). Tam gerekçe ve kapsam dışı listesi `phases/PHASE-2.md` → Kapsam Tartışması.
+- **Sıra değişti:** "Görsel ve mobil iyileştirme" fazı alan adı geçişinin **önüne** alındı (kullanıcı kararı) — ölçülmüş AA kontrast ihlalleri (B-032) canlıya çıkmasın. B-032 · B-033 · B-031 o faza atandı.
+- **B-058'in ölçülmemiş ayağı, fazın ilk işlerinden biri:** `.env`'deki `LEAD_TOKEN_PRODUCTION` gerçekten yerel depo kopyasının token'ı mı (`.env.example` §3 böyle beyan ediyor) yoksa canlı üretim token'ı mı? Canlı değer oradaysa döndürme kapsamı üçe çıkar ve v1'in canlı lead akışı da ilgilenir (`docs/DECISIONS.md` 2026-09-22).
+- **Kullanıcı gözü bekleyen iki kalem (Faz 1 milestone'unun doğrulama ayakları, kapanışı engellemedi):** (1) `DEMO_TO`'ya giden e-postanın **gelen kutusunda mı spam'de mi** olduğu; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi. İkisinin de ürün tarafı ölçüldü; kayıt `phases/PHASE-1.md` → Milestone kapanış notu.
+- **Canlı depodaki test kayıtları:** `leads_preview` 15 kayıt (Faz 1'in bilinçli test turları; `leads` 2 → değişmedi). 12 aylık saklama işi siler. ⚠️ IP tuzu döndürülünce bu kayıtların `ip_hash`'i yeni kayıtlarla karşılaştırılamaz olur (bilinçli, `docs/DECISIONS.md`).
 - **Yerel `lead-store` konteyneri hâlâ ayakta** (25 test kaydıyla) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
 
 ---
@@ -51,7 +52,7 @@
 
 | # | Task | Durum |
 |---|------|-------|
-| — | Aktif faz henüz planlanmadı (Faz 2 kapsam tartışması bekliyor) | — |
+| — | Faz 2'nin task'ları henüz yazılmadı (araştırma → planlama bekliyor) | — |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -90,7 +91,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok (Faz 1 ✅ kapandı — sıradaki adım `/devflow:discuss-phase`)
-**Aktif Faz:** — henüz yok (Faz 2 kapsam tartışması bekliyor) · son kapanan: `phases/PHASE-1.md` ✅
+**Aktif Task:** — yok (Faz 2 kapsamı kararlaştı — sıradaki adım `/devflow:research-phase`)
+**Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
