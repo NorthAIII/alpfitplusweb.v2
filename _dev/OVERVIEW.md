@@ -36,7 +36,7 @@ Türkiye'deki butik spor kulübü sahipleri. Dört segment: reformer/pilates, bo
 |--------|-----------|
 | Frontend | Next.js 16 (App Router, Turbopack), React 19, TypeScript |
 | Backend | Next.js route handler (`/api/demo`; ileride `/api/chat`), Node.js runtime |
-| Veritabanı | Yok — lead kaydı webhook veya JSONL dosyası (`LEAD_WEBHOOK_URL` / `LEAD_FILE_PATH`) |
+| Veritabanı | Kendi şemamız yok — demo talebi v1'in PocketBase lead deposuna yazılır (`LEAD_STORE_URL` / `LEAD_STORE_TOKEN` / `IP_HASH_SALT`; alan adı geçişine kadar `leads_preview` koleksiyonu), yerel yedek JSONL dosyasıdır (`LEAD_FILE_PATH`) |
 | Styling | Tailwind CSS 4 (CSS-first `@theme`), lucide-react |
 | Deployment | Docker Compose (yerel), Vercel (hedef; v2 için ayrı proje) |
 | Diğer | Sora + Inter self-host daraltılmış font; Playwright + sharp araştırma konteyneri |
