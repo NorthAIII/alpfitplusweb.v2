@@ -43,8 +43,11 @@
 - [TASK-1.09] `phases/PHASE-1.md:123` Teknik Kararlar özeti hâlâ eski olay adlarını yazıyor (`whatsapp-click`/`phone-click`) — v1 hizası kararı `docs/DECISIONS.md` 2026-09-22; verify-phase Adım 1 süpürmesi
 
 - [audit-product] Yerel `lead-store`'da bu denetim turunun **25 test kaydı** duruyor (`Ayse/Pilates`, `Deneme Kisi/Deneme Studyo`, `CSRF/K`, `Zemin/Kontrol`) — silinmedi; sonraki ölçüm bunları gerçek lead sanmasın
-- [audit-product] `_dev/docs/DECISIONS.md` kırmızı çizgide: **20.218 token** (`doc-scan.sh`, 2026-09-22) — rota `/devflow:audit-docs`
-- [audit-product] `_dev/OVERVIEW.md:39` lead hedefini yanlış anlatıyor (`LEAD_WEBHOOK_URL` TASK-1.14'te kaldırıldı; kayıt PocketBase deposuna gidiyor) — rota `/devflow:audit-docs`
+- [audit-docs] Kök `CLAUDE.md` → `### Oturum Kapanışı:` gövdesi motorun güncel şablonundan eski (2 satırlık blok ↔ 4 satırlık blok + Terfi kuralı · Ön-hazırlık · dört özel durum · `engel:`/`önerilir:` önek kümesi). Göç ÖLÇÜLDÜ: +7.901 token, parent'ı 15.857 → ~23,8k yapıp kırmızı çizgiyi aşırıyor ve kanonun çaresi ("önce bölme") bu projede tükenmiş — karar gerekiyor; erteleme kaydı `CLAUDE.md` → Oturum Disiplini KURAL yorumunda
+- [audit-docs] Kök neden motor düzeyinde: DevFlow'un kendi `templates/CLAUDE-MD.md`'si **20.114 token** (kırmızı çizgide) ve `Oturum Disiplini`'nin doktrin çocuğu yok — proje-özgü kuralı olan hiçbir parent tam uygunlukta çizginin altında kalamıyor. Rota DevFlow'un kendi deposu, bu repo değil
+- [audit-docs] `_dev/claude/DOKUMAN-DISIPLINI.md:47` tek satırda 2.141 karakter (1.500 eşiğinin üstünde) — metin motor template'inden birebir geliyor, rota yine DevFlow'un kendi deposu
+- [audit-docs] `docs/DECISIONS.md`'deki task atıfları arşivlemede **sistemik** kırılıyor (`tasks/TASK-1.04/1.07/1.09.md` → gerçek yer `tasks/archive/`); dokümanın kendi KURAL'ı "yazılmış karar düzeltilmez" dediği için düzeltilmedi — kural kararı gerekiyor (her arşivleme yeni bir kırık atıf doğuruyor)
+- [audit-docs] `docker-compose.yml:23` yorumu üretim imajını `localhost:3001` diye anlatıyor; gerçek eşleme `:30`'da `3100:3000` ve `CLAUDE.md` 3001'i adıyla yasaklıyor — kod olduğu için audit-docs kapsamı dışı
 
 - [audit-product SORU] `DemoForm.tsx:113` `noValidate` ve hız sınırının doğrulamadan önce sayması bilinçli mi? İkisi birlikte M3 F3.1 kriteriyle çelişiyor ve geçerli talebi 429'a düşürüyor (B-020, B-054) — önerim: kota yalnız doğrulamayı geçen isteği saysın, istemci doğrulaması açılsın
 - [audit-product SORU] Footer'daki "Giriş Yap" bilinçli mi? Bilinçli Tercihler kaydı yalnız **header**'ı kapsıyor, bağlantı bugün footer'da ve `app.alpfitplus.com` çözümlenmiyor — önerim: ürün canlıya çıkana dek gizlensin, kayıt gerçeği yansıtsın
