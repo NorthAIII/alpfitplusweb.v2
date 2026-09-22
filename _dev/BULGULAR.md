@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-22 — TASK-1.09 (run-task): `TASK-1.09.md`/`PHASE-1-ARASTIRMA.md` hizalandı, Gelen Kutusu satırı mezun edildi; yerine `PHASE-1.md:123`'ün kendi özetinin kapsam dışı bırakıldığını işaretleyen yeni satır düşüldü. Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
+**Son Güncelleme:** 2026-09-22 — TASK-1.15 (run-task): B-024'e "hedef anlatımı bayatladı" notu ve güncel kalem listesi yazıldı, index kancası tazelendi; Gelen Kutusu'na iki `[TASK-1.15]` pointer satırı (12 ay beyanını koruyan kapı yok · alan adı geçişinde metin gerileyebilir). Açık bulgu 49 — rehber eşik (~30) aşıldı, triyaj çağrısı sürüyor.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -64,6 +64,8 @@
 - [audit-product] `globals.css:122` `html { scroll-behavior: smooth }` taşıyor ama `<html>`'de `data-scroll-behavior="smooth"` yok. Next 16 dev sunucusu uyarı basıyor: rota geçişinde yumuşak kaydırmayı kapatma artık bu özniteliğe bağlı. Uzun sayfalardan iç gezinmenin görünür bir kaydırma animasyonu üretip üretmediği ölçülmedi (odak dışı, M2 turuna)
 - [audit-product SORU] `Assistant.tsx`'te `donanim` düğümü **tek yön kapı**: dokuz düğümün hiçbirinin devam sorusunda yok, yani kök ekranından ayrılan ziyaretçi turnike/donanım itirazına bir daha ulaşamıyor (dönüş yalnız 25 px "Baştan" düğmesiyle). Bilinçli daraltma mı? — önerim: bir-iki düğümün `next`'ine eklensin ya da chip kümesi her zaman bir kök konusu içersin
 - [TASK-1.09] `phases/PHASE-1.md:123` Teknik Kararlar özeti hâlâ eski olay adlarını (`whatsapp-click`/`phone-click`) yazıyor — v1 hizası kararı `docs/DECISIONS.md` 2026-09-22; `TASK-1.09.md` ve `PHASE-1-ARASTIRMA.md` bu turda hizalandı, parent faz dokümanının kendi özeti kapsam dışı bırakıldı (run-task yetkisi task dokümanı + araştırma çocuğuyla sınırlıydı)
+- [TASK-1.15] Yayındaki KVKK'nın "12 ay" beyanı **v1 reposundaki** bir sabite bağlı (`../Alpfitplus-website.v1/pocketbase/pb_hooks/lead_lib.js` → `RETENTION_MONTHS`) ve v2'de bunu koruyan kapı yok — v1'in kendi `tests/server/legal-consistency.spec.ts`'i var, v2'nin yok
+- [TASK-1.15] Alan adı geçişinde (F7.5) yayındaki yasal metin **gerileyebilir**: v1'in canlı metni yurt dışı aktarımı ve alıcı dökümünü açıkça yazıyor (`../Alpfitplus-website.v1/src/i18n/legal.ts` → `RECIPIENTS` · `TRANSFER_FACT`), v2 yalnız kaydın ülkesini olgu olarak söylüyor — B-008/B-024 hukukçu kalemi geçişten önce kapanmalı
 
 ## Açık Bulgular
 
@@ -96,7 +98,7 @@
 - 🟡 [B-055 — Demo formunun hata akışı mobilde görünmüyor](bulgular/B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md) — 320'de 6/6 hata metni ekran dışında, alanda işaret yok; `missing` odağı dolu alana
 - 🟡 [B-038 — `lead-sheet.gs` üç operasyonel sessizlik, testi `catch` dalını hiç koşturmuyor](bulgular/B-038-lead-sheet-operasyonel-sessizlikleri.md) — Google Sheet hedefi düştü; dosya siliniyor, bulgu konusuz kapanacak → TASK-1.14
 - 🟡 [B-041 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor](bulgular/B-041-yasal-sayfalar-noindex-eziyor.md) — canlı önizlemede `index, follow` servis ediliyor; faz ölçüm tablosu bunu yeşil gösteriyor
-- 🟡 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — IP, yurt dışı aktarım, onay kapsamı; hukukçuya gönderimden (B-008) önce düzeltilmeli
+- 🟡 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — IP/`ip_hash`, yurt dışı aktarımın **dayanağı**, iki metnin veri listesi, onay kapsamı; hukukçuya gönderimden (B-008) önce düzeltilmeli. Hedef anlatımı TASK-1.15'te (2026-09-22) güncellendi, kalemler açık
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — analitik eklenirken yazmak için doğal an; pencere kapanırsa bir daha zor açılır
 - 🟡 [B-025 — Çalışma zamanı için hiçbir alarm yok](bulgular/B-025-calisma-zamani-alarm-yok.md) — "hiçbir hedefe yazılamadı" satırı yalnız Hobby loglarına düşüyor; kimse haber almaz
 - 🟡 [B-044 — Ürün görselinde semt baş harfi sızıntısı ve avatar-ad uyumsuzluğu](bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) — yayınlanan uyumsuzluk `grup`/`takvim`'de sürüyor ("Burak Ş."+DK); semt baş harfi sınıfı açık, denetim 20/21 kör

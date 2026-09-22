@@ -33,7 +33,7 @@ export const KVKK: LegalDoc = {
   title: "KVKK Aydınlatma Metni",
   description:
     "6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında alpfitplus.com ziyaretçileri ve demo talep edenler için aydınlatma metni.",
-  updated: "11 Eylül 2026",
+  updated: "22 Eylül 2026",
   intro: `Bu aydınlatma metni, ${SITE.domain} adresini ziyaret ettiğinizde ve demo talep formunu doldurduğunuzda kişisel verilerinizin nasıl işlendiğini açıklar. Alpfit Plus uygulamasının kendisinde (kulüp üyesi, antrenör, diyetisyen ve yönetim hesapları) işlenen veriler için ayrı bir aydınlatma metni uygulanır ve bu metin onu kapsamaz.`,
   sections: [
     {
@@ -97,19 +97,23 @@ export const KVKK: LegalDoc = {
       blocks: [
         {
           type: "p",
+          text: "Demo talebiniz, kendi sunucumuzdaki bir kayıt veritabanına yazılır. Sunucu bize aittir ve Almanya'da (Nürnberg) bir veri merkezinde durur; kaydın kendisi bir üçüncü kişiye aktarılmaz. Kayıtları yalnızca yetkili yönetici hesabımız görebilir: veritabanının dışarıya açık okuma kuralları kapalıdır ve sitenin kullandığı anahtar yalnızca yeni kayıt oluşturabilir, var olan kayıtları okuyamaz.",
+        },
+        {
+          type: "p",
           text: "Kişisel verileriniz, yalnızca demo talebinizin karşılanması amacıyla ve amacın gerektirdiği ölçüde, aşağıdaki hizmetleri aldığımız tedarikçilerimize aktarılabilir:",
         },
         {
           type: "ul",
           items: [
             "Barındırma: sitenin ve demo talep formunun çalıştığı altyapı",
+            "Sunucu barındırma: kayıt veritabanımızın çalıştığı sunucunun bulunduğu veri merkezi",
             "Elektronik posta gönderimi: talebinizin bize bildirilmesi",
-            "Kayıt tutma: demo talebiniz, tedarikçimizin (Google) elektronik tablo hizmetinde bir satır olarak saklanır; bu tabloya yalnızca demo süreciyle ilgilenen hesap erişebilir",
           ],
         },
         {
           type: "p",
-          text: "Siteyi kaç kişinin gezdiğini ölçmek için çerezsiz ve kimlik tanımlamayan bir ölçüm hizmeti (Umami) kullanıyoruz. Bu hizmete kişisel verileriniz aktarılmaz: ölçüm kayıtları sizi kişi olarak tanımlamaz ve demo talebinizdeki bilgilerle birleştirilmez.",
+          text: "Siteyi kaç kişinin gezdiğini ölçmek için, kayıt veritabanıyla aynı sunucuda kendi kurduğumuz, çerezsiz ve kimlik tanımlamayan bir ölçüm yazılımı (Umami) kullanıyoruz. Ölçüm için üçüncü bir tarafa veri göndermiyoruz ve bu ölçüme kişisel verileriniz aktarılmaz: ölçüm kayıtları sizi kişi olarak tanımlamaz ve demo talebinizdeki bilgilerle birleştirilmez.",
         },
         {
           type: "p",
@@ -122,7 +126,11 @@ export const KVKK: LegalDoc = {
       blocks: [
         {
           type: "p",
-          text: "Demo talebinize ilişkin veriler, talebin sonuçlanmasından itibaren en fazla iki yıl saklanır. Bu sürenin sonunda veya talebiniz üzerine daha erken bir tarihte silinir, yok edilir veya anonim hâle getirilir.",
+          text: "Demo talebinizin sunucumuzdaki kaydı, oluşturulmasından 12 ay sonra, günlük çalışan bir temizlik işiyle otomatik olarak silinir. Talebiniz üzerine daha erken bir tarihte de silinir, yok edilir veya anonim hâle getirilir.",
+        },
+        {
+          type: "p",
+          text: "Talebiniz ayrıca elektronik posta ile bize bildirilir. Bu bildirimin bir kopyası ekip posta kutumuzda, bir kopyası da e-postayı ileten sağlayıcıda kalır. Bu kopyalar yukarıdaki 12 aylık süreye bağlı değildir; bugün için otomatik bir silme süresi işletmiyoruz.",
         },
       ],
     },
@@ -158,7 +166,7 @@ export const PRIVACY: LegalDoc = {
   title: "Gizlilik Politikası",
   description:
     "alpfitplus.com tanıtım sitesinin gizlilik politikası: hangi verileri topluyoruz, neden topluyoruz ve nasıl koruyoruz.",
-  updated: "11 Eylül 2026",
+  updated: "22 Eylül 2026",
   intro: `Bu gizlilik politikası ${SITE.domain} tanıtım sitesi için geçerlidir. Alpfit Plus uygulamasında saklanan kulüp ve üye verileri için kulübünüzle imzalanan sözleşme ve uygulamanın kendi gizlilik metni geçerlidir.`,
   sections: [
     {
@@ -188,11 +196,11 @@ export const PRIVACY: LegalDoc = {
         },
         {
           type: "p",
-          text: "Hangi sayfaların ziyaret edildiğini ve demo talep yolunun kullanılıp kullanılmadığını görmek için çerezsiz bir ölçüm hizmeti (Umami) kullanıyoruz. Bu ölçüm tarayıcınıza çerez yerleştirmez, IP adresinizi saklamaz ve sizi kişi olarak tanımlamaz.",
+          text: "Hangi sayfaların ziyaret edildiğini ve demo talep yolunun kullanılıp kullanılmadığını görmek için, kendi sunucumuzda çalışan çerezsiz bir ölçüm yazılımı (Umami) kullanıyoruz. Bu ölçüm tarayıcınıza çerez yerleştirmez, kayıtlarında IP adresinizi tutmaz ve sizi kişi olarak tanımlamaz.",
         },
         {
           type: "p",
-          text: "Ölçüme yalnızca ziyaret edilen sayfa ve tıklanan bağlantının hangi bölümde olduğu gibi bilgiler gider. Adınız, telefon numaranız, elektronik posta adresiniz ve forma yazdığınız mesaj ölçüme gönderilmez.",
+          text: "Ölçüme yalnızca ziyaret edilen sayfanın adresi ve tıklanan bağlantının hangi bölümde olduğu gibi bilgiler gider; adres satırında soru işaretinden sonra gelen kısım ölçüme hiç gönderilmez. Adınız, telefon numaranız, elektronik posta adresiniz ve forma yazdığınız mesaj ölçüme gönderilmez.",
         },
       ],
     },
@@ -205,7 +213,7 @@ export const PRIVACY: LegalDoc = {
         },
         {
           type: "p",
-          text: "Talebiniz bize elektronik posta ile bildirilir ve hizmet aldığımız bir elektronik tablo hizmetinde (Google) kayıt olarak saklanır. Hangi tedarikçiye ne amaçla aktarım yapıldığı KVKK Aydınlatma Metni'nin Aktarım başlığında yazılıdır.",
+          text: "Talebiniz bize elektronik posta ile bildirilir ve kendi sunucumuzdaki kayıt veritabanında saklanır. Kaydın nerede durduğu, kimin eriştiği ve ne kadar saklandığı KVKK Aydınlatma Metni'nin Aktarım ve Saklama süresi başlıklarında yazılıdır.",
         },
       ],
     },
@@ -214,7 +222,7 @@ export const PRIVACY: LegalDoc = {
       blocks: [
         {
           type: "p",
-          text: "Site ve talep kayıtları erişim kontrolü altında tutulur, aktarım şifreli bağlantı üzerinden yapılır. Verilere yalnızca demo süreciyle ilgilenen ekip üyeleri erişebilir.",
+          text: "Site ve talep kayıtları erişim kontrolü altında tutulur, aktarım şifreli bağlantı üzerinden yapılır. Kayıtlara yalnızca yetkili yönetici hesabımız erişebilir.",
         },
       ],
     },
