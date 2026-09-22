@@ -49,3 +49,16 @@ docker rm -f <ad>
 `next.config.ts` → `env` ile gömülen bir değerin **gerçekten gömüldüğü** bu yolla
 kanıtlanmaz, gömme yalnız değeri okuyan kod varsa çıktıya girer; doğrulaması bu
 alternatif derlemeyi ister.
+
+## `docker compose exec web npm run build` de aynı riski taşır (TASK-1.08, 2026-09-22)
+
+CLAUDE.md → "Ölçüm betikleri" bu komutu **kanonik üretim derleme kontrolü** olarak
+listeler ve `restart` adımı yazmaz — ama `exec` de aynı çalışan konteynerin (`web`),
+dolayısıyla aynı `next_cache` hacminin üstüne yazar; yukarıdaki "ezer" riski `docker
+compose run` ile açılan **ayrı** bir konteynerle sınırlı değil. Ölçüldü: build sonrası
+`curl` ile `/`, `/demo`, `/api/demo` hemen 200/405 döndü ve dev log'u temiz kaldı
+(görünür bir kırılma yoktu) — yine de temkinli olarak `docker compose restart web`
+uygulandı ve sonrası da temiz ölçüldü. Yani gözlemlenen risk bu Next 16/Turbopack
+sürümünde **düşük** olabilir (dev artefaktları `.next/dev/` alt dizininde ayrı
+duruyor) ama kanıtlanmış değil — `docker compose exec web npm run build` çalıştıran
+her oturum ihtiyatlı olarak ardından `docker compose restart web` yapmalı.

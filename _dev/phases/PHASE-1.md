@@ -155,7 +155,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.18 | TASK-1.18 | ✅ Tamamlandı | Canlı depo bağlantısı: Vercel env (önizleme token'ı) ve token → `leads_preview` teyidi |
 | 1.06 | TASK-1.06 | ✅ Tamamlandı | E-posta hattını aç ve önizlemeden uçtan uca canlı tur — `RESEND_API_KEY` üretildi ve girildi, tek talep depoya + gelen kutusuna ulaştı |
 | 1.07 | TASK-1.07 | ✅ Tamamlandı | Kendi Umami'ye site kaydı ve tracker — v2 kaydı API ile açıldı (`640b05f1-…`), yayın yüzeyi `data-tag="preview"` ile sayıyor; panel görünümü UAT'a |
-| 1.08 | TASK-1.08 | ⬜ Bekliyor | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
+| 1.08 | TASK-1.08 | ✅ Tamamlandı | Olay sarmalayıcı, yüzey sözlüğü ve `demo-submit` olayı |
 | 1.09 | TASK-1.09 | ⬜ Bekliyor | Global tıklama dinleyicisi, `data-surface` çapaları, analitik yükü ölçümü |
 | 1.10 | TASK-1.10 | ✅ Tamamlandı | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
 | 1.15 | TASK-1.15 | ⬜ Bekliyor | Yasal metin hizası: kayıt yeri kendi sunucudaki lead deposu (12 ay), ölçüm kendi Umami |

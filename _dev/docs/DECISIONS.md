@@ -13,6 +13,22 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-22 — Analitik olay adları v1 ile hizalandı: `whatsapp-click`/`phone-click` yerine `whatsapp`/`phone`
+
+**Bağlam:** TASK-1.08 `src/lib/analytics.ts`'i (olay sözlüğü + `track()`) yazarken 2026-09-13 «Analitik (yeniden)» kararı olay adlarını `demo-submit` / `whatsapp-click` / `phone-click` olarak sabitlemişti. 2026-09-14 «Umami site kaydı» kararı v2'nin alan adı geçişinde **v1'in Umami kaydına** devralınacağını netleştirdi — bu, geçmiş ve yeni verinin panelde **aynı seride** kalması gerektiği anlamına gelir. v1'in olay adları (salt-okunur, `../Alpfitplus-website.v1/src/config/analytics.ts:20-42`, doğrulandı 2026-09-22): `demo-submit`, `whatsapp`, `phone`, `email`, `instagram`, `cta` — `-click` eki yok. Aynı kayıtta iki farklı adlandırma birikirse geçiş günü seri ikiye böler, geçmiş veri geri toparlanamaz.
+
+**Seçenekler:**
+1. 2026-09-13 kararını aynen uygula: `whatsapp-click` / `phone-click`.
+2. v1 ile hizala: `whatsapp` / `phone` (`-click` eki düşer), `demo-submit` zaten aynı.
+
+**Karar:** 2. `EVENTS` sözlüğü (`src/lib/analytics.ts`) `demo-submit` / `whatsapp` / `phone` olarak yazıldı — v2'de bugün tüketicisi olmayan v1 olayları (`email`, `instagram`, `cta`) açılmadı (kullanılmayan sabit yok, YAGNI).
+
+**Gerekçe:** 2026-09-13 kararının gerekçesi (ölçülebilirlik: yeni bağlantı otomatik sayılır; bakım: tek sarmalayıcı, sağlayıcı değişse yalnız `analytics.ts` değişir) **mimari** tercihi (global tıklama dinleyicisi + tek `surface` alanı) savunuyordu, üç ad dizesinin `-click` eki taşımasına özgü bir gerekçe içermiyordu — 2026-09-14'ün v1-hizası hedefiyle çelişmeyen güçlü bir gerekçe bulunamadı. Mimari tercih (dinleyici, `surface` alanı, `data-tag`, sessiz geçiş) aynen geçerli kalır; değişen yalnız üç ad dizesi. `surface` (yüzey) v1'de serbest dizeydi, v2'de tip düzeyinde daraltıldı (TASK-1.08 Alt Görev 1) — bu event adı hizasını bozmaz, `surface` event adından bağımsız ayrı bir veri alanı.
+
+**İlgili Task/Faz:** Faz 1 — TASK-1.08 (bu kayıt, `src/lib/analytics.ts` yazıldı). **Açık kalem:** `tasks/TASK-1.09.md`'nin kendi Alt Görevler/Test Kriterleri metni hâlâ `whatsapp-click`/`phone-click` yazıyor — o task henüz çalıştırılmadı, plan metni run-task'ın değil plan-phase/verify-plan'ın konusu; BULGULAR.md → Gelen Kutusu'na düşüldü.
+
+---
+
 ### 2026-09-21 — Anahtar kasası: yönetim düzeyi anahtarlar repo dışında dosyada, panel adımları API'ye taşınır
 
 **Bağlam:** Faz 1'in son üç task'ı (1.06 Resend, 1.07 Umami, 1.18 depo) kullanıcının bir web paneline girip değer üretmesini bekliyordu. Kullanıcı panel adımlarında zorlanıyor (2026-09-14 ve 2026-09-21) ve her adım koşumu durduruyordu: TASK-1.06 bir tam tur boyunca `RESEND_API_KEY` bekledi.

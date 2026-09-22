@@ -33,6 +33,11 @@ const isPublished = DEPLOY_STAGE === "production";
  * `data-tag` ortami ayirir ve ayni `deployStage`den gelir — noindex ve lead
  * `env` alani da oradan okur, ucuncu bir ortam kavrami dogmaz.
  *
+ * Betik adresi BURADA kalir, `src/lib/analytics.ts`'e tasinmadi (TASK-1.08
+ * kararı): script YUKLEME kaygisi (strateji, `data-tag`, `data-exclude-search`)
+ * bu JSX'e ozgu, `analytics.ts`'in isi olay GONDERMEK (`track()`) — iki
+ * tuketicisi (DemoForm, TASK-1.09) de yalniz onu okur, betik adresini degil.
+ *
  * `data-domains` KULLANILMAZ — v1'den bilincli fark: v1 yalniz canli alan adini
  * sayar; v2 bugun yalniz onizleme adresinde yasiyor ve orada da saymali. Yerel
  * ve onizleme trafigi alan adiyla kesilmez, `data-tag` ile ayrilir.

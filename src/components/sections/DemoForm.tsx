@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { CONTACT } from "@/content/site";
 import { SEGMENTS } from "@/content/segments";
 import { cn } from "@/lib/cn";
+import { track } from "@/lib/analytics";
 
 type State = "idle" | "sending" | "ok" | "error";
 
@@ -45,6 +46,10 @@ export function DemoForm() {
       });
       const json = await res.json().catch(() => ({}));
       if (res.ok && json.ok) {
+        // Yalniz gercek basaride gonderilir -- bal kupu dolu istek de 200
+        // doner ama form `json.ok`'a bakiyor, bu dalin disinda kalir
+        // (TASK-1.08).
+        track("demo-submit", "demo-form");
         setState("ok");
         setInvalidFields([]);
         form.reset();
