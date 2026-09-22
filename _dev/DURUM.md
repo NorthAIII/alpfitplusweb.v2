@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — audit-docs turu: doktrin kanonu (kök CLAUDE.md + dört çocuk) motorun güncel sürümüne hizalandı ve DECISIONS'ın kapanan 2026-09-10..2026-09-13 aralığı arşive bölündü.
+**Son Güncelleme:** 2026-09-22 — verify-phase (Faz 1 UAT): 33 senaryonun 29'u geçti; iki düzeltme task'ı açıldı (TASK-1.19 e-posta konusu satır sonu, TASK-1.20 yasal sayfaların noindex meta katmanı), iki senaryo otonom kolda ölçülemedi ve kullanıcı gözü bekliyor.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** verify
-**İlerleme:** 17/17 task tamamlandı (1 iptal: TASK-1.04)
+**Adım:** task
+**İlerleme:** 17/19 task tamamlandı (1 iptal: TASK-1.04); UAT'tan iki düzeltme task'ı doğdu
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -35,12 +35,13 @@
 
 ## Aktif Task
 
-**Task:** Yok — fazın tüm task'ları tamamlandı (son: TASK-1.15)
-**Durum:** — (Adım `verify`)
-**İlerleme:** Faz koddan ve metinden tamamdır. Sıradaki adım `/devflow:verify-phase`.
+**Task:** TASK-1.19 — Satır sonu ayıklama: e-posta konusu ve depo mesajı sahtelenemesin
+**Durum:** ⬜ Bekliyor (Adım `task`)
+**İlerleme:** UAT 33 senaryonun 29'unu geçti. İki düzeltme task'ı sırada: TASK-1.19, sonra TASK-1.20. İkisi bitince `/devflow:verify-phase` **baştan** koşar.
 **Not:**
-- **UAT'a devredilen iki kalem:** (1) Umami panelinde v2 kaydı altında sayfaların, yüzey etiketlerinin (`hero`/`footer`/`fiyat`) ve üç olayın gözle teyidi — kod tarafı uçtan uca ölçüldü (TASK-1.07/1.08/1.09); (2) TASK-1.06 e-postasının gelen kutusu/spam yerleşimi — gönderim tarafı `delivered` ölçüldü.
-- **Yerel `lead-store` konteyneri hâlâ ayakta** (ölçüldü 2026-09-22: `Up`, healthy) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
+- **Kullanıcı gözü bekleyen iki kalem (UAT'ta otonom kolda kapanmadı):** (1) TASK-1.06 ve UAT turunun e-postalarının **gelen kutusunda mı spam'de mi** olduğu — gönderim tarafı iki turda da Resend `delivered`; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi — verinin kendisi panelin okuma API'siyle teyitli (sayfa görüntülemesi 7 → 10, `whatsapp` 3 → 5, `phone` 0 → 1, `demo-submit` 1 → 2; yüzeyler `hero`/`sss`/`footer`/`demo-form`).
+- **UAT turu canlı depoya bir kayıt bıraktı:** `leads_preview`'da `UAT Test Kulubu` (2026-09-22 14:15:52Z) — bilinçli, milestone'un kendi şartını ölçmek için; 12 aylık saklama işi siler.
+- **Yerel `lead-store` konteyneri hâlâ ayakta** (ölçüldü 2026-09-22: `Up 2 days`, healthy) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
 
 ---
 
@@ -66,6 +67,8 @@
 | 1.09 | Global tıklama dinleyicisi ve yüzey etiketleri | ✅ Tamamlandı |
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
 | 1.15 | Yasal metin hizası — lead deposu (12 ay) ve kendi Umami | ✅ Tamamlandı |
+| 1.19 | Satır sonu ayıklama — e-posta konusu ve depo mesajı (UAT #26) | ⬜ Bekliyor |
+| 1.20 | Yasal sayfaların noindex meta katmanı (UAT #33, B-041) | ⬜ Bekliyor |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -124,7 +127,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** yok — son tamamlanan `tasks/archive/TASK-1.15.md`
+**Aktif Task:** `tasks/TASK-1.19.md` (sonraki: `tasks/TASK-1.20.md`)
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

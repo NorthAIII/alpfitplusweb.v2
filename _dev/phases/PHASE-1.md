@@ -7,6 +7,11 @@
 
 ---
 
+**Bölme çocukları** (faz hâlâ aktifken bölündü; parent bu fazın mini-index'idir):
+`PHASE-1-KAPSAM.md` — kapsam-tartışması · `PHASE-1-ARASTIRMA.md` — araştırma-detayı · `PHASE-1-OLCUMLER.md` — ölçüm-detayı
+
+---
+
 ## Genel Bilgiler
 
 **Amaç:** v2'yi v1'den **ayrı** bir Vercel projesinde önizleme adresine çıkarmak; demo talebini gerçek bir hedefe (kendi sunucudaki v1 lead deposu, `lead.alpfitplus.com`) dayanıklı yazıp e-postayla bildirmek ve bu hattın sözleşmesini kalıcı testle korumak; üç dönüşüm olayını (demo gönderimi, WhatsApp tıklaması, telefon tıklaması) yüzey etiketiyle saymak. Bu faz ILKELER'in iki pazarlıksız maddesini ("gelen talep kaybolmaz", "ölçülebilirlik") bugün karşılanmayan hâlden çıkarır. v1 Vercel projesine ve `alpfitplus.com`'a dokunulmaz.
@@ -30,46 +35,19 @@
 
 ## Kapsam Tartışması
 
-> Bu bölüm `/devflow:discuss-phase` oturumunda dolduruldu (2026-09-11).
+> `/devflow:discuss-phase` oturumunda dolduruldu (2026-09-11), iki kez revize edildi (2026-09-13, 2026-09-14).
+>
+> **Bölme çocuğu:** `PHASE-1-KAPSAM.md` — alınan kararların tam metni, kullanıcı tercihleri ve kapsam dışı listesi (kapsam-tartışması).
 
-### Alınan Kararlar
+**Fazı belirleyen beş karar:**
 
-- **Faz sırası değişti:** Bu faz "Metin tonu"nun önüne geçti. Metin tonu kullanıcı örneklerine bağlıydı ve hiçbir faz ona bağımlı değil; lead hattı ve ölçüm ise ILKELER'in pazarlıksız maddeleri. Yeni sıra `docs/DECISIONS.md` (2026-09-11) ve `PHASES.md` → Sıradaki Fazlar.
-- **Lead hedefi v1'in lead deposu (2026-09-14 plan revizyonu):** Talep, v1 sitesinin iki aydır yazdığı PocketBase deposuna (`lead.alpfitplus.com`) yazılır; önizleme `leads_preview`'a, alan adı geçişinden sonra `leads`'e. Önce Google Sheet seçildi, dağıtım yapılamadı (2026-09-13). Sonra Bunker seçildi; TASK-1.11 keşfi `alpfit`'in canlı soğuk kampanya kiracısı olduğunu ölçtü ve kullanıcı "canlı sitenin yazdığı yere, basitçe" dedi (`docs/DECISIONS.md` 2026-09-14). Vercel'de kalıcı disk olmadığından `LEAD_FILE_PATH` yolu yayın ortamında kullanılmaz (yerel Docker'da kalabilir). Site adaptörü v1'in deposunun yerel kopyasına karşı sınanır (kullanıcı kararı 2026-09-14); depo kodu v1'de kalır, bu fazda değişmez.
-- **E-posta bu fazda kapanır:** Site her talepte gönderir, alıcı göndermez — kayıt ve bildirim birbirinden bağımsız kalır (revizyon kararı 2026-09-13). Kod zaten Resend'e yazılı; `demo@alpfitplus.com` göndericisi için alan adı doğrulaması (TXT/DKIM/SPF) gerekir. Kayıtlar `alpfitplus.com` DNS'ine eklenir, v1 barındırmasına dokunmaz. Kayıtları oturum hazırlar, kullanıcı ekler.
-- **Analitik sağlayıcısı research'te seçilir, ölçütler burada:** Vercel planı **Hobby**; Vercel Web Analytics bu planda özel olay saymaz. Aday: çerezsiz üçüncü taraf (Umami, Plausible benzeri) ya da kendi küçük olay ucu. Seçim ölçütleri sırayla: çerezsiz ve rıza gerektirmez (KVKK), üç özel olayı yüzey etiketiyle sayar, sayfa ağırlığı ve LCP/CLS etkisi ölçülebilir küçük, ücretsiz ya da düşük sabit ücret, bakım yükü. Reklam engelleyicinin sayıları eksiltmesi bilinerek kabul edilir.
-- **Önizleme açık adres + noindex:** Şifre koruması yok (telefonda şifresiz bakılır, form testi korumaya takılmaz). Üretim dışı ortamda (`VERCEL_ENV !== "production"`) `X-Robots-Tag: noindex, nofollow` başlığı ve `robots.txt` tam `disallow` gider; üretimde bugünkü davranış korunur.
-- **Test ve gerçek talep ayrımı:** Önizlemeden gelen test talepleri gerçeklerden ayrılır, silinmesi gerekmez. Lead deposunda (2026-09-14 revizyonu) ayrımı token yapar: kayıt `leads_preview` koleksiyonuna `env=preview` ile düşer; gövdedeki `env` alanı depoya girmez, e-posta gövdesindeki `Ortam:` satırında kalır (TASK-1.14).
-- **Yasal metin dokunuşu kapsamda:** `legal.ts` Aktarım maddesi yalnız "barındırma ve e-posta tedarikçisi" diyordu; kayıt tutma yeri ve çerezsiz analitik ölçümü eklenir (TASK-1.10 Google/Umami Cloud'a göre yazdı, revizyon sonrası kendi sunucuya TASK-1.15 hizalar). Metin zaten hukukçu onayı bekliyor (B-008); bu değişiklik o kapsamda kalır, bulgu kapanmaz.
-- **GIT-STRATEJI bu fazda değişecek:** Repo Vercel'e bağlanınca her `main` push önizlemeyi tetikler; "yayın hattı yok" beyanı "push = önizleme, üretim alan adı bağlı değil" olarak güncellenir. Güncelleme F7.3 task'ının kapanışında `lib/git-strategy-kurulum.md` tarifiyle yapılır (korumalı doküman, kullanıcıya bildirilerek).
-- **Başlangıç ölçümü korunur:** F7.4 sonrası `perf.mjs` ağırlık ve LCP/CLS başlangıç çizgisiyle (`modules/M6-Kalite-Kapilari.md` → Teknik Notlar) kıyaslanır; artış rakamıyla task dokümanına yazılır.
+- **Lead hedefi v1'in lead deposu** (PocketBase, `lead.alpfitplus.com`; önizleme `leads_preview`, geçişten sonra `leads`). Önce Google Sheet, sonra Bunker seçilmiş, ikisi de elenmişti — gerekçeler `docs/DECISIONS.md` 2026-09-13 ve 2026-09-14. Site adaptörü deponun **yerel kopyasına** karşı sınanır; v1'in depo kodu bu fazda değişmez.
+- **E-postayı site gönderir**, alıcı göndermez — kayıt ve bildirim birbirinden bağımsız kalır (`docs/DECISIONS.md` 2026-09-13).
+- **Analitik kendi Umami'de** (`umami.kiwiailab.com`), çerezsiz; ortam ayrımı `data-tag`, dar kapsam: yalnız üç dönüşüm olayı.
+- **Önizleme açık adres + noindex** — şifre koruması yok (telefondan şifresiz bakılacak, form testi korumaya takılmayacak).
+- **Test ve gerçek talep ayrımını token yapar:** kayıt `leads_preview`'a `env=preview` ile düşer; gövdedeki `env` depoya girmez, e-postadaki `Ortam:` satırında yaşar.
 
-### Kullanıcı Tercihleri
-
-- Lead hedefi: **v1'in lead deposu** (2026-09-14; önce Google Sheet, sonra Bunker). Notion, Slack/WhatsApp, yönetilen Postgres, yalnız e-posta, Sheets API ve Bunker seçenekleri elendi.
-- Site adaptörü **yerel depo kopyasında** (compose profili; v1'in `pocketbase/` klasörü salt okunur) sınanır, canlı depoya tek test isteği gider (2026-09-14); test koşucusu **Vitest** bu fazda kurulur (2026-09-13).
-- Analitik: **kendi Umami** (2026-09-13; Umami Cloud yerine).
-- DNS: kullanıcı `alpfitplus.com` DNS'ine kayıt ekleyebilir; Resend hesabı kullanıcıda.
-- Vercel planı: **Hobby**.
-- Önizleme: **açık adres + noindex**.
-- Vercel projesi kullanıcı eylemiyle açılır (vercel.com/new → repo içe aktarma); env değerlerini Vercel'e kullanıcı girer, oturum anahtar adlarını ve değer üretim tarifini hazırlar. v1'in projesi `alpfitplus-website` ile aynı hesapta, farklı ad (öneri: `alpfitplus-web-v2`).
-- Görsel ve mobil inceleme önizleme adresi çıktıktan sonra gerçek telefonda yapılır; bulgular BULGULAR'a düşer ve "Görsel ve mobil iyileştirme" fazını besler.
-
-### Kapsam Dışı
-
-- Alan adı bağlama, 301 haritası, canonical/sitemap alan adı değişimi (F7.5 — "Alan adı geçişi" fazı)
-- CI, tek komut ölçüm, iddia sızıntı denetimi (M6 — "Kalite kapıları otomatik" fazı)
-- Görsel ve mobil iyileştirme, ana sayfa mobil uzunluğu sorusu (Gelen Kutusu'nda bekler; sonraki faz)
-- Metin tonu (alan adı geçişinden hemen önceki faz)
-- Asistanın Claude'a bağlanması (v2.1)
-- Hız sınırının paylaşımlı sayaca taşınması (BULGULAR → Bilinçli Tercihler)
-- Lead takip akışı (arandı / demo yapıldı / teklif verildi) — elle yürür, CRM yok
-- Slack/WhatsApp anlık bildirim; e-posta bildirim yeterli
-- Sayfa görüntüleme dışında ek olaylar (fiyat hesaplayıcı kullanımı, segment tıklaması vb.) — üç dönüşüm olayıyla sınırlı, dar faz
-- Vercel şifre/oturum koruması, önizleme için ayrı dal veya PR akışı (tek dal `main`)
-- Lead hattı bulgularından B-020 (kota + `noValidate`; Gelen Kutusu sorusu açık), B-036 ve B-037 — bu faza yalnız B-021 alındı (revizyon kararı 2026-09-13)
-- Umami'nin yerel kopyası (analitik canlı kurulumda `data-tag` ile ayrılır)
-- v1'in lead deposunda kod, şema ya da ayar değişikliği (dokunulmaz repo); talep sahibine onay e-postası (v1'de var, v2'de yok — Gelen Kutusu)
+**Kapsam dışı bırakılanlardan bu fazı doğrudan ilgilendirenler:** alan adı geçişi ve 301 haritası (F7.5) · CI, tek komut ölçüm, iddia sızıntı denetimi (M6) · görsel ve mobil iyileştirme · metin tonu · lead hattı bulgularından **B-020, B-036 ve B-037** (bu faza yalnız B-021 alındı — revizyon kararı 2026-09-13) · üç dönüşüm olayı dışındaki olaylar. Tam liste çocukta.
 
 ---
 
@@ -120,7 +98,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 
 - **Aşama türetimi tek yerde:** `next.config.ts` `deployStage`'i hesaplar (`local | preview | production`), `env.NEXT_PUBLIC_DEPLOY_STAGE` ile gömer ve aynı değerle `headers()`'da noindex'i verir; `src/lib/stage.ts` yalnız okur. Gerekçe: iki ayrı yerde iki koşul drift'tir; `VERCEL_ENV` tek başına yanlış (yukarıda ölçüldü). Kayıt `docs/DECISIONS.md` (2026-09-11).
 - **Lead hedefi v1'in lead deposu (revizyon 2026-09-14):** e-posta site kaynaklı kalır; site adaptörü yerel depo kopyasında sınanır, sözleşme paketi yalnız yerelde koşar, canlıya tek teyit isteği gider. Gerekçe: soğuk otomasyondan kanıtlı ayrık, sunucu/Bunker/n8n işi yok, alan adı geçişinde talepler aynı depoda kesintisiz. Kayıtlar `docs/DECISIONS.md` 2026-09-14.
-- **Analitik kendi Umami + global dinleyici:** olay adları `demo-submit` / `whatsapp-click` / `phone-click`, tek özellik `surface`, etiket `data-tag=deployStage`; kişisel veri girmez. Kayıtlar `docs/DECISIONS.md` (2026-09-11 dinleyici, 2026-09-13 sağlayıcı).
+- **Analitik kendi Umami + global dinleyici:** olay adları `demo-submit` / `whatsapp` / `phone` (v1 hizası — `docs/DECISIONS.md` 2026-09-22; plandaki `-click` ekli adlar alan adı geçişinde seriyi ikiye bölerdi), tek özellik `surface`, etiket `data-tag=deployStage`; kişisel veri girmez. Kayıtlar `docs/DECISIONS.md` (2026-09-11 dinleyici, 2026-09-13 sağlayıcı, 2026-09-22 ad hizası).
 - **noindex üç katman aynı kaynaktan:** başlık + robots.txt + metadata; F7.5'te alan adı bağlanınca üçü birden açılır, elle adım yok.
 - **`.env.example` anahtar seti:** `LEAD_STORE_URL`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT` (v1'le aynı adlar; `LEAD_WEBHOOK_URL` kalkar — TASK-1.14), `LEAD_FILE_PATH` (yalnız yerel), `RESEND_API_KEY`, `DEMO_TO`, `DEMO_FROM`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, yerel depo token'ları (TASK-1.17) ve sözleşme paketi adresi (TASK-1.13). Değer yok.
 - **Milestone cümlesi iki revizyonda değişti:** 2026-09-13'te "Google Sheet'e satır" → "Bunker'da kayıt, otomasyon tetiklenmeden" ve "analitik paneli" → "kendi Umami paneli"; 2026-09-14'te "Bunker'da kayıt, otomasyon tetiklenmeden" → "v1'in lead deposunda kayıt (önizleme koleksiyonu)".
@@ -159,6 +137,8 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.09 | TASK-1.09 | ✅ Tamamlandı | Global tıklama dinleyicisi, `data-surface` çapaları — panelde yüzey görünürlüğü UAT'a |
 | 1.10 | TASK-1.10 | ✅ Tamamlandı | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
 | 1.15 | TASK-1.15 | ✅ Tamamlandı | Yasal metin hizası: kayıt yeri kendi sunucudaki lead deposu (Almanya/Nürnberg, 12 ay, yalnız yetkili yönetici okur), ölçüm aynı sunucudaki kendi Umami; Google adı veri akışından çıktı |
+| 1.19 | TASK-1.19 | ⬜ Bekliyor | **UAT düzeltmesi (Senaryo #26):** satır sonu ayıklama — kulüp adındaki `\n` e-posta konusuna geçiyor, mesaja sahte `Segment:` satırı yazılabiliyor |
+| 1.20 | TASK-1.20 | ⬜ Bekliyor | **UAT düzeltmesi (Senaryo #33, B-041):** üç yasal sayfanın HTML meta katmanı aşama türetimini atlıyor, canlı önizlemede `index, follow` |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -167,8 +147,6 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 ## Ölçümler
 
 > Fazın yayın zinciri üzerinden alınmış ölçümleri (QUALITY 6). **Tam tablolar ve gerekçeler → `PHASE-1-OLCUMLER.md`** (ölçüm-detayı); icra detayı task dokümanlarında. Yeni ölçüm çocuğa yazılır, aşağıdaki satır birlikte güncellenir.
->
-> **Bölme çocukları:** `PHASE-1-ARASTIRMA.md` (araştırma-detayı) · `PHASE-1-OLCUMLER.md` (ölçüm-detayı).
 
 | Ölçüm | Ne zaman | Sonuç (özet) |
 |---|---|---|
@@ -185,12 +163,46 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 
 > Bu bölüm `/devflow:verify-phase` oturumunda doldurulur.
 
-**Tarih:** [tarih]
-**Toplam Senaryo:** X | **Geçen:** Y | **Kalan:** Z
+**Tarih:** 2026-09-22
+**Toplam Senaryo:** 33 | **Geçen:** 29 | **Kalan:** 4
+
+Ölçüm yüzeyi: canlı önizleme (`alpfitplus-web-v2.vercel.app`, dağıtım `bcax46s0i`), canlı lead deposu (SSH, salt okunur), Resend API, kendi Umami'nin okuma API'si, `web` konteynerinde Vitest, araştırma konteynerinde Playwright + beş kapı betiği.
 
 | # | Senaryo | Sonuç | Not |
 |---|---------|-------|-----|
-| 1 | [Senaryo 1] | ✅/❌ | [not] |
+| 1 | Önizleme adresi şifresiz açılıyor; 16 sayfa + `/sitemap.xml` + 404 beklenen kodu dönüyor | ✅ Geçti | 15 sayfa 200 · `/sitemap.xml` ve `/robots.txt` 200 · kontrol: olmayan yol → 404 (kapı ayırt ediyor) |
+| 2 | noindex önizlemede kapalı: `X-Robots-Tag` (16/16 rota) · `robots.txt` `Disallow: /` · HTML meta (12/15 sayfa) | ✅ Geçti | kontrol: aynı anda v1 (`alpfitplus.com`) başlıksız ve `Allow: /` — kapı ortamı gerçekten ayırt ediyor. Meta katmanının üç istisnası → satır 33 |
+| 3 | `X-Robots-Tag` HTML-dışı yanıtta da var (`/sitemap.xml`) — meta etiketin yetişemediği katman | ✅ Geçti | `content-type: application/xml` + `x-robots-tag: noindex, nofollow` |
+| 4 | Altı güvenlik başlığı önizleme yanıtında tam; önbellekten geçen (`HIT`) yanıtta da soyulmuyor | ✅ Geçti | beş başlık + HSTS tek değer, `x-powered-by` yok; `x-vercel-cache: HIT` yanıtında da tam |
+| 5 | Aşama önizlemede `preview` türüyor (ara hâl: `VERCEL_ENV=production` + `.vercel.app`) | ✅ Geçti | yayın HTML'inde `data-tag":"preview"` (`/` ve `/demo`), `data-website-id` v2'nin, `data-domains` yok |
+| 6 | Önizlemeden gönderilen gerçek demo talebi uçtan `200 {stored:true, mailed:true}` dönüyor | ✅ Geçti | gerçek tarayıcı ağ kaydı, 14:15:52Z; başarı ekranı göründü, konsol ve sayfa hatası 0 |
+| 7 | Aynı talep canlı depoda `leads_preview`'a bir kayıt olarak düşüyor; `leads` sayısı değişmiyor | ✅ Geçti | `leads_preview` 13 → **14**, `leads` 2 → **2**; UAT kaydı yalnız önizleme koleksiyonunda. Okuma `mode=ro`, öncesi/sonrası `stat` ile `data.db` ve `-wal` değişmedi |
+| 8 | Kaydın alanları doğru: `env=preview` · `Segment:` öneki · `ip_hash` 64 hex · ham IP yok · `notify_team=sent` | ✅ Geçti | `notify_lead=pending`; tabloda ham IP / `ua` / `consent` / `segment` kolonu yok — şema beyaz listesi tutuyor |
+| 9 | Aynı talep `DEMO_TO`'ya e-posta oluyor; gövde dokuz alan + `KVKK onayı` + `Ortam: preview`; `reply_to` lead'in adresi | ✅ Geçti | Resend kaydı `01a0c979-…` **`delivered`**; dokuz alanın dokuzu da gövdede; `reply_to` `to`'dan bilerek farklı seçildi ve doğru geldi |
+| 10 | E-posta gelen kutusuna düşüyor (spam değil) | ❌ Doğrulanamadı | yerleşim API'den ölçülemez — gönderim tarafı `delivered` + DKIM hizası kanıtlı; **kullanıcı gözü gerekiyor** |
+| 11 | `demo-submit` olayı Umami'de v2 kaydı altında `surface=demo-form` ve `preview` etiketiyle duruyor | ✅ Geçti | telde `{name:"demo-submit", data:{surface:"demo-form"}, tag:"preview"}` → `200` + gerçek `sessionId`/`visitId`; panelin veri katmanında `demo-submit` 1 → **2** |
+| 12 | Hero'daki WhatsApp tıklaması `whatsapp` / `surface=hero` üretiyor | ✅ Geçti | Umami `event-data/fields`: `surface=hero` **1** (tur öncesi 0) |
+| 13 | Footer'daki telefon tıklaması `phone` / `surface=footer` üretiyor | ✅ Geçti | `phone` olayı 0 → **1**, `surface=footer` **1** |
+| 14 | `section[id]` yedeği çalışıyor: SSS bölümündeki WhatsApp bağlantısı `surface=sss` üretiyor | ✅ Geçti | `surface=sss` **1**; çapa `data-surface` değil `<Section id="sss">` — yedek yol ölçüldü. Planın `fiyat` örneği ölçülemez (o bölümde iletişim bağlantısı yok) → Gelen Kutusu |
+| 15 | Önizlemede gezilen sayfalar Umami'de v2 kaydı altında `preview` etiketiyle sayfa görüntülemesi olarak sayılıyor | ✅ Geçti | `tag=preview` süzgeciyle üç yol: `/`, `/fiyat`, `/demo`; sayfa görüntülemesi 7 → **10**; `hostname=alpfitplus-web-v2.vercel.app` |
+| 16 | Umami **panelinde gözle**: v2 kaydı altında sayfalar, üç olay ve yüzey kırılımı görünüyor | ❌ Doğrulanamadı | veri katmanı panelin kendi okuma API'siyle teyitli (11-15); panel arayüzünün gözle görülmesi **kullanıcı gözü gerektiriyor** |
+| 17 | Ölçüm çerez koymuyor (önizlemede gezinme sonrası tarayıcı bağlamında 0 çerez) | ✅ Geçti | altı sayfa + dört olay sonrası `context.cookies()` → **0** |
+| 18 | Kişisel veri analitiğe gitmiyor: `/demo?name=…&phone=…&email=…` adresinde olay yükü sorgu dizesi taşımıyor (B-056) | ✅ Geçti | telde `url=…/demo` (sorgu yok), `referrer` boş; Umami'de 18 kaydın hiçbirinde `urlQuery`/`referrerQuery` yok |
+| 19 | Umami tanımsızken sayfa hatasız çalışıyor, olay gönderilmiyor, konsol temiz | ✅ Geçti | yerel dev: HTML'de `umami` geçişi 0, `data-tag` yok; `scan.mjs` dört sayfada konsol temiz. `track()` 503 dalında hiç çağrılmadı; **kontrol:** aynı düzenekte 200 dalında tam bir kez çağrıldı |
+| 20 | Depo düşünce e-postaya geçiliyor; ikisi de düşünce uç `503 no-sink` + WhatsApp yolu — "gönderildi" demiyor | ✅ Geçti | Vitest: bozuk yanıtların hepsi 503 `no-sink`. UI: 503 dalında "kaydedemedik" + WhatsApp/telefon yolu görünür, "ulaştı" yok; **kontrol:** 200 dalında başarı ekranı — kapı iki yönde de ayırt ediyor |
+| 21 | `IP_HASH_SALT` (ya da URL/token) eksikken depoya istek **hiç gitmiyor** (fail-closed); ham IP hiçbir yere yazılmıyor | ✅ Geçti | Vitest `it.each` üç anahtarı ayrı ayrı siliyor → `fetch` çağrısı yok; **kontrol:** üçü tanımlıyken istek gerçekten gidiyor. Depo gövdesinde ham IP yok, yalnız 64 hex özet |
+| 22 | Bal küpü dolu istek `200` dönüyor ama hiçbir hedefe yazmıyor | ✅ Geçti | Vitest; alıcıya hiç çağrı gitmiyor |
+| 23 | Uç hız sınırı 6. istekte `429`; deponun kendi `429`'u uca taşınıyor, e-posta denenmiyor | ✅ Geçti | Vitest (her iki kol) + canlı önizlemede 6. istek gerçekten `429` (satır 25 ölçümü) |
+| 24 | Canlı depoya token'sız `POST /lead` → `401 unauthorized`, kayıt oluşmuyor | ✅ Geçti | `401 {"error":"unauthorized"}`; **kontrol:** aynı anda `GET /api/health` → 200, yani uç ayakta ve 401 kapıdan geliyor. Kayıt sayısı 14 → 14 |
+| 25 | Sahte `X-Forwarded-For`/`X-Real-IP` ile önizlemede kota atlatılamıyor (platform başlığı eziyor) | ✅ Geçti | yedi farklı sahte IP çifti → 5 × `422` sonra `429`; başlık istemciden alınsaydı yedisi ayrı kovada olurdu. Gövde `{}` seçildi, depoya ulaşmadı |
+| 26 | **Adversarial:** ad/kulüp alanına satır sonu konarak e-posta konusuna başlık enjekte edilemiyor | ❌ Kaldı | `clean()` iç satır sonlarını ayıklamıyor: kulüp adı `Form Spor\nBcc: …` iken konu satırı `"Demo talebi — Form Spor\nBcc: …"` olarak kuruluyor. **Kontrol:** olağan kulüp adında konu tek satır. Sınıfın ikinci örneği: depo `message` alanına sahte `Segment:` satırı yazılabiliyor. `reply_to` korunuyor (`isValidEmail` boşluk kabul etmiyor) → TASK-1.19 |
+| 27 | Sırlar istemciye sızmıyor: önizleme HTML+JS'inde depo token'ı, tuz ve Resend anahtarı yok; `.env.example` değersiz | ✅ Geçti | 10 istemci JS dosyası (647.503 bayt) + HTML tarandı: `LEAD_STORE_TOKEN`/`IP_HASH_SALT`/`RESEND_API_KEY`/`re_…`/`X-Lead-Token`/`lead.alpfitplus.com`/`api.resend.com` → **0**. **Kontrol:** sır olmayan iki değer (Umami site kimliği, WhatsApp numarası) eşleşti — tarama kör değil. `.env.example`'da değerli satır 0 |
+| 28 | `npm test` yeşil (aşama türetimi + `/api/demo` sözleşmesi + iletişim + analitik + ClickTracker) | ✅ Geçti | 5 dosya / **61 PASS** + 1 skipped (depo sözleşme paketi, env kapısı tanımsız) — taban birebir |
+| 29 | Kalite kapıları: `a11y` TOPLAM SORUN 0 · `mobile-audit` yatay kaydırma yok · `scan` konsol temiz · `font-guard` eksik karakter yok | ✅ Geçti | `a11y` 0 · `mobile-audit` dokuz rotada "yatay kaydırma: yok" · `scan` `/`, `/demo`, `/destek`, `/fiyat` konsol temiz · `font-guard` **canlı önizlemeye karşı** 16 sayfa / 80.487 karakter, eksik yok. 157 küçük dokunma hedefi bilinen sayı, değişmedi |
+| 30 | Analitik yükü başlangıç çizgisini aşmıyor (sayfa ağırlığı, LCP, CLS) | ✅ Geçti | `perf.mjs`: ana sayfa 144 KB / 133 KB (çizgiyle birebir), LCP 84 ms / 64 ms (çizgi 96 ms), CLS 0,005 / 0. Betik ve olay isteğinin kendi ağırlığı TASK-1.09'da CDP ile ayrıca ölçüldü |
+| 31 | Yasal metin gerçek veri akışını anlatıyor (kendi sunucu · Almanya · 12 ay · kendi Umami); `Google`/"elektronik tablo" geçmiyor | ✅ Geçti | canlı önizlemede `/kvkk`: Nürnberg + 12 ay + Umami var; üç sayfada da `Google` / "elektronik tablo" / "en fazla iki yıl" → 0. Yasaklı iddia kalıbı 0; **kontrol:** ana sayfada "pilot" 1 — tarama kör değil |
+| 32 | v1'e dokunulmadı: `alpfitplus.com` hâlâ v1'i sunuyor ve v1'in Umami kaydının sayıları değişmedi | ✅ Geçti | `alpfitplus.com` 200, `X-Robots-Tag` yok, `robots.txt` `Allow: /`; v1 Umami kaydında son olay 2026-09-21, hostname yalnız `alpfitplus.com` |
+| 33 | Üç yasal sayfanın HTML meta katmanı aşama türetimini atlıyor (`/kvkk`, `/gizlilik`, `/kullanim-kosullari`) | ❌ Kaldı | 16 rotanın 12'si `noindex, nofollow`, üç yasal sayfa **`index, follow`** — `page.tsx:9`'da sabit `robots: { index: true, follow: true }`. Başlık ve `robots.txt` katmanları koruduğu için pratik açık yok, ama "üç katman tek koşuldan" değişmezi delinmiş. B-041'in canlı teyidi → TASK-1.20 |
 
 ---
 

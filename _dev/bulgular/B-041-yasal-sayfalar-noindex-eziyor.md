@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** hata / tutarsızlık | **Alan:** M7 — Yayın ve altyapı
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → TASK-1.20 (verify-phase 2026-09-22 UAT Senaryo #33'te canlı önizlemede yeniden ölçüldü; 16 rotanın 12'si doğru, üç yasal sayfa `index, follow`)
 
 ## Gözlem
 

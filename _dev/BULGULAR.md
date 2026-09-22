@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-22 — audit-product (derin tur, filo 4 ajan): Faz 1'in kapattığı yüzey (M3 lead hattı · M7 yayın+analitik · yasal metin) gerçekle uzlaştırıldı. B-038 konusuz kapandı ve arşive gitti; B-024 · B-037 · B-055 🔴'ye yükseldi; dört yeni atom (B-058…B-061) Gelen Kutusu'nun altı deneme-satırını mezun etti. Açık bulgu 49 → 52; kutu 30 → 21 satır.
+**Son Güncelleme:** 2026-09-22 — verify-phase (Faz 1 UAT): B-041 canlı önizlemede yeniden ölçüldü ve `→ TASK-1.20` işaretini aldı (16 rotanın 12'si doğru, üç yasal sayfa `index, follow`); PHASE-1'in bayat olay adı kalemi mezun edildi, üç yeni kutu satırı düştü. Açık bulgu 52 (değişmedi); Gelen Kutusu 23 → 26 satır (biri mezun, dördü yeni).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -40,7 +40,9 @@
 - [TASK-1.11] Bunker OS'un canlı n8n `lead-intake-agent`'ı çalışmaz ama açık bir giriş kapısı — evi Bunker OS triyajı (`tasks/archive/TASK-1.11-BUNKER-KESFI.md`)
 - [TASK-1.18 / run-phase] UI 🔴 bulgularını (B-032 · B-033 · B-034 · B-031) "Yayın öncesi düzeltmeler" fazına alma önerisi — kullanıcı 2026-09-14: "önce Faz 1 bitsin, arayüz sonra"; karar o fazın discuss-phase'inde. `docs/DECISIONS.md` 2026-09-13 bunları kilitleyen kümeye almamıştı, öneri o seçimi yeniden açar
 - [TASK-1.06] Uçtan uca tur fiziksel telefonla değil mobil profilli tarayıcıyla koşuldu — fiziksel cihaz gözlemi "Görsel ve mobil iyileştirme" UAT'ına
-- [TASK-1.09] `phases/PHASE-1.md:123` Teknik Kararlar özeti hâlâ eski olay adlarını yazıyor (`whatsapp-click`/`phone-click`) — v1 hizası kararı `docs/DECISIONS.md` 2026-09-22; verify-phase Adım 1 süpürmesi
+- [PHASE-1] `mobile-audit.mjs` bal küpünün bilinçli `left-[-9999px]` konumunu "taşan eleman" sayıyor (`/demo`'da 3 kalem) ve TOPLAM SORUN'u şişiriyor — kapı-kalitesi kümesiyle aynı ev (B-030 · B-031 · B-035)
+- [PHASE-1] `tasks/archive/TASK-1.09.md`'nin UAT kriteri "fiyat bölümündeki bir bağlantı `surface=fiyat` üretir" ölçülemez: `PricingBlock`'ta hiç `wa.me`/`tel:` bağlantısı yok. `section[id]` yedeği UAT'ta `sss` üzerinden ölçüldü; `fiyat` etiketi sözlükte tüketicisiz duruyor
+- [PHASE-1] Yerel `lead-store` konteyneri iki gündür ayakta (`Up 2 days`, healthy) — kaldırma komutu `memory/yerel-lead-deposu-docker-profili.md`; içindeki test kayıtları hâlâ duruyor (üstteki `[audit-product]` satırı)
 
 - [audit-product] Yerel `lead-store`'da bu denetim turunun **25 test kaydı** duruyor (`Ayse/Pilates`, `Deneme Kisi/Deneme Studyo`, `CSRF/K`, `Zemin/Kontrol`) — silinmedi; sonraki ölçüm bunları gerçek lead sanmasın
 - [audit-docs] Kök `CLAUDE.md` → `### Oturum Kapanışı:` gövdesi motorun güncel şablonundan eski (2 satırlık blok ↔ 4 satırlık blok + Terfi kuralı · Ön-hazırlık · dört özel durum · `engel:`/`önerilir:` önek kümesi). Göç ÖLÇÜLDÜ: +7.901 token, parent'ı 15.857 → ~23,8k yapıp kırmızı çizgiyi aşırıyor ve kanonun çaresi ("önce bölme") bu projede tükenmiş — karar gerekiyor; erteleme kaydı `CLAUDE.md` → Oturum Disiplini KURAL yorumunda
@@ -96,7 +98,7 @@
 - 🟡 [B-060 — Yayındaki yasal beyanları koruyan test yok](bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) — "12 ay", `data-exclude-search` ve görsel beyanı tek satıra bağlı; v1'de çalışan kapı v2'ye taşınmadı
 - 🟡 [B-059 — Alan adı geçişinde v1'in lead hattı ve yasal metin davranışları geriler](bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md) — onay e-postası kaybolur, `notify_lead` kalıcı `pending`, metin bugünkünden az bilgi verir
 - 🟡 [B-061 — Lead deposunun tek yedeği aynı sunucuda ve aynı hacimde](bulgular/B-061-lead-deposu-yedegi-ayni-sunucuda.md) — S3 kapalı, yedekler `pb_data/` içinde; geçişten sonra tek dayanıklı hedef orası
-- 🟡 [B-041 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor](bulgular/B-041-yasal-sayfalar-noindex-eziyor.md) — 15 rotanın 12'si doğru, `/kvkk` · `/gizlilik` · `/kullanim-kosullari` canlı önizlemede `index, follow`
+- 🟡 [B-041 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor](bulgular/B-041-yasal-sayfalar-noindex-eziyor.md) — 15 rotanın 12'si doğru, `/kvkk` · `/gizlilik` · `/kullanim-kosullari` canlı önizlemede `index, follow` → TASK-1.20
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — 15/15 rotada yok; Umami artık gerçekten yüklendiği için yazma penceresi tam şimdi açık
 - 🟡 [B-025 — Çalışma zamanı için hiçbir alarm yok](bulgular/B-025-calisma-zamani-alarm-yok.md) — v1'in `⚠ KAYIT EDİLEMEDİ` e-posta öneki v2'de yok; depo düşerse ekip ayırt edilemeyen bir posta alır
 - 🟡 [B-044 — Ürün görselinde avatar-ad uyumsuzluğu ve denetim körlüğü](bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) — semt kalemi kapandı; körlük hattın dışına uzanıyor (Hero'daki elle yazılmış "%78")
