@@ -83,3 +83,20 @@ geliyorsa doğrulamaya geçmiş demektir ve geçerli bir gövde **kayıt oluştu
 kontrol atlanırsa "zararsız test" sanılan istekler gerçek bir depoya satır yazar
 (bu turda yerel `lead-store`'a 25 test kaydı böyle düştü — hedef yereldi, canlıya
 gitmedi, ama şans eseri).
+
+## 3100 bayat olabilir — ölçmeden güvenme, ayırt edici bir alan seç (verify-phase, 2026-09-22)
+
+`perf.mjs` (sabit `BASE`) ve `font-guard.mjs` (`BASE` env'li) varsayılan olarak **3100'ü** ölçer, ama `web-prod`
+konteyneri uzun ömürlüdür ve kendiliğinden yeniden derlenmez — B-019'un mekanizması budur. UAT'ta ölçüldü: imaj
+15:30'da derlenmişti, yani o günün TASK-1.09/1.15/1.19/1.20 commit'lerinin hiçbirini taşımıyordu; `perf.mjs` o hâlde
+ölçülseydi **ClickTracker'ı hiç görmeyen** bir yeşil üretirdi.
+
+- **Yaşı tek istekle ölç:** aşamaya ya da içeriğe bağlı, son değişiklikte dokunulmuş bir alan seç ve 3000/3200 ile
+  kıyasla. O turda iki ayırt edici kullanıldı: `curl -s localhost:3100/kvkk | grep '<meta name="robots"'`
+  (TASK-1.20 öncesi `index, follow`, sonrası `noindex, nofollow`) ve `/kvkk`'de `Nürnberg` geçişi (TASK-1.15).
+- **Taze ölçüm gerekiyorsa `web-prod`'a dokunma** (başkasının servisi olabilir): `docker build --target runner -t
+  <etiket> .` + `docker run -d -p 3200:3000 <etiket>`; betiği scratchpad'e kopyalayıp `BASE`'ini 3200'e çevir
+  (`sed`), araştırma konteynerine `-v` ile mount et. Konteyner **ve imaj** ölçüm biter bitmez silinir — imaj `.env`'i
+  içerir (B-058), ortalıkta bırakılmaz. Port boşluğu pozitif kontrolle teyit edilir (200 → bağlantı reddedildi).
+- **İlk koşum soğuktur:** taze konteynerde rota başına ilk render LCP'yi şişirir (ölçüldü: ana sayfa 308 ms → ısınınca
+  100 ms). Çizgiyle kıyaslamadan önce `perf.mjs`'i **iki kez** koştur, ikincisini raporla.

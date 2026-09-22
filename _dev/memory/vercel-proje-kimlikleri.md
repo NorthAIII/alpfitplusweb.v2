@@ -32,3 +32,16 @@ autoExposeSystemEnvs → true olmalı (panelde "Enable access to System
 `vercel link` yan etki olarak repo köküne `.env.local` (yalnız `VERCEL_OIDC_TOKEN`) yazar. Kullanılmıyor; gitignore'lu ama **önce var olan bir `.env.local` varsa üzerine yazma riskini kontrol et**.
 
 İlgili: [Vercel `output: "standalone"` ile derleme kırar](vercel-standalone-cikti-catismasi.md) · [Aşamaya bağlı davranışta "ara hâl" ayrıca sınanır](asama-bagimli-davranis-ara-hal-sinamasi.md)
+
+## Dağıtımı commit'e bağlama — `vercel inspect` SHA basmaz (verify-phase, 2026-09-22)
+
+`vercel inspect <url>` çıktısında `githubCommitSha` / dal / commit alanı **yoktur** (ölçüldü: `grep -i commit` boş).
+Bir dağıtımın hangi commit'ten geldiğini kanıtlamak için iki yol var, ikisi de ucuz:
+
+- **Zaman eşlemesi:** `vercel ls <proje> --scope <takım>` + `vercel inspect` → `created`; `git log -1 --format=%cI <sha>`.
+  Aralık saniyeler mertebesindeyse bağ kuruludur (ölçüldü: commit 17:51:52 → dağıtım 17:51:58).
+- **Davranış ayırt edicisi:** o commit'in değiştirdiği bir yüzeyi canlıda ölç (örn. TASK-1.20'den sonra `/kvkk`'nin
+  `robots` meta'sı). Ölçümün kendisi zaten UAT senaryosuysa ek maliyet sıfırdır.
+
+`vercel inspect` çıktısındaki **Aliases** bloğu üretim alias'ının (`alpfitplus-web-v2.vercel.app`) o dağıtıma bağlı
+olup olmadığını gösterir — "son dağıtım Ready" tek başına "canlıda o var" demek değildir, alias'a bak.

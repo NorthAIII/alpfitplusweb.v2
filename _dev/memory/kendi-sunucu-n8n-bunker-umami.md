@@ -58,6 +58,19 @@ Kullanıcı panele bakamadığı için "olay panelde görünüyor mu" sorusu uzu
 - `tag` metriği **ziyaret** düzeyinde sayar, olay düzeyinde değil — "üç olay `preview` etiketiyle sayıldı" iddiası için `metrics?type=event&tag=preview` kullan, çıplak `type=tag` sayısını yorumlama.
 - Geriye kalan tek kullanıcı-gözü kalemi panel **arayüzünün** görülmesidir; verinin varlığı bu uçlarla kapanır.
 
+### "Sorgu dizesi analitiğe gitmiyor" iddiası kayıt yazmadan ters çevrilir (verify-phase, 2026-09-22)
+
+`data-exclude-search` çalışıyor mu sorusu yeşil bir yükü görmekle kapanmaz — probe o katmanı hiç görmüyor da olabilir.
+Kayıt yazmadan kurulan ters-çevirme:
+
+1. `ctx.route('**://umami.kiwiailab.com/api/send**')` ile yükü **yakala ve `abort` et** — hiçbir olay Umami'ye düşmez.
+2. Aynı sayfayı ikinci kez, bu kez HTML'i `route` ile yakalayıp `data-exclude-search\":\"true\"` → `false` çevirerek sun.
+3. Yük karşılaştır: yayındaki hâlde `url=…/demo`, ters çevrilmiş hâlde `url=…/demo?name=…&phone=…&email=…`.
+
+Öznitelik ilk HTML'de RSC flight payload'ında **kaçışlı** durur (yukarıdaki not), o yüzden `replace` kalıbı da kaçışlı
+yazılır. Aynı desen `window.umami`'yi `addInitScript` ile sahte bir `track` sayacına bağlayıp "olay gönderilmiyor"
+iddialarının kontrol grubunu kurmak için de kullanılır.
+
 ### Tracker etiketi HTML'de düz öznitelik olarak aranmaz
 
 `next/script` + `strategy="afterInteractive"` betiği ilk HTML'e `<script data-tag="preview">` olarak **yazmaz**; öznitelikler RSC flight payload'ında kaçışlı durur. Yayın yüzeyinde ölçerken `grep -o 'data-tag[^,}]*'` gibi bir kalıp kullan (`data-tag\":\"preview\"` döner); `data-tag="..."` araması sessizce boş döner ve "tracker yok" yanılgısı üretir.

@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — run-task TASK-1.20 tamamlandı: üç yasal sayfa artık kök layout'un `isPublished` değerini miras alıyor (sabit `robots` satırı kalktı), dört ortam senaryosunda ölçüldü, B-041 kapandı; fazdaki tüm task'lar sonuçlandı.
+**Son Güncelleme:** 2026-09-22 — verify-phase 2. tur: 34 senaryonun 32'si geçti, düzeltme task'ı doğmadı; kalan iki kalem kullanıcı gözü bekliyor (e-postanın gelen kutusu/spam ayrımı, Umami panel arayüzü). TASK-1.20'nin UAT'a devredilen canlı doğrulaması da kapandı — faz `review`'a hazır.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** verify
-**İlerleme:** 19/19 task tamamlandı (1 iptal: TASK-1.04); UAT'tan doğan iki düzeltme task'ı da bitti (TASK-1.19, TASK-1.20) — faz task döngüsü tamamlandı
+**Adım:** review
+**İlerleme:** 19/19 task tamamlandı (1 iptal: TASK-1.04); UAT 2. tur 32/34 geçti, yeni düzeltme task'ı yok — kalan 2 kalem `❌ doğrulanamadı` (kullanıcı gözü), faz kapanışını engellemiyor
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -35,12 +35,13 @@
 
 ## Aktif Task
 
-**Task:** TASK-1.20 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor (B-041)
-**Durum:** ✅ Tamamlandı (Adım `verify`)
-**İlerleme:** Fazdaki 19 task da sonuçlandı (18 ✅ + 1 ❌) — sıradaki adım `/devflow:verify-phase`, UAT **baştan** koşar.
+**Task:** — yok (faz task döngüsü kapandı; UAT 2. turu düzeltme task'ı doğurmadı)
+**Durum:** ✅ Faz `review` adımında
+**İlerleme:** Fazdaki 19 task da sonuçlandı (18 ✅ + 1 ❌ iptal); UAT 2. tur **34 senaryo / 32 geçti / 2 doğrulanamadı**. Sıradaki adım `/devflow:review-phase`.
 **Not:**
-- **Kullanıcı gözü bekleyen iki kalem (UAT'ta otonom kolda kapanmadı):** (1) TASK-1.06 ve UAT turunun e-postalarının **gelen kutusunda mı spam'de mi** olduğu — gönderim tarafı iki turda da Resend `delivered`; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi — verinin kendisi panelin okuma API'siyle teyitli (sayfa görüntülemesi 7 → 10, `whatsapp` 3 → 5, `phone` 0 → 1, `demo-submit` 1 → 2; yüzeyler `hero`/`sss`/`footer`/`demo-form`).
-- **UAT turu canlı depoya bir kayıt bıraktı:** `leads_preview`'da `UAT Test Kulubu` (2026-09-22 14:15:52Z) — bilinçli, milestone'un kendi şartını ölçmek için; 12 aylık saklama işi siler.
+- **Kullanıcı gözü bekleyen iki kalem (iki UAT turunda da otonom kolda kapanmadı):** (1) e-postaların **gelen kutusunda mı spam'de mi** olduğu — gönderim tarafı üç turda da Resend `delivered`, DKIM hizalı, yerleşim API'den ölçülemez; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi — verinin kendisi panelin kendi okuma API'siyle teyitli (2. turda sayfa görüntülemesi 10 → 13, `whatsapp` 5 → 7, `phone` 1 → 2, `demo-submit` 2 → 3; yüzeyler `hero`/`sss`/`footer`/`demo-form`).
+- **Karar bekleyen 🔴 B-058:** `.dockerignore` `.env`'i dışlamıyor, beş sır üretim imajı katmanında — 2. turda taze derlenen imajda yeniden ölçüldü (dosya `/app/.env`, `600`, beş anahtar). Soru kullanıcıda: bu makinedeki `.env` üretim değerlerini mi taşıyor, imaj dışarı çıktıysa anahtarlar döndürülmeli mi?
+- **UAT 2. turu canlı depoya bir kayıt daha bıraktı:** `leads_preview`'da `UAT2 Test Kulubu` (2026-09-22 15:01:23Z) — bilinçli, milestone'un kendi şartını ölçmek için; koleksiyon 14 → 15, `leads` 2 → 2. 12 aylık saklama işi siler.
 - **Yerel `lead-store` konteyneri hâlâ ayakta** (ölçüldü 2026-09-22: `Up 2 days`, healthy) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
 
 ---
@@ -125,7 +126,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/archive/TASK-1.20.md` (faz task döngüsü tamamlandı — sıradaki adım verify-phase)
+**Aktif Task:** — yok (faz task döngüsü tamamlandı, UAT 2. tur geçti — sıradaki adım review-phase)
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
