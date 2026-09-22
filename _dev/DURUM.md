@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — run-task TASK-1.19 tamamlandı: `cleanLine()` tek satırlık lead alanlarını kontrol karakterlerinden ayıklıyor, segment etiketi mesajdan `---` ayırıcısıyla ayrıldı (UAT #26 kapandı); 66 PASS + 1 skipped.
+**Son Güncelleme:** 2026-09-22 — run-task TASK-1.20 tamamlandı: üç yasal sayfa artık kök layout'un `isPublished` değerini miras alıyor (sabit `robots` satırı kalktı), dört ortam senaryosunda ölçüldü, B-041 kapandı; fazdaki tüm task'lar sonuçlandı.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 1 — Önizleme yayını, lead hattı ve analitik
 **Milestone:** v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı.
-**Adım:** task
-**İlerleme:** 18/19 task tamamlandı (1 iptal: TASK-1.04); UAT'tan doğan iki düzeltme task'ından biri (TASK-1.19) bitti, TASK-1.20 sırada
+**Adım:** verify
+**İlerleme:** 19/19 task tamamlandı (1 iptal: TASK-1.04); UAT'tan doğan iki düzeltme task'ı da bitti (TASK-1.19, TASK-1.20) — faz task döngüsü tamamlandı
 **Faz Dokümanı:** `phases/PHASE-1.md`
 
 ---
@@ -36,8 +36,8 @@
 ## Aktif Task
 
 **Task:** TASK-1.20 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor (B-041)
-**Durum:** ⬜ Bekliyor (Adım `task`)
-**İlerleme:** UAT 33 senaryonun 29'unu geçti. TASK-1.19 tamamlandı, TASK-1.20 sırada — bitince `/devflow:verify-phase` **baştan** koşar.
+**Durum:** ✅ Tamamlandı (Adım `verify`)
+**İlerleme:** Fazdaki 19 task da sonuçlandı (18 ✅ + 1 ❌) — sıradaki adım `/devflow:verify-phase`, UAT **baştan** koşar.
 **Not:**
 - **Kullanıcı gözü bekleyen iki kalem (UAT'ta otonom kolda kapanmadı):** (1) TASK-1.06 ve UAT turunun e-postalarının **gelen kutusunda mı spam'de mi** olduğu — gönderim tarafı iki turda da Resend `delivered`; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi — verinin kendisi panelin okuma API'siyle teyitli (sayfa görüntülemesi 7 → 10, `whatsapp` 3 → 5, `phone` 0 → 1, `demo-submit` 1 → 2; yüzeyler `hero`/`sss`/`footer`/`demo-form`).
 - **UAT turu canlı depoya bir kayıt bıraktı:** `leads_preview`'da `UAT Test Kulubu` (2026-09-22 14:15:52Z) — bilinçli, milestone'un kendi şartını ölçmek için; 12 aylık saklama işi siler.
@@ -68,7 +68,7 @@
 | 1.10 | Yasal metin — Aktarım ve Çerezler maddeleri | ✅ Tamamlandı |
 | 1.15 | Yasal metin hizası — lead deposu (12 ay) ve kendi Umami | ✅ Tamamlandı |
 | 1.19 | Satır sonu ayıklama — e-posta konusu ve depo mesajı (UAT #26) | ✅ Tamamlandı |
-| 1.20 | Yasal sayfaların noindex meta katmanı (UAT #33, B-041) | ⬜ Bekliyor |
+| 1.20 | Yasal sayfaların noindex meta katmanı (UAT #33, B-041) | ✅ Tamamlandı |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -77,6 +77,17 @@
 ## Son Task Özetleri
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
+
+### TASK-1.20 — Yasal sayfaların noindex meta katmanı (2026-09-22)
+
+**Durum:** ✅ Tamamlandı
+**Özet:**
+- Üç yasal sayfada (`kvkk`, `gizlilik`, `kullanim-kosullari`) sabit `robots: { index: true, follow: true }` satırı kaldırıldı — sayfa artık kök `layout.tsx`'teki `isPublished`/`deployStage` türevini miras alıyor, ikinci bir koşul yazılmadı.
+- Devralma dört ortam senaryosunda (yerel · üretim simülasyonu · **ara hâl** `VERCEL_ENV=production`+`.vercel.app` · alan adı env'i tanımsız) serving katmanında, izole derlemeyle ölçüldü — dördü de beklenen sonucu verdi, fail-open yok.
+- B-041 kapandı: Çözüm Kaydı yazıldı, atom `bulgular/archive/`e taşındı, index satırı silindi (Açık Bulgular 52 → 51). Fazdaki tüm task'lar sonuçlandı.
+
+**Test:** Yerelde 16/16 rotada (404 dâhil) HTML meta + `X-Robots-Tag` + `robots.txt` regresyonsuz. `docker compose exec web npm test` → 5 dosya/**66 PASS** + 1 skipped (taban birebir). `tsc --noEmit` 0, eslint (3 dosya) 0. `npm run build` hatasız, 23 rota. `a11y.mjs` TOPLAM SORUN: 0, üç sayfada `scan.mjs` konsol temiz. Canlı önizleme doğrulaması bilinçli ertelendi — kanal UAT.
+**Detay:** `tasks/archive/TASK-1.20.md`
 
 ### TASK-1.19 — Satır sonu ayıklama: e-posta konusu ve depo mesajı (2026-09-22)
 
@@ -88,17 +99,6 @@
 
 **Test:** Bozuk girdi sınaması: `route.ts` geçici olarak eski hâline döndürüldü, 5 yeni senaryo kırmızı görüldü (28 diğer senaryo yeşil kaldı), düzeltme geri konunca 33/33 yeşil. `docker compose exec web npm test` tüm paket → 5 dosya/**66 PASS** + 1 skipped (taban 61+1'den +5). `tsc --noEmit` 0, eslint temiz. `npm run build` hatasız, 23 rota.
 **Detay:** `tasks/archive/TASK-1.19.md`
-
-### TASK-1.15 — Yasal metin hizası: lead deposu ve kendi Umami (2026-09-22)
-
-**Durum:** ✅ Tamamlandı
-**Özet:**
-- KVKK **Aktarım** maddesi gerçeğe hizalandı: "Kayıt tutma — Google elektronik tablo" kalemi düştü; yeni giriş paragrafı kaydın **kendi sunucumuzda** olduğunu, Almanya'da (Nürnberg) bir veri merkezinde durduğunu ve yalnız yetkili yönetici hesabının okuyabildiğini yazıyor (sitenin anahtarı yalnız kayıt oluşturur). Listeye `Sunucu barındırma` kalemi girdi — kayıt aktarılmıyor, veri merkezi bir tedarikçi.
-- KVKK **Saklama süresi** "en fazla iki yıl"dan v1 desenine geçti: depo kaydı **12 ay** (günlük temizlik işi, `RETENTION_MONTHS=12` ile ölçüldü) + "talebiniz üzerine daha erken" korundu; ekip posta kutusu ve gönderim sağlayıcısındaki kopyalar **süre iddiası kurulmadan** sayıldı.
-- **Gizlilik** iki başlıkta hizalandı: ölçüm yazılımı kendi sunucumuzda (Umami; `umami.kiwiailab.com` deponun IP'siyle aynı — ölçüldü), "IP saklamaz" ölçülen kapsama **daraltıldı** ("kayıtlarında IP adresinizi tutmaz"), sorgu dizesi olgusu eklendi; "elektronik tablo hizmetinde (Google)" → kendi sunucudaki kayıt veritabanı.
-
-**Test:** `npm test` 5 dosya/**61 PASS** + 1 skipped (taban birebir). `tsc --noEmit` 0, eslint 0. `npm run build` temiz (23 rota). Üç yasal sayfa 200 + yeni metin; `Google`/"elektronik tablo"/"en fazla iki yıl" **0** eşleşme. `a11y.mjs` TOPLAM SORUN: 0 (kapsam `/kvkk`, B-012), `font-guard.mjs` eksik karakter yok (16 sayfa/80.487 krk), `scan.mjs` üç yasal sayfada konsol temiz, `mobile-audit.mjs` yatay kaydırma yok. İddia taraması eşleşmesiz.
-**Detay:** `tasks/archive/TASK-1.15.md`
 
 <!-- KURAL: **Detay:** yolu task'ın DURUMUNA bağlıdır. ✅ Tamamlandı ise task arşive taşınmıştır (run-task Adım 7) ve yol `tasks/archive/…`'dır; task hâlâ `_dev/tasks/` altındaysa (🔄 / ⏸️ / 🔴) canlı yol yazılır. Özet Adım 5'te yazılır, taşıma Adım 7'de yapılır — sırayı izleyip tamamlanan task'a canlı yol yazmak, commit anında kırık bir referans bırakır ve bir sonraki audit turu onu "kırık dosya referansı" kalemi olarak açar. -->
 
@@ -125,7 +125,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-1.20.md`
+**Aktif Task:** `tasks/archive/TASK-1.20.md` (faz task döngüsü tamamlandı — sıradaki adım verify-phase)
 **Aktif Faz:** `phases/PHASE-1.md`
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** hata / tutarsızlık | **Alan:** M7 — Yayın ve altyapı
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** → TASK-1.20 (verify-phase 2026-09-22 UAT Senaryo #33'te canlı önizlemede yeniden ölçüldü; 16 rotanın 12'si doğru, üç yasal sayfa `index, follow`)
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -57,4 +57,14 @@ $ for p in kvkk gizlilik kullanim-kosullari; do curl -sI ".../$p" | grep -i '^x-
 
 ## Çözüm Kaydı
 
-—
+TASK-1.20 (2026-09-22): Üç dosyada (`src/app/kvkk/page.tsx`, `src/app/gizlilik/page.tsx`, `src/app/kullanim-kosullari/page.tsx`) sabit `robots: { index: true, follow: true }` satırı **kaldırıldı** — sayfa artık kök `layout.tsx`'teki `isPublished` (`deployStage`) türevini miras alıyor, ikinci bir koşul yazılmadı.
+
+Devralma dört ortam senaryosunda serving katmanında (izole `docker run ... npm run build && npm start`, ayrı port 3200, dev sunucusuna dokunulmadan) ölçüldü:
+- Yerel (`VERCEL` yok) → üç sayfa + kontrol grubu (`/fiyat`) 4/4 `noindex, nofollow`
+- Üretim simülasyonu (`VERCEL_ENV=production`, alan adı `alpfitplus.com`) → kontrol grubu: 4/4 `index, follow`
+- **Ara hâl** (`VERCEL_ENV=production` + `…vercel.app`, kapının asıl sınavı) → 4/4 `noindex, nofollow` — fail-open yok
+- **Boş kapsam** (`VERCEL_ENV=production`, alan adı env'i tanımsız) → 4/4 `noindex, nofollow` — fail-safe
+
+Yerelde 16 rotanın 16'sında (404 dâhil) HTML meta + `X-Robots-Tag` + `robots.txt` regresyonsuz doğrulandı; güvenlik başlıkları 5/5 yerinde. `docker compose exec web npm run build` hatasız (23 rota), ardından `docker compose restart web` ile dev sunucusu tazelendi. `tsc --noEmit` 0, `eslint` (dokunulan 3 dosya) 0. `docker compose exec web npm test` → 5 dosya / 66 PASS + 1 skipped (taban birebir — bu değişiklik saf fonksiyon testleriyle kapsanmıyor, serving-katmanı ölçümü yukarıdaki dört senaryo). `a11y.mjs` TOPLAM SORUN 0, üç yasal sayfada `scan.mjs` konsol temiz.
+
+**Kapsanmayan yüzey:** canlı önizlemede (`alpfitplus-web-v2.vercel.app`) dağıtım-sonrası 16/16 doğrulaması bu task'ın işi değil — bir sonraki `/devflow:verify-phase` turunda UAT kanalıyla teyit edilecek (task dokümanının kendi Test Kriterleri listesinde `kanal: UAT` işaretli).

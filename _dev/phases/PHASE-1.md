@@ -138,7 +138,7 @@ Tam liste ölçümleriyle → `PHASE-1-ARASTIRMA.md` → Dikkat Edilecekler. Pla
 | 1.10 | TASK-1.10 | ✅ Tamamlandı | Yasal metin: Aktarım ve Çerezler maddeleri (e-tablo tedarikçisi + çerezsiz ölçüm) |
 | 1.15 | TASK-1.15 | ✅ Tamamlandı | Yasal metin hizası: kayıt yeri kendi sunucudaki lead deposu (Almanya/Nürnberg, 12 ay, yalnız yetkili yönetici okur), ölçüm aynı sunucudaki kendi Umami; Google adı veri akışından çıktı |
 | 1.19 | TASK-1.19 | ✅ Tamamlandı | **UAT düzeltmesi (Senaryo #26):** satır sonu ayıklama — kulüp adındaki `\n` e-posta konusuna geçiyor, mesaja sahte `Segment:` satırı yazılabiliyor |
-| 1.20 | TASK-1.20 | ⬜ Bekliyor | **UAT düzeltmesi (Senaryo #33, B-041):** üç yasal sayfanın HTML meta katmanı aşama türetimini atlıyor, canlı önizlemede `index, follow` |
+| 1.20 | TASK-1.20 | ✅ Tamamlandı | **UAT düzeltmesi (Senaryo #33, B-041):** üç yasal sayfanın HTML meta katmanı aşama türetimini atlıyor, canlı önizlemede `index, follow` — sabit değer kaldırıldı, kök layout'tan miras alınıyor |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 

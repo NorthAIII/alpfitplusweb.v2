@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   title: PRIVACY.title,
   description: PRIVACY.description,
   alternates: { canonical: "/gizlilik" },
-  robots: { index: true, follow: true },
 };
 
 export default function Page() {

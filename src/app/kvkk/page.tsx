@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   title: KVKK.title,
   description: KVKK.description,
   alternates: { canonical: "/kvkk" },
-  robots: { index: true, follow: true },
 };
 
 export default function Page() {

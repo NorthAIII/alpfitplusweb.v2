@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-22 — verify-phase (Faz 1 UAT): B-041 canlı önizlemede yeniden ölçüldü ve `→ TASK-1.20` işaretini aldı (16 rotanın 12'si doğru, üç yasal sayfa `index, follow`); PHASE-1'in bayat olay adı kalemi mezun edildi, üç yeni kutu satırı düştü. Açık bulgu 52 (değişmedi); Gelen Kutusu 23 → 26 satır (biri mezun, dördü yeni).
+**Son Güncelleme:** 2026-09-22 — run-task TASK-1.20: B-041 çözüldü (üç yasal sayfa artık kök layout'un `isPublished` değerini miras alıyor, dört ortam senaryosunda ölçüldü), atom `bulgular/archive/`e taşındı, index satırı silindi. Açık bulgu 52 → 51.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -98,7 +98,6 @@
 - 🟡 [B-060 — Yayındaki yasal beyanları koruyan test yok](bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) — "12 ay", `data-exclude-search` ve görsel beyanı tek satıra bağlı; v1'de çalışan kapı v2'ye taşınmadı
 - 🟡 [B-059 — Alan adı geçişinde v1'in lead hattı ve yasal metin davranışları geriler](bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md) — onay e-postası kaybolur, `notify_lead` kalıcı `pending`, metin bugünkünden az bilgi verir
 - 🟡 [B-061 — Lead deposunun tek yedeği aynı sunucuda ve aynı hacimde](bulgular/B-061-lead-deposu-yedegi-ayni-sunucuda.md) — S3 kapalı, yedekler `pb_data/` içinde; geçişten sonra tek dayanıklı hedef orası
-- 🟡 [B-041 — Üç yasal sayfa noindex'in üçüncü katmanını eziyor](bulgular/B-041-yasal-sayfalar-noindex-eziyor.md) — 15 rotanın 12'si doğru, `/kvkk` · `/gizlilik` · `/kullanim-kosullari` canlı önizlemede `index, follow` → TASK-1.20
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — 15/15 rotada yok; Umami artık gerçekten yüklendiği için yazma penceresi tam şimdi açık
 - 🟡 [B-025 — Çalışma zamanı için hiçbir alarm yok](bulgular/B-025-calisma-zamani-alarm-yok.md) — v1'in `⚠ KAYIT EDİLEMEDİ` e-posta öneki v2'de yok; depo düşerse ekip ayırt edilemeyen bir posta alır
 - 🟡 [B-044 — Ürün görselinde avatar-ad uyumsuzluğu ve denetim körlüğü](bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) — semt kalemi kapandı; körlük hattın dışına uzanıyor (Hero'daki elle yazılmış "%78")

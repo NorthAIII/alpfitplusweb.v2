@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   title: TERMS.title,
   description: TERMS.description,
   alternates: { canonical: "/kullanim-kosullari" },
-  robots: { index: true, follow: true },
 };
 
 export default function Page() {
