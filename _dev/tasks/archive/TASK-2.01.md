@@ -32,7 +32,7 @@ Fazın iki kalemi bilerek bu ölçüme bağlandı (research 2026-09-22, kullanı
 **Okunması Gereken:**
 - `_dev/memory/kendi-sunucu-n8n-bunker-umami.md` — sunucuya erişim yolu, salt-okunur kuralları, Umami kurulumu
 - `../altyapi/vps/CLAUDE.md` — sunucu deposunun kendi kuralları (salt okunur)
-- `_dev/bulgular/B-058-env-uretim-imajina-gomulu.md` — beş değerin bu makinedeki hâli
+- `_dev/bulgular/archive/B-058-env-uretim-imajina-gomulu.md` — beş değerin bu makinedeki hâli
 - `_dev/bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md` → "🔴 gerekçesi" bloğu — v1'in 2026-07-28 ölçümü
 - `_dev/tasks/archive/TASK-1.17.md:146` ve `_dev/tasks/archive/TASK-1.18.md:150,184` — token ve tuz üretiminin kaydı
 

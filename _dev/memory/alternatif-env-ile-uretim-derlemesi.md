@@ -73,16 +73,47 @@ her oturum ihtiyatlı olarak ardından `docker compose restart web` yapmalı.
   LEAD_STORE_URL` **boş döner** — `exec` yeni bir kabuk açar, Next sürecinin ortamı
   değildir. Yani dev'deki `/api/demo` POST'u **hedefsiz 503'e düşmez**, gerçekten
   `LEAD_STORE_URL`'in gösterdiği yere yazar.
-- **`web-prod` (3100):** `.env` **üretim imajının içinde** (`.dockerignore:6` yalnız
-  `.env*.local` yazıyor, `.env`'i eşlemiyor) — compose'da env verilmemesine rağmen uç
-  bağlı. Bu aynı zamanda bir güvenlik bulgusudur → `_dev/bulgular/B-058-env-uretim-imajina-gomulu.md`.
+- **`web-prod` (3100): DÜZELTİLDİ (TASK-2.02, 2026-09-23).** Eskiden `.env` **üretim
+  imajının içindeydi** (`.dockerignore` yalnız `.env*.local` yazıyor, `.env`'i
+  eşlemiyordu) ve compose'da env verilmemesine rağmen uç bağlıydı. Bugün `.dockerignore`
+  `.env` + `.env.*` (+ `!.env.example`) yazıyor, imajda `.env` **yok** ve `web-prod`
+  compose'da üç kayıt yolunun baş anahtarını (`LEAD_STORE_URL` / `LEAD_FILE_PATH` /
+  `RESEND_API_KEY`) **açıkça boş** alıyor — yerel prova bilinçli olarak hedefsizdir ve uç
+  geçerli talebe `503 no-sink` döner. **3100'e POST atıp `stored:true` bekleme** — gerçek
+  depoya karşı prova gerekiyorsa `--profile lead` + `http://lead-store:8090`.
+  Kapanan bulgu → `_dev/bulgular/archive/B-058-env-uretim-imajina-gomulu.md`.
 
-**Kural — yerel bir uca POST atmadan önce hedefi `printenv` ile değil, ucun kendi
-davranışıyla ölç:** tek bir `{}` POST'u at; `503 no-sink` geliyorsa hedef yok, `422`
-geliyorsa doğrulamaya geçmiş demektir ve geçerli bir gövde **kayıt oluşturur**. Bu
-kontrol atlanırsa "zararsız test" sanılan istekler gerçek bir depoya satır yazar
-(bu turda yerel `lead-store`'a 25 test kaydı böyle düştü — hedef yereldi, canlıya
-gitmedi, ama şans eseri).
+**Compose'da BOŞ bir değer vermek `.env`'i gölgeler — bu bir koruma aracıdır (ölçüldü,
+TASK-2.02).** Next'in dotenv yükleyicisi bir anahtarı yalnız `process.env`'de **hiç
+tanımlı değilse** doldurur (`@next/env` → `processEnv`, `typeof p[t]==="undefined"`
+kapısı; `node_modules/@next/env/dist/index.js` okunarak doğrulandı). Boş string
+**tanımlıdır**, yani `.env`'deki değer onu ezemez. İki sonucu var: (a) bir konteyneri
+kasten hedefsiz bırakmak istiyorsan anahtarı silmek yerine **boş vermek** daha
+dayanıklıdır — dosya bir gün geri sızsa bile boş kalır; (b) bir env'in neden
+"gelmediğini" ararken compose'da boş tanımlanmış olma ihtimalini önce kontrol et.
+
+**Kural — yerel bir uca POST atmadan önce hedefin ne olduğunu ÖĞREN.** Bu kontrol
+atlanırsa "zararsız test" sanılan istekler gerçek bir depoya satır yazar (bir turda
+yerel `lead-store`'a 25 test kaydı böyle düştü — hedef yereldi, canlıya gitmedi, ama
+şans eseri).
+
+⚠️ **`{}` POST'u hedefi ÖLÇMEZ — eski kayıt burada yanlıştı (düzeltildi TASK-2.02,
+2026-09-23).** `route.ts`'te doğrulama (422) kayıt yollarından **önce** koşar, yani
+`{}` gövdesi hedef yapılandırması ne olursa olsun **her zaman** `422 missing` döner ve
+`503 no-sink`'e hiç ulaşamaz. Ölçüldü: aynı konteynerde `{}` → 422, geçerli gövde →
+503. Yani `{}` yalnızca "uç ayakta ve doğrulama çalışıyor" der; hedef hakkında **hiçbir
+şey** söylemez.
+
+Hedefi yazmadan öğrenmenin yolu yapılandırmaya bakmaktır, uca değil:
+- **Compose'un verdiği değişkenler `printenv` ile görünür** (yalnız `.env` dosyasından
+  gelenler görünmez — üstteki tuzak). Anahtar bazında çıkış kodu ayırt eder:
+  `printenv LEAD_STORE_URL` → çıkış 0 = tanımlı (boş olabilir), çıkış 1 = hiç yok.
+- **İmajda/bind-mount'ta `.env` var mı** — `docker run --rm --entrypoint sh <imaj> -c
+  'ls -la /app/.env*'`. Varsa Next onu çalışma anında okur ve uç bağlıdır.
+- Geçerli gövdeli POST hedefi kesin söyler ama **hedef varsa yazar** — öğrenme aracı
+  olarak kullanılmaz; yalnız hedefsizliği zaten kanıtlanmış bir konteynerde teyit
+  amacıyla atılır (`503 no-sink` yanıtı kendi kendini kanıtlar: koda göre oraya depo
+  **ve** dosya **ve** e-posta üçü birden düşünce gelinir).
 
 ## 3100 bayat olabilir — ölçmeden güvenme, ayırt edici bir alan seç (verify-phase, 2026-09-22)
 
@@ -96,7 +127,8 @@ konteyneri uzun ömürlüdür ve kendiliğinden yeniden derlenmez — B-019'un m
   (TASK-1.20 öncesi `index, follow`, sonrası `noindex, nofollow`) ve `/kvkk`'de `Nürnberg` geçişi (TASK-1.15).
 - **Taze ölçüm gerekiyorsa `web-prod`'a dokunma** (başkasının servisi olabilir): `docker build --target runner -t
   <etiket> .` + `docker run -d -p 3200:3000 <etiket>`; betiği scratchpad'e kopyalayıp `BASE`'ini 3200'e çevir
-  (`sed`), araştırma konteynerine `-v` ile mount et. Konteyner **ve imaj** ölçüm biter bitmez silinir — imaj `.env`'i
-  içerir (B-058), ortalıkta bırakılmaz. Port boşluğu pozitif kontrolle teyit edilir (200 → bağlantı reddedildi).
+  (`sed`), araştırma konteynerine `-v` ile mount et. Konteyner ve imaj ölçüm biter bitmez silinir (artık sır taşıdığı
+  için değil — `.env` TASK-2.02'den beri imaja girmiyor — yalnız port ve disk ortalıkta kalmasın diye). Port boşluğu
+  pozitif kontrolle teyit edilir (200 → bağlantı reddedildi).
 - **İlk koşum soğuktur:** taze konteynerde rota başına ilk render LCP'yi şişirir (ölçüldü: ana sayfa 308 ms → ısınınca
   100 ms). Çizgiyle kıyaslamadan önce `perf.mjs`'i **iki kez** koştur, ikincisini raporla.

@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — plan revizyonu (Faz 2): TASK-2.03 ❌ iptal edilip arşive taşındı (sunucu↔yerel parmak izi eşleşmedi, döndürülecek canlı anahtar yok), B-058'in kalan işi ve atom kapanışı TASK-2.02'ye geçti, TASK-2.17'nin zemini ölçülmüş rakamlarla sabitlendi ve milestone'un anahtar ayağı ölçümü anacak şekilde yeniden yazıldı (kullanıcı kararı). `Adım` → `task`; sıradaki adım `/devflow:run-task` (TASK-2.02).
+**Son Güncelleme:** 2026-09-23 — TASK-2.02 ✅: üretim imajından `.env` çıktı (önce 369 B vardı, şimdi yok — kontrol gruplu ölçüm) ve `web-prod` üç kayıt yolunun baş anahtarını açıkça boş alıyor; uç geçerli talebe `503 no-sink` veriyor, yani 3100'e bakan ölçüm turları artık hiçbir depoya yazamıyor. B-058 kapandı ve arşive taşındı. Sıradaki adım `/devflow:run-task` (TASK-2.04).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 1/19 (TASK-2.01 ✅, TASK-2.03 ❌ iptal). Sıra TASK-2.02'de.
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 2/19 (TASK-2.01 ✅, TASK-2.02 ✅, TASK-2.03 ❌ iptal). Sıra TASK-2.04'te.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,11 +35,11 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.02 — `.env` üretim imajından çıkar, yerel prova hedefini açıkça söyler (B-058 kapanır)
+**Task:** TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034)
 **Durum:** ⬜ Bekliyor
-**İlerleme:** Plan revizyonu bitti; sıradaki adım `/devflow:run-task`. TASK-2.02'nin kendi içeriği TASK-2.01'in ölçümünden **etkilenmedi** (koşulsuz yapısal düzeltme) — değişen tek şey B-058'in atom kapanışının artık bu task'a ait olması.
+**İlerleme:** TASK-2.02 kapandı, sıradaki adım `/devflow:run-task`. TASK-2.04 kendinden önceki iki task'tan bağımsız — mobil dokunma hedefi düzeltmesi (`flex-1` → `sm:flex-1`).
 **Not:**
-- **Plan revizyonu (2026-09-23) üç şey yaptı:** TASK-2.03 ❌ iptal edilip arşive taşındı (döndürülecek canlı anahtar yok) · B-058'in kalan işi ve atom kapanışı TASK-2.02'ye geçti, kalıcı kapı M6 F6.2'ye devredildi · TASK-2.17'nin zemini ölçülmüş rakamlarla sabitlendi. Milestone'un anahtar ayağı ölçümü anacak şekilde yeniden yazıldı (kullanıcı kararı).
+- **Yerel üretim provası (3100) artık hedefsiz** (TASK-2.02): `web-prod`'a `LEAD_STORE_URL` / `LEAD_FILE_PATH` / `RESEND_API_KEY` açıkça **boş** veriliyor ve uç geçerli talebe `503 no-sink` dönüyor. Bu **doğru** davranıştır (M3 F3.1) — 3100'e POST atıp `stored:true` bekleyen bir iş önce `docker-compose.yml`'deki `web-prod` yorumunu okusun; gerçek depoya karşı prova `--profile lead` + `http://lead-store:8090` ile açılır. Derleme sonrası kalıcı `ls /app/.env` kapısı **kurulmadı**, M6 F6.2'ye devredildi.
 - **Yasal metin için bağlayıcı ölçüm (TASK-2.01, 2026-09-22):** ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **bugün hiçbir saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. Yani metin *"IP tutulmaz"* diyemez ve **hiçbir süre yazamaz** — cümlenin son hâli TASK-2.17'nin işi.
 - **Rotasyon tanımlı ama konteynere inmiyor:** `daemon.json` `50m × 3` diyor, `bunker-nginx` ondan önce oluşturulduğu için kural uygulanmıyor. Düzeltme **bu reponun işi değil** (evi `altyapi/vps`) — `BULGULAR.md` → Gelen Kutusu'nda. Yapılırsa ≈ 30 günlük bir pencere doğar ve metin o gün bir süre yazabilir hâle gelir.
 - **TASK-2.20 (MX kayıtları) kullanıcı eliyle ilerler** — DNS adımı Squarespace'te kullanıcıdadır; faz yönergeyi yazar, ölçer ve gerçek test postasıyla doğrular. Kullanıcı kaydı girmezse task ⏸️ duraklar, faz kilitlenmez.
@@ -57,7 +57,7 @@
 | # | Task | Durum |
 |---|------|-------|
 | 2.01 | TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058) | ✅ Tamamlandı |
-| 2.02 | TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058) | ⬜ Bekliyor |
+| 2.02 | TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058) | ✅ Tamamlandı |
 | 2.03 | TASK-2.03 — İki anahtarın döndürülmesi (B-058) | ❌ İptal — ön koşul ölçümle düştü (2026-09-23) |
 | 2.04 | TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034) | ⬜ Bekliyor |
 | 2.05 | TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g) | ⬜ Bekliyor |
@@ -86,6 +86,20 @@
 ## Son Task Özetleri
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
+
+### TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058)
+
+**Durum:** ✅ Tamamlandı — 2026-09-23
+**Detay:** `tasks/archive/TASK-2.02.md`
+
+**Özet:**
+- **Üretim imajı artık `.env` taşımıyor:** `.dockerignore`'daki `.env*.local` (create-next-app varsayılanı, `.env`'i eşlemiyordu) yerini `.env` + `.env.*` + `!.env.example`'a bıraktı. Ölçüm kontrol gruplu: aynı komut önce `369 B /app/.env` gösteriyordu, yeniden derlenen imajda `No such file` (çıkış 2); imaj genelinde hiçbir `.env` izi yok.
+- **Yerel prova bilinçli olarak hedefsiz:** `web-prod`'a üç kayıt yolunun baş anahtarı (`LEAD_STORE_URL` / `LEAD_FILE_PATH` / `RESEND_API_KEY`) açıkça boş veriliyor; uç geçerli talebe `503 no-sink` dönüyor (M3 F3.1'in doğru davranışı), yani 3100'e bakan ölçüm turları hiçbir depoya satır yazamıyor.
+- **Boş değer gerçek bir ikinci katman** (ölçüldü): Next'in dotenv yükleyicisi yalnız `process.env`'de **hiç tanımlı olmayan** anahtarı doldurur, boş string'i ezmez — `.env` bir gün imaja geri sızsa bile prova hedefsiz kalır. B-058 kapandı; kalıcı derleme-sonrası kapı M6 F6.2'ye devredildi.
+
+**Test:** İmaj katmanı kontrol gruplu ölçüldü (önce 369 B → sonra yok). Uç iki ayaklı sınandı, hiçbir yere kayıt yazmadan: `{}` → 422 `missing` (istek yolu sağlam, yani 503 çökmeden değil), geçerli gövde → 503 `no-sink`; konteyner logu `Depo yapılandırması eksik` diyor. `printenv` çıkış kodu: üç anahtar tanımlı-ve-boş, `LEAD_STORE_TOKEN`/`IP_HASH_SALT` hiç yok. Ana sayfa 200 (345 531 B). `npm test` 6 dosya / 66 geçti + 1 atlandı (taban birebir). `npm run build` imajın builder katmanında hatasız (paylaşılan `next_cache`'e dokunmamak için `exec` yolu bilinçli seçilmedi). `font-guard` temiz (153 karakter / 16 sayfa / 80 487 karakter); `perf` ısınmış koşumda ana sayfa masaüstü 144 KB · mobil 133 KB — başlangıç çizgisiyle birebir aynı, LCP 80 ms (çizgi 96 ms).
+
+---
 
 ### TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058)
 
@@ -124,7 +138,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.02.md` ⬜ — `.env` üretim imajından çıkar, yerel prova hedefi açık söylenir (B-058 kapanır)
+**Aktif Task:** `tasks/TASK-2.04.md` ⬜ — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

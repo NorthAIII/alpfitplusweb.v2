@@ -53,4 +53,21 @@ Aynı mekanizma dev tarafında da çalışıyor ve bir **ölçüm tuzağı** ür
 
 ## Çözüm Kaydı
 
-—
+**Tarih:** 2026-09-23 (TASK-2.02) — atomun iki zararı da kapandı, üçüncü ayak (anahtar döndürme) ölçümle düştü.
+
+**(1) Sır imaj katmanından çıktı.** `.dockerignore`'daki `.env*.local` satırı — Next'in `create-next-app` varsayılanı, `.env`'i eşlemiyordu — yerini `.env` + `.env.*` + `!.env.example` üçlüsüne bıraktı, kalıbın neden değiştiği dosyada yorumla duruyor. Ölçüm **kontrol gruplu**: aynı komut değişiklikten önce `-rw------- 1 nextjs nodejs 369 Sep 22 12:30 /app/.env` (çıkış 0), yeniden derlenen imajda `No such file or directory` (çıkış 2). Yani "yok" sahte yeşil değil — komut dosyayı görebiliyordu. Ek olarak imaj genelinde `find / -name ".env"` (node_modules hariç) hiçbir şey döndürmedi; `/app` kökünde yalnız `.next`, `node_modules`, `package.json`, `public`, `server.js` var.
+
+**(2) Yerel prova (3100) artık neye bağlandığını söylüyor — ve hiçbir şeye bağlı değil.** `web-prod` bloğuna açık `environment:` girdi ve üç anahtar **boş** tanımlandı: `LEAD_STORE_URL`, `LEAD_FILE_PATH`, `RESEND_API_KEY`. Üçü `/api/demo`'daki üç kayıt yolunun (`toStore` / `toFile` / `toEmail`) başıdır ve boşken o yol hiç denenmez (fail-closed), dolayısıyla hedefsizliği tam olarak ifade ederler. Ölçüm iki ayaklı ve **hiçbir yere kayıt yazmadan** yapıldı:
+- *Kontrol grubu:* `{}` gövdeli POST → **422** `{"code":"missing"}` — istek yolu ve doğrulama sağlam, yani aşağıdaki 503 bir çökmenin sonucu değil.
+- *Asıl ölçüm:* geçerli gövdeli POST → **503** `{"code":"no-sink"}`. Bu yanıt kendi kendini kanıtlar: koda göre oraya yalnız depo **ve** dosya **ve** e-posta üçü birden düşünce gelinir. Konteyner logu gerekçeyi yazıyor: `[demo] Depo yapılandırması eksik, kayıt denenmedi.`
+- `printenv` çıkış koduyla doğrulandı: üç anahtar **tanımlı ve boş** (compose'dan), `LEAD_STORE_TOKEN` ve `IP_HASH_SALT` **hiç yok** (çünkü artık `.env` yok) — compose'da yazan ile konteynerde duran birebir aynı.
+
+**Boş değer dekoratif değil, ölçülmüş ikinci katman.** Next'in dotenv yükleyicisi bir anahtarı yalnız `process.env`'de **hiç tanımlı değilse** doldurur (`@next/env` → `processEnv`, `typeof p[t]==="undefined"` kapısı; kod okunarak ölçüldü). Boş string tanımlıdır, yani ezilmez — `.env` bir gün imaja geri sızsa bile bu üç anahtar boş kalır ve prova hedefsiz kalmaya devam eder. Kalıcı not: `_dev/memory/alternatif-env-ile-uretim-derlemesi.md`.
+
+**(3) Anahtar döndürme ayağı ölçümle düştü.** Atomun *"`.env` üretim değeri taşıyor mu?"* sorusu TASK-2.01'de sunucudaki `/opt/alpfit-lead/.env` ile parmak izi karşılaştırmasıyla cevaplandı: **eşleşme yok** — imaja giren hiçbir değer canlı bir sır değil. Döndürme gerekmedi, TASK-2.03 iptal edildi (`tasks/archive/TASK-2.03.md`).
+
+**Kalıcı kapı kurulmadı — bilinçli devir.** Koruma önerisindeki *"derleme sonrası tek komut: `ls /app/.env` boş dönmeli"* kapısı bu fazda **kurulmadı**; M6 F6.2'nin tek komutuna girecek. Bu turda aynı komut yalnız **bir kerelik ölçüm** olarak koşuldu. Yani bugün imajı temiz tutan şey bir kapı değil, `.dockerignore`'un kendisidir; regresyonu yakalayacak otomatik kontrol F6.2 ile gelir.
+
+**Regresyon kapsamı:** `npm test` 6 dosya / 66 geçti + 1 atlandı (taban birebir; bu değişikliği saf fonksiyon testleri kapsamıyor, kapsayan ölçüm yukarıdaki uç davranışıdır). `npm run build` imajın builder katmanında hatasız. `font-guard.mjs` temiz (153 karakter / 16 sayfa / 80 487 karakter). `perf.mjs` ısınmış koşumda ana sayfa masaüstü 144 KB · mobil 133 KB — M6 başlangıç çizgisiyle birebir aynı; LCP 80 ms (çizgi 96 ms). Ana sayfa 200.
+
+Detay: `tasks/archive/TASK-2.02.md` → Oturum Kaydı.

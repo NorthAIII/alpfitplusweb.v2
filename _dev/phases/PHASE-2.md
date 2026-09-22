@@ -158,7 +158,7 @@ Gerekçelerin tam metni → `PHASE-2-ARASTIRMA.md` → Teknik Kararlar.
 | # | Task | Durum | Açıklama |
 |---|------|-------|----------|
 | 2.01 | TASK-2.01 | ✅ Tamamlandı | Sunucu ölçümü: nginx erişim kaydının bugünkü hâli + `.env` parmak izi karşılaştırması (B-024 ve B-058'i besleyen keşif ayağı) |
-| 2.02 | TASK-2.02 | ⬜ Bekliyor | `.dockerignore` düzeltilir, `web-prod`'a bilinçli env verilir; üretim imajında `.env` kalmaz (B-058, koşulsuz ayak) |
+| 2.02 | TASK-2.02 | ✅ Tamamlandı | `.dockerignore` düzeltildi, `web-prod` üç kayıt yolunun baş anahtarını açıkça boş alıyor; üretim imajında `.env` yok (önce 369 B — kontrol gruplu), uç `503 no-sink`. B-058 kapandı, kalıcı kapı M6 F6.2'ye devredildi |
 | 2.03 | TASK-2.03 | ❌ İptal | İki anahtarın döndürülmesi — ön koşul ölçümle düştü: sunucu↔yerel parmak izi eşleşmedi, döndürülecek canlı anahtar yok (plan revizyonu 2026-09-23). B-058'in kalan işi TASK-2.02'de, atom orada kapanıyor |
 | 2.04 | TASK-2.04 | ⬜ Bekliyor | Fiyat sayfasının mobil ana çağrısı 24 px'ten 52 px'e döner — `flex-1` → `sm:flex-1` (B-034) |
 | 2.05 | TASK-2.05 | ⬜ Bekliyor | Demo formunda odak ve durum mekaniği: onay ve hata her telefonda görünür, odak hata türüne göre doğru yere gider (B-055 b·c·d·e·f·g) |

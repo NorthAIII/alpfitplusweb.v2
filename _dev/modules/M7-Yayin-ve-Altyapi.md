@@ -21,6 +21,7 @@
 **Edge Case'ler:**
 - Yeni rota klasörü → `docker compose restart web` (Turbopack bind-mount'ta yeni dizini yakalamaz)
 - Port 3001 makinede başka projede — kullanılmaz
+- `web-prod`'un env'i **bilinçlidir ve hedefsizdir** (TASK-2.02, B-058): üç kayıt yolunun baş anahtarı compose'da açıkça boş, uç geçerli talebe `503 no-sink` veriyor — 3100'e bakan ölçüm turları hiçbir depoya yazmaz. `.env` imaja girmez (`.dockerignore`); gerçek depo provası `--profile lead` + `http://lead-store:8090` ile açılır
 
 ---
 

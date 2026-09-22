@@ -20,7 +20,29 @@ services:
     command: npm run dev
     restart: unless-stopped
 
-  # Uretim imajinin yerelde dogrulanmasi — http://localhost:3001
+  # Uretim imajinin yerelde dogrulanmasi — http://localhost:3100
+  #
+  # Yerel uretim provasi BILINCLI olarak HEDEFSIZDIR (B-058, TASK-2.02). Once
+  # bu blokta hic env yoktu; konteyner imaja sizmis `.env`'i okuyup /api/demo
+  # istegini sessizce bir depoya yaziyordu. `.dockerignore` artik `.env`'i
+  # disarida birakiyor, bu blok da niyeti YAZILI hale getirir.
+  #
+  # Asagidaki uc anahtarin her biri kendi yolunun BASIDIR ve bos oldugunda o
+  # yol hic denenmez (fail-closed — src/app/api/demo/route.ts): depo (toStore),
+  # yerel JSONL dosyasi (toFile), e-posta (toEmail). Ucu de bos oldugu icin uc
+  # durustce 503 `no-sink` doner (M3 F3.1 kabul kriteri) ve 3100'e bakan olcum
+  # turlari (perf.mjs, font-guard.mjs) hicbir yere kayit yazmaz.
+  #
+  # Bos deger dekoratif DEGIL, ikinci katmandir: Next'in dotenv yukleyicisi
+  # yalnizca process.env'de HIC TANIMLI OLMAYAN anahtari doldurur (@next/env
+  # -> processEnv, `typeof p[t]==="undefined"` kapisi; kod okunarak olculdu,
+  # TASK-2.02). Yani `.env` bir gun imaja geri sizsa bile bu uc anahtar bos
+  # kalir ve prova hedefsiz kalmaya devam eder.
+  #
+  # Gercek bir depoya karsi prova gerekirse `--profile lead` ile lead-store
+  # kaldirilir ve buraya LEAD_STORE_URL=http://lead-store:8090 + LEAD_STORE_TOKEN
+  # + IP_HASH_SALT yazilir (port host'a yayinlanmaz, adres compose agi icinden).
+  # CANLI depo adresi/token'i buraya ASLA yazilmaz.
   web-prod:
     build:
       context: .
@@ -29,6 +51,10 @@ services:
     ports:
       - "3100:3000"
     profiles: ["prod"]
+    environment:
+      LEAD_STORE_URL: ""
+      LEAD_FILE_PATH: ""
+      RESEND_API_KEY: ""
     restart: unless-stopped
 
   # Playwright: rakip analizi, ekran goruntusu, gorsel regresyon

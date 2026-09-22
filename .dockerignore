@@ -3,6 +3,12 @@ node_modules
 .git
 research/out
 npm-debug.log*
-.env*.local
+# Sirlar imaj katmanina GIRMEZ (B-058, TASK-2.02). Buradaki eski kalip
+# create-next-app varsayilani `.env*.local` idi ve `.env`'i ESLEMIYORDU —
+# uretim imaji bes degeri kendi katmaninda tasidi. `.env.example` yalniz
+# anahtar ADLARINI tasir (deger yok), istisna edilir.
+.env
+.env.*
+!.env.example
 Dockerfile*
 docker-compose*.yml

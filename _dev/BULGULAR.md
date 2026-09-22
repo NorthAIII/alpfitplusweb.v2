@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-22 — discuss-phase (Faz 2): on bulgu `→ Faz 2` işaretini aldı (B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-060, artı kısmî ikisi: B-059 yalnız onay e-postası ayağıyla, B-040 yetenek listesi kapsamında); `[TASK-1.18 / run-phase]` UI kümesi sorusu cevaplandı (B-032 · B-033 · B-031 görsel ve mobil faza, o faz geçişin önüne alındı). Açık bulgu 51 (değişmedi — işaret mezuniyet değil).
+**Son Güncelleme:** 2026-09-23 — TASK-2.02: **B-058 kapandı** ve atomu `bulgular/archive/`e taşındı (üretim imajında `.env` yok — kontrol gruplu ölçüm; `web-prod` bilinçli olarak hedefsiz, uç `503 no-sink`; döndürme ayağı TASK-2.01'in parmak izi ölçümüyle düşmüştü). Kalıcı derleme-sonrası kapı bu fazda kurulmadı, M6 F6.2'ye devredildi. Açık bulgu 51 → **50**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -82,7 +82,6 @@
      Bu index bir kanvas dokümandır: BÖLÜNMEZ. Liste yönetilemeyecek kadar uzadıysa (rehber eşik ~30 açık bulgu —
      işaret fişeği, mahkûmiyet değil) bu bir triyaj çağrısıdır: stok eritilir/elenir, yapı değiştirilmez. -->
 
-- 🔴 [B-058 — `.env` üretim Docker imajına gömülü](bulgular/B-058-env-uretim-imajina-gomulu.md) — `.dockerignore` `.env`'i eşlemiyor; beş sır imaj katmanında, 3100 provası sessizce hedefe bağlı → Faz 2
 - 🔴 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — `content-type` kontrolsüz çapraz-site POST **artık depoya satır yazıyor**; `null` gövde 500; 5 MB gövde kabul
 - 🔴 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — dört kalem açık; "IP saklamaz" beyanı ölçülen nginx logu gerçeğiyle çelişiyor, `ip_hash` 12 ay saklanıyor → Faz 2
 - 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — 5/5 hâlâ açık; ürün ilerledi ama hiçbirinin karşılığı doğmadı → Faz 2
