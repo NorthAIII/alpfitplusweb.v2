@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-22 — verify-plan: 20 task doğrulandı; şablon, sıra ve bağımlılıklar temiz. Üç düzeltme uygulandı (kullanıcı onayı): dokuz bayat satır çapası ölçülen numaralara çekildi, TASK-2.11 beş tekil yol-haritası cümlesini de kapsayacak şekilde genişletildi (B-040'ın kapanışı onlar bağlanmadan ölçülemiyordu), `flex-1` sayımı üç dokümanda düzeltildi. Sıradaki adım: TASK-2.01.
+**Son Güncelleme:** 2026-09-22 — TASK-2.01 ✅ (keşif ayağı, kod değişmedi): ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **saklama sınırı yok** (155 MB / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. İki token'ın sunucu↔yerel parmak izi **eşleşmedi** → döndürme düşer, TASK-2.03 iptal edilecek ve milestone'un o ayağı yeniden yazılacak. `Adım` → `plan`; sıradaki adım `/devflow:plan-phase` (revizyon).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, iki anahtar döndürülmüş; 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
-**Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅. Task çalıştırma başlıyor.
+**Adım:** plan
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · task çalıştırma 1/20 (TASK-2.01 ✅). Keşif ayağı TASK-2.03'ün ön koşulunu düşürdü — sırada plan revizyonu var, sonra TASK-2.02.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,17 +35,18 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058)
-**Durum:** ⬜ Bekliyor
-**İlerleme:** Plan doğrulandı; sıradaki adım `/devflow:run-task` — fazın ilk task'ı bir **keşif ayağıdır**, kod değiştirmez.
+**Task:** TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058)
+**Durum:** ⬜ Bekliyor — **önce plan revizyonu var** (aşağı bak)
+**İlerleme:** TASK-2.01 ✅ kapandı. Sıradaki adım `/devflow:run-task` **değil**: `Adım` alanı `plan`'a çekildi, çünkü TASK-2.01'in ölçümü TASK-2.03'ün ön koşulunu düşürdü ve milestone'un bir ayağı kullanıcıyla yeniden yazılacak. Revizyon oturumundan sonra sıra TASK-2.02'ye döner — o task'ın kendi içeriği bu ölçümden **etkilenmedi** (koşulsuz yapısal düzeltme).
 **Not:**
-- **Plan doğrulamasının değiştirdikleri (verify-plan 2026-09-22):** TASK-2.11 üç yerine **dört** dosyaya dokunuyor — `karsilastirma.ts` de kapsama girdi ve beş tekil yol-haritası cümlesi (turnike/online ödeme) sabite bağlanıyor; buna bağlı olarak TASK-2.08'in kurduğu sabitin kalemleri **tek tek adreslenebilir** olmak zorunda. Bayat satır çapaları düzeltildi — task oturumları artık doğru satıra bakıyor.
-- **TASK-2.03 koşulludur:** TASK-2.01'in sunucu parmak izi karşılaştırması eşleşme bulursa koşar; bulmazsa ❌ İptal edilir ve milestone'un "iki anahtar döndürülmüş" ayağı kullanıcıyla yeniden yazılır (kullanıcı kararı, research 2026-09-22).
+- **TASK-2.01 ölçtü, iki kalem kapandı (2026-09-22):**
+  - **Parmak izi eşleşmedi** — sunucudaki `/opt/alpfit-lead/.env`'in iki token'ı yereldeki değerlerle **aynı değil** (ölçülen dosyanın canlı kaynak olduğu çalışan konteynerin env'iyle ayrıca doğrulandı). Yani imaja giren hiçbir değer canlı bir sır değil; **döndürme düşer**. → **TASK-2.03 iptal edilecek** ve milestone'un *"iki anahtar döndürülmüş"* ayağı yeniden yazılacak — ikisi de plan revizyonunun işi (`docs/DECISIONS.md` 2026-09-22).
+  - **Ölçüm sunucusu ham IP tutuyor ve saklama sınırı yok** — 592.183/592.375 erişim satırı ham IPv4 ile başlıyor, 5.580 benzersiz IP, 155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0, log gönderici ajan yok. Yani yasal metin *"IP tutulmaz"* diyemez ve bir **süre vaadi veremez**; cümlenin son hâli TASK-2.17'nin işi, dayanağı sabitlendi.
+- **Rotasyon aslında tanımlı ama konteynere inmiyor:** `daemon.json` `50m × 3` diyor, ancak `bunker-nginx` ondan önce oluşturulduğu için kural uygulanmıyor. Düzeltme **bu reponun işi değil** (evi `altyapi/vps`) — `BULGULAR.md` → Gelen Kutusu'na düştü. Yapılırsa ≈ 30 günlük bir pencere doğar ve metin o gün bir süre yazabilir hâle gelir.
 - **TASK-2.20 (MX kayıtları) kullanıcı eliyle ilerler** — DNS adımı Squarespace'te kullanıcıdadır; faz yönergeyi yazar, ölçer ve gerçek test postasıyla doğrular. Kullanıcı kaydı girmezse task ⏸️ duraklar, faz kilitlenmez.
 - **Tarayıcı katmanlı kriterler `kanal: UAT` işaretli** (TASK-2.04 · 2.05 · 2.06 · 2.20): projenin otomatik katmanı gerçek tarayıcı yerleşimini ve odağını ölçmüyor; kalıcı tarayıcı betiği bilinçli olarak "Kalite kapıları otomatik" fazına bırakıldı.
 - **Faz 2 kapsamı dokuz bulgu:** B-029 · B-018 · B-024 · B-011 · B-058 · B-034 · B-055 · B-060 · B-059'un onay-e-postası ayağı (yan kazanç B-040). Tam gerekçe ve kapsam dışı listesi `phases/PHASE-2.md` → Kapsam Tartışması.
 - **Sıra değişti:** "Görsel ve mobil iyileştirme" fazı alan adı geçişinin **önüne** alındı (kullanıcı kararı) — ölçülmüş AA kontrast ihlalleri (B-032) canlıya çıkmasın. B-032 · B-033 · B-031 o faza atandı.
-- **B-058 ölçüldü, döndürme koşula bağlandı:** `.env`'in beş değeri değer basılmadan parmak izlendi — depo adresi yerel konteyneri gösteriyor, iki token bu makinede üretilmiş (TASK-1.17 kaydı), canlı IP tuzu Vercel'e boru içinden girilip hiçbir yere kaydedilmemiş (TASK-1.18). Yani **imaja giren hiçbir değer canlı değil**. Kesin teyit sunucudaki `/opt/alpfit-lead/.env` ile parmak izi karşılaştırmasıdır; milestone'un "iki anahtar döndürülmüş" ayağı o sonuca bağlı (kullanıcı kararı, `docs/DECISIONS.md` 2026-09-22 research kaydı).
 - **Kullanıcı gözü bekleyen iki kalem (Faz 1 milestone'unun doğrulama ayakları, kapanışı engellemedi):** (1) `DEMO_TO`'ya giden e-postanın **gelen kutusunda mı spam'de mi** olduğu; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi. İkisinin de ürün tarafı ölçüldü; kayıt `phases/PHASE-1.md` → Milestone kapanış notu.
 - **Canlı depodaki test kayıtları:** `leads_preview` 15 kayıt (Faz 1'in bilinçli test turları; `leads` 2 → değişmedi). 12 aylık saklama işi siler. ⚠️ IP tuzu döndürülünce bu kayıtların `ip_hash`'i yeni kayıtlarla karşılaştırılamaz olur (bilinçli, `docs/DECISIONS.md`).
 - **Yerel `lead-store` konteyneri hâlâ ayakta** (25 test kaydıyla) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
@@ -56,9 +57,9 @@
 
 | # | Task | Durum |
 |---|------|-------|
-| 2.01 | TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058) | ⬜ Bekliyor |
+| 2.01 | TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058) | ✅ Tamamlandı |
 | 2.02 | TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058) | ⬜ Bekliyor |
-| 2.03 | TASK-2.03 — **Koşullu** — iki anahtarın döndürülmesi (B-058) | ⬜ Bekliyor |
+| 2.03 | TASK-2.03 — **Koşullu** — iki anahtarın döndürülmesi (B-058) | ⬜ Bekliyor — ⚠️ ön koşul düştü, iptal plan revizyonunda |
 | 2.04 | TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034) | ⬜ Bekliyor |
 | 2.05 | TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g) | ⬜ Bekliyor |
 | 2.06 | TASK-2.06 — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a) | ⬜ Bekliyor |
@@ -87,7 +88,17 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
-— yok (yeni faza geçildi; Faz 1'in task özetleri `tasks/archive/` ve `phases/PHASE-1.md`'de)
+### TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058)
+
+**Durum:** ✅ Tamamlandı — 2026-09-22
+**Detay:** `tasks/archive/TASK-2.01.md`
+
+**Özet:**
+- Erişim kaydı ölçüldü: **ham IP tutuluyor** (592.183/592.375 satır, 5.580 benzersiz IP, 490.980 satır user-agent'lı), **saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0, logrotate ve kesen cron yok), **üçüncü tarafa gitmiyor** (gönderici ajan yok, Umami şemasında IP sütunu yok).
+- `daemon.json` rotasyonu (`50m × 3`) tanımlı ama `bunker-nginx` ondan önce oluşturulduğu için konteynere **inmiyor** — kesim 11 eski / 5 yeni konteynerde ve 5 dakikalık sınır örneğiyle kanıtlandı; düzeltme `altyapi/vps` işi, Gelen Kutusu'na düştü.
+- İki token'ın sunucu↔yerel parmak izi **eşleşmedi** → döndürme düşer; TASK-2.03'ün iptali ve milestone ayağının yeniden yazımı plan revizyonuna gitti. Hiçbir sır değeri hiçbir yere yazılmadı.
+
+**Test:** Kod değişmediği için regresyon koşumu yok (keşif ayağı). Ölçümün kendisi iki kontrol grubuyla sınandı: bilinen ortak girdi iki makinede de aynı özeti verdi (`5bff3c05b9bd`) ve yereldeki iki eş değer aynı özeti verdi (`1a5c428e4b47`) — yani "eşleşmedi" sahte kırmızı değil. Salt-okuma doğrulandı: üç dosyanın mtime'ı değişmedi, 20 konteyner ayakta, `RestartCount=0`.
 
 <!-- KURAL: **Detay:** yolu task'ın DURUMUNA bağlıdır. ✅ Tamamlandı ise task arşive taşınmıştır (run-task Adım 7) ve yol `tasks/archive/…`'dır; task hâlâ `_dev/tasks/` altındaysa (🔄 / ⏸️ / 🔴) canlı yol yazılır. Özet Adım 5'te yazılır, taşıma Adım 7'de yapılır — sırayı izleyip tamamlanan task'a canlı yol yazmak, commit anında kırık bir referans bırakır ve bir sonraki audit turu onu "kırık dosya referansı" kalemi olarak açar. -->
 

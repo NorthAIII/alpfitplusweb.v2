@@ -19,6 +19,56 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-22 — Parmak izi eşleşmedi: iki anahtarın döndürülmesi düşer, milestone ayağı yeniden yazılır
+
+**Bağlam:** Aynı gün alınan «`.env` sızıntısının kapsamı ölçüldü» kararı döndürmeyi tek bir koşula bağlamıştı: *"sunucudaki `/opt/alpfit-lead/.env` → `LEAD_TOKEN_PREVIEW` / `LEAD_TOKEN_PRODUCTION` değerlerinin parmak izi yerel değerlerle karşılaştırılır; sonuca göre döndürülür ya da iptal edilir."* Karşılaştırma TASK-2.01'de koşuldu (salt okuma, hiçbir değer basılmadan — SHA-256'nın ilk 12 karakteri):
+
+| Anahtar | Sunucu | Yerel | Sonuç |
+|---|---|---|---|
+| `LEAD_TOKEN_PREVIEW` | `0dc073b889b4` | `1a5c428e4b47` | ✗ eşleşmiyor |
+| `LEAD_TOKEN_PRODUCTION` | `257900c72d3d` | `ace3e073f68a` | ✗ eşleşmiyor |
+
+Ölçülen dosyanın **canlı kaynak** olduğu ayrıca doğrulandı: çalışan `alpfit-pocketbase` konteynerinin env'i dosyayla birebir aynı parmak izini veriyor, yani dosya bayat değil. Yöntemin eşleşmeyi yakalayabildiği iki kontrol grubuyla gösterildi (bilinen ortak girdi iki makinede de aynı özeti verdi; yereldeki iki eş değer aynı özeti verdi).
+
+**Seçenekler:**
+1. Ölçüme uy: döndürme iptal edilir, yalnız yapısal düzeltme (TASK-2.02) kalır.
+2. Yine de döndür: ölçüm dolaylı bir kaçağı gözden kaçırmış olabilir.
+
+**Karar:** 1 — koşul sonucuna uyuldu (TASK-2.01, ölçüm belirledi; tercih kullanılmadı).
+
+**Gerekçe:** Önceki kararın hükmü zaten bu koşula bağlıydı; koşul olumsuz çıktı. Sızmamış bir anahtarı döndürmek koruma üretmez, buna karşılık canlı lead akışına dokunan bir işlemdir. Ölçüm iki yönden çapalı: hem sunucunun ayar dosyası hem o dosyayı okuyan çalışan konteyner aynı parmak izini veriyor, ve karşılaştırmanın kendisi pozitif kontrolle sınandı.
+
+**Milestone etkisi:** Faz 2 milestone'unun *"iki anahtar döndürülmüş"* ayağı **düşer**. Önceki karar bunu açıkça yazmıştı: *"Eşleşme çıkmazsa ayak düşer ve milestone o gün yeniden yazılır — sessizce daraltılmaz."* Ayağın yeni hâli kullanıcıyla yazılır; TASK-2.03 iptal edilir. İkisi de plan revizyonu oturumunun işidir (`/devflow:plan-phase`), bu yüzden DURUM'un `Adım` alanı `plan`'a çekildi.
+
+**İlgili Task/Faz:** TASK-2.01 · Faz 2. Bulgu: B-058.
+
+---
+
+### 2026-09-22 — Ölçüm sunucusu ham IP tutuyor ve saklama sınırı yok: yasal metin "IP tutulmaz" diyemez, süre de vaat edemez
+
+**Bağlam:** B-024'ün 🔴 gerekçesi `legal.ts:199` (*"Bu ölçüm … kayıtlarında IP adresinizi tutmaz"*) ve `:116` (*"bu ölçüme kişisel verileriniz aktarılmaz"*) cümlelerini v1'in **2026-07-28** tarihli ölçümüne dayandırıyordu ve bugünkü hâlin ölçülmediğini açıkça yazıyordu. TASK-2.01 bugünkü hâli salt-okuma ile ölçtü:
+
+- **Ham IP tutuluyor.** `umami.kiwiailab.com`'un önündeki `bunker-nginx`'in bağlı `nginx.conf`'unda **0** adet `access_log`/`log_format` direktifi var → nginx'in gömülü `combined` biçimi işliyor, `/var/log/nginx/access.log` → `/dev/stdout` → Docker `json-file`. **592.375** stdout satırının **592.183**'ü ham IPv4 ile başlıyor; **5.580 benzersiz IP**; **490.980** satır ayrıca user-agent taşıyor. Umami sunucu bloğunun kendi `access_log`'u yok, http varsayılanını miras alıyor.
+- **Saklama sınırı yok.** Dosya 155 MB / 603.025 satır, penceresi 2026-08-22T22:29:38Z → 2026-09-22T21:53:39Z (31 gün) ve büyüyor. Pencerenin başlangıcı rotasyon değil, 2026-08-23'teki elle disk temizliği.
+- **Üçüncü tarafa gitmiyor.** Log gönderici ajan yok, hiçbir konteyner log dizinini mount etmiyor, Umami şemasında IP sütunu yok (`session` yalnız türetilmiş `country/region/city` tutuyor), Next telemetrisi kapalı.
+
+**Ölçümün düzelttiği devralınan gerekçe:** v1'in kaydı *"`/etc/docker/daemon.json` yok, yani rotasyon yok"* diyordu. **Bugün `daemon.json` var** (`max-size 50m`, `max-file 3`) ama `bunker-nginx`'e inmiyor: konteyner 2026-04-15'te, daemon.json'dan (2026-08-28 20:57) **önce** oluşturulmuş ve `HostConfig.LogConfig.Config` değeri boş. Kesim ölçüldü — daemon.json'dan sonra oluşturulan 5 konteynerin hepsinde rotasyon var, öncekilerin 11'inde yok; sınır örneği `alpfit-garage` (5 dk 42 sn önce oluşturulmuş, rotasyonsuz). **Sonuç aynı, gerekçe farklı.**
+
+**Seçenekler:**
+1. Metin bugünkü gerçeği yazar: ölçüm isteği sunucumuzun web sunucusuna düşer, erişim kaydında IP bulunur, bugün tanımlı bir saklama süresi yoktur.
+2. Metin eski hâlinde kalır ("IP tutulmaz").
+3. Metin bir süre vaat eder (örn. "30 gün").
+
+**Karar:** 1 — ölçüm belirledi (TASK-2.01). Cümlenin son hâli TASK-2.17'nin işidir; bu kayıt yalnız dayanağı sabitler.
+
+**Gerekçe:** 2 ölçümle çürüdü — ham IP ölçülerek bulundu. 3 ise bugün **karşılığı olmayan** bir vaat olurdu: rotasyon konteynere inmiyor, logrotate kuralı yok, kesen bir zamanlanmış iş yok. `ILKELER.md` → *"Kanıtsız iddia yayınlanmaz"* ve `CLAIMS.md` → *"Bilinmeyen uydurulmaz"* burada doğrudan uygulanır; üstelik bunlar ziyaretçiye verilen hukuki taahhütler.
+
+**Not — süre vaadi altyapı düzeltmesine bağlı, metne değil:** `bunker-nginx` yeniden oluşturulursa (`up -d --force-recreate` + ardından nginx reload) daemon.json'un kuralı iner ve tavan 50m × 3 = 150 MB olur; bugünkü hıza göre (155 MB / 31 gün) bu ≈ 30 günlük bir pencere demektir. O düzeltme **bu fazın ve bu reponun kapsamı dışıdır** (evi `altyapi/vps`), `BULGULAR.md` → Gelen Kutusu'na düştü. Düzeltme yapılırsa metin bir süre yazabilir hâle gelir — ama TASK-2.17 bugünkü gerçeği yazar, gelecekteki hâli değil.
+
+**İlgili Task/Faz:** TASK-2.01 (ölçüm) → TASK-2.16 / TASK-2.17 (metin) · Faz 2. Bulgu: B-024.
+
+---
+
 ### 2026-09-22 — `.env` sızıntısının kapsamı ölçüldü: imajdaki beş değerin hiçbiri canlı değil; döndürme bir karşılaştırmaya bağlandı
 
 **Bağlam:** Aynı gün alınan «`.env`'in imaja sızması» kararı iki anahtarın döndürülmesine hükmetti ve dayanağı şu cümleydi: *"Beş anahtarın ikisi canlı: `LEAD_STORE_TOKEN` (v1'in lead deposunun önizleme token'ı) ve `IP_HASH_SALT`."* O cümle ölçülmemişti; kaydın kendisi de bunu *"açık kalem (fazın ilk işlerinden biri)"* diye işaretliyordu. Research oturumunda ölçüldü (2026-09-22, değer basılmadan — SHA-256 önekleriyle):

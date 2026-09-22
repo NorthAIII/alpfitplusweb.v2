@@ -35,6 +35,7 @@
      Not task'a dönüştüğünde veya atomlaştığında satır
      SİLİNİR — bilgi yeni evine taşınmıştır (mezuniyet). Olgun hal: boş kutu. -->
 
+- [TASK-2.01] `bunker-nginx` erişim kaydı ham IP tutuyor ve rotasyonsuz büyüyor (155 MB / 31 gün); `daemon.json`'daki `50m × 3` kuralı konteyner ondan önce oluşturulduğu için inmiyor — yeniden oluşturma ≈ 30 günlük pencere açar. Evi `altyapi/vps` projesi (bu repo değil); ölçüm `tasks/archive/TASK-2.01.md`, metne etkisi `docs/DECISIONS.md` 2026-09-22
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px, referans rakip de benzer — kısaltılsın mı? Karar kullanıcıda (`modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
 - [TASK-1.07 / run-phase] Umami giriş ucunda hız sınırı ve kilitlenme yok, panel internete açık — evi `altyapi/vps` projesi, kayıp olmasın diye burada
 - [TASK-1.11] Bunker OS'un canlı n8n `lead-intake-agent`'ı çalışmaz ama açık bir giriş kapısı — evi Bunker OS triyajı (`tasks/archive/TASK-1.11-BUNKER-KESFI.md`)

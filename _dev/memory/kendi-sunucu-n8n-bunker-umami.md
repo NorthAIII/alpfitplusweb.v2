@@ -75,6 +75,17 @@ iddialarının kontrol grubunu kurmak için de kullanılır.
 
 `next/script` + `strategy="afterInteractive"` betiği ilk HTML'e `<script data-tag="preview">` olarak **yazmaz**; öznitelikler RSC flight payload'ında kaçışlı durur. Yayın yüzeyinde ölçerken `grep -o 'data-tag[^,}]*'` gibi bir kalıp kullan (`data-tag\":\"preview\"` döner); `data-tag="..."` araması sessizce boş döner ve "tracker yok" yanılgısı üretir.
 
+## Ölçüm sunucusunun ön kapısı — nginx erişim kaydı (ölçüldü 2026-09-22, TASK-2.01)
+
+Site izleyici betiğini `umami.kiwiailab.com`'dan çektiği için **her ziyaretçinin ham IP'si** bu sunucunun nginx'ine düşer. Umami'nin kendi veritabanında IP sütunu olmaması bunu değiştirmez — soru nginx katmanında cevaplanır.
+
+- **Ham IP tutuluyor.** Bağlı `nginx.conf`'ta (`/opt/bunker/nginx/nginx.conf`) **hiç** `access_log`/`log_format` direktifi yok → nginx'in **gömülü `combined`** biçimi işler (`$remote_addr` + user-agent). `/var/log/nginx/access.log` → `/dev/stdout` → Docker `json-file`. Umami sunucu bloğunun kendi `access_log`'u yoktur, http varsayılanını miras alır. Ölçüm: 592.183/592.375 satır ham IPv4 ile başlıyor, 5.580 benzersiz IP, 490.980 satır user-agent taşıyor.
+- **Saklama sınırı yok** (155 MB / 603.025 satır / 31 gün ve büyüyor). `logrotate`'te docker kuralı yok; kesen cron/timer yok — güvenlik denetimi toplam MB'yi yalnız **ölçer**.
+- ⚠️ **`daemon.json`'da rotasyon görmek yetmez — Docker'ın log ayarı GERİYE DÖNÜK DEĞİLDİR.** `/etc/docker/daemon.json` `max-size 50m` + `max-file 3` diyor, ama bu ayar konteyner **oluşturulurken** çözülüp `HostConfig.LogConfig.Config`'e yazılır; `restart` yeniden çözmez, yalnız yeniden oluşturma (`up -d --force-recreate`) çözer. `bunker-nginx` 2026-04-15'te, daemon.json'dan (2026-08-28 20:57) önce oluşturulduğu için `Config` değeri **boş** ve rotasyon işlemiyor. Ölçüt beyanname değil **`docker inspect <konteyner> --format '{{json .HostConfig.LogConfig.Config}}'`** çıktısıdır; kesim sunucuda kanıtlı (daemon.json'dan sonra oluşturulan 5 konteynerde kural var, öncekilerin 11'inde yok — sınır örneği `alpfit-garage`, 5 dk 42 sn önce oluşturulmuş, rotasyonsuz).
+- **Üçüncü tarafa gitmiyor:** log gönderici ajan yok (promtail/vector/filebeat/fluentd/datadog — konteyner ve host süreci 0), hiçbir konteyner `/var/lib/docker/containers`'ı mount etmiyor, Umami'de `NEXT_TELEMETRY_DISABLED=1`. nginx umami bloğu `X-Real-IP`/`X-Forwarded-For` **iletir** ama aynı sunucuda kalır ve kalıcılaşmaz (`session` tablosu yalnız türetilmiş `country/region/city` tutar).
+- **Yasal metne etkisi:** *"IP tutulmaz"* yazılamaz ve bugün bir **süre vaadi** verilemez (`docs/DECISIONS.md` 2026-09-22). Konteyner yeniden oluşturulursa tavan 150 MB olur ≈ 30 günlük pencere; o düzeltme `altyapi/vps` işidir.
+- ⚠️ **Konteyner yeniden oluşturulursa nginx reload'u atlama** — bu deponun kendi tuzağı (`../altyapi/vps/CLAUDE.md`): yeni konteyner yeni IP alır, nginx eski IP'yi tutar → 502.
+
 ## Bunker — tuzak
 
 - Kanonik kod `../Bunker OS/bunker-dashboard` (`NorthAIII/bunker-os` monoreposu). `../bunker-dashboard` klonu bayat ve GitHub'da arşivli.

@@ -157,9 +157,9 @@ Gerekçelerin tam metni → `PHASE-2-ARASTIRMA.md` → Teknik Kararlar.
 
 | # | Task | Durum | Açıklama |
 |---|------|-------|----------|
-| 2.01 | TASK-2.01 | ⬜ Bekliyor | Sunucu ölçümü: nginx erişim kaydının bugünkü hâli + `.env` parmak izi karşılaştırması (B-024 ve B-058'i besleyen keşif ayağı) |
+| 2.01 | TASK-2.01 | ✅ Tamamlandı | Sunucu ölçümü: nginx erişim kaydının bugünkü hâli + `.env` parmak izi karşılaştırması (B-024 ve B-058'i besleyen keşif ayağı) |
 | 2.02 | TASK-2.02 | ⬜ Bekliyor | `.dockerignore` düzeltilir, `web-prod`'a bilinçli env verilir; üretim imajında `.env` kalmaz (B-058, koşulsuz ayak) |
-| 2.03 | TASK-2.03 | ⬜ Bekliyor | **Koşullu** — TASK-2.01 eşleşme bulursa iki anahtar döndürülür; bulmazsa ❌ İptal ve milestone ayağı yeniden yazılır (B-058) |
+| 2.03 | TASK-2.03 | ⬜ Bekliyor | **Koşullu — ön koşul DÜŞTÜ.** TASK-2.01 parmak izi karşılaştırmasında **eşleşme bulmadı** (2026-09-22), yani döndürülecek canlı anahtar yok. İptal ve milestone ayağının yeniden yazımı plan revizyonunda yapılır (B-058) |
 | 2.04 | TASK-2.04 | ⬜ Bekliyor | Fiyat sayfasının mobil ana çağrısı 24 px'ten 52 px'e döner — `flex-1` → `sm:flex-1` (B-034) |
 | 2.05 | TASK-2.05 | ⬜ Bekliyor | Demo formunda odak ve durum mekaniği: onay ve hata her telefonda görünür, odak hata türüne göre doğru yere gider (B-055 b·c·d·e·f·g) |
 | 2.06 | TASK-2.06 | ⬜ Bekliyor | Hatalı alan kendi üstünde görünür: `aria-invalid` işareti + alan bazlı hata metni (B-055 a) |
