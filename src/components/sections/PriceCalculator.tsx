@@ -161,10 +161,10 @@ export function PriceCalculator({ compact = false }: { compact?: boolean }) {
         ) : null}
 
         <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-          <Button href="/demo" size="lg" className="flex-1">
+          <Button href="/demo" size="lg" className="sm:flex-1">
             Demo İste
           </Button>
-          <Button href="/fiyat" variant="secondary" size="lg" className="flex-1">
+          <Button href="/fiyat" variant="secondary" size="lg" className="sm:flex-1">
             Fiyat ayrıntısı
           </Button>
         </div>

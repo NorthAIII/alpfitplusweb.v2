@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.02 ✅: üretim imajından `.env` çıktı (önce 369 B vardı, şimdi yok — kontrol gruplu ölçüm) ve `web-prod` üç kayıt yolunun baş anahtarını açıkça boş alıyor; uç geçerli talebe `503 no-sink` veriyor, yani 3100'e bakan ölçüm turları artık hiçbir depoya yazamıyor. B-058 kapandı ve arşive taşındı. Sıradaki adım `/devflow:run-task` (TASK-2.04).
+**Son Güncelleme:** 2026-09-23 — TASK-2.04 ✅: fiyat hesaplayıcısının iki mobil ana çağrısı 24 px'ten **52 px**'e döndü (`flex-1` → `sm:flex-1`, iki satır); altı rotadaki 12 örneğin 12'si eşiği geçiyor (önce 0'ı geçiyordu), masaüstü davranışı rakamı rakamına değişmedi. B-034 kapandı ve arşive taşındı. Sıradaki adım `/devflow:run-task` (TASK-2.05).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 2/19 (TASK-2.01 ✅, TASK-2.02 ✅, TASK-2.03 ❌ iptal). Sıra TASK-2.04'te.
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 3/19 (TASK-2.01 ✅, TASK-2.02 ✅, TASK-2.03 ❌ iptal, TASK-2.04 ✅). Sıra TASK-2.05'te.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,9 +35,9 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034)
+**Task:** TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g)
 **Durum:** ⬜ Bekliyor
-**İlerleme:** TASK-2.02 kapandı, sıradaki adım `/devflow:run-task`. TASK-2.04 kendinden önceki iki task'tan bağımsız — mobil dokunma hedefi düzeltmesi (`flex-1` → `sm:flex-1`).
+**İlerleme:** TASK-2.04 kapandı, sıradaki adım `/devflow:run-task`. TASK-2.05 dar odaklı bir arayüz task'ı — 320-412 px'te formun onayı ve hatası görünür olacak, odak hata türüne göre doğru yere gidecek.
 **Not:**
 - **Yerel üretim provası (3100) artık hedefsiz** (TASK-2.02): `web-prod`'a `LEAD_STORE_URL` / `LEAD_FILE_PATH` / `RESEND_API_KEY` açıkça **boş** veriliyor ve uç geçerli talebe `503 no-sink` dönüyor. Bu **doğru** davranıştır (M3 F3.1) — 3100'e POST atıp `stored:true` bekleyen bir iş önce `docker-compose.yml`'deki `web-prod` yorumunu okusun; gerçek depoya karşı prova `--profile lead` + `http://lead-store:8090` ile açılır. Derleme sonrası kalıcı `ls /app/.env` kapısı **kurulmadı**, M6 F6.2'ye devredildi.
 - **Yasal metin için bağlayıcı ölçüm (TASK-2.01, 2026-09-22):** ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **bugün hiçbir saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. Yani metin *"IP tutulmaz"* diyemez ve **hiçbir süre yazamaz** — cümlenin son hâli TASK-2.17'nin işi.
@@ -59,7 +59,7 @@
 | 2.01 | TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058) | ✅ Tamamlandı |
 | 2.02 | TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058) | ✅ Tamamlandı |
 | 2.03 | TASK-2.03 — İki anahtarın döndürülmesi (B-058) | ❌ İptal — ön koşul ölçümle düştü (2026-09-23) |
-| 2.04 | TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034) | ⬜ Bekliyor |
+| 2.04 | TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034) | ✅ Tamamlandı |
 | 2.05 | TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g) | ⬜ Bekliyor |
 | 2.06 | TASK-2.06 — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a) | ⬜ Bekliyor |
 | 2.07 | TASK-2.07 — Talep sahibine onay e-postası + `notify_lead` (B-059) | ⬜ Bekliyor |
@@ -87,6 +87,20 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034)
+
+**Durum:** ✅ Tamamlandı — 2026-09-23
+**Detay:** `tasks/archive/TASK-2.04.md`
+
+**Özet:**
+- **Mobil ana çağrı 24 px'ten 52 px'e döndü:** `PriceCalculator`'ın CTA çiftinde `flex-1` → `sm:flex-1` (iki satır). Kolon modunda `flex: 1 1 0%`'ın basis'i ana eksen olan **yüksekliği** hedefleyip `h-13`'ü eziyordu; ölçümde `flex-basis` kolon modunda `0%` → `auto` olarak görüldü. Deyim yeni değil — `DemoForm.tsx:240,253` aynı desenin doğru hâlini zaten taşıyordu.
+- **Kıyas kontrol gruplu:** aynı betik düzeltmeden önce de koştu. `/fiyat` 320/360/390/412 px'te **0/8 → 8/8** örnek ≥ 52 px; altı rotanın 12 örneğinde **0/12 → 12/12**. Masaüstü kontrol grubu **rakamı rakamına aynı** kaldı (640 px 255×52, 1440 px 303×52).
+- **Kapı bu düzeltmeyi göremedi — önce de sonra da:** `mobile-audit.mjs` toplamı 157'de sabit kaldı, çünkü buton 302 px geniş olup `rc.width < 200` muafiyetine takılıyor. Sabit kalan sayı körlüğün kanıtıdır, düzeltmenin değil. Mekanik kural bilinçli olarak eklenmedi (depodaki beş meşru `flex-1` yanlış alarm verirdi); kapı tarafı B-015/B-031 ile "Kalite kapıları otomatik" fazında. B-034 kapandı ve arşive taşındı.
+
+**Test:** Ölçüm dev sunucusuna (3000) karşı geçici Playwright betiğiyle, önce ve sonra aynı betikle yapıldı; taban 0/12 "KALDI" verdiği için düzeneğin kırmızıyı gösterebildiği kanıtlı. `mobile-audit` 9/9 rotada **yatay kaydırma: yok** (M6 çizgisi karşılandı); 157'lik dokunma hedefi sayımı TASK-1.09 ve PHASE-1 UAT'ta kayıtlı sayıyla birebir. `a11y` 8 rota **TOPLAM SORUN 0**. `scan` 390×844'te `/fiyat` (10 kare / 7 734 px) ve `/segmentler/crossfit` (11 kare / 9 190 px) **konsol temiz**. `npm test` 6 dosya / **66 geçti + 1 atlandı** (taban birebir; saf fonksiyon testleri bu değişikliği kapsamıyor). Üretim derlemesi imajın builder katmanında hatasız — paylaşılan `next_cache` hacmine dokunulmadı. 3100 tazelik kontrol grubuyla ölçüldü (önce `flex-1` sunuyordu, yeni imaja alındıktan sonra `sm:flex-1`, HTTP 200).
+
+---
+
 ### TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058)
 
 **Durum:** ✅ Tamamlandı — 2026-09-23
@@ -100,18 +114,6 @@
 **Test:** İmaj katmanı kontrol gruplu ölçüldü (önce 369 B → sonra yok). Uç iki ayaklı sınandı, hiçbir yere kayıt yazmadan: `{}` → 422 `missing` (istek yolu sağlam, yani 503 çökmeden değil), geçerli gövde → 503 `no-sink`; konteyner logu `Depo yapılandırması eksik` diyor. `printenv` çıkış kodu: üç anahtar tanımlı-ve-boş, `LEAD_STORE_TOKEN`/`IP_HASH_SALT` hiç yok. Ana sayfa 200 (345 531 B). `npm test` 6 dosya / 66 geçti + 1 atlandı (taban birebir). `npm run build` imajın builder katmanında hatasız (paylaşılan `next_cache`'e dokunmamak için `exec` yolu bilinçli seçilmedi). `font-guard` temiz (153 karakter / 16 sayfa / 80 487 karakter); `perf` ısınmış koşumda ana sayfa masaüstü 144 KB · mobil 133 KB — başlangıç çizgisiyle birebir aynı, LCP 80 ms (çizgi 96 ms).
 
 ---
-
-### TASK-2.01 — Sunucu ölçümü: nginx erişim kaydı + `.env` parmak izi (B-024, B-058)
-
-**Durum:** ✅ Tamamlandı — 2026-09-22
-**Detay:** `tasks/archive/TASK-2.01.md`
-
-**Özet:**
-- Erişim kaydı ölçüldü: **ham IP tutuluyor** (592.183/592.375 satır, 5.580 benzersiz IP, 490.980 satır user-agent'lı), **saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0, logrotate ve kesen cron yok), **üçüncü tarafa gitmiyor** (gönderici ajan yok, Umami şemasında IP sütunu yok).
-- `daemon.json` rotasyonu (`50m × 3`) tanımlı ama `bunker-nginx` ondan önce oluşturulduğu için konteynere **inmiyor** — kesim 11 eski / 5 yeni konteynerde ve 5 dakikalık sınır örneğiyle kanıtlandı; düzeltme `altyapi/vps` işi, Gelen Kutusu'na düştü.
-- İki token'ın sunucu↔yerel parmak izi **eşleşmedi** → döndürme düşer; TASK-2.03'ün iptali ve milestone ayağının yeniden yazımı plan revizyonuna gitti. Hiçbir sır değeri hiçbir yere yazılmadı.
-
-**Test:** Kod değişmediği için regresyon koşumu yok (keşif ayağı). Ölçümün kendisi iki kontrol grubuyla sınandı: bilinen ortak girdi iki makinede de aynı özeti verdi (`5bff3c05b9bd`) ve yereldeki iki eş değer aynı özeti verdi (`1a5c428e4b47`) — yani "eşleşmedi" sahte kırmızı değil. Salt-okuma doğrulandı: üç dosyanın mtime'ı değişmedi, 20 konteyner ayakta, `RestartCount=0`.
 
 <!-- KURAL: **Detay:** yolu task'ın DURUMUNA bağlıdır. ✅ Tamamlandı ise task arşive taşınmıştır (run-task Adım 7) ve yol `tasks/archive/…`'dır; task hâlâ `_dev/tasks/` altındaysa (🔄 / ⏸️ / 🔴) canlı yol yazılır. Özet Adım 5'te yazılır, taşıma Adım 7'de yapılır — sırayı izleyip tamamlanan task'a canlı yol yazmak, commit anında kırık bir referans bırakır ve bir sonraki audit turu onu "kırık dosya referansı" kalemi olarak açar. -->
 
@@ -138,7 +140,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.04.md` ⬜ — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034)
+**Aktif Task:** `tasks/TASK-2.05.md` ⬜ — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

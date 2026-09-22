@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / dönüşüm-erişilebilirlik | **Alan:** M2 — Sayfalar ve bölümler (`PriceCalculator`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** → Faz 2
+**Durum:** ✅ Kapandı (TASK-2.04, 2026-09-23)
 
 ## Gözlem
 
@@ -51,4 +51,33 @@ Bugüne dek görünmemesinin sebebi ölçüm kapsamı: `mobile-audit.mjs` dokunm
 
 ## Çözüm Kaydı
 
-—
+**Tarih:** 2026-09-23 (TASK-2.04) — atomun düzeltme ayağı kapandı; kapı ayağı bilinçli olarak başka faza ait.
+
+**Düzeltme tek dosyada, iki satır.** `PriceCalculator.tsx:164` ve `:167` → `className="flex-1"` yerine `className="sm:flex-1"`. Kap satırı (`:163`, `flex flex-col … sm:flex-row`), `h-13` ve buton bileşeni değişmedi. Deyim icat edilmedi: kod tabanında zaten vardı — bugünkü çapası `DemoForm.tsx:240,253` (yukarıdaki "Kanıt" bloğundaki `:177,190` 2026-09-12 ölçümünün kaydıdır, o dosya o tarihten sonra büyüdü).
+
+**Ölçüm kontrol gruplu — aynı betik düzeltmeden önce de koştu.** Bu şarttı: taban kırmızı vermeseydi "sonra yeşil" hiçbir şey kanıtlamazdı.
+
+| `/fiyat` genişlik | ÖNCE | SONRA | kap yönü |
+|---|---|---|---|
+| 320 px | 232×**24** · basis `0%` | 232×**52** · basis `auto` | column |
+| 360 px | 272×**24** · basis `0%` | 272×**52** · basis `auto` | column |
+| 390 px | 302×**24** · basis `0%` | 302×**52** · basis `auto` | column |
+| 412 px | 324×**24** · basis `0%` | 324×**52** · basis `auto` | column |
+| 640 px *(kontrol)* | 255×52 · basis `0%` | 255×52 · basis `0%` | row |
+| 1440 px *(kontrol)* | 303×52 · basis `0%` | 303×52 · basis `0%` | row |
+
+Mobil dörtlüde **0/8 → 8/8** örnek ≥ 52 px. Atomun saydığı **12 örnek** (6 rota × 2 buton) 390 px'te tek tek ölçüldü: **0/12 → 12/12**. Masaüstü kontrol grubu rakamı rakamına değişmedi — satır modunda `flex-1` hâlâ eşit genişlik veriyor, yani düzeltme yalnız kolon modunu hedefledi.
+
+**Mekanizma doğrulandı:** ölçülen `flex-basis` kolon modunda `0%` → `auto` oldu, satır modunda `0%` kaldı. Yani basis artık yalnız kabın yönü satır olduğunda devrede — `h-13` kolon modunda ezilmiyor.
+
+**Koruma önerisinin diğer iki ayağı bilinçle kurulmadı:**
+- **Kapı tarafı** (`mobile-audit.mjs`'in `rc.width < 200` muafiyeti + eşiğin 44 px'e çekilmesi) bu fazın kapsamı dışında; evi B-015/B-031 ve "Kalite kapıları otomatik" fazı. ⚠️ Bu turda kanıtlandı: kapının toplamı düzeltmeden **önce de sonra da 157**'de sabit kaldı — buton 302 px geniş olduğu için muafiyete takılıyor ve kapı bu sınıfı hiç görmüyor. Sabit kalan sayı körlüğün kanıtıdır, düzeltmenin değil.
+- **Mekanik kural** eklenmedi: araştırma depodaki dokuz `flex-1` kullanımını saydı, **beşi meşru** (`SegmentsGrid.tsx:50,54`, `Assistant.tsx:150,167`, `ProductStory.tsx:200`) ve ayırt edici imza dar (sabit `h-*` + `flex-1` + kolon kabı); imzasız bir kural beş yanlış alarm verirdi (`phases/PHASE-2.md`).
+
+**Bugün bu sınıfı yakalayacak otomatik kapı yok** — regresyonu görecek şey doğrudan yükseklik ölçümüdür, `mobile-audit.mjs` değil.
+
+**İkinci örnek aranıp bulunamadı:** `DemoForm.tsx:95` aynı `flex-col … sm:flex-row` desenini taşıyor ama çocukları `size="md"` ve `flex-1` kullanmıyor — temiz.
+
+**Regresyon kapsamı:** `mobile-audit.mjs` 9/9 rotada **yatay kaydırma: yok** (M6 başlangıç çizgisi). `a11y.mjs` 8 rota **TOPLAM SORUN: 0**. `scan.mjs` 390×844'te `/fiyat` (10 kare / 7 734 px) ve `/segmentler/crossfit` (11 kare / 9 190 px) konsol temiz. `npm test` 6 dosya / 66 geçti + 1 atlandı (taban birebir; saf fonksiyon testleri bu katmanı kapsamıyor). Üretim derlemesi imajın builder katmanında hatasız.
+
+Detay: `tasks/archive/TASK-2.04.md` → Oturum Kaydı.

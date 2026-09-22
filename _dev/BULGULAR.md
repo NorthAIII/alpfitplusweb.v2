@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.02: **B-058 kapandı** ve atomu `bulgular/archive/`e taşındı (üretim imajında `.env` yok — kontrol gruplu ölçüm; `web-prod` bilinçli olarak hedefsiz, uç `503 no-sink`; döndürme ayağı TASK-2.01'in parmak izi ölçümüyle düşmüştü). Kalıcı derleme-sonrası kapı bu fazda kurulmadı, M6 F6.2'ye devredildi. Açık bulgu 51 → **50**.
+**Son Güncelleme:** 2026-09-23 — TASK-2.04: **B-034 kapandı** ve atomu `bulgular/archive/`e taşındı (fiyat hesaplayıcısının iki mobil ana çağrısı 24 px → **52 px**; kontrol gruplu ölçüm, 12 örneğin 12'si eşiği geçiyor, masaüstü değişmedi). Kapı ayağı kurulmadı — `mobile-audit.mjs`'in genişlik muafiyeti düzeltmeyi önce de sonra da görmedi (toplam 157'de sabit), evi B-015/B-031. Açık bulgu 50 → **49**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -91,7 +91,6 @@
 - 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok → Faz 2
 - 🔴 [B-032 — Ana sayfada ve segment sayfalarında ölçülmüş AA kontrast ihlalleri](bulgular/B-032-olculmus-aa-ihlalleri.md) — ürün turu soluk kartları 2,54:1, kapanış paragrafı 3,48:1; ILKELER pazarlıksız diyor
 - 🔴 [B-033 — 320 px'te Kurucu Programı bölümü içerik ve işlev kaybediyor](bulgular/B-033-320px-kurucu-programi-icerik-kaybi.md) — 18 metin düğümü 70 px kesiliyor, CTA etiketi dâhil; kapı yatay kaydırma görmediği için temiz diyor
-- 🔴 [B-034 — Mobilde fiyat sayfasının ana çağrısı 52 px yerine 24 px](bulgular/B-034-mobilde-ana-cagri-24px.md) — kırılımsız `flex-1`; 6 rotada 12 örnek, doğru deyim `DemoForm`'da zaten var → Faz 2
 - 🔴 [B-020 — Hız sınırı doğrulamadan önce sayıyor, geçerli talep reddediliyor](bulgular/B-020-hiz-siniri-gecerli-talebi-reddediyor.md) — beş kez hata yapan kullanıcının düzeltilmiş talebi 429; 2026-09-22'de yeniden üretildi
 - 🔴 [B-030 — Beş kalite kapısının dördü eşik altında bile çıkış kodu 0 döndürüyor](bulgular/B-030-kapilar-kirmiziya-donemiyor.md) — tek `exitCode` `font-guard:52`; betikler 09-13'ten beri hiç değişmedi; depo şema kapısı da varsayılanda kapalı
 - 🔴 [B-031 — `a11y.mjs`'in kontrast yöntemi üç kör nokta taşıyor](bulgular/B-031-a11y-kontrast-yontemi-kor-noktalari.md) — dördü de satır satır yerinde; kökte tek gradyan ölçüleni 157'den 0'a düşürüyor
