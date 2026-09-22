@@ -28,7 +28,7 @@ http://localhost:3000/demo?website=&name=JS+Yok&club=K&phone=&email=&branches=1&
 İki ayrı zarar: **(a) sessiz kayıp** — hiçbir sunucu talebi almıyor, hata gösterilmiyor, WhatsApp yönlendirmesi tetiklenmiyor, kullanıcı boş formla aynı sayfada kalıyor; `<noscript>` uyarısı yok. Bu yol yalnız "JS'i kapatan kullanıcı" değil, **paket/hydration hatası** durumunda da açılıyor. **(b) gizlilik** — `name`, `phone`, `email`, `message` sorgu dizesine giriyor: tarayıcı geçmişi, sonraki gezinmelerin `Referer`'ı ve **sunucu istek logları**. `referrer-policy: strict-origin-when-cross-origin` dış siteye sızmayı engelliyor, sunucu logunu engellemiyor. [B-024](B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md)'ün kapsamadığı ikinci bir veri akışı.
 
 **(3) Sessiz `MAX` kırpması iletişim değerini ulaşılamaz hâle getirebiliyor.**
-Sınırlar ölçüldü: `name` 120 · `club` 160 · `phone` 40 · `email` 160 · `message` 2000 · `segment` 60 · `branches` 10. 406 karakterlik bir e-posta 160'a kırpıldığında son 12 karakter `"eeeeeeeeeeee"` — yani `@x.com` **kayboldu**, adres ulaşılamaz hâle geldi ve uç yine başarı bildirecek. 9000 karakterlik bir mesajın 7000'i sessizce gitti. Kırpma hiçbir katmanda kullanıcıya bildirilmiyor. `M3-Lead-Hatti.md` F3.1 kırpmayı bilinçli sayıyor (*"değer sessizce kırpılır, istek reddedilmez"*) — ama kriterin kastettiği şey bir **iletişim** alanının bozulması olmasa gerek; [B-021](B-021-iletisim-formati-dogrulanmiyor.md)'in "ulaşılamaz lead başarılı sayılır" sınıfını genişletiyor.
+Sınırlar ölçüldü: `name` 120 · `club` 160 · `phone` 40 · `email` 160 · `message` 2000 · `segment` 60 · `branches` 10. 406 karakterlik bir e-posta 160'a kırpıldığında son 12 karakter `"eeeeeeeeeeee"` — yani `@x.com` **kayboldu**, adres ulaşılamaz hâle geldi ve uç yine başarı bildirecek. 9000 karakterlik bir mesajın 7000'i sessizce gitti. Kırpma hiçbir katmanda kullanıcıya bildirilmiyor. `M3-Lead-Hatti.md` F3.1 kırpmayı bilinçli sayıyor (*"değer sessizce kırpılır, istek reddedilmez"*) — ama kriterin kastettiği şey bir **iletişim** alanının bozulması olmasa gerek; [B-021](archive/B-021-iletisim-formati-dogrulanmiyor.md)'in "ulaşılamaz lead başarılı sayılır" sınıfını genişletiyor.
 
 **(4) `toFile` ve `toEmail` hiçbir arızayı loglamıyor.**
 `toWebhook` beş ayrı arıza kipini özenle logluyor (`route.ts:87, 97, 105, 111, 125`). `toFile` (`:130-140`) ve `toEmail` (`:142-178`) `catch { return false }` ile sessiz; `res.ok === false` de sessiz. Sonuç: **süresiz bozuk bir Resend anahtarı + çalışan e-tablo** = `200 {ok:true, stored:true, mailed:false}` ve hiçbir yerde tek satır iz yok. [B-025](B-025-calisma-zamani-alarm-yok.md)'ten bir katman daha aşağıda: orada alarm yok, burada **log bile yok**.
@@ -71,3 +71,15 @@ Dördü aynı kökten: **başarı ölçütü "hedefe yazdım" değil, "hata alma
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — dört yolun üçü açık, biri daraldı.**
+
+- **(1) bal küpü — AÇIK.** `curl --data '{"website":"x"}'` → `{"ok":true}` HTTP 200; `route.ts:260-262`'de hâlâ tek bir log satırı yok. Alan `DemoForm.tsx:116-119`'da `absolute left-[-9999px]` + `name="website"` + etiket "Web siteniz", `aria-hidden` sarmalayıcı içinde gerçek form kontrolü (WCAG 4.1.2).
+- **(2) JS'siz native GET — AÇIK.** `DemoForm.tsx:109-114` `<form onSubmit … noValidate>`, `action`/`method` **yok**; `grep -rn "noscript" src/` → **0**. `layout.tsx:182`'deki `data-exclude-search="true"` yalnız Umami'yi korur, tarayıcı geçmişini ve sunucu istek logunu korumaz.
+- **(3) `MAX` kırpması — DARALDI, sınıf yaşıyor.** Atomun 406 karakterlik örneği bugün 422 `bad-contact` alıyor (TASK-1.12 onu kapattı). Ama kırpma hâlâ doğrulamadan **önce**, yani "kırpıldıktan sonra da geçerli görünen" adres geçiyor:
+  ```
+  "a"×148 + "@gmail.com.tr" (161 krk) → 160'a kirpildi → "…@gmail.com.t" → EMAIL_RE gecer
+  → HTTP 200 {"ok":true,"stored":true}            ← ULASILAMAZ adres, kayit olustu
+  ```
+  Telefon tarafı (`MAX.phone = 40`) bu turda kapalı çıktı (kırpılmış değer 422 aldı).
+- **(4) `toFile`/`toEmail` log yok — AÇIK.** `awk 'NR>=189 && NR<=237' route.ts | grep -c console.` → **0**. `toStore` beş arıza kipini logluyor, diğer iki hedef hâlâ `catch { return false }`.

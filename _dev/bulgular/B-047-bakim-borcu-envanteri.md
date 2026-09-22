@@ -98,3 +98,25 @@ Proje **çok iyi belgelenmiş ama iki sınırda duruyor**: `@theme` (renk/yarı�
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — bir kalem KAPANDI, kod kalemleri aynı, iki kanıt komutu DÜZELTİLDİ.**
+
+| Ölçüm | Atom | Bugün | |
+|---|---|---|---|
+| `grep -rn "ui/Card\|<Card\|<Chip" src/ \| wc -l` | 0 | **0** | aynı (`ui/Card.tsx` 61 satır, 0 tüketici) |
+| `grep -ro "rounded-card" src/ \| wc -l` | 43 | **43** | aynı |
+| `text-[0.9375rem]` / `[0.6875rem]` / `[0.625rem]` / `[1.0625rem]` | 52 / 28 / 10 / 9 | **52 / 28 / 10 / 9** | aynı |
+| `grep -n -- "--text-" src/app/globals.css` | yok | **boş** | `@theme`'de tipografi token'ı hâlâ yok |
+
+**KAPANAN alt kalem:** `SHOTS.sube` + `public/product/sube.webp` — `ls public/product/sube.webp` yok, `grep -n "sube" src/content/product.ts` boş. QUICK-001 ile temizlendi.
+
+**DÜZELTİLEN kanıt komutları (atomun kendi rakamları yeniden üretilemiyordu — sahte hüküm riski):**
+- `grep -rnoE "#[0-9a-fA-F]{6}" src/ | wc -l` → kayıtlı **51**, bugün **77**, **baz commit `147c5e8`'de de 77**. Yani 51 muhtemelen `globals.css` dışlanarak ölçülmüş (77 − 26 = 51) ama komut onu dışlamıyor. Doğru komut: `grep -rnoE "#[0-9a-fA-F]{6}" src/ --exclude=globals.css | wc -l` → 51.
+- `tracking-[0.16em]` → kayıtlı **17**, bugün ve baz commit'te **14** (+ `tracking-[0.14em]` 2 = 16 ≠ 17). Bugünkü doğru rakam **14**.
+Bu **regresyon değil, kayıt hatası**: iki komut da kaydedildikleri gün o rakamı üretmiyordu.
+
+**Yeni alt kalemler:**
+- **`scroll-behavior` özniteliği eksik.** `globals.css:122` `html { scroll-behavior: smooth }` var ama `data-scroll-behavior="smooth"` kaynakta **yok** (grep: 0). Dev sunucusu uyarıyı **hâlâ basıyor** (`missing-data-scroll-behavior`) ve animasyon **üretimde de gerçek**: önizlemede `/` → `/fiyat` rota geçişinde `scrollY` 3357 → 0, 50 ms aralıklarla 21 farklı değer (~1,05 sn). Tek öznitelikle kapanır.
+- **İzlenen yinelenen üretim çıktısı büyüdü.** `.gitignore:44-45` yalnız `research/out/` ve `research/product-out/`'u yoksayıyor; izlenen: `photos-out/` 19 dosya / **2.086.903 B**, `fonts-out/` 7 / **98.475 B**, `brand-out/` 6 / **184.944 B**. md5 ile doğrulandı: `photos-out/final/*` ↔ `public/foto/*` ve `fonts-out/*` ↔ `public/fonts/*` **bayt bayt aynı**. Ayrıca `photos-out/adaylar/` 6 ara JPEG = **1.163.535 B**, hiçbir yerde kullanılmıyor.
+- **Öksüz varlıklar aynen duruyor:** `public/{next,vercel,globe,window,file}.svg` 0 referans · `public/foto/salon-genis-wide.webp` (200.878 B) ve `grup-dersi.webp` (84.294 B) 0 referans · `twitter-image.png` ≡ `opengraph-image.png` (md5 `b39393cc237917cc35143213ca20cbe8`) · `research/scripts/`'in 20 betiğinden 7'si hiçbir koşum yolunda anılmıyor.
+- **İlkel garantileri aynen açık:** `ui/Button.tsx:46,69` spread yalnız `<button>` dalında, `type` varsayılanı yok · `ui/Icon.tsx:28` `name: string` (union değil) · `Roles.tsx:21` cast · `Logo.tsx:8` `id="lm"` ve iki çağıran (`Header.tsx:75`, `Footer.tsx:47`) `id` geçmiyor → `lm-g` her sayfada iki kez · `Logo.tsx:54` ölü üçlü · `Assistant.tsx:75` ölü fallback · `CHAT_FALLBACK` 0 tüketici · `WhatsAppIcon`, `CONTACT.phone.display`, `PRODUCT_STATUS.short`, `PRODUCT_STATUS.version`, `PRICING.annualPrepayBenefit` hepsi 0 import.

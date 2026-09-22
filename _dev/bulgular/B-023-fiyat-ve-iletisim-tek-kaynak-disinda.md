@@ -69,3 +69,10 @@ Tek kaynak disiplini **sayısal hesaplama** yollarında uygulanmış (`monthlyFo
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — sayı değişmedi (8 fiyat + 4 iletişim), bir yeni yer eklendi.**
+
+Fiyat/kurulum/deneme (8): `faq.ts:20`, `:36`, `:59`, `:63`, `:70` · `karsilastirma.ts:116` · `segments.ts:273`, `:288` · `WhyUs.tsx:32` · `FounderProgram.tsx:17-18` ("13 ay", `PRICING`'de yok).
+İletişim (4): `layout.tsx:115` `telephone: "+90-535-937-59-55"` (JSON-LD) · `layout.tsx:111` `addressLocality: "Tuzla", addressRegion: "İstanbul"` (`CONTACT.city = "Tuzla, İstanbul"` varken) · `global-error.tsx:77` `https://wa.me/905359375955` · `ProductStory.tsx:142` `app.alpfitplus.com`.
+**YENİ:** `src/components/ui/Frames.tsx:10` — `label = "app.alpfitplus.com"` **varsayılan parametre değeri**; `SITE.appUrl` okumuyor. İkinci elle-yazım yeri.
+`CONTACT.phone.display` hâlâ **hiç kullanılmıyor** (`grep -rn "phone.display" src/` → 0); beş yer `phone.href` kullanıyor (`demo/page.tsx:69`, `destek/page.tsx:29`, `Footer.tsx:62`, `FinalCta.tsx:60`, `Header.tsx:155`).

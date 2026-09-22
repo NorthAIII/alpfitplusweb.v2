@@ -1,6 +1,6 @@
 # B-024: Yasal metinler gerçek veri akışını eksik anlatıyor — IP, yurt dışı aktarım ve onay kapsamı
 
-**Önem:** 🟡 | **Tip:** tutarsızlık / uyum | **Alan:** M1 — İçerik (`src/content/legal.ts`) / M3 — Lead hattı
+**Önem:** 🔴 | **Tip:** tutarsızlık / uyum | **Alan:** M1 — İçerik (`src/content/legal.ts`) / M3 — Lead hattı
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
 **Durum:** Açık
 
@@ -75,3 +75,21 @@ Bulgu **açık kalır**. Üç kalem tek düzenlemede kapanacak boyutta ve aynı 
 **Hedef anlatımı bayatladı — TASK-1.15, 2026-09-22.** Yukarıdaki Gözlem ve Kanıt bölümleri kayıt hedefini "Google Apps Script → Google E-Tablo" diye anlatıyor. O hedef 2026-09-14'te düştü (`docs/DECISIONS.md` → *Lead hedefi (yeniden, 2)*): kayıt artık kendi sunucumuzdaki PocketBase deposuna gidiyor ve `legal.ts` bu oturumda o gerçeğe hizalandı — Google adı veri akışı bağlamında metinde **kalmadı**, Aktarım/Saklama maddeleri konumu (Almanya, Nürnberg), erişimi (yalnız yetkili yönetici hesabı) ve saklama süresini (12 ay, günlük temizlik işi) yazıyor. Bulgunun **kalemleri değişmedi**, yalnız 2. maddenin yarısı olan yurt dışı kaleminin zemini değişti: metin artık ülkeyi **olgu olarak** söylüyor ama aktarımın hukuki dayanağını hâlâ kurmuyor — o kalem hukukçunundur ve açık kalır.
 
 Bugün açık olan kalemler: **1** (IP ve hız sınırı amacı KVKK listesinde yok — ayrıca kayda giren `ip_hash` de anılmıyor), **2'nin yurt dışı yarısı** (dayanak yok), **3** (Gizlilik'in topladığı-veri listesi KVKK ile ayrışık; üstelik KVKK'nın saydığı "tarayıcı bilgisi" artık hiçbir kalıcı kayda girmiyor — `route.ts` `ua`'yı depo gövdesine ve e-posta metnine koymuyor, yani liste bu kalemde *fazlasını* söylüyor), **4** (form onay metninin kapsamı).
+
+**Yeniden ölçüm (audit-product 2026-09-22) — dört kalem de açık; 1. kalem 🔴'ye yükseltti.**
+
+Bugünkü `legal.ts` kalem kalem okundu (315 satır):
+
+- **(1) IP / `ip_hash` — AÇIK ve ağırlaştı.** KVKK'nın işlenen-veri listesi (`legal.ts:59-63`) hâlâ IP'yi saymıyor. Ama artık yalnız bellekte on dakika tutulan bir değer değil: `route.ts:128` `ip_hash: hashIp(ip, salt)` **depo gövdesine yazılıyor** ve kayıt **12 ay** saklanıyor — kodun kendi yorumu bunu söylüyor (`route.ts:71-74`). IP'den türetilmiş kalıcı bir tanımlayıcı, metinde hiç anılmadan bir yıl saklanıyor.
+- **Ters yön de kırık:** `legal.ts:63` "tarayıcı bilgisi"ni işlenen veri sayıyor, ama `route.ts:118` yorumu *"env/ua/consent/at gövdeye GİRMEZ"* diyor ve e-posta gövdesi de `ua` taşımıyor (`route.ts:215-228`). `ua` yalnız `LEAD_FILE_PATH` yolunda kalıcılaşıyor, o da yayında tanımlı değil. Liste bu kalemde *fazlasını* söylüyor.
+- **(2) Yurt dışı — yarısı açık.** TASK-1.15 ülkeyi **olgu** olarak yazdı (`legal.ts:100`: *"Sunucu bize aittir ve Almanya'da (Nürnberg) bir veri merkezinde durur"*). Ama hukuki sebep bölümü (`legal.ts:91`) yalnız KVKK m.5/2(c) ve (f) + açık rızaya dayanıyor; **yurt dışına aktarımın kendi dayanağı (m.9) hiç anılmıyor** ve tedarikçi listesi (`legal.ts:104-112`) hiçbirinin ülkesini söylemiyor — oysa e-posta sağlayıcısı bir aktarım hedefidir (v1'in ölçümü: `../Alpfitplus-website.v1/_dev/memory/bunker-ortami.md:99-104` → Resend müşteri verisini **ABD'de** saklıyor, İrlanda yalnız gönderim bölgesi). `legal.ts:147` ziyaretçiye hâlâ *"aktarıldığı üçüncü kişileri bilme"* hakkını sayıyor.
+- **(3) İki metnin listesi — AÇIK.** TASK-1.15 Gizlilik'e bir *aktarım* paragrafı ekledi (`legal.ts:216`) ama **topladığı-veri listesine** (`legal.ts:182-185`) dokunmadı; "işlem güvenliği verisi" satırı orada hâlâ yok.
+- **(4) Onay kapsamı — AÇIK, hiç dokunulmamış.** `DemoForm.tsx:211-212` hâlâ yalnız *"İletişim bilgilerimin…"* diyor; uç ayrıca `club`, `branches`, `segment`, `message`, `at`, `env`, `ua` ve `ip_hash` işliyor (`route.ts:265-275`).
+
+**🔴 gerekçesi — "IP saklamaz" beyanının altındaki olgu ölçülmüş ve olumsuz.** Kanvasın Gelen Kutusu'ndaki `[TASK-1.07]` satırı bunu *"ölçülmedi, sunucu erişimi gerekiyor"* diye taşıyordu. **Ölçüm mevcut ve komşu repoda duruyor:** `../Alpfitplus-website.v1/_dev/memory/bunker-ortami.md:84-93` (2026-07-28) — `bunker-nginx` erişim kaydı `/dev/stdout` → Docker `json-file`, `/etc/docker/daemon.json` **yok**, yani rotasyon yok ve log sınırsız büyüyor (o tarihte 188 MB); içinde **her isteğin ham IP'si ve user-agent'ı** duruyor. Site izleyici betiğini `umami.kiwiailab.com`'dan çektiği için **her ziyaretçinin IP'si bu loga düşüyor**; Umami veritabanında IP sütunu olmaması bunu değiştirmiyor. Kaydın kendi cümlesi: *"Yasal metinde 'IP saklanmaz' cümlesi bu yüzden olduğu gibi yazılamaz; süre de yazılamaz, çünkü bugün sınırlı değil."*
+
+Bugünkü metin bu belirsizliği kaldıracak kadar dar **değil**: `legal.ts:199` *"Bu ölçüm … kayıtlarında IP adresinizi tutmaz"* — "bu ölçüm" ziyaretçi için ölçüm sisteminin tamamıdır ve nginx onun ön kapısıdır; `legal.ts:116` daha da ileri gidiyor: *"bu ölçüme kişisel verileriniz aktarılmaz"* (ham IP KVKK'da kişisel veridir). Ayrıca `legal.ts:68` *"Formu doldurmadan siteyi yalnızca gezdiğinizde, sizden kimlik veya iletişim verisi toplanmaz"* diyor — sadece gezen ziyaretçinin IP'si de o loga düşüyor.
+
+**Ölçülemeyen (tahmin edilmedi):** nginx logunun **bugünkü** hâli — 2026-07-28'den bu yana `daemon.json` eklenmiş olabilir; ve Resend'in güncel veri konumu beyanı. Sunucu erişimi gerekiyor.
+
+**Koruma kalemi ayrı eve taşındı:** metnin dayandığı olguları bağlayan bir test yok → [B-060](B-060-yasal-beyani-koruyan-kapi-yok.md).

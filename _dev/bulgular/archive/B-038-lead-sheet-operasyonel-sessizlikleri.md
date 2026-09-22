@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** hata / test-kapsamı | **Alan:** M3 — Lead hattı (`research/lead-sheet.gs`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** → TASK-1.14
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -57,7 +57,7 @@ $ grep -c "catch" research/lead-sheet.test.mjs   → catch dalını tetikleyen s
 
 Betik **veri kaybetmemek** için tasarlanmış ve bu doğru önceliktir: kuşkulu her durumda yazmayı deniyor, `{ok:true}` dönüyor. Ama aynı refleks üç yerde **yanlış yere yazmayı** da başarı sayıyor. Kurulum varsayımları (sayfa adı, sayfanın boş olması, token uzunluğu) kodda **doğrulanmıyor**, yalnız `research/lead-sheet.gs` başındaki KURULUM yorumunda insana söyleniyor.
 
-Test ise betiğin **mutlu yolunu** ve token kapısını kapsıyor; sözleşmenin dayandığı hata yolu kapsam dışında. Bu, ["ürettiğim kapıyı sınadım"](../memory/hiz-sinirli-uca-test-bataryasi.md) disiplininin bir adım ötesi: kapı sınanmış, **kapının arkasındaki sözleşme** sınanmamış.
+Test ise betiğin **mutlu yolunu** ve token kapısını kapsıyor; sözleşmenin dayandığı hata yolu kapsam dışında. Bu, ["ürettiğim kapıyı sınadım"](../../memory/hiz-sinirli-uca-test-bataryasi.md) disiplininin bir adım ötesi: kapı sınanmış, **kapının arkasındaki sözleşme** sınanmamış.
 
 ## Koruma Önerisi
 
@@ -71,4 +71,18 @@ Test ise betiğin **mutlu yolunu** ve token kapısını kapsıyor; sözleşmenin
 
 ## Çözüm Kaydı
 
-**Taslak (TASK-1.14, 2026-09-14) — gerçek arşivleme verify-phase'in işi:** Konusuz kapandı. Lead hedefi Google Sheet'ten v1'in PocketBase lead deposuna değişti (`docs/DECISIONS.md` 2026-09-14 "Lead hedefi (yeniden, 2)"); Apps Script alıcısı (`research/lead-sheet.gs`) ve testi (`research/lead-sheet.test.mjs`) hiç dağıtılmadı ve TASK-1.14'te repodan silindi (git geçmişinde kalır). Bulgunun tarif ettiği üç operasyonel sessizlik ve test boşluğu artık var olmayan bir dosyaya ait — düzeltilecek kod yok, doğrulanacak sözleşme yok. Kapsanan yüzey: bulgunun tamamı (dosyalar kaldırıldı, konu ortadan kalktı).
+**Konusuz kapandı — TASK-1.14 (`8c1879c`, 2026-09-14); teyit: audit-product 2026-09-22.** Konusuz kapandı. Lead hedefi Google Sheet'ten v1'in PocketBase lead deposuna değişti (`docs/DECISIONS.md` 2026-09-14 "Lead hedefi (yeniden, 2)"); Apps Script alıcısı (`research/lead-sheet.gs`) ve testi (`research/lead-sheet.test.mjs`) hiç dağıtılmadı ve TASK-1.14'te repodan silindi (git geçmişinde kalır). Bulgunun tarif ettiği üç operasyonel sessizlik ve test boşluğu artık var olmayan bir dosyaya ait — düzeltilecek kod yok, doğrulanacak sözleşme yok. Kapsanan yüzey: bulgunun tamamı (dosyalar kaldırıldı, konu ortadan kalktı).
+
+
+**Arşivleme teyidi (audit-product, 2026-09-22).** Silme commit'i ölçüldü:
+```
+$ git log --diff-filter=D --format='%h %ad %s' --date=short -- '*lead-sheet*'
+8c1879c 2026-09-14 feat(TASK-1.14): kayıt adaptörü toStore'a bağlandı …
+$ git show --stat 8c1879c | grep -i lead-sheet
+ research/lead-sheet.gs        | 167 ------
+ research/lead-sheet.test.mjs  | 288 ------
+```
+`research/` bugün ikisini de taşımıyor; `src/` altında tek referans yok. Kalan geçişler yalnız tarihsel dokümanlarda (DURUM, PHASE-1, DECISIONS).
+
+**Kapanış kapsamı:** bulgunun beş operasyonel sessizliği ve test boşluklarının tamamı **konusuz** kapandı — düzeltilecek kod, doğrulanacak sözleşme yok.
+**Kapsanmayan yüzey — yaşayan eve taşındı:** "şema paritesi" alt kalemi (`COLUMNS` ↔ `route.ts type Lead`) konusuz değil, **hedef değiştirdi**. Bugünkü karşılığı: depo şema paritesini gerçekten gören tek kapı `tests/lead-store.contract.test.ts` ve o `LEAD_CONTRACT_URL` tanımsızken atlanıyor; varsayılan yolda kalan `tests/api-demo.test.ts:176-178` anahtar kümesini **elle yazılmış bir listeye** karşı kilitliyor, depo şemasına karşı değil. Kalem [B-030](../B-030-kapilar-kirmiziya-donemiyor.md)'a taşındı.

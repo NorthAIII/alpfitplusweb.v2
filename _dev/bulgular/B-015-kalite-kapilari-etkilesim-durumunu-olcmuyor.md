@@ -75,3 +75,20 @@ Kardeş bulgu [B-012](B-012-olcum-betikleri-rota-kapsami-eksik.md) aynı kapıla
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — özü açık; başlık cümlesi fazla geniş, daraltılıyor.**
+
+```
+$ for f in a11y mobile-audit font-guard perf scan; do echo -n "$f: "; grep -c "click\|\.tap(\|press(" research/scripts/$f.mjs; done
+a11y: 0   mobile-audit: 0   font-guard: 1   perf: 0   scan: 0
+```
+**Özü HÂLÂ AÇIK:** M4 F4.1'in kabul kriterlerinde **adıyla** geçen iki betik (`a11y.mjs`, `mobile-audit.mjs`) tek bir tıklama yapmıyor; asistan paneli, mobil menü ve SSS akordeonu hiçbirinde ölçülmüyor. Eşik de değişmemiş: `mobile-audit.mjs:51` → `if (rc.height < 40 && rc.width < 200)` (QUALITY 7 eşiği 44 px; `width < 200` muafiyeti 201×28 px chip'i hâlâ kaçırıyor).
+
+**Düzeltme:** başlıktaki *"hiçbir şeye tıklamıyor"* **yanlış** — beş kapıdan biri tıklıyor:
+```
+research/scripts/font-guard.mjs:28-33
+  // asistan panelini de ac — icindeki metin de sayilsin
+  const btn = await p.$('button[aria-controls="asistan-panel"]');
+  if (btn) { await btn.click(); await p.waitForTimeout(500); }
+```
+Bu bir **çözüm ipucudur**: aranan desen repoda zaten çalışıyor, yalnız kardeş betiklere taşınmamış. [B-030](B-030-kapilar-kirmiziya-donemiyor.md)'un teşhis ettiği *"bir betik güncellendi, kardeşleri hizalanmadı"* deseninin üçüncü örneği (çıkış kodu, rota listesi, şimdi de etkileşim). Atomun gövdesindeki ölçümler (28 px chip'ler, `liveRegions:0`, `tabIndex:-1`) bu turda yeniden koşturulmadı.

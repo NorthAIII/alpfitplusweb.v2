@@ -1,6 +1,6 @@
-# B-055: Demo formunun hata akışı mobilde görünmüyor — hata metni ekran dışında, alanda işaret yok, odak iki durumda yanlış yerde
+# B-055: Demo formunun gönderim sonrası hâli mobilde görünmüyor — hata da, onay da ekran dışında kalıyor
 
-**Önem:** 🟡 | **Tip:** hata / erişilebilirlik + dönüşüm | **Alan:** M3 — Lead hattı (`src/components/sections/DemoForm.tsx`, F3.1)
+**Önem:** 🔴 | **Tip:** hata / erişilebilirlik + dönüşüm | **Alan:** M3 — Lead hattı (`src/components/sections/DemoForm.tsx`, F3.1)
 **Kaynak:** audit-product (TASK-1.12 sonrası denetim) | **Tarih:** 2026-09-13
 **Durum:** Açık
 
@@ -133,3 +133,27 @@ $ sed -n '61,62p' src/components/sections/DemoForm.tsx
 ## Çözüm Kaydı
 
 —
+
+---
+
+**Yeniden ölçüm ve kapsam genişlemesi (audit-product 2026-09-22) — 🔴'ye yükseltildi.**
+
+Dört ayağın dördü de yerinde; ayrıca **aynı kökten iki yeni semptom** ölçüldü ve bu atoma katıldı (kalem birimi konum değil nedendir: sonuç yüzeyi sayfa akışında sabit duruyor, gönderimden sonra ne kaydırma ne odak taşınıyor).
+
+**(f) YENİ — 320-360 px'te başarılı gönderim hiçbir onay göstermiyor.** Sitenin birincil dönüşümü tamamlandığında kullanıcı hiçbir şey görmüyor: `role="status"` kutusu ("Talebiniz bize ulaştı") **ekranın üstünde** kalıyor ve 68 px'lik yapışkan başlığın arkasına düşüyor. Kaydırma 6/6 örnekte sabit (`scrollY=1021`), yani animasyon artığı değil.
+
+| Görünüm | Kutu top/bottom | vh | Kullanıcının gördüğü |
+|---|---|---|---|
+| **320×568** | −424 / **14** | 568 | 14 px'lik şerit, o da başlığın arkasında → **hiçbir şey** |
+| **360×640** | −387 / **27** | 640 | **hiçbir şey** |
+| 390×844 | 376 / 765 | 844 | tam görünür ✓ |
+| 412×915 | 411 / 800 | 915 | tam görünür ✓ |
+| 768 / 1440 | — | — | ✓ |
+
+Ekran görüntüsüyle doğrulandı: 320'de kullanıcı gönderdikten sonra form kaybolmuş, yerinde "Doğrudan ulaşın" iletişim bloğunu görüyor, onay yok. Bu, `ILKELER.md`'nin **1. öncelik ekseni** olan Dönüşüm'e doğrudan dokunuyor.
+
+**(g) YENİ — 412 px'te gönderim sonrası sayfa başlığı yapışkan başlığın arkasında.** `/demo`, 412×915, geçerli gönderim sonrası (`scrollY=157`, 6/6 örnekte sabit): sticky başlık 0-**68 px** (`z-index: 50`), `<h1>` kutusu top **28** / bottom 162 → h1'in **üst 40 px'i başlığın arkasında**. Ekran görüntüsü: başlığın ilk satırı ("20 dakikada") tamamen okunmuyor. 390×844'te de aynı (`h1.top = -7`); 320/360'ta h1 ekranın tamamen dışında; 768/1440'ta sorun yok. Yatay kaydırma yok, konsol temiz.
+
+**(a)-(d) teyidi (bağımsız yöntem).** (a) kontrollü kıyasla kesinleşti — **odakta olmayan geçersiz** alan (`#email`) ile **odakta olmayan geçerli** alan (`#name`) 8 özellikte karşılaştırıldı (`boxShadow, borderColor, borderWidth, backgroundColor, color, outlineColor, outlineWidth, outlineStyle`): **4/4 genişlikte `farklar: []`**, sıfır ayırt edici işaret. (b) 412 px de eklendi: hata kutusu **+168 px ekran altında** (320'de +384, 390'da +204); `missing` vakalarında 320'de +561 px — B-055'in özgün rakamı birebir yeniden üretildi. (c) 2/2 vakada odak dolu alana gidiyor (`DemoForm.tsx:66-67` kuralı değişmemiş). (d) başarı (7/7 genişlik) ve 429 (8/8 senaryo) → odak `body`.
+
+**Koruma önerisine eklenen:** onay kutusuna da `tabIndex={-1}` + `focus()` ve `scroll-margin-top` ≥ yapışkan başlık yüksekliği; kalıcı betiğin ölçtüklerine **başarı yolu** ve **320/360** genişlikleri girer.

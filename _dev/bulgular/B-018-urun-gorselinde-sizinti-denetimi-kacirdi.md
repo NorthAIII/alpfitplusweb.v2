@@ -81,3 +81,14 @@ Kapanış kapsamının ölçütü hâlâ [B-044](B-044-urun-gorselinde-semt-bas-
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — bir kalem KAPANDI, ikisi aynen açık.**
+
+`public/product`, `research/lib` ve `render-product.mjs` 2026-09-13'ten beri **hiç değişmedi** (`git log --since=2026-09-13` → boş; ağaç temiz).
+
+| Kalem | Hüküm |
+|---|---|
+| "Simge & Gizem" + ciro kartı (`sube.webp`) | ✅ **kapandı** — ekran `5da5bf1` (2026-09-12) ile hattan düşürüldü; `render-product.mjs:30` gerekçesi yazılı (QUICK-001) |
+| **"Gizem Ö." (`grup.webp`)** | **AÇIK, gözle doğrulandı** — "Box · **Gizem Ö.** · 17:00 · 60 dk"; görsel `ProductStory.tsx:52` ile **ana sayfada** render ediliyor. Yasal metnin *"gerçek bir kişinin verisi gösterilmemektedir"* beyanı (`legal.ts:302`) çürümeye devam ediyor |
+| "Kampanyalar" nav (yol haritası özelliği) | **AÇIK — 6/7 görselde** (`cockpit/takvim/grup/finans/antrenor/raporlar/uye.html` kaynaklarının her birinde 1 geçiş) |
+| "Yenileme & Churn" | **AÇIK** — `../Alpfit.v1/demo/raporlar.html:242` `<h4>Yenileme &amp; Churn</h4>`; `raporlar.webp` bu kaynaktan üretiliyor |

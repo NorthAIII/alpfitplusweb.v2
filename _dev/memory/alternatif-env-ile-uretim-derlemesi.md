@@ -62,3 +62,24 @@ uygulandı ve sonrası da temiz ölçüldü. Yani gözlemlenen risk bu Next 16/T
 sürümünde **düşük** olabilir (dev artefaktları `.next/dev/` alt dizininde ayrı
 duruyor) ama kanıtlanmış değil — `docker compose exec web npm run build` çalıştıran
 her oturum ihtiyatlı olarak ardından `docker compose restart web` yapmalı.
+
+## `.env`'i kim okuyor — `printenv` yalan söyler (audit-product 2026-09-22)
+
+`docker-compose.yml` hiçbir servise `env_file` vermiyor, ama **her iki konteyner de
+`.env`'i görüyor** — iki ayrı yoldan:
+
+- **`web` (dev, 3000):** repo kökü `/app`'e bind-mount'lu ve **Next.js `/app/.env`'i
+  kendi dotenv'iyle çalışma anında okuyor**. `docker compose exec web printenv
+  LEAD_STORE_URL` **boş döner** — `exec` yeni bir kabuk açar, Next sürecinin ortamı
+  değildir. Yani dev'deki `/api/demo` POST'u **hedefsiz 503'e düşmez**, gerçekten
+  `LEAD_STORE_URL`'in gösterdiği yere yazar.
+- **`web-prod` (3100):** `.env` **üretim imajının içinde** (`.dockerignore:6` yalnız
+  `.env*.local` yazıyor, `.env`'i eşlemiyor) — compose'da env verilmemesine rağmen uç
+  bağlı. Bu aynı zamanda bir güvenlik bulgusudur → `_dev/bulgular/B-058-env-uretim-imajina-gomulu.md`.
+
+**Kural — yerel bir uca POST atmadan önce hedefi `printenv` ile değil, ucun kendi
+davranışıyla ölç:** tek bir `{}` POST'u at; `503 no-sink` geliyorsa hedef yok, `422`
+geliyorsa doğrulamaya geçmiş demektir ve geçerli bir gövde **kayıt oluşturur**. Bu
+kontrol atlanırsa "zararsız test" sanılan istekler gerçek bir depoya satır yazar
+(bu turda yerel `lead-store`'a 25 test kaydı böyle düştü — hedef yereldi, canlıya
+gitmedi, ama şans eseri).

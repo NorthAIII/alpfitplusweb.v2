@@ -80,3 +80,18 @@ $ grep -n "telephone" src/app/layout.tsx        → 73:  telephone: "+90-535-937
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22, önizleme 15 rota) — bir alt kalem KAPANDI, dördü açık.**
+
+| Alt kalem | Bugün | Hüküm |
+|---|---|---|
+| `og:url` | **15/15** `https://alpfitplus.com` (ana sayfa) | AÇIK |
+| `og:title` | **15/15** birebir aynı | AÇIK |
+| `og:image:alt` | 0/15 | AÇIK |
+| **`canonical` ve `<title>`** | **15/15 sayfaya özgü ve doğru** | ✅ **kapandı** |
+| `/foto` önbelleksiz | `/foto/*` ve `_next/image?url=%2Ffoto%2F…` → `max-age=0, must-revalidate`; `/product` → `604800+swr`; `/fonts` → `immutable` | AÇIK |
+| JSON-LD | **7 sayfaya `FAQPage` eklendi** (v1 gerilemesinin bir dilimi kapandı); `Organization.sameAs/logo/email/telephone`, `SoftwareApplication.url`, `Offer.priceSpecification` hâlâ yok; `contactPoint.telephone` hâlâ elle | KISMEN |
+| `lastmod` | 15 adres, **tek damga** `2026-09-22T12:59:31.624Z` | AÇIK |
+| İki tema rengi | HTML `#fbfbf9` ↔ manifest `theme_color: #74b36f` | AÇIK |
+
+Sitemap 15 `<loc>` — F7.2 kriterindeki "16 sayfa" hâlâ yanlış.

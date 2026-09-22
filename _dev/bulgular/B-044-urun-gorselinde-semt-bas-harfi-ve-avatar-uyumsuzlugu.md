@@ -107,3 +107,18 @@ Yukarıdaki envanter tablosunun `sube.webp` satırı bugünden itibaren **tarihs
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — `sube` kalemi KAPANDI, kalanlar aynen açık; denetim körlüğü hattın DIŞINA da uzanıyor.**
+
+Git ölçümü: `git log --oneline --since=2026-09-13 -- public/product research/lib research/scripts/render-product.mjs` → **boş**. Son dokunuş `5da5bf1` (2026-09-12, *"sube ekranı ürün görseli hattından düşürüldü"*). `public/product/*.webp` mtime Sep 10, `research/lib/*.mjs` Sep 10; ağaç temiz.
+
+| Kalem | Hüküm |
+|---|---|
+| (1) semt baş harfi "BŞ" (`sube.webp`) | ✅ **kapandı** — ekran hattan düştü, yayınlanan set 8 → 7 |
+| (2) **avatar–ad uyumsuzluğu** | **AÇIK, gözle doğrulandı** — `grup.webp`: "Burak Ş."+**DK** · "Deniz A."+**EÖ** · "Tolga B."+**BT**. Kontrol: "Selin Y."+SY, "Merve A."+MA doğru → hat çalışıyor, `.av` sınıfı haritanın dışında |
+| (3) **denetim körlüğü** | **AÇIK, hiç dokunulmamış** — `research/lib/screen-cleanup-v2.mjs:96-97` `auditTexts()` hâlâ iki dal (iki-tam-sözcük ad regex'i + `BRAND_LEAK`); `AVATAR_SELECTOR` hâlâ v1'den devralınıyor (`:12,40`) |
+| yüzde/ciro kalemleri | **AÇIK** — `grup.webp`'te gözle: %96 · %88 · %71 · %64 · %81 doluluk + ₺68.400 + "Üyeler 842"; denetimde bu sınıf için hiç dal yok |
+
+**Körlüğün kapsamı hattan geniş — yeni ölçüm.** `src/components/sections/Hero.tsx:93-105` ürün ekran görüntüsünün üzerine **elle yazılmış React** bir kart bindiriyor: `%78` (2xl, extrabold, `tabnum`) + "Haftalık doluluk" + %78 dolu ilerleme çubuğu; yanında 11 px `text-faint` ile *"Örnek görünüm, demo verisi"*. Yayında teyit edildi. Feragat etiketi olduğu için metin dürüst, **ihlal değil** — ama bu kart `render-product.mjs` hattının çıktısı olmadığı için `auditTexts()` onu **yapısal olarak göremiyor**. Yani aynı sınıftan bir iddia (`%NN` + ürün metriği) bileşene yazıldığı anda hiçbir kapıdan geçmiyor; hattı düzeltmek bile bu yüzeyi kapatmaz.
+
+**Koruma önerisine eklenen:** M6 F6.4'ün sözlüğü yalnız `src/content/`'i değil `src/components/` + `src/app/`'ı da taramalı; `%NN` + ürün metriği kalıbı yakınında feragat metni aranmalı.

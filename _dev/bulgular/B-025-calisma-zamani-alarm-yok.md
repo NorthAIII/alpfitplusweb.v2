@@ -18,7 +18,7 @@ Ne hata izleme bağımlılığı var, ne uptime kontrolü, ne `vercel.json` içi
 
 Zamanlaması önemli: bugün lead hattı zaten tam bağlı değil, bu yüzden risk teorik. Ama iki eşik yakında geçilecek — hedef bağlandığında (TASK-1.04 canlı turu) ve alan adı geçtiğinde (F7.5). İkincisinden sonra sessiz lead kaybı fark edilmez hâle gelir; `ILKELER`'in pazarlık konusu olmayan maddesi tam da o noktada ölçüsüz kalır.
 
-Etkiyi büyüten iki komşu bulgu: [B-021](B-021-iletisim-formati-dogrulanmiyor.md) (ulaşılamaz lead **başarılı** sayılıyor, dolayısıyla loga bile düşmüyor) ve pratikte tek dayanıklı hedef olması — `LEAD_FILE_PATH` Vercel'de kalıcı disk olmadığı için devreye giremez, e-posta ise dayanıklı sayılmıyor.
+Etkiyi büyüten iki komşu bulgu: [B-021](archive/B-021-iletisim-formati-dogrulanmiyor.md) (ulaşılamaz lead **başarılı** sayılıyor, dolayısıyla loga bile düşmüyor) ve pratikte tek dayanıklı hedef olması — `LEAD_FILE_PATH` Vercel'de kalıcı disk olmadığı için devreye giremez, e-posta ise dayanıklı sayılmıyor.
 
 ## Kanıt
 
@@ -55,3 +55,18 @@ Gözlemlenebilirlik bir feature olarak hiç planlanmamış. `ILKELER.md` ölçü
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — hâlâ açık; iki yeni sessiz kanal eklendi.**
+
+Zemin değişmedi: `grep -rn "Sentry\|captureException\|logger" src/` → hiç; bağımlılıklar hâlâ `lucide-react`, `next`, `react`, `react-dom`; `vercel.json` yok; `.github/workflows/` yok. Tek sinyal altı `console.error` (`route.ts:104, 141, 156, 182, 185, 325`).
+
+**Yeni (1) — `notifyStore` arızası da yalnız loga düşüyor** (`route.ts:182`, `:185`): "kayıt oluştu ama bildirim durumu depoya yazılamadı" durumundan da kimse haber almıyor.
+
+**Yeni (2) — v1'de olan görünür uyarı v2'de yok (gerileme).** v1 depo düşüp e-posta geçtiğinde konu satırına insanın gözüne batan bir önek koyuyor:
+```
+../Alpfitplus-website.v1/api/demo.ts:36   const STORE_FAIL_PREFIX = '⚠ KAYIT EDİLEMEDİ — ';
+../Alpfitplus-website.v1/api/demo.ts:331  subject: `${stored ? '' : STORE_FAIL_PREFIX}Demo talebi — …`
+```
+v2 koşulsuz yazıyor: `route.ts:214` → `subject: \`Demo talebi — ${lead.club || lead.name}\``. Yani v2'de depo düşer e-posta geçerse ekip **ayırt edilemeyen** bir e-posta alır; tek iz `console.error`, ona da kimse bakmıyor.
+
+**Bu, atomun en ucuz düzeltmesidir:** `toStore` sonucunu `toEmail`'e geçirip konuya önek eklemek bir alarm altyapısı kurmadan "sessiz kayıp"ı görünür kılar. Test: *"depo 500 + e-posta açık → Resend gövdesindeki `subject` uyarı öneki taşır."*

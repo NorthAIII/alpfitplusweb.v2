@@ -48,3 +48,12 @@ Lint hiç koşturulmadan geliştirme yapıldı; `package.json`'da `lint` betiği
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — rakam birebir aynı, ama çerçevesi daha ağır.**
+
+```
+✖ 30 problems (25 errors, 5 warnings)
+```
+Dağılım: `react/no-unescaped-entities` 23 hata · `@next/next/no-html-link-for-pages` 1 (`global-error.tsx:61`) · `react-hooks/set-state-in-effect` 1 (`Header.tsx:28`) · `@typescript-eslint/no-unused-vars` 5 uyarı. Beş uyarının **dördü `research/scripts/`'ten** (`brand-assets.mjs:3`, `glyph.mjs:16`, `perf.mjs:38`, `render-product.mjs:175`); sebebi `eslint.config.mjs:9-15` — `globalIgnores` eslint-config-next'in varsayılan yoksayma listesini daraltarak eziyor.
+
+**Atomun çerçevesi eksikti: bugün lint'e ulaşan hiçbir otomatik yol yok.** Next 16.3.4 ESLint entegrasyonunu tamamen kaldırmış — `grep -rl "runLintCheck" node_modules/next/dist/` **boş**, `next/dist/lint` dizini yok, `next/dist/cli/next-lint.js` yok, `build/index.js`'teki iki "eslint" geçişi `// eslint-disable-next-line` **yorumu**. Üstüne `npm run check` `package.json`'da tanımsız ve `.github/workflows/` dizini hiç yok. Yani "CI kurulduğu gün kırmızı doğar" değil, **kapı hiç kurulmamış**: `eslint` F6.2 tek komutuna elle eklenmezse F6.3 workflow'u onu hiç görmez.

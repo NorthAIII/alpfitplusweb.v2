@@ -57,3 +57,20 @@ $ curl -s http://localhost:3000/ | grep -oE '>0[1-5]<!-- --> · <!-- -->[a-zA-Z�
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — özü DOĞRULANDI ve daha kötü; başlık rakamları ÖLÇÜLEMEDİ, kanıt komutu değiştirildi.**
+
+**Kayıtlı komut yanlış, kaydedildiği gün de yanlıştı.** `grep -rn "SectionHead\|PageHero" src/ | grep -cE 'label=|title=|lead='` bugün **3** veriyor; aynı komut atomun baz commit'inde (`147c5e8`, `git archive` ile açıldı) **da 3** veriyor — kayıtlı 70 rakamını hiç üretmiyor. Sebep: komut satır bazlı, JSX ise çok satırlı (`<SectionHead\n  label=…`), bileşen adı ile prop aynı satıra düşmüyor. İkinci kanıt betiği (`scratchpad/audit/prose.mjs`) artık mevcut değil — **402 / 238 / 164 rakamları yeniden üretilemez.**
+
+**Yeni yöntem (blok bazlı, kayda geçiyor):** `<SectionHead`/`<PageHero` açılış etiketini süslü-parantez derinliği sayarak kes, blok içinde `label=`/`title=`/`lead=` say; `{DEGISKEN.alan}` biçimli değerleri "içerik referansı" işaretle.
+```
+<SectionHead>/<PageHero> label=/title=/lead= TOPLAM: 103
+  bunlardan degisken/icerik referansi olan: 3
+    src/app/yazilim-secerken/page.tsx:72   lead={ARASTIRMA.note}
+    src/components/sections/LegalPage.tsx:16 title={doc.title}
+    src/components/sections/LegalPage.tsx:17 lead={doc.intro}
+Cagri yeri: 27 <SectionHead> + 8 <PageHero> = 35
+```
+Aynı betik baz commit'te de **103 / 3** veriyor → kod bu eksende hiç değişmedi.
+
+**Hüküm:** atomun özü **HÂLÂ AÇIK** ve payda kayıtlı olandan **daha kötü** — 103 değerin yalnız **3'ü** (%2,9) `src/content/`'ten geliyor. `src/content/` bugün 10 dosya / 1.550 satır. "Metin tonu" fazının ön koşulu duruyor; kriteri bugünkü envanterle sağlanamaz.

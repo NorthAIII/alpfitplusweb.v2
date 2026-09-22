@@ -82,3 +82,14 @@ Betikler **rapor aracı** olarak yazılmış, kapı olarak değil: ölçüyor, o
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — hiç değişmemiş; bir kalem devralındı.**
+
+```
+$ grep -n "process.exitCode\|process.exit" research/scripts/*.mjs
+research/scripts/font-guard.mjs:52:  process.exitCode = 1;          ← TEK vurus
+$ git log --oneline --since=2026-09-13 -- research/scripts/       → (bos)
+```
+`a11y.mjs:115` ve `mobile-audit.mjs:76` `TOPLAM SORUN`u yalnız `console.log` ediyor, hiçbir eşiğe bağlamıyor; `perf.mjs` ve `scan.mjs`'de de çıkış kodu kurulumu yok. Altı betiğin hiçbirinde HTTP durumu kontrolü yok (`grep -c "response.ok()\|\.ok()\|\.status()"` → 0), yani 404/5xx sessizce "geçiyor". `npm run check` yok, `.github/workflows/` yok.
+
+**Devralınan kalem ([B-038](archive/B-038-lead-sheet-operasyonel-sessizlikleri.md) arşivlenirken taşındı):** depo **şema paritesi** kapısı var ama varsayılan koşumda **kapalı**. `tests/lead-store.contract.test.ts` gerçek depoya karşı koşar ve şemayı görür — ama `LEAD_CONTRACT_URL` tanımsızken atlanır (`npm test`: `1 skipped`), yani rutin koşumda hiçbir şey doğrulamaz. Varsayılan yolda kalan tek kontrol `tests/api-demo.test.ts:176-178`: depo gövdesinin anahtar kümesini **elle yazılmış bir listeye** karşı kilitliyor, depo şemasına karşı değil. v1'in şeması değişirse test yeşil kalır. Bu, atomun "kapı kırmızıya dönemiyor" sınıfının test tarafındaki eşidir.

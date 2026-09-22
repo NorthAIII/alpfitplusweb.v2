@@ -127,3 +127,19 @@ Sunucu "önce temizle, sonra doğrula" yerine "olduğu gibi doğrula" yapıyor. 
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — üç eksenin üçü de açık, ve ağırlaştı: artık depoya yazıyor.**
+
+`src/lib/contact.ts:22-29` değişmemiş. Canlı uçta (dev 3000, senaryo başına ayrı `X-Forwarded-For`), hedef **bağlıyken**:
+
+| Değer | HTTP | Not |
+|---|---|---|
+| `+90 0532 111 22 33` · `+90 (0532) …` · `0212/123 45 67` · `0090 532 …` · `0532.111.22.33` · `444 12 34` | 422 | meşru yazımlar reddediliyor |
+| `U+202D+90 (532) 111 22 33U+202C` (Mac Rehber yapıştırması) | 422 | |
+| `0532111223` (bir hane eksik) | **200 `stored:true`** | ulaşılamaz numara **kayda geçti** |
+| `53211122334` (bir hane fazla) | **200 `stored:true`** | |
+| `0000000000` · `1234567890` | **200 `stored:true`** | |
+
+Atom (3)'ü *"hedef tanımlı hâl"*i yalıtılmış Vitest'te ölçmüştü. Bugün **canlı uçta, gerçek depoya** ölçülüyor: ulaşılamaz numara `{"ok":true}` alıyor ve satır oluşuyor. Saf fonksiyon aynı sonucu veriyor; `+1 415 555 2671` ve `+49 30 1234567` de kabul.
+
+**Koruma boşluğu duruyor:** `tests/contact.test.ts` (84 satır) hâlâ yalnız 4 kabul + 4 red vakası tutuyor; `0532111223`, `53211122334`, `0000000000`, `U+202D…` ve meşru aileler (`+90 0532…`, `0212/…`, `0090…`) testte yok.

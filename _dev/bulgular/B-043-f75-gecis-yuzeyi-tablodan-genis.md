@@ -66,3 +66,7 @@ F7.5 tablosu **v1'in sayfa ağacından** türetilmiş (`src/pages/` → 10 TR + 
 ## Çözüm Kaydı
 
 —
+
+**Kapsam eklemesi (audit-product 2026-09-22, Gelen Kutusu mezuniyeti `[TASK-1.06]`).**
+
+Geçişin üçüncü ölçülmemiş yüzeyi: **301 haritasının (20 adres) kendisi bugünkü canlıya karşı doğrulanmadı.** Liste v1'den daha önce çıkarıldı; o günden bu yana v1'in gerçek adres envanteri değişmiş olabilir ve Umami'de en çok gezilen sayfalar haritayla karşılaştırılmadı. Geçiş öncesi yapılacak iş: (a) v1'in canlı adres envanteri yeniden çıkarılır, (b) Umami'nin en çok gezilen sayfa listesiyle kesiştirilir, (c) 20 adreslik harita bu ikisine karşı kalem kalem doğrulanır. Aksi hâlde geçiş günü haritada olmayan bir adres 404'e düşer ve bunu ancak trafik kaybından fark ederiz.

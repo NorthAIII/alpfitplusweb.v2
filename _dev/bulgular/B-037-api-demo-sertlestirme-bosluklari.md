@@ -1,6 +1,6 @@
 # B-037: `/api/demo` sertleştirme boşlukları — kota istemcinin başlığıyla anahtarlanıyor, `null` gövde 500 veriyor, `content-type` hiç bakılmıyor
 
-**Önem:** 🟡 | **Tip:** güvenlik / hata | **Alan:** M3 — Lead hattı (`src/app/api/demo/route.ts`)
+**Önem:** 🔴 | **Tip:** güvenlik / hata | **Alan:** M3 — Lead hattı (`src/app/api/demo/route.ts`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
 **Durum:** Açık
 
@@ -53,6 +53,32 @@ $ curl -X POST -H 'content-type: text/plain' -H 'Origin: https://kotu.example' \
 **Ek küçük kalem:** POST dışı yöntemler 405 dönüyor ama **`Allow` başlığı yok** (RFC 9110 405'te zorunlu tutar); `OPTIONS` doğru (`allow: OPTIONS, POST`). Gövde boyutu sınırsız: 20 MB tam okundu ve ayrıştırıldı, 413 yok, `content-length` kapısı yok (`MAX` yalnız ayrıştırmadan **sonra** kırpıyor, bellek koruması değil). Vercel platformu gövdeyi kendi sınırında kesiyor — hafifletici, ama yerel/self-hosted yüzeyde sınır yok.
 
 **Doğru çalışanlar kaydedilir:** prototip kirletme (`__proto__`) etkisiz; sıkıştırılmış gövde dürüst 400; e-posta gövdesinde `html:` alanı **yok** (dolayısıyla e-posta XSS'i yok, `<script>` düz metin kalıyor); sır hijyeni temiz (`RESEND_API_KEY` yalnız `authorization` başlığında, hiçbir yanıtta/logda anahtar, hedef adres ya da kişisel veri yok).
+
+**Yeniden ölçüm (audit-product 2026-09-22) — (4) teorik olmaktan çıktı, 🔴'ye yükseltildi.**
+
+Hedef **bağlandı** (TASK-1.14/1.18). Atomun *"hedef bağlandığı gün satır düşerdi"* cümlesi bugün gerçek: dördü de `Origin: https://kotu.example` ile, dev 3000'de:
+```
+text/plain                        → 200 {"ok":true,"stored":true,"mailed":false}
+application/x-www-form-urlencoded → 200 {"ok":true,"stored":true,"mailed":false}
+application/json; charset=utf-16  → 200 {"ok":true,"stored":true,"mailed":false}
+content-type basligi hic yok      → 200 {"ok":true,"stored":true,"mailed":false}
+```
+Yani `enctype="text/plain"` taşıyan bir HTML formu, ön-kontrolsüz çapraz-site POST ile ziyaretçinin tarayıcısından **depoya satır yazdırabiliyor**. `Origin`/`Sec-Fetch-Site` kontrolü hâlâ yok.
+
+**(1)'in ters yüzü ölçüldü — kota anahtarı yalnız atlatılabilir değil, aynı zamanda herkesi kilitliyor.** `route.ts:240-243` her iki başlık da yoksa anahtarı literal **`"bilinmiyor"`** yapıyor; ters proxy'siz koşan her dağıtım (Docker 3000/3100, `next start`, XFF ezmeyen proxy) **tüm ziyaretçileri tek 5 istek/10 dk kovasına** koyar:
+```
+$ for i in 1..7; do curl -s -o /dev/null -w "%{http_code} " -X POST /api/demo \
+    -H 'content-type: application/json' --data '{}'; done   # HIC IP basligi yok
+429 429 429 429 429 429 429      ← ilk istek bile 429; kova zaten dolu
+# ayni pencerede taze XFF → 422 (kova ayri) · taze x-real-ip → 422 422 422 422 429
+```
+Altıncı ziyaretçi ilk denemesinde 429 alır. Vercel etkilenmez (platform başlığı eziyor). `toStore`'daki `hashIp(ip, salt)` aynı sorunu deponun saatlik `ip_hash` kotasına taşır: hepsi aynı özet → depo 429 → `route.ts:307-312` ziyaretçiye 429.
+
+**(2) ve (3) değişmedi.** `list.push(now)` koşulsuz ve `HITS.clear()` yerinde (`route.ts:58-65`); `null` gövde **hâlâ 500 + boş gövde** (`route.ts:260` `clean(body.website, …)`), diğer skalerler (`42`/`"metin"`/`[]`/`{}`/`true`) doğru 422 veriyor. Test boşluğu adlandırıldı: `tests/api-demo.test.ts:306` yalnız **sözdizimsel** bozuk gövdeyi sınıyor; geçerli-ama-nesne-olmayan gövde kapsam dışı.
+
+**Ek kalemler de yerinde:** 405'te `Allow` başlığı yok (`curl -D - -X GET` → 0 eşleşme); gövde sınırı yok — **5 MB gövde 34 ms'de tam okundu, 200 döndü ve depoya yazıldı** (413 yok).
+
+**Satır kayması:** `limited(ip)` artık `:245`, JSON ayrıştırması `:254`, doğrulama `:278-299`, kota anahtarı `:240-243`.
 
 ## Kanıt
 

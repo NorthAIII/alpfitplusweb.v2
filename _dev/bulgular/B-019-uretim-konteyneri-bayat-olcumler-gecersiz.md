@@ -83,3 +83,15 @@ Tazeleme: `docker compose --profile prod up -d --build web-prod`.
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — belirtiler kapandı, mekanizma hâlâ canlı ve bu kez yayındaki yasal beyanı yanlışlıyor.**
+
+Belirtiler: konteyner artık `latest` imajı koşuyor (`sha256:6990cada…`, 15:30:41'de derlendi); 3100'de `noindex, nofollow` (meta + başlık), `robots.txt` `Disallow: /`, **rakip adı 15/15 rotada 0 vuruş**. Yani atomun 2026-09-11 ve 09-13 tablolarındaki dört satır da bugün temiz.
+
+**Mekanizma yerinde:** imaj 15:30:41'de derlendi, `920006b` (TASK-1.15) 15:59:10'da commit'lendi — konteyner **29 dakika geride**. Bugün sunduğu içerik, TASK-1.15'in tam olarak düzelttiği metin:
+```
+3100 /kvkk     : "…tedarikçimizin (Google) elektronik tablo hizmetinde bir satır olarak saklanır…"   (3 vuruş)
+3100 /gizlilik : "…hizmet aldığımız bir elektronik tablo hizmetinde (Google) kayıt olarak saklanır." (2 vuruş)
+önizleme       : "kendi sunucumuzdaki kayıt veritabanı…"                                             (temiz)
+```
+Zararın sınıfı değişti: eskiden ölçüm geçerliliği ve rakip adsızlığıydı, bugün **yayındaki hukuki beyanla çelişen bir metin** yerel bir ölçüm hedefinde ayakta. `perf.mjs` ve `font-guard.mjs` içinde tazelik/`deployStage` kontrolü hâlâ **yok** (grep: 0) — atomun koruma önerisi karşılanmadı.

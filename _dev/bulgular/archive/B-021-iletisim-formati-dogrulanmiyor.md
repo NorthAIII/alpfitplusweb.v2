@@ -22,9 +22,9 @@ HTTP 503 {"code":"no-sink"}       ← aynı
 
 **Bugün bu görünmüyor, çünkü 503 onu maskeliyor.** `LEAD_WEBHOOK_URL` henüz tanımsız olduğu için her talep zaten "kaydedemedik" ile bitiyor. Hedef tanımlandığı gün (TASK-1.04'ün canlı turu) aynı istekler **200** dönecek, e-tabloya satır düşecek, kullanıcı *"Talebiniz bize ulaştı"* ekranını görecek — ve kimse ona ulaşamayacak.
 
-Bu, hata sınıfının en sinsi türü: sistem talebi **başarılı** sayıyor, dolayısıyla kayıp hiçbir istatistiğe girmiyor. `BULGULAR.md` kanvasına giren diğer lead bulgularından farkı budur — [B-020](B-020-hiz-siniri-gecerli-talebi-reddediyor.md) kullanıcının gördüğü bir reddediş üretir, bu hiçbir iz bırakmaz.
+Bu, hata sınıfının en sinsi türü: sistem talebi **başarılı** sayıyor, dolayısıyla kayıp hiçbir istatistiğe girmiyor. `BULGULAR.md` kanvasına giren diğer lead bulgularından farkı budur — [B-020](../B-020-hiz-siniri-gecerli-talebi-reddediyor.md) kullanıcının gördüğü bir reddediş üretir, bu hiçbir iz bırakmaz.
 
-Etki [B-019](B-019-uretim-konteyneri-bayat-olcumler-gecersiz.md) ve alarm eksikliğiyle birleşince tam sessizliğe dönüşüyor: ulaşılamaz lead kaydedilir, alarm yoktur, günlük lead sayısı kontrolü yoktur.
+Etki [B-019](../B-019-uretim-konteyneri-bayat-olcumler-gecersiz.md) ve alarm eksikliğiyle birleşince tam sessizliğe dönüşüyor: ulaşılamaz lead kaydedilir, alarm yoktur, günlük lead sayısı kontrolü yoktur.
 
 ## Kanıt
 

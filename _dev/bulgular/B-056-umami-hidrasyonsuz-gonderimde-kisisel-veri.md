@@ -125,3 +125,18 @@ Yasal metin (TASK-1.10) izleyicinin **tasarlanan** davranışını anlatıyor, a
 **Açık kalan iki ayak:**
 1. **Kaynak tarafı** — formun native GET yolu hâlâ kişisel veriyi adrese yazıyor ([B-036](B-036-lead-kaybi-yollari.md) (2)). Tarayıcı geçmişi ve sunucu/Vercel günlüğü izleri bu bulguyla kapanmadı.
 2. **(b) ölçüm kriteri** — bot kontrolünün sahte yeşili. Not TASK-1.07'nin 2026-09-21 kaydı → Sonraki Adım Detayı md. 4'e işlendi; kapanış turu orada uyarılıyor.
+
+---
+
+**Yeniden ölçüm (audit-product 2026-09-22) — "bugün etkisiz" gerekçesi DÜŞTÜ, zincir canlı.**
+
+`NEXT_PUBLIC_UMAMI_WEBSITE_ID` artık **önizlemede tanımlı** (`640b05f1-…`, halka açık HTML'de servis ediliyor — sır değil) ve izleyici gerçekten yükleniyor. Bulgunun *"hiçbir ortamda tanımlı değil, bugün etkisiz"* çerçevesi geçersiz.
+
+**(a) izleyici tarafı — KAPANDI, canlı yüzeyde doğrulandı.** Servis edilen etiket:
+`script src=https://umami.kiwiailab.com/script.js data-website-id=640b05f1-… data-tag="preview" data-exclude-search="true"`
+Kanıt: `/demo?name=Test+Kisi&phone=05550000000&email=…&message=gizli+mesaj+metni` ile açıldığında gönderilen olay yükündeki `url` alanı **`https://alpfitplus-web-v2.vercel.app/demo`** — sorgu tamamen silinmiş. Kişisel veri yok. (İstek abort edildi, sunucuya ulaşmadı.)
+Ek betik yok: sayfadaki tek harici betik `script.js` (4.595 bayt); içinde `rrweb`/`replay`/`record*`/`MediaRecorder`/dinamik `createElement('script')` **0 eşleşme**, tek uç `/api/send`.
+
+**Açık kalan iki ayak:**
+- **(1) kaynak tarafı** — JS'siz native GET gönderimi kişisel veriyi URL'ye yazıyor ([B-036](B-036-lead-kaybi-yollari.md) (2)). `data-exclude-search` yalnız **Umami'yi** korur; tarayıcı geçmişini ve sunucu istek logunu korumaz. Bu ayak artık **canlı bir zincirin üstünde** duruyor.
+- **(b) bot-kontrolü sahte yeşili** — `DISABLE_BOT_CHECK` canlıda tanımlı mı, bu turda **bilinçli olarak ölçülmedi**: ölçmek `/api/send`'e gerçek bir isteğin varması demekti ve bot kontrolü kapalıysa bu bir kayıt yazardı (canlı analitiği kirletme sınırı).

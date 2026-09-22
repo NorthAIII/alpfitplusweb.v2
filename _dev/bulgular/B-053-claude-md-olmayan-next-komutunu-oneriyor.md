@@ -46,3 +46,24 @@ Motor güncellemesi vendored klasörü yeniler, kök `CLAUDE.md`'yi yenilemez. P
 ## Çözüm Kaydı
 
 —
+
+**Yeniden ölçüm (audit-product 2026-09-22) — açık ve atomda yazandan GENİŞ.**
+
+Gerçek komut dosyaları (`ls .claude/commands/devflow/*.md`, 27 adet): `next.md` **yok**, `run-phase.md` **var**.
+
+| | Kök `CLAUDE.md:197` | Şablon `templates/CLAUDE-MD.md:224` |
+|---|---|---|
+| Yardımcı satırı | `` `next` ``, quick, pause, … | `` `run-phase` ``, quick, pause, … |
+
+`next` ayrıca `CLAUDE.md:138` (*"varsayılan öneri `/devflow:next`'tir"*), `:82` (*"`next` istisnası"*), `:83`'te geçiyor; **`run-phase` kök dosyada hiçbir listede yok**. PRD / Proje Başlatma / Faz Döngüsü satırları (`:194-196`) şablonla birebir aynı — drift yalnız Yardımcı satırında.
+
+**İkinci belirti atomda yazandan büyük — kapanış bloğu:**
+
+| | Kök `CLAUDE.md:126-138` | Şablon `:126-148` |
+|---|---|---|
+| Blok | **2 satır** (`📋` + `Sıradaki oturumdan önce`) | **4 satır** (sonuç · `📋` · `→` gerekçe · `Açık kalemler`) |
+| Önek kümesi | yalnız `önerilir:` | `engel:` + `önerilir:` |
+| `💡` durumu · terfi kuralı · "blok üretmeyen komutlar" · "nihai blok oturumun son sözüdür" | yok | var |
+
+Komut dosyaları (`audit-product.md` Adım 7 dahil) şablonun 4 satırlık bloğunu kanon sayıp *"CLAUDE.md → Oturum Kapanışı"*na işaret ediyor, ama kök dosya eski biçimi tutuyor. Rota değişmedi: `/devflow:audit-docs`.
+⚠️ Karşılaştırma **çalışma ağacı** hâliyle yapıldı; motor dosyaları bu sırada başka bir oturumun commit'lenmemiş değişikliklerini taşıyordu.
