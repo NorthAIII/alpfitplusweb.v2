@@ -8,8 +8,26 @@ import { Button } from "@/components/ui/Button";
 import { Roles } from "@/components/sections/Roles";
 import { ProductStory } from "@/components/sections/ProductStory";
 import { FinalCta } from "@/components/sections/FinalCta";
-import { MODULES } from "@/content/product";
+import {
+  CAPABILITIES,
+  CAPABILITY_STAGES,
+  MODULES,
+  STAGE_LABEL,
+  capabilityTitle,
+  type CapabilityStage,
+} from "@/content/product";
 import { PRICING } from "@/content/pricing";
+
+/**
+ * Kolonun GORUNUMU burada, ICERIGI degil (B-040). Kalem listesi ve kademe
+ * basligi `product.ts` → CAPABILITIES + STAGE_LABEL'dan gelir; bu sayfa
+ * kademelere yalnizca bir ton atar. Sabitte olmayan kalem buraya yazilmaz.
+ */
+const STAGE_TONE: Record<CapabilityStage, "sage" | "amber" | "neutral"> = {
+  simdi: "sage",
+  yolda: "amber",
+  sonra: "neutral",
+};
 
 export const metadata: Metadata = {
   title: "Özellikler",
@@ -86,77 +104,43 @@ export default function FeaturesPage() {
           lead="Bu üç kolonu ayrı tutuyoruz. Yolda olan bir şeyi bugün varmış gibi anlatmıyoruz."
         />
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {[
-            {
-              tag: "Bugün var",
-              tone: "sage" as const,
-              items: [
-                "Takvim, rezervasyon ve bekleme listesi",
-                "Grup dersleri, kontenjan ve yoklama",
-                "Üyelik, seans paketi ve kalan hak",
-                "Finans, ciro, kalan borç ve iade",
-                "Çok şube cockpit ve yetki şablonları",
-                "Antrenör performansı",
-                "Diyetisyen modülü",
-                "Raporlar, XLSX, CSV ve PDF",
-                "Push bildirim ve toplu duyuru",
-                "Üye ve antrenör mobil uygulaması",
-              ],
-            },
-            {
-              tag: "Yolda",
-              tone: "amber" as const,
-              items: [
-                "Kampanya ve pazarlama derinleşmesi",
-                "Gelişmiş raporlama",
-                "Churn ve risk paneli",
-              ],
-            },
-            {
-              tag: "Yol haritasında",
-              tone: "neutral" as const,
-              items: [
-                "Online ödeme",
-                "QR ve turnike ile giriş",
-                "Apple Health ve Google Fit",
-                "Yapay zekâ destekli gelişim ve beslenme analizi",
-                "Kurumsal üyelik",
-              ],
-            },
-          ].map((col) => (
-            <Reveal key={col.tag}>
-              <div
-                className={
-                  "h-full rounded-card p-7 ring-1 " +
-                  (col.tone === "sage"
-                    ? "bg-sage-wash ring-sage/25"
-                    : col.tone === "amber"
-                      ? "bg-amber-wash ring-amber/20"
-                      : "bg-surface ring-line")
-                }
-              >
-                <p
+          {CAPABILITY_STAGES.map((stage) => {
+            const tone = STAGE_TONE[stage];
+            return (
+              <Reveal key={stage}>
+                <div
                   className={
-                    "font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] " +
-                    (col.tone === "sage"
-                      ? "text-sage-ink"
-                      : col.tone === "amber"
-                        ? "text-amber"
-                        : "text-faint")
+                    "h-full rounded-card p-7 ring-1 " +
+                    (tone === "sage"
+                      ? "bg-sage-wash ring-sage/25"
+                      : tone === "amber"
+                        ? "bg-amber-wash ring-amber/20"
+                        : "bg-surface ring-line")
                   }
                 >
-                  {col.tag}
-                </p>
-                <ul className="mt-4 flex flex-col gap-2.5">
-                  {col.items.map((it) => (
-                    <li key={it} className="text-[0.9375rem] leading-snug text-ink">
-                      {it}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-          ))}
+                  <p
+                    className={
+                      "font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] " +
+                      (tone === "sage"
+                        ? "text-sage-ink"
+                        : tone === "amber"
+                          ? "text-amber"
+                          : "text-faint")
+                    }
+                  >
+                    {STAGE_LABEL[stage]}
+                  </p>
+                  <ul className="mt-4 flex flex-col gap-2.5">
+                    {CAPABILITIES[stage].map((c) => (
+                      <li key={c.id} className="text-[0.9375rem] leading-snug text-ink">
+                        {capabilityTitle(c)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
         <p className="mt-8 text-center text-sm text-faint">
           {PRICING.trialDays} gün ücretsiz deneme demo verisiyle yürür, kredi kartı istemiyoruz.

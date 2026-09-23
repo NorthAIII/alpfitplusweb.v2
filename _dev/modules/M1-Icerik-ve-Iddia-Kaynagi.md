@@ -19,7 +19,8 @@
 - Fiyat kıyası (`karsilastirma.ts`) yöntem + erişim tarihi taşır
 - **Yetenek/yol haritası ayrımı yalnız `product.ts` → `CAPABILITIES` içinde tanımlıdır** (TASK-2.08); "bugün var" kademesine yalnız ürün koduna (`../Alpfit.v1`) karşı doğrulanmış kalem girer, karşılığı ölçülemeyen iddia "yolda" kademesinde durur. Kapı: `tests/capabilities.test.ts`
 - **`PRODUCT_STATUS.modules` elle yazılmaz**, "bugün var" kademesinin modül düzeyli kalemlerinden türer (`moduleProse()`)
-- Yol haritası kalemleri sabit **dışında** listelenmez; `grep` ile teyit edilir — tüketicilerin bağlanması TASK-2.10/2.11'in işidir (bu task kapanırken sabiti atlayan 17 çağrı satırı / 6 dosya ölçüldü, kapanış ölçütü o sayıdır)
+- Yol haritası kalemleri sabit **dışında** listelenmez; `grep` ile teyit edilir (B-040'ın kanıt komutu). TASK-2.10 iki bileşen-içi kopyayı bağladı — `/ozellikler` ve `FounderProgram` **0** döndü; kalan tüketiciler TASK-2.11'in işidir ve kapanış ölçütü **7 satır → 0**'dır (`faq.ts` 3 · `chat.ts` 2 · `karsilastirma.ts` 2; sabitin kendi 3 satırı sayılmaz). Kapı: `tests/capabilities.test.ts` → tüketici ayağı (`yolda`+`sonra` etiketleri bileşen kaynağında geçmez; `simdi` bilinçle dışarıda — modül adları meta açıklamada meşru geçiyor)
+- **Sitede bir sürüm numarası iddiası** (`v1` · `v1.5`) ürünün sürüm haritasına çapalanır: `../Alpfit.v1/_dev/PRD/VERSIONS.md`. Kod yorumundaki *"v1.5 adayı / ertelendi"* kapsam taahhüdü değildir — `yolda` kademesi bir sürümün kapsamı **değil**, bu yüzden kademe başlıkları `STAGE_LABEL`'dan okunur ve `PRODUCT_STATUS.nextVersion` **açılmadı** (TASK-2.10, `docs/DECISIONS.md` 2026-09-23)
 
 **Bağımlılık:** Yok
 

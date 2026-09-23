@@ -4,6 +4,7 @@ import { SectionHead } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { PRICING, tl } from "@/content/pricing";
+import { STAGE_LABEL, capabilityProse } from "@/content/product";
 import { PRODUCT_STATUS } from "@/content/site";
 
 const PERKS = [
@@ -77,21 +78,35 @@ export function FounderProgram() {
                 Ürün bugün nerede
               </p>
 
+              {/*
+                Uc satirin da govdesi TEK kaynaktan gelir (B-040): kalemler
+                product.ts → CAPABILITIES, surum adi site.ts → PRODUCT_STATUS.
+                Buraya elle kalem yazilmaz — ayrismanin kaynagi tam olarak
+                buydu (bu kart 4 kalem sayarken /ozellikler 5 sayiyordu).
+
+                ALT IKI SATIR SURUM NUMARASI TASIMAZ, kademe adini tasir.
+                Onceki hali "v1.5 yolda" diyordu; TASK-2.10 olctu ki urunun
+                kendi surum haritasi (../Alpfit.v1/_dev/PRD/VERSIONS.md, source
+                of truth) v1.5'e yalniz uc kalem koyuyor — "yolda" kademesindeki
+                dort B-029 kalemi o haritanin hicbir satirinda yok. Yedisine
+                birden "v1.5" demek capasiz iddia olurdu. Gerekce site.ts →
+                PRODUCT_STATUS basligi yorumunda, uzun hali orada.
+              */}
               <div className="mt-5 flex flex-col gap-4">
                 <StatusRow
                   state="done"
-                  title="v1 hazır"
+                  title={`${PRODUCT_STATUS.version} hazır`}
                   body={`${PRODUCT_STATUS.modules} ${PRODUCT_STATUS.sentence}`}
                 />
                 <StatusRow
                   state="wip"
-                  title="v1.5 yolda"
-                  body="Kampanya derinleşmesi, gelişmiş raporlama ve churn paneli."
+                  title={STAGE_LABEL.yolda}
+                  body={`${capabilityProse("yolda")}.`}
                 />
                 <StatusRow
                   state="plan"
-                  title="Yol haritasında"
-                  body="Online ödeme, QR ve turnike ile giriş, Apple Health ve Google Fit, yapay zekâ destekli gelişim ve beslenme analizi."
+                  title={STAGE_LABEL.sonra}
+                  body={`${capabilityProse("sonra")}.`}
                 />
               </div>
 

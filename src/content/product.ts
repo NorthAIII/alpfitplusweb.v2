@@ -285,6 +285,18 @@ export const STAGE_LABEL: Record<CapabilityStage, string> = {
   sonra: "Yol haritasında",
 };
 
+/**
+ * Kademelerin ANLATIM sirasi: once bugun ne var, sonra ne geliyor, en sonda ne
+ * planli. Uc kademeyi birlikte gosteren yuzeyler (bugun `/ozellikler`'in uc
+ * kolonu) bunun uzerinde doner.
+ *
+ * Ayri bir dizi olarak duruyor cunku `Object.keys(CAPABILITIES)` sirasi
+ * ORTULUDUR: sabitin icinde kademeler yer degistirse sayfanin kolon sirasi
+ * sessizce degisir ve bunu hicbir sey yakalamaz. Burada sira aciktir ve
+ * kapisi capabilities testindedir.
+ */
+export const CAPABILITY_STAGES: readonly CapabilityStage[] = ["simdi", "yolda", "sonra"];
+
 export const CAPABILITIES: Record<CapabilityStage, Capability[]> = {
   simdi: [
     { id: "takvim-rezervasyon", label: "takvim, rezervasyon ve bekleme listesi", modul: "randevu" },

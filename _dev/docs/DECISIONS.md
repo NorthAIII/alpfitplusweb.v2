@@ -19,6 +19,29 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-23 — Site sürüm etiketi ürünün sürüm haritasına çapalanır; `nextVersion` açılmaz (aynı günün 7. kararı geçersiz)
+
+**Bağlam:** TASK-2.10 `FounderProgram`'ın üç durum satırını sabite bağlarken orta satırın başlığını (`"v1.5 yolda"`) `PRODUCT_STATUS.nextVersion`'a taşıyacaktı — aynı günün bir önceki kararının 7. maddesi bunu açıkça devrediyordu. Bağlamadan önce ölçüldü.
+
+**Ölçüm** (`../Alpfit.v1/_dev/PRD/VERSIONS.md`, dosyanın kendi beyanı *"Bu dosya source of truth"*):
+
+| Ürünün sürüm haritası | Sitedeki karşılığı |
+|---|---|
+| **v1.5** = kampanya derinleşmesi · gelişmiş raporlama/Excel · bekleme listesi otomasyonu · churn paneli olgunlaşması | `CAPABILITIES.yolda`'nın **ilk üçü** |
+| **v2** = online ödeme · QR/turnike · Apple Health/Google Fit · AI gelişim/beslenme analizi · kurumsal üyelik | `CAPABILITIES.sonra`'nın **beşi de, birebir** |
+| — (haritada **hiç geçmiyor**) | `yolda`'ya TASK-2.08'in taşıdığı **dört B-029 kalemi**: Üye 360 tam fazı · iptal eşiği ayarı · üyelik bitişi bildirimi · tek-yetki revoke |
+
+**Karar:** `"yolda"` kademesi bir **sürümün kapsamı değildir** — yedisine birden "v1.5" demek, B-029'un tam olarak ölçtüğü çapasız iddia sınıfına girer. Bu yüzden:
+
+1. **`nextVersion` açılmadı.** Aynı günün 7. kararı (*"alanı tüketicisini bağlayan task açar — TASK-2.10"*) bu ölçümle **geçersizdir**: alanın tüketicisi doğmadı, çünkü doğru cümle sürüm numarası taşımıyor. Alan ancak **kalem düzeyinde** sürüm bilgisi doğarsa anlamlı olur.
+2. **Alt iki satırın başlığı `STAGE_LABEL`'dan okunur** ("Yolda" · "Yol haritasında") — `/ozellikler`'in kolon başlıklarıyla artık birebir aynı sözlük.
+3. **`version` ("v1") bağlandı** ve çapası ölçüldü: aynı dosya v1 içeriğini tamamlanmış sayıyor (*"v1 içerik tamamlandı, Faz 8–22 ✅"*). 6. karar yerinde duruyor.
+4. **Yeni kural:** sitede bir **sürüm numarası** iddiası yazılacaksa çapası ürünün kod yorumu değil `VERSIONS.md`'dir. Kod yorumundaki *"v1.5 adayı / ertelendi"* bir **kapsam taahhüdü değildir** ve bayatlar — ürünün kendi deposunda bunu kovalayan bir test bile var (`web/src/groups/GroupSessionsPanel.test.tsx:817`, *"bileşen kaynağında 'v1.5' ibaresi kalmadı"*).
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.10 (`tasks/archive/TASK-2.10.md`)
+
+---
+
 ### 2026-09-23 — Yetenek/yol haritası tek kaynağı `CAPABILITIES`; `PRODUCT_STATUS.short` silinir, `version` kalır
 
 **Bağlam:** "Bugün var / yolda / yol haritasında" ayrımı beş evde elle yazılıydı ve üçü birbirinden farklıydı (B-040); ayrıca beş yetenek cümlesinin ürün kodunda karşılığı yoktu (B-029). `PRODUCT_STATUS.short` ve `.version` alanlarının ise hiç tüketicisi yoktu (B-047).

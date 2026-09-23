@@ -47,8 +47,27 @@ export const NAV = [
  *
  * `short` ("Pilot aşamada") 2026-09-23'te SILINDI: hic tuketicisi yoktu ve
  * planlanmiyordu; pilot iddiasini `sentence` tasiyor (karar: docs/DECISIONS.md).
- * `version` KALDI — "v1 hazir" bugun uc yerde elle yazili (chat.ts, faq.ts,
- * FounderProgram.tsx) ve TASK-2.10/2.11 onlari buraya baglayacak.
+ *
+ * `version` TASK-2.10'da tuketicisine baglandi: FounderProgram'in ilk durum
+ * satiri ("v1 hazir") artik bu alandan okuyor. Capasi olculdu — urunun kendi
+ * surum haritasi v1 icerigini tamamlanmis sayiyor
+ * (../Alpfit.v1/_dev/PRD/VERSIONS.md: "v1 icerik tamamlandi, Faz 8-22").
+ * "v1 hazir" hala chat.ts ve faq.ts'te elle yazili; onlari TASK-2.11 baglar.
+ *
+ * `nextVersion` ("v1.5") BILINCLE ACILMADI — TASK-2.08 onu TASK-2.10'a
+ * birakmisti, olcum o devri curuttu (2026-09-23, ../Alpfit.v1/_dev/PRD/
+ * VERSIONS.md, "Bu dosya source of truth"):
+ *   · urunun v1.5 kapsami = kampanya derinlesmesi · gelismis raporlama/Excel ·
+ *     bekleme listesi otomasyonu · churn paneli olgunlasmasi
+ *   · urunun v2 kapsami = CAPABILITIES.sonra'nin BESI DE, birebir
+ *   · ama CAPABILITIES.yolda'ya TASK-2.08'in tasidigi dort B-029 kalemi
+ *     (Uye 360 tam fazi, iptal esigi ayari, uyelik bitisi bildirimi, tek-yetki
+ *     revoke) surum haritasinin HICBIR satirinda yok — kod yorumunda
+ *     "v1.5 adayi / ertelendi" demeleri kapsam taahhudu degil.
+ * Yani "yolda" kademesi bir SURUMUN kapsami degil; tumune "v1.5" demek
+ * capasiz iddia olurdu (B-029'un ta kendisi). Kademe basligi bu yuzden
+ * STAGE_LABEL'dan okunuyor, surum numarasindan degil. Alan ancak kalem
+ * duzeyinde surum bilgisi dogarsa anlamli olur; o gun tuketicisiyle acilir.
  */
 export const PRODUCT_STATUS = {
   version: "v1",

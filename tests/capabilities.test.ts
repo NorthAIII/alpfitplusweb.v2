@@ -1,7 +1,11 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import {
   CAPABILITIES,
+  CAPABILITY_STAGES,
   type Capability,
   type CapabilityStage,
   capability,
@@ -161,5 +165,61 @@ describe("düzyazı türetmesi", () => {
     expect(PRODUCT_STATUS.modules).toContain("antrenör performansı");
     // Uye 360 modul cumlesine GIRMEZ -- ekran var ama iki kalemi "Yakinda".
     expect(kucult(PRODUCT_STATUS.modules)).not.toContain("üye 360");
+  });
+});
+
+// ── TASK-2.10 — TUKETICI KAPISI (B-040) ───────────────────────────────────
+//
+// Yukaridaki bloklar SABITIN kendi dogrulugunu sorar. Bu blok farkli bir soru
+// sorar: sabit dogru olsa bile bir bilesen ayni listeyi ELLE yeniden yazabilir
+// mi? B-040'in olctugu ayrisma tam olarak buydu — `/ozellikler` 5 yol-haritasi
+// kalemi sayarken FounderProgram 4 sayiyordu, ikisi de sabiti gormuyordu.
+//
+// Kapsam BILINCLE "yolda" + "sonra" kademeleri: B-040'in bes evde ayristigini
+// olctugu siniftir ve bu etiketler baska hicbir mesru baglamda gecmez. "simdi"
+// kademesi DISARIDA ve bu olculdu — modul duzeyli etiketleri ("antrenör
+// performansı", "diyetisyen modülü") sayfanin meta aciklamasinda ve modul
+// basliklarinda mesru olarak geciyor; o sinifin taramasi TASK-2.12'nin isi.
+/** Sabite baglanmis tuketiciler + her birinin baglanti kaniti olan sembol. */
+const TUKETICILER = [
+  { yol: "src/app/ozellikler/page.tsx", baglanti: "CAPABILITY_STAGES" },
+  { yol: "src/components/sections/FounderProgram.tsx", baglanti: "capabilityProse" },
+] as const;
+
+const kaynakOku = (yol: string) =>
+  readFileSync(fileURLToPath(new URL(`../${yol}`, import.meta.url)), "utf8");
+
+/** Elle yazilmasi yasak kalemler: yol haritasinin iki kademesi. */
+const YOL_HARITASI_ETIKETLERI = (["yolda", "sonra"] as const).flatMap((s) =>
+  CAPABILITIES[s].map((c) => c.label),
+);
+
+describe("tüketiciler — boş kapsam", () => {
+  // Bu blok olmadan asagidaki "geçmiyor" kontrolleri iki yoldan sessizce
+  // yesil kalirdi: etiket listesi bosalirsa dongu hic donmez, dosya okunamaz
+  // ya da bosalirsa da hicbir sey bulunmaz.
+  it("yasaklı etiket listesi dolu", () => {
+    expect(YOL_HARITASI_ETIKETLERI.length).toBeGreaterThan(5);
+  });
+
+  it.each(TUKETICILER)("$yol okunuyor ve sabite bağlı", ({ yol, baglanti }) => {
+    const kaynak = kaynakOku(yol);
+    expect(kaynak.length).toBeGreaterThan(1000);
+    expect(kaynak).toContain('from "@/content/product"');
+    expect(kaynak).toContain(baglanti);
+  });
+});
+
+describe("B-040 — yol haritası kalemi bileşende elle yazılmaz", () => {
+  it.each(TUKETICILER)("$yol sabiti atlayan kalem taşımıyor", ({ yol }) => {
+    const kaynak = kucult(kaynakOku(yol));
+    const elle = YOL_HARITASI_ETIKETLERI.filter((e) => kaynak.includes(kucult(e)));
+    expect(elle).toEqual([]);
+  });
+});
+
+describe("kademe sırası", () => {
+  it("üç kademe de açık sırada sayılıyor", () => {
+    expect([...CAPABILITY_STAGES]).toEqual(STAGES);
   });
 });
