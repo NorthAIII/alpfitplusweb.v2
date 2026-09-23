@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — Faz 2 yeniden kapsam tartışması: **KVKK başvuru adresinin posta alması (B-011) fazdan çıktı**, "Alan adı geçişi" fazına taşındı (kullanıcı kararı) — kalan iki ayağı kullanıcının Squarespace DNS adımına bağlıydı ve ILKELER böyle bir işin fazı kilitlemesini yasaklıyor. Milestone'un *"test postası alıyor"* ayağı düştü, TASK-2.20 ❌ iptal + arşiv, ürettiği ölçülmüş zemin (yönerge + bozulmama tabanı + örtük-MX biçimi) B-011 atomuna mezun edildi. **Fazın repo tarafında iş kalmadı — sıra kabul testinde.** Kod değişmedi, test koşturulmadı.
+**Son Güncelleme:** 2026-09-23 — Faz 2 **kabul testi koşuldu** (`verify-phase`, otonom kol): 30 senaryo, **29 geçti / 1 kaldı**. Kapılar ters çevirmeyle sınandı (sekiz ters-çevirmenin sekizi kırmızı) — yeşiller kör değil. Tek bulgu güvenlik merceğinden geldi: uç, talep sahibinin yazdığı adrese **doğrulama yapmadan** onay e-postası gönderiyor → **TASK-2.21**. Faz dokümanı kırmızı çizgiyi aştığı için UAT bölümü `PHASE-2-UAT.md`'ye bölündü (faz hâlâ aktifken). Kod değişmedi; iki ters-çevirme ağacı geçici bozdu, ikisi de md5 ile geri yüklendi.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,9 +10,9 @@
 
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
-**Adım:** verify
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · **kapsam revizyonu ✅** (2026-09-23: B-011 fazdan çıktı, milestone'un posta ayağı düştü) · task çalıştırma **18/18 tamamlandı** (TASK-2.01 → 2.19; TASK-2.03 ve TASK-2.20 ❌ iptal). **Fazın repo tarafında yapılacak iş kalmadı** — sıradaki adım kabul testi.
-**Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
+**Adım:** task
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ · kapsam revizyonu ✅ · task çalıştırma **18/18 tamamlandı** (TASK-2.03 ve TASK-2.20 ❌ iptal) · **kabul testi ✅** (2026-09-23: 30 senaryo, 29 geçti). Kalan tek kalem bir düzeltme task'ına bağlandı: **TASK-2.21**.
+**Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocukları: `phases/PHASE-2-ARASTIRMA.md` · `phases/PHASE-2-UAT.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
 
@@ -35,9 +35,9 @@
 
 ## Aktif Task
 
-**Task:** — yok · Faz 2'nin 20 task'ı da sonuçlandı (18 ✅ + 2 ❌ iptal)
-**Durum:** — · sıradaki iş fazın kabul testi (`/devflow:verify-phase`)
-**İlerleme:** Son hamle **TASK-2.20'nin iptali** oldu: konusu (B-011 — KVKK başvuru adresinin posta alması) kullanıcı kararıyla **"Alan adı geçişi" fazına taşındı**, çünkü kalan iki ayağı kullanıcının Squarespace DNS adımına bağlıydı ve ILKELER böyle bir işin fazı kilitlemesini yasaklıyor. Milestone'un *"`destek@alpfitplus.com` test postası alıyor"* ayağı bu kararla **düştü** (faz ortasında sessiz daralma değil — kullanıcıya sunuldu, kararı o verdi). Task'ın ürettiği ölçülmüş zemin kaybolmadı: `bulgular/B-011-apex-mx-kaydi-yok.md` atomuna mezun edildi. Açık bulgu **43** (B-011 açık, faz işareti kalktı).
+**Task:** TASK-2.21 — Onay e-postası yalnızca doğrulanabilir bir alıcıya gider (`tasks/TASK-2.21.md`)
+**Durum:** ⬜ Bekliyor — kabul testinin kapsam-içi tek bulgusu
+**İlerleme:** Kabul testi (`verify-phase`, 2026-09-23) 30 senaryonun 29'unu yeşil kapattı. Kalan senaryo 26: uç, **istek gövdesinde yazan her biçimsel geçerli adrese** doğrulanmış `alpfitplus.com` göndericisinden onay e-postası yolluyor ve selamlamada istek sahibinin 120 karakterine kadar metnini taşıyor. Sınırlayan kapılar ölçüldü — IP başına 10 dk / 5 istek (6. istek `429`), bal küpü, onay kutusu zorunlu — ama **adresin sahipliğini gösteren kapı yok**. Bu bir kayıp/sızıntı bulgusu değil: lead hattı, kayıt, `notify_lead` ve dönüşüm yolu doğru çalışıyor (senaryo 23-25 ✅). Task üç seçenek sunuyor ve **hangisinin seçileceği kullanıcıya sorulacak** (adres başına tavan · selamlamadaki serbest metni kaldırmak · onayı ikinci adıma bağlamak).
 **Not:**
 - ⚠️ **Yasal beyan kapısı TAMAMLANDI (TASK-2.18 + 2.19) — 9 dal / 31 test.** Sekiz dal depo içinden ölçüyor, dokuzuncusu komşu depodan: `web` servisi `../Alpfitplus-website.v1/pocketbase/pb_hooks`'u `/opt/v1-pb-hooks`'a **salt okunur** bağlıyor ve dal `RETENTION_MONTHS`'ı metin olarak okuyor. **Kapı `LEGAL_CONTRACT_HOOKS_DIR` env'i ile açılır; tanımsızken atlanır** — yani düz `docker compose exec web npm test` bundan sonra **204 geçti + 2 atlandı** gösterir (ikinci atlanan bu daldır, arıza değil). Tam koşum: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **211**. ⚠️ Bağlama `restart` ile **gelmez**, `docker compose up -d web` gerekir. TASK-2.17'de ölçülen **depo dışı** olgular (Hetzner/DE · Resend ABD + `eu-west-1` · Google MX · Umami şemasında IP sütunu yokluğu · erişim kaydında rotasyon yokluğu) **bilerek çivilenmedi** — kaynakları canlı sistemler; çapaları `legal.ts`'in Aktarım yorumunda. Kapının kendi `ÖLÇÜLEMEYEN` blokları iki yüzeyi daha adıyla dışarıda bırakıyor: depo anahtarının **yetki yüzeyi** (komşu depo sözleşmesi) ve başvuru adresinin gerçekten **posta alması** (DNS → 2.20).
 - ⚠️ **Kapı yazarken ölçülen üç fail-open — sonraki kapılar için geçerli:** (1) bir deseni **dosya genelinde** aramak yorum satırlarını da sayar (`data-exclude-search` `layout.tsx`'te 1 öznitelik + 1 yorum); (2) **iki jetonlu** desen araya giren bir cast'le kör kalır (`window.umami` ↔ `(window as unknown as {…}).umami`); (3) bir **önek süzgeci** aynı çağrının başka biçimini kaçırır (mutlak URL süzülüyor, göreli URL geçiyor). Üçü de negatif kontrolle bulundu, tahminle değil. Ayrıntı: `memory/urun-iddiasi-capa-dogrulamasi.md` → 7. kural.
@@ -86,6 +86,7 @@
 | 2.18 | TASK-2.18 — Yasal beyan testi — depo içi sekiz olgu (B-060) | ✅ Tamamlandı |
 | 2.19 | TASK-2.19 — Yasal beyan testi — çapraz depo "12 ay" dalı (B-060 kapandı) | ✅ Tamamlandı |
 | 2.20 | TASK-2.20 — KVKK başvuru adresi: MX kayıtları ve test postası (B-011) | ❌ İptal — konusu kapsam kararıyla alan adı geçişi fazına taşındı (2026-09-23) |
+| 2.21 | TASK-2.21 — Onay e-postası yalnızca doğrulanabilir bir alıcıya gider (UAT senaryo 26) | ⬜ Bekliyor |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -150,7 +151,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok · Faz 2'nin 20 task'ı da sonuçlandı; sıradaki iş fazın kabul testi
-**Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
+**Aktif Task:** `tasks/TASK-2.21.md` ⬜ — kabul testinin tek bulgusu (onay e-postasının alıcısı doğrulanmıyor)
+**Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md` · UAT detayı: `phases/PHASE-2-UAT.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

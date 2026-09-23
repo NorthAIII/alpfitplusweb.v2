@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — Faz 2 yeniden kapsam tartışması: **B-011 fazdan çıktı ve "Alan adı geçişi" fazına taşındı** (kullanıcı kararı) — kalan iki ayağı kullanıcının DNS adımına bağlıydı, ILKELER gereği fazı kilitlemez. Index satırından `→ Faz 2` işareti kalktı, atomun **Durum**'u Açık'a döndü. TASK-2.20'nin ürettiği ölçülmüş zemin **atoma mezun edildi** — arşive gömülseydi kimseye görünmezdi: Squarespace yönergesi (kaynağından doğrulandı) + ikinci kullanıcı adımı (Google'da kutu) + TXT/NS/SOA bozulmama tabanı + örtük-MX başarısızlık biçimi + kapanış ölçümünün sırası; çürük satır çapaları da düzeltildi (`site.ts:22`→`:24`, `legal.ts:133/198/273`→`:230/316/391`). Gelen kutusu **29** (değişmedi), açık bulgu **43** (değişmedi — B-011 kapanmadı, evi değişti).
+**Son Güncelleme:** 2026-09-23 — Faz 2 kabul testi (`verify-phase`): 30 senaryonun 29'u geçti. Kapsam-içi tek bulgu **TASK-2.21**'e bağlandı (uç, talep sahibinin yazdığı adrese doğrulama yapmadan onay e-postası gönderiyor) — kendi atomu açılmadı, evi düzeltme task'ı. Gelen Kutusu'na **bir** kapsam-dışı satır düştü: görsel hattının bir kez ölçülen çıktı-yüksekliği farkı. Faza dokunan kutu notları ve işaretsiz açık bulgular süpürüldü — **çözülmüş çıkan olmadı**; B-013 yarı kapandı (compose yorumundaki port düzeldi, README hâlâ 3001) ve tam kapanmadığı için mezun edilmedi. Gelen kutusu **30**, açık bulgu **43** (değişmedi).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -69,6 +69,8 @@
 - [audit-product SORU] `Assistant.tsx`'te `donanim` düğümü **tek yön kapı**: dokuz düğümün hiçbirinin devam sorusunda yok. Bilinçli daraltma mı? — önerim: bir-iki düğümün `next`'ine eklensin ya da chip kümesi her zaman bir kök konusu içersin
 
 - [PHASE-2] `discuss-phase` Adım 7 DURUM'un `Adım` alanına **her hâlde `research`** yazdırıyor; oysa Adım 6 aktif bir fazın *yeniden* tartışılabileceğini kendisi tanıyor. Bu turda harfiyen uygulansaydı 19 task'ı bitmiş bir faz araştırma adımına geri gönderilecekti — `verify` yazıldı ve gerekçesi rapora kondu. DevFlow yönteminin geneline dair; evi faz retrosunun "DevFlow'a Öneri" bölümü (review-phase triyajı)
+
+- [PHASE-2] Ürün görseli hattının çıktısı **bir kez** farklı yükseklik verdi: `finans.webp` altı koşumun birinde 1440×**606**, kalan beşinde 1440×**601** ve beş koşumun md5'i birebir aynı (yayındaki dosyayla da aynı). Yineletilemedi, mekanizma tahmin: başsız render'da yerleşim/font yarışı. Önemi: `src/content/shots.ts` yükseklikleri elle çivili (CLS için) — hat sessizce 5 px kaydırırsa boyut bildirimi bayatlar ve kimse görmez. Ölçüm verify-phase 2026-09-23 oturumunda, kopya tabloyla koşuldu
 
 - [TASK-2.05] Demo formunun onay ve hata kutularına artık odak taşınıyor, ama kutular `role="status"` / `role="alert"` canlı bölgesini de taşımaya devam ediyor — ekran okuyucu içeriği **iki kez** duyurabilir (bir kez canlı bölge, bir kez odak). Projede ekran okuyucu ölçüm kanalı yok, ölçülemedi; ayırt edici `DemoForm.tsx` sonuç kutularının `aria-live` değeri
 
