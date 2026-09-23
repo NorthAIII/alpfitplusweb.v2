@@ -54,14 +54,26 @@ const KARSILIKSIZ: { id: string; iddia: string; urunGercegi: string; yasakli: st
   {
     id: "uyelik-bitis-bildirimi",
     iddia: "Üyelik bitişi push'u / bitişe yaklaşan üyeye bildirim",
-    urunGercegi: "12 gönderim fonksiyonunun hiçbiri üyelik bitişi göndermiyor",
+    // TASK-2.09 yeniden olctu: 12 degil 14 (urun iki gonderim daha ekledi);
+    // hicbiri hala uyelik bitisi degil. Bitise yaklasan uye PANELDE listelenir.
+    urunGercegi: "14 gönderim fonksiyonunun hiçbiri üyelik bitişi göndermiyor",
     yasakli: ["üyelik bitiş", "bitişine yaklaşan", "bitişe yaklaşan"],
   },
   {
+    // ⚠️ TASK-2.09 (olculdu 2026-09-23) B-029'un bu satirini DARALTTI.
+    // B-029 "revokeGrant'in uretim cagirani yok" diye olcmustu; o dogru ama
+    // eksik: geri alma uretimde `revokeTemplate` uzerinden kosuyor
+    // (accounts-update.ts:861 -> revokeGrant -> permissionGrant.deleteMany),
+    // uc PATCH /accounts/:userId server.ts:375'te kayitli ve paneli
+    // web/src/lib/account-mutations.ts cagiriyor. Yani "yetkiler sube bazinda
+    // verilir ve geri alinir" cumlesi DOGRU ve sitede duruyor.
+    // Ertelenmis olan yalniz SABLONDAN BAGIMSIZ tek-yetki revoke ucu.
+    // Bu yuzden `yasakli` daraltildi: eski genis liste ("geri alin", "geri
+    // alma") artik DOGRU olan cumleyi kirmizi yapardi (yanlis alarm).
     id: "yetki-geri-alma",
-    iddia: "Yetkiler şube bazında verilir ve geri alınır",
-    urunGercegi: "revokeGrant'ın üretim çağıranı yok; revoke ucu v1.5'e ertelendi",
-    yasakli: ["geri alın", "geri alma", "yetki geri"],
+    iddia: "Tek bir yetkinin şablon değiştirmeden geri alınması",
+    urunGercegi: "revoke HTTP ucu v1.5'e ertelendi (permission-templates.ts:15-17)",
+    yasakli: ["şablon değiştirmeden", "tek tek geri al", "yetkiyi sökme"],
   },
   {
     id: "kampanya",

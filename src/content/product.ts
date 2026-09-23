@@ -125,14 +125,22 @@ export const MODULES: Module[] = [
   {
     key: "uye360",
     title: "Üye 360",
-    blurb:
-      "Bir üyenin üyeliği, PT geçmişi, ölçümü, ödemesi ve diyetisyen notu tek ekranda.",
+    // B-029 #1 (TASK-2.09, olculdu 2026-09-23): panelin Uye 360 ekrani
+    // ../Alpfit.v1/web/src/pages/MemberDetailPage.tsx — bolumleri kimlik,
+    // haklar, randevular, grup kayitlari, odemeler. OLCUM GRAFIGI ve
+    // DIYETISYEN NOTU orada YOK; ekranin kendi "Yakinda" kutusu bunu yaziyor
+    // (tr.json -> member.upcoming: "... Uye 360 tam fazinda (W8) gelecek",
+    // render MemberDetailPage.tsx:434). Ikisi de uygulamada VAR (uyenin
+    // mobilinde MeasurementChart, diyetisyen modulunde program/dosya) —
+    // karsiligi olmayan iddia "TEK EKRANDA toplanmis olmalari"ydi, o yuzden
+    // bu modulden cikti; kalemi CAPABILITIES.yolda -> uye360-tam tasiyor.
+    blurb: "Bir üyenin üyeliği, PT geçmişi, grup kayıtları ve ödemesi tek ekranda.",
     points: [
       "Üyelik ve paket geçmişi",
       "Randevu ve yoklama kaydı",
-      "Ölçüm grafiği",
+      "Grup dersi kayıtları",
       "Ödeme zaman çizelgesi ve kalan borç",
-      "Diyetisyen programı ve dosyaları",
+      "Kimlik bilgileri ve üyenin giriş kodu",
     ],
     icon: "user",
   },
@@ -211,12 +219,25 @@ export const MODULES: Module[] = [
   {
     key: "bildirim",
     title: "Bildirim ve Bağlılık",
-    blurb: "Randevu, grup ve üyelik bitişi push'u. Toplu duyuru ve geri çağırma katmanı.",
+    // B-029 #3 ve #5 (TASK-2.09, olculdu 2026-09-23):
+    //  · UYELIK BITISI bildirimi YOK. notification.service.ts'in 14 gonderim
+    //    fonksiyonunun (B-029 12 olcmustu; urun iki tane daha ekledi) hicbiri
+    //    uyelik bitisi gondermiyor. membership-expiry.service.ts'in tuketicileri
+    //    okuma ucu + rapor ureticisi + MembershipExpiriesPage — yani bitise
+    //    yaklasan uye PANELDE LISTELENIR, bildirim gitmez. O liste zaten
+    //    "Uyelik ve Paket" modulunde yaziyor; kalem CAPABILITIES.yolda'da.
+    //  · KAMPANYA YOK. broadcasts.ts / BroadcastsPage.tsx var (toplu duyuru
+    //    dogru), campaign/kampanya adli rota-sayfa-servis yok. Ayni sayfanin
+    //    "Yolda" kolonu zaten "Kampanya ve pazarlama derinlesmesi" diyordu —
+    //    ic celiski buradan doguyordu.
+    //  · Yerine gecen kalem olculdu: sendComebackT2 — seri sifirlandiktan T+2
+    //    gun sonra uyeye geri cagirma push'u (idempotent, sessiz saat erteler).
+    blurb: "Randevu, grup ve geri çağırma push'u. Toplu duyuru katmanı.",
     points: [
       "Randevu ve grup dersi hatırlatması",
-      "Üyelik bitişine yaklaşan üyeye bildirim",
       "Bekleme listesinden yer açıldı bildirimi",
-      "Toplu duyuru ve kampanya",
+      "Serisi bozulan üyeye geri çağırma bildirimi",
+      "Toplu duyuru",
       "Haftalık aktiflik serisi",
     ],
     icon: "bell",
@@ -272,8 +293,14 @@ export const CAPABILITIES: Record<CapabilityStage, Capability[]> = {
     { id: "finans-ciro", label: "finans, ciro, kalan borç ve iade", modul: "finans ve ciro" },
     {
       id: "cok-sube-cockpit",
-      // Sablonlar urunde var ve panelde secilebiliyor; yetkinin GERI ALINMASI
-      // yok (revoke HTTP ucu v1.5'e ertelendi) — o kalem "yolda"da.
+      // Sablonlar urunde var ve panelde secilebiliyor. GERI ALMA da var:
+      // sablon degisimi eski sablonun grant'larini ayni transaction'da siler
+      // (olculdu 2026-09-23 — accounts-update.ts:861 revokeTemplate ->
+      // revokeGrant -> permissionGrant.deleteMany; uc PATCH /accounts/:userId,
+      // server.ts:375, panel cagrisi web/src/lib/account-mutations.ts).
+      // B-029 bunu "yok" diye olcmustu cunku yalniz revokeGrant'in cagiranina
+      // bakmisti; araya TASK-54.11'in REPLACE yolu girmis. Hala eksik olan tek
+      // sey sablon degistirmeden TEK bir yetkiyi sokmek — o "yolda"da.
       label: "çok şube cockpit ve üç yetki şablonu (patron, şube müdürü, muhasebe)",
       modul: "çok şube cockpit",
     },
@@ -300,15 +327,20 @@ export const CAPABILITIES: Record<CapabilityStage, Capability[]> = {
     { id: "churn-paneli", label: "churn ve risk paneli" },
     // Asagidaki dordu B-029'un olctugu karsiliksiz iddialardir. Urunun KENDI
     // kaydi bunlari erteliyor: Uye 360 tam fazi (W8), iptal esigi v1.5 adayi,
-    // uyelik bitisi bildirimi churn panelinin ardina birakilmis, revoke ucu
-    // v1.5'e ertelenmis. Site bunlari "bugun var" diye anlatamaz.
+    // uyelik bitisi bildirimi churn panelinin ardina birakilmis, tek-yetki
+    // revoke ucu v1.5'e ertelenmis. Site bunlari "bugun var" diye anlatamaz.
     {
       id: "uye360-tam",
       label: "Üye 360'ta ölçüm grafiği ve diyetisyen notunun tek ekranda toplanması",
     },
     { id: "iptal-esigi-ayari", label: "iptal eşiğinin kulüp tarafından ayarlanabilmesi" },
     { id: "uyelik-bitis-bildirimi", label: "üyelik bitişine yaklaşan üyeye bildirim" },
-    { id: "yetki-geri-alma", label: "şube yetkisinin panelden geri alınması" },
+    // TASK-2.09 daralttı (olculdu 2026-09-23): yetkinin panelden geri alinmasi
+    // BUGUN VAR (sablon degisimi eski grant'lari siliyor — cok-sube-cockpit
+    // kaleminin yorumu). Ertelenmis olan yalniz tek bir yetkiyi sablondan
+    // bagimsiz sokmek: permission-templates.ts:15-17 "revoke HTTP endpoint'i
+    // v1.5'e ertelendi".
+    { id: "yetki-geri-alma", label: "tek bir yetkinin şablon değiştirmeden geri alınması" },
   ],
   sonra: [
     { id: "online-odeme", label: "online ödeme" },

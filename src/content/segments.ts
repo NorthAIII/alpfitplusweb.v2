@@ -68,7 +68,15 @@ export const SEGMENTS: Segment[] = [
       },
       {
         title: "No-show adaleti kural olarak yazılı",
-        body: "İptal eşiğini siz belirlersiniz. Eşiğin içinde iptal hakkı iade eder, dışında yakar. Üye basmadan önce ne olacağını görür.",
+        // B-029 #2 (TASK-2.09, olculdu 2026-09-23): esik AYARLANABILIR DEGIL —
+        // kod sabiti, uc yerde (reservations-cancel.ts:55, group-class-cancel.ts:104,
+        // mobile/app/home/reservations.tsx) ve ayarlanabilirligi urunun kendi
+        // notunda v1.5 adayi (queue.ts:46). Cumlenin geri kalani olculdu ve
+        // DOGRU: iade/yanma hesabi reservations-cancel.ts:129'da, uye sonucu
+        // basmadan ONCE goruyor (mobile reservations.tsx:3 "surpriz yok").
+        // Gercek deger (24 saat) bilincle YAZILMADI — urun degisince bayatlar
+        // ve sitede o rakami urune bagli tutan hicbir kapi yok.
+        body: "İptal eşiği üründe sabit bir kuraldır. Eşiğin içinde iptal hakkı iade eder, dışında yakar. Üye basmadan önce ne olacağını görür.",
       },
       {
         title: "Doluluk ve eğitmen performansı rakamla",
@@ -204,7 +212,11 @@ export const SEGMENTS: Segment[] = [
       },
       {
         title: "Aktiflik serisi ve bildirim",
-        body: "Haftalık aktiflik takip edilir, bitişe yaklaşan üyelere bildirim gider.",
+        // B-029 #3 (TASK-2.09, olculdu 2026-09-23): bitise yaklasan uyeye
+        // BILDIRIM GITMIYOR — o liste panelde duruyor (MembershipExpiriesPage +
+        // bitise-yaklasan raporu). Giden gercek bildirim seri temelli:
+        // sendComebackT2, seri sifirlandiktan T+2 gun sonra.
+        body: "Haftalık aktiflik takip edilir, serisi bozulan üyeye geri çağırma bildirimi gider. Bitişe yaklaşan üyeler panelde listelenir.",
       },
     ],
     modules: ["grup", "takvim", "uyelik", "antrenor-perf", "bildirim"],

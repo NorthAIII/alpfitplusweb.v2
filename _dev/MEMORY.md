@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.07: Vercel atomu iki ölçümle düzeltildi — CLI kimliği snap revizyonuna çivili (`XDG_DATA_HOME` kaymış, düzeltmesiz her çağrı cihaz-giriş akışında asılıyor) ve `vercel env pull` `--sensitive` anahtarları maskeli döndürüyor. Yeni atom açılmadı, index satırı eklenmedi (konu mevcut atomun kapsamında).
+**Son Güncelleme:** 2026-09-23 — TASK-2.09: yeni atom + index satırı (Süreç Disiplinleri) — devralınan ürün-iddiası bulgusu uygulanmadan önce yeniden ölçülür ve ürünün kendi "v1.5 / ertelendi" notu çapa sayılmaz; B-029'un bir satırı tam bu yüzden yanlıştı (ölçüldü, cümle doğruymuş).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -49,6 +49,7 @@
 
 - [Aşamaya bağlı davranışta "ara hâl" ayrıca sınanır](memory/asama-bagimli-davranis-ara-hal-sinamasi.md) — `deployStage`'e göre davranan her task `VERCEL_ENV=production` + `…vercel.app` hâlini de koşar (projenin F7.5'e kadarki gerçek hâli); iki uçlu test bu fail-open'ı göremez
 - [Hız sınırlı uca test bataryası — her senaryo kendi IP'sini taşır](memory/hiz-sinirli-uca-test-bataryasi.md) — `/api/demo` IP başına 10 dk / 5 istek sayar ve doğrulamadan **önce** çalışır; çok senaryolu batarya senaryo başına ayrı `X-Forwarded-For` göndermezse 6. istekten sonra sahte kırmızı okur; **arayüz ölçen tarayıcı turu ucu `page.route` ile taklit eder** — kota saymaz, canlı depoya test kaydı yazılmaz
+- [Ürün iddiası düzeltilirken bulgu yeniden ölçülür](memory/urun-iddiasi-capa-dogrulamasi.md) — devralınan B-029 tipi tablo **uygulanmadan önce** `../Alpfit.v1`'e karşı yeniden ölçülür ve ürünün kendi "v1.5 / Yakında / ertelendi" notu **tek başına kanıt değildir** (bayatlıyor); karşılık çağrı grafiğiyle doğrulanır — yorum ve test satırları grep'te çağrı gibi görünür. Ölçülmeden "düzeltmek" doğru bir cümleyi bozabilir: TASK-2.09'da tam bu oldu
 - [Tek kaynağı atlayan çağrı siteleri kapanışta sayılır](memory/tek-kaynak-atlayan-cagri-sitesi-supurmesi.md) — tek kaynak tanıtan/değiştiren task, kapanışta kaynağı **atlayan** yazımları grep'ler; saf fonksiyon testi bu sınıfı göremez (TASK-1.20)
 
 ---

@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.08 ✅: sitenin yetenek iddialarının dayanağı olan tek liste kuruldu (`src/content/product.ts` → `CAPABILITIES`; bugün var 12 · yolda 7 · yol haritasında 5). Ürünün karşılamadığı beş iddianın hiçbiri "bugün var" kademesinde değil; `PRODUCT_STATUS.modules` artık elle yazılmıyor, listeden türüyor ve bir kalem düzeltildi ("antrenör performansı" eklendi). `short` silindi, `version` kaldı. Batarya 72 → 95 test. **Tüketiciler henüz bağlanmadı** — sabiti atlayan 17 çağrı satırı / 6 dosya ölçüldü (TASK-2.10/2.11).
+**Son Güncelleme:** 2026-09-23 — TASK-2.09 ✅: B-029'un beş karşılıksız cümlesinden **dördü düzeltildi, biri ölçümle çürütüldü**. Üye 360 artık "ölçüm grafiği + diyetisyen notu tek ekranda" demiyor; iptal eşiği "siz belirlersiniz" olmaktan çıktı (24 saat bilinçle **yazılmadı**); üyelik bitişi "bildirim gider" → "panelde listelenir"; "kampanya" modül metninden çıktı ve `/ozellikler`'in iç çelişkisi kapandı. Çürütülen: "yetkiler … geri alınır" **doğruymuş** (geri alma `revokeTemplate` üzerinden üretimde) — cümle korundu. Batarya 95 → 115.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 7/19 (TASK-2.01 ✅, TASK-2.02 ✅, TASK-2.03 ❌ iptal, TASK-2.04 ✅, TASK-2.05 ✅, TASK-2.06 ✅, TASK-2.07 ✅, TASK-2.08 ✅). Sıra TASK-2.09'da.
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 8/19 (TASK-2.01 ✅, TASK-2.02 ✅, TASK-2.03 ❌ iptal, TASK-2.04 ✅, TASK-2.05 ✅, TASK-2.06 ✅, TASK-2.07 ✅, TASK-2.08 ✅, TASK-2.09 ✅). Sıra TASK-2.10'da.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,9 +35,9 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.09 — Beş karşılıksız yetenek cümlesi düzeltilir (B-029)
+**Task:** TASK-2.10 — `/ozellikler` ve Kurucu Programı tek kaynaktan okur (B-040)
 **Durum:** ⬜ Bekliyor
-**İlerleme:** TASK-2.08 kapandı ve arşive gitti; yetenek listesi (`product.ts` → `CAPABILITIES`) artık var ve ürünün karşılamadığı beş iddia orada "yolda" kademesinde duruyor. Sıradaki adım `/devflow:run-task`. TASK-2.09 o listeye **dayanarak** sitedeki beş yanlış cümleyi düzeltir. ⚠️ **Liste kuruldu ama tüketiciler bağlanmadı** (bilinçli, plan böyle): beş ev hâlâ kendi metnini yazıyor — sabiti atlayan **17 çağrı satırı / 6 dosya** ölçüldü (`ozellikler/page.tsx` 6 · `faq.ts` 3 · `karsilastirma.ts` 2 · `chat.ts` 2 · `FounderProgram.tsx` 2 · `fiyat/page.tsx` 2) ve bu sayı TASK-2.10 + 2.11'in kapanış ölçütüdür.
+**İlerleme:** TASK-2.09 kapandı ve arşive gitti; sitedeki beş karşılıksız cümle artık ürün koduyla uyumlu ve `tests/iddia-metinleri.test.ts` bunu ziyaretçiye görünen yüzeylerde çiviliyor. Sıradaki adım `/devflow:run-task`. ⚠️ **Tüketiciler hâlâ bağlanmadı** (bilinçli, plan böyle): beş ev kendi metnini yazıyor — sabiti atlayan **17 çağrı satırı / 6 dosya** ölçüldü (`ozellikler/page.tsx` 6 · `faq.ts` 3 · `karsilastirma.ts` 2 · `chat.ts` 2 · `FounderProgram.tsx` 2 · `fiyat/page.tsx` 2) ve bu sayı TASK-2.10 + 2.11'in kapanış ölçütüdür. ⚠️ **TASK-2.10 `nextVersion` alanını açacak** — `FounderProgram.tsx:88` "v1.5"i hâlâ elle yazıyor (TASK-2.08 tüketicisiz alan açmamak için bilinçle bırakmıştı).
 **Not:**
 - **Yerel üretim provası (3100) artık hedefsiz** (TASK-2.02): `web-prod`'a `LEAD_STORE_URL` / `LEAD_FILE_PATH` / `RESEND_API_KEY` açıkça **boş** veriliyor ve uç geçerli talebe `503 no-sink` dönüyor. Bu **doğru** davranıştır (M3 F3.1) — 3100'e POST atıp `stored:true` bekleyen bir iş önce `docker-compose.yml`'deki `web-prod` yorumunu okusun; gerçek depoya karşı prova `--profile lead` + `http://lead-store:8090` ile açılır. Derleme sonrası kalıcı `ls /app/.env` kapısı **kurulmadı**, M6 F6.2'ye devredildi.
 - **Yasal metin için bağlayıcı ölçüm (TASK-2.01, 2026-09-22):** ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **bugün hiçbir saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. Yani metin *"IP tutulmaz"* diyemez ve **hiçbir süre yazamaz** — cümlenin son hâli TASK-2.17'nin işi.
@@ -65,7 +65,7 @@
 | 2.06 | TASK-2.06 — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a) | ✅ Tamamlandı |
 | 2.07 | TASK-2.07 — Talep sahibine onay e-postası + `notify_lead` (B-059) | ✅ Tamamlandı |
 | 2.08 | TASK-2.08 — Yetenek ve yol haritası tek kaynağı (B-029, B-040) | ✅ Tamamlandı |
-| 2.09 | TASK-2.09 — Beş karşılıksız yetenek cümlesi düzeltilir (B-029) | ⬜ Bekliyor |
+| 2.09 | TASK-2.09 — Beş karşılıksız yetenek cümlesi düzeltilir (B-029) | ✅ Tamamlandı |
 | 2.10 | TASK-2.10 — `/ozellikler` ve Kurucu Programı sabitten okur (B-040) | ⬜ Bekliyor |
 | 2.11 | TASK-2.11 — Chat, SSS, fiyat ve karşılaştırma sayfası sabitten okur (B-040, B-014) | ⬜ Bekliyor |
 | 2.12 | TASK-2.12 — Riskli alt küme taraması (B-029 kapanır) | ⬜ Bekliyor |
@@ -88,6 +88,20 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-2.09 — Beş karşılıksız yetenek cümlesi: dördü düzeltildi, biri çürütüldü (B-029)
+
+**Durum:** ✅ Tamamlandı — 2026-09-23
+**Detay:** `tasks/archive/TASK-2.09.md`
+
+**Özet:**
+- **Sitenin ürüne uymayan dört cümlesi düzeldi, tonu değişmeden.** Üye 360 artık "ölçüm grafiği ve diyetisyen notu **tek ekranda**" demiyor — ikisi de üründe **var** ama başka ekranlarda (üyenin mobilinde, diyetisyen modülünde); panelin kendi "Yakında" kutusu bunu zaten yazıyordu. İptal eşiği "**siz belirlersiniz**" olmaktan çıkıp ürünün gerçeği olan sabit kurala döndü. Üyelik bitişi "**bildirim gider**" değil artık "**panelde listelenir**" (giden gerçek bildirim seri temelli geri çağırma — ölçüldü). "Kampanya" modül metninden çıktı ve **`/ozellikler`'in iki kolonunun birbirini kestiği iç çelişki kapandı** (servisten ölçüldü: eski ifade 0, kampanya artık yalnız Yolda kolonunda).
+- **Beşinci kalem ölçümle çürütüldü — cümle doğruymuş ve yerinde kaldı.** "Yetkiler şube bazında verilir **ve geri alınır**": bulgu yalnız `revokeGrant`'in çağıranına bakıp "yok" demişti, oysa geri alma üretimde **başka bir isim** üzerinden koşuyor: `revokeTemplate` (`accounts-update.ts:861`, uç `PATCH /accounts/:userId`, paneli çağırıyor) ve şablon değişimi eski yetkileri aynı transaction'da siliyor. Gerçekten ertelenmiş olan **tek bir yetkiyi şablondan bağımsız sökmek**; `yolda` kalemi buna daraltıldı. Ölçülmeseydi doğru bir cümle bozulacaktı. **İptal eşiğinin 24 saatlik değeri bilinçle yazılmadı** — sitede o rakamı ürüne bağlı tutan kapı yok, yazılsa B-029'un kendisi olan çapasız iddia sınıfına girerdi.
+- **Yeni kapı ziyaretçiye görünen metni güdüyor:** `tests/iddia-metinleri.test.ts`. Boşluk gerçekti ve sondayla gösterildi — metne üç iddia geri yazıldığında TASK-2.08'in sabit kapısı **23/23 yeşil kaldı**, yeni kapı 3 kırmızı verdi. Bulgu atomunun bayat satırı ve ürünün kendi bayat notu memory'ye süreç kuralı olarak yazıldı.
+
+**Test:** `npm test` **115 geçti + 1 atlandı** (taban 95+1; +20 senaryo — yeni `tests/iddia-metinleri.test.ts`). **Ürettiğim kapı iki sondayla sınandı** (ikisinde de kaynak değil **girdi** bozuldu; iki dosya scratchpad'e yedeklendi, sonra `diff -q` ile birebir geri yüklendi): *bozuk girdi* — üç karşılıksız iddia ziyaretçiye görünen metnin kendisine geri yazıldı → **3 kırmızı**, üçü de doğru testte; sabit kapısı aynı sondada 23/23 yeşil kaldı ve bu, yeni kapının neden ayrı gerektiğinin kanıtıdır. *Boş kapsam* — `MODULES` + `SEGMENTS` boşaltıldı → **8 kırmızı**; bu sondada "…demiyor" biçimindeki **12 kontrol yeşil kaldı**, fail-open tam olarak orada. Sonda sonrası batarya yeniden 115+1. `npx tsc --noEmit` çıkış 0. Üretim derlemesi imajın builder katmanında hatasız; 3100 yeni imaja alındı ve beş rota 200 (`/` 344.982 B, `/ozellikler` 173.449 B, üç segment sayfası). **Düzeltilen cümleler serviste doğrulandı** (eski ifadeler 0, yeni ifadeler yerinde). `a11y` 8 rota **TOPLAM SORUN 0**; `font-guard` 16 sayfa / 80.486 karakter, kümede olmayan karakter yok; `mobile-audit` **9/9 rotada yatay kaydırma yok**, dokunma hedefi **157** (taban birebir); `scan` 390×844 dört rota **konsol temiz**. ⚠️ `perf` koşulmadı — değişiklik yalnız metin içeriği (`/ozellikler` −54 B).
+
+---
+
 ### TASK-2.08 — Yetenek ve yol haritası tek kaynağı: `product.ts` → `CAPABILITIES` (B-029, B-040)
 
 **Durum:** ✅ Tamamlandı — 2026-09-23
@@ -101,21 +115,6 @@
 **Test:** `npm test` **95 geçti + 1 atlandı** (taban 72+1; +23 senaryo — yeni `tests/capabilities.test.ts`). **Ürettiğim kapı iki sondayla sınandı** (ikisinde de kaynak değil **girdi** bozuldu; dosya önce scratchpad'e yedeklendi, sonra birebir geri yüklendi — `diff -q` doğruladı): *bozuk girdi* — ürünün karşılamadığı "toplu duyuru ve kampanya" iddiası "bugün var" kademesine yeni kalem olarak yazıldı (id hiç taşınmadan, kusurun gerçekte oluşacağı yerde) → **1 kırmızı**, doğru testte; kimlik ayağı bu sondada yeşil kaldı ve bu bilinçli kontrol grubudur. *Boş kapsam* — kademe komple boşaltıldı → **3 kırmızı**; bu sondada beş metin kontrolü **yeşil kaldı**, "hiç bakmadan PASS basan kapı" tam olarak budur ve boş-kapsam bloğu o fail-open için var. Sonda sonrası batarya yeniden 95+1. `npx tsc --noEmit` çıkış 0. Üretim derlemesi imajın builder katmanında hatasız, **23 rota**; 3100 yeni imaja alındı (`/` 200 / 345.042 B, `/ozellikler` 200 / 173.503 B) ve değişen cümle **serviste doğrulandı** ("antrenör performansı" 1 kez, eski sıralama 0). `a11y` 8 rota **TOPLAM SORUN 0**; `font-guard` 16 sayfa / 80.509 karakter, kümede olmayan karakter yok; `scan` 390×844 `/` 20 kare ve `/ozellikler` 15 kare **konsol temiz**. ⚠️ `mobile-audit`/`perf` **koşulmadı** — değişiklik tek bir cümlenin içeriğine dokunuyor, yerleşim/ağırlık ekseni kapsam dışı.
 
 ---
-
-### TASK-2.07 — Talep sahibine onay e-postası ve `notify_lead`'in gerçek sonucu (B-059)
-
-**Durum:** ✅ Tamamlandı — 2026-09-23
-**Detay:** `tasks/archive/TASK-2.07.md`
-
-**Özet:**
-- **Talep sahibi artık ikinci bir kanaldan da onay alıyor:** ekran kutusunun yanında bir e-posta. Metin `src/content/mail.ts`'te (yeni tek kaynak), dönüş süresi vaadi formun onay kutusundaki cümlenin **aynısı** — v1'in "(genelde 1 iş günü içinde)" parantezi taşınmadı, yeni süre icat edilmedi (B-026 büyümedi). Alıcı ziyaretçi, `reply_to` **ekibin kutusu**; gövde HTML değil düz metin (ziyaretçinin yazdığı ad doğrudan gövdeye giriyor).
-- **`notify_lead` kalıcı `pending` olmaktan çıktı.** PATCH gövdesi `{notify_team, notify_lead}`; üç değerin **üçü de gerçek depo hook'una yazılarak** ölçüldü — `sent` (`2f0kswpek4ivyyd`), `skipped` (`4ih3pu3sd4m85kr`, ziyaretçi geçerli adres vermedi), `failed` (`g1jxcb84qmyvlyr`). Aynı sorgunun bir önceki kaydı (değişiklikten önce) `notify_lead: pending` — kontrol grubu. 2026-09-14 gerekçe yorumu silinmedi, dayanağının neden düştüğüyle birlikte güncellendi.
-- **İki gönderim paralel ve birbirini bloke etmiyor:** sağlayıcı damgaları **214 ms** arayla düştü, uç süresi **575 ms**. Ziyaretçinin gördüğü yanıt üç dalda da değişmiyor (aynı `200`, aynı gövde alanları) — onay gönderimi `200`'ü `503` yapmıyor. **B-059'un iki ayağı kapandı**, atom açık kalıyor (üçüncü ayak alan adı geçişi fazında).
-
-**Test:** `npm test` **72 geçti + 1 atlandı** (taban 66+1; +6 senaryo). **Kontrol grubu:** aynı batarya **kod değişmeden önce** koşuldu → **7 kırmızı**, yani yeni dallar gerçekten ölçüyor; tabanda yeşil kalan tek yeni senaryo "üç dalda da yanıt aynı"dır ve bilinçlidir (yanıt gövdesi değişmiyor). Uçtan uca tur **yerel `lead-store`'a karşı**, kendi geçici konteynerimde (üretim imajı, compose ağı, önizleme token'ı) — canlı `leads_preview` deposuna **hiçbir kayıt yazılmadı**; talep HTTP **200** `{ok:true,stored:true,mailed:true}`. Sağlayıcıda **iki e-posta da `delivered`** (onay `01a0cbda-b7b1-…`, ekip `01a0cbda-b734-…`); onayın gövdesi geri okundu: `from` `demo@alpfitplus.com`, `reply_to` ekip kutusu, `html` alanı boş. `skipped`/`failed` dalları geçersiz sağlayıcı anahtarıyla koşuldu — hiç e-posta gitmedi. `npx tsc --noEmit` çıkış 0; üretim derlemesi imajın builder katmanında hatasız, 3100 yeni imaja alındı (`/demo` HTTP 200 / **74.747 B** — TASK-2.06 ile birebir). ⚠️ `a11y`/`mobile-audit`/`scan`/`font-guard` **koşulmadı**: değişiklik render edilen hiçbir yüzeye dokunmuyor (`src/components/**` ve `src/app/**/page.tsx` değişmedi).
-
----
-
 
 <!-- KURAL: **Detay:** yolu task'ın DURUMUNA bağlıdır. ✅ Tamamlandı ise task arşive taşınmıştır (run-task Adım 7) ve yol `tasks/archive/…`'dır; task hâlâ `_dev/tasks/` altındaysa (🔄 / ⏸️ / 🔴) canlı yol yazılır. Özet Adım 5'te yazılır, taşıma Adım 7'de yapılır — sırayı izleyip tamamlanan task'a canlı yol yazmak, commit anında kırık bir referans bırakır ve bir sonraki audit turu onu "kırık dosya referansı" kalemi olarak açar. -->
 
@@ -142,7 +141,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.09.md` ⬜ — Beş karşılıksız yetenek cümlesi düzeltilir (B-029)
+**Aktif Task:** `tasks/TASK-2.10.md` ⬜ — `/ozellikler` ve Kurucu Programı tek kaynaktan okur (B-040)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
