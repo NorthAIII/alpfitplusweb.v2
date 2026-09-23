@@ -91,7 +91,7 @@ export const KVKK: LegalDoc = {
         },
         {
           type: "p",
-          text: "Formu doldurmadan siteyi yalnızca gezdiğinizde, sizden kimlik veya iletişim verisi toplanmaz.",
+          text: "Formu doldurmadan siteyi yalnızca gezdiğinizde, sizden ad, telefon ve elektronik posta gibi kimlik ve iletişim verisi toplanmaz. Buna karşılık her ziyaret, aşağıda Aktarım başlığında anlatılan erişim kaydına bir satır düşürür; o satırda IP adresiniz ve tarayıcınızın kendini tanıttığı bilgi yer alır.",
         },
       ],
     },
@@ -120,28 +120,69 @@ export const KVKK: LegalDoc = {
         },
       ],
     },
+    // Aktarim ve olcum beyanlarinin dayanagi (TASK-2.17, B-024 k.2). Her kalem
+    // 2026-09-23'te YENIDEN olculdu; devralinan rakam kullanilmadi:
+    //  - Barindirma ABD: repoda `vercel.json` ve `preferredRegion` YOK, yani
+    //    Vercel'in varsayilani gecerli. Canli olcum: `/api/demo` yanitinin
+    //    `x-vercel-id` basligi uc kosumda da `fra1::iad1::…` -> fonksiyon
+    //    bolgesi `iad1`. Vercel'in kendi belgesi: iad1 = us-east-1,
+    //    Washington, D.C., USA (vercel.com/docs/edge-network/regions).
+    //  - Sunucu Almanya: RDAP 178.104.140.36 -> Hetzner Online GmbH, ag adi
+    //    CLOUD-NBG1, country DE; ters DNS `…clients.your-server.de`.
+    //  - Resend ABD: saglayicinin KENDI beyani, resend.com/legal/dpa ->
+    //    "Company's primary processing operations take place in the United
+    //    States" (privacy-policy ayni seyi yaziyor). v1'in 2026-07-28 olcumu
+    //    bugun de geciyor -- kopyalanmadi, kaynaga geri gidildi.
+    //  - Resend gonderim bolgesi: `GET api.resend.com/domains` ->
+    //    alpfitplus.com region `eu-west-1` (Irlanda), status verified. Iki
+    //    kalem AYRI YAZILIR cunku bolge ayari verinin evini SOYLEMEZ -- v1'in
+    //    kendi dersi (`bunker-ortami.md`: "Ireland secildi -> veri AB'de"
+    //    yanlis cikmisti). Gonderim Irlanda, saklama ABD.
+    //  - Ekip kutusu: `DEMO_TO` alan adi `kiwiailab.com`, MX = aspmx.l.google
+    //    .com (Google Workspace). Yalniz "ABD merkezli" yazildi; verinin hangi
+    //    bolgede durdugu OLCULMEDI, o yuzden yazilmadi.
+    //  - Erisim kaydi: `bunker-nginx` LogConfig `{}` (rotasyon inmiyor),
+    //    615.853 satirin 604.452'si ham IPv4 ile basliyor, 5.647 benzersiz IP,
+    //    pencere 2026-08-22 -> 2026-09-23 ve rotasyon dosyasi 0. Bu yuzden
+    //    metin HICBIR saklama suresi yazmaz, "bugun isletmiyoruz" der.
+    //  - Umami semasi: information_schema taramasinda IP sutunu yok (tek iki
+    //    eslesme `board.description` / `report.description`). DIKKAT: `session`
+    //    yalniz ulke/bolge/sehir DEGIL, ayrica browser/os/device/screen/
+    //    language tutuyor -- TASK-2.01'in ozeti bu kalemde eksikti, metin
+    //    olculen tam listeye gore yazildi.
+    // "Birlestirilmez" bir TAAHHUTTUR, olcum degil. Hukuki sebep bolumune
+    // dokunulmadi: m.9 dayanagi hukukcunundur (B-008).
     {
       title: "Aktarım",
       blocks: [
         {
           type: "p",
-          text: "Demo talebiniz, kendi sunucumuzdaki bir kayıt veritabanına yazılır. Sunucu bize aittir ve Almanya'da (Nürnberg) bir veri merkezinde durur; kaydın kendisi bir üçüncü kişiye aktarılmaz. Kayıtları yalnızca yetkili yönetici hesabımız görebilir: veritabanının dışarıya açık okuma kuralları kapalıdır ve sitenin kullandığı anahtar yalnızca yeni kayıt oluşturabilir, var olan kayıtları okuyamaz.",
+          text: "Demo talebiniz, kendi sunucumuzdaki bir kayıt veritabanına yazılır. Sunucu bize aittir ve Almanya'da (Nürnberg) bir veri merkezinde durur; kaydın tutulduğu yer burasıdır ve aşağıda saydığımız tedarikçiler dışında hiç kimseye veri gitmez. Kayıtları yalnızca yetkili yönetici hesabımız görebilir: veritabanının dışarıya açık okuma kuralları kapalıdır ve sitenin kullandığı anahtar yalnızca yeni kayıt oluşturabilir, var olan kayıtları okuyamaz.",
         },
         {
           type: "p",
-          text: "Kişisel verileriniz, yalnızca demo talebinizin karşılanması amacıyla ve amacın gerektirdiği ölçüde, aşağıdaki hizmetleri aldığımız tedarikçilerimize aktarılabilir:",
+          text: "Kişisel verileriniz, yalnızca demo talebinizin karşılanması amacıyla ve amacın gerektirdiği ölçüde, aşağıdaki hizmetleri aldığımız tedarikçilere aktarılır. Liste her tedarikçinin rolünü ve verinizin işlendiği ülkeyi gösterir:",
         },
         {
           type: "ul",
           items: [
-            "Barındırma: sitenin ve demo talep formunun çalıştığı altyapı",
-            "Sunucu barındırma: kayıt veritabanımızın çalıştığı sunucunun bulunduğu veri merkezi",
-            "Elektronik posta gönderimi: talebinizin bize bildirilmesi",
+            "Barındırma — sitenin ve demo talep formunun çalıştığı altyapı (Vercel, Amerika Birleşik Devletleri merkezli): form ucumuz sağlayıcının Washington, D.C. bölgesindeki sunucularında çalışır, yani formu gönderdiğinizde verileriniz önce orada işlenir",
+            "Sunucu barındırma — kayıt veritabanımızın ve ölçüm yazılımımızın çalıştığı sunucunun bulunduğu veri merkezi (Hetzner, Almanya — Nürnberg)",
+            "Elektronik posta gönderimi — talebinizin bize bildirilmesi ve size onay e-postası gönderilmesi (Resend, Amerika Birleşik Devletleri merkezli): gönderim İrlanda bölgesinden yapılır, ancak sağlayıcı kendi veri işleme sözleşmesinde müşteri verisini Amerika Birleşik Devletleri'nde işlediğini yazar",
+            "Ekip posta kutusu — bize gelen bildirimin düştüğü kutu (Google Workspace, Amerika Birleşik Devletleri merkezli)",
           ],
         },
         {
           type: "p",
-          text: "Siteyi kaç kişinin gezdiğini ölçmek için, kayıt veritabanıyla aynı sunucuda kendi kurduğumuz, çerezsiz ve kimlik tanımlamayan bir ölçüm yazılımı (Umami) kullanıyoruz. Ölçüm için üçüncü bir tarafa veri göndermiyoruz ve bu ölçüme kişisel verileriniz aktarılmaz: ölçüm kayıtları sizi kişi olarak tanımlamaz ve demo talebinizdeki bilgilerle birleştirilmez.",
+          text: "Bu listenin pratik karşılığı şudur: yurt dışına aktarım koşullu bir ihtimal değil, her demo talebinde olan şeydir. Talebiniz önce Amerika Birleşik Devletleri'ndeki form ucumuzda işlenir, ardından Almanya'daki sunucumuza yazılır; bildirim ve onay e-postaları Amerika Birleşik Devletleri merkezli sağlayıcılar üzerinden iletilir.",
+        },
+        {
+          type: "p",
+          text: "Siteyi kaç kişinin gezdiğini ölçmek için, kayıt veritabanıyla aynı sunucuda kendi kurduğumuz, çerezsiz bir ölçüm yazılımı (Umami) kullanıyoruz. Ölçüm için üçüncü bir tarafa veri göndermiyoruz. Bu yazılımın kendi veritabanında IP adresiniz için bir alan yoktur; orada ziyaretten türetilmiş ülke, bölge ve şehir ile tarayıcı, işletim sistemi, cihaz türü, ekran boyutu ve dil bilgisi durur. Bu kayıtlar demo talebinizdeki bilgilerle birleştirilmez.",
+        },
+        {
+          type: "p",
+          text: "Ölçüm yazılımı kendi sunucumuzdan yüklendiği için, siteyi her gezişinizde o sunucunun erişim kaydına bir satır düşer ve bu satırda IP adresiniz ile tarayıcınızın kendini tanıttığı bilgi yer alır. Kayıt sunucumuzda kalır; bir başkasına gönderilmez, dışarıya aktarılmaz. Ne kadar saklandığı aşağıda Saklama süresi başlığında yazılıdır.",
         },
         {
           type: "p",
@@ -159,6 +200,10 @@ export const KVKK: LegalDoc = {
         {
           type: "p",
           text: "Talebiniz ayrıca elektronik posta ile bize bildirilir; geçerli bir elektronik posta adresi verdiyseniz size de bir onay e-postası gönderilir. Bize gelen bildirimin bir kopyası ekip posta kutumuzda kalır; her iki e-postanın birer kopyası da e-postayı ileten sağlayıcıda kalır. Bu kopyalar yukarıdaki 12 aylık süreye bağlı değildir; bugün için otomatik bir silme süresi işletmiyoruz.",
+        },
+        {
+          type: "p",
+          text: "Siteyi gezdiğinizde sunucumuzun erişim kaydına düşen satırlar da bu 12 aylık süreye bağlı değildir: bugün için o kayıtlar üzerinde otomatik bir silme süresi işletmiyoruz. Bir silme süresi işletmeye başladığımızda bu metne yazılacaktır.",
         },
       ],
     },
@@ -202,7 +247,7 @@ export const PRIVACY: LegalDoc = {
       blocks: [
         {
           type: "p",
-          text: "Siteyi yalnızca gezdiğinizde sizden kimlik veya iletişim bilgisi toplamıyoruz. Yalnızca demo talep formunu doldurduğunuzda verdiğiniz bilgileri alıyoruz.",
+          text: "Siteyi yalnızca gezdiğinizde sizden ad, telefon veya elektronik posta gibi kimlik ve iletişim bilgisi toplamıyoruz; ziyaretinizde sunucumuzun erişim kaydına düşen bilgiler aşağıda «Çerezler ve ölçüm» başlığında yazılıdır. Yalnızca demo talep formunu doldurduğunuzda verdiğiniz bilgileri alıyoruz.",
         },
         {
           type: "ul",
@@ -229,7 +274,11 @@ export const PRIVACY: LegalDoc = {
         },
         {
           type: "p",
-          text: "Hangi sayfaların ziyaret edildiğini ve demo talep yolunun kullanılıp kullanılmadığını görmek için, kendi sunucumuzda çalışan çerezsiz bir ölçüm yazılımı (Umami) kullanıyoruz. Bu ölçüm tarayıcınıza çerez yerleştirmez, kayıtlarında IP adresinizi tutmaz ve sizi kişi olarak tanımlamaz.",
+          text: "Hangi sayfaların ziyaret edildiğini ve demo talep yolunun kullanılıp kullanılmadığını görmek için, kendi sunucumuzda çalışan çerezsiz bir ölçüm yazılımı (Umami) kullanıyoruz. Bu yazılım tarayıcınıza çerez yerleştirmez ve kendi veritabanında IP adresiniz için bir alan tutmaz; orada ziyaretten türetilmiş ülke, bölge ve şehir ile tarayıcı, işletim sistemi, cihaz türü, ekran boyutu ve dil bilgisi durur.",
+        },
+        {
+          type: "p",
+          text: "Ölçüm yazılımı kendi sunucumuzdan yüklendiği için, siteyi her gezişinizde o sunucunun erişim kaydına bir satır düşer; bu satırda IP adresiniz ve tarayıcınızın kendini tanıttığı bilgi yer alır. Kayıt sunucumuzda kalır ve bir başkasına gönderilmez. Bu kayıtların ne kadar saklandığı KVKK Aydınlatma Metni'nin Saklama süresi başlığında yazılıdır.",
         },
         {
           type: "p",

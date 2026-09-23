@@ -4,7 +4,7 @@
 
 ## Kural
 
-**Beş ayrı kural, beşi de zorunlu:**
+**Altı ayrı kural, altısı da zorunlu:**
 
 1. **Devralınan bulgu tablosu uygulanmadan önce yeniden ölçülür.** Ürün deposu bu sitenin fazlarından bağımsız ilerliyor; bir bulgu yazıldıktan sonra ürün o boşluğu kapatmış olabilir. Ölçüm ucuz, yanlış düzeltme pahalı — çünkü "düzeltme" bu projede *doğru bir cümleyi bozmak* anlamına gelebilir.
 2. **Ürünün kendi erteleme notu (`v1.5` · `Yakında` · `ertelendi` · `W8`) tek başına kanıt değildir.** Not, kodu değişince güncellenmiyor. Karşılığı **çağrı grafiğiyle** doğrula: fonksiyonun üretim çağıranı var mı, çağıran bir HTTP ucuna bağlı mı, uç `server.ts`'te kayıtlı mı, paneli çağırıyor mu.
@@ -14,6 +14,8 @@
 4. **YERİNE yazdığın iddia da ölçülür — ve onu çivileyen kapı elle listeden değil gerçeğin kaynağından türetilir.** Bir karşılıksız cümleyi silmek işin yarısı; yerine gelen cümle de bir iddiadır ve aynı kapıdan geçmelidir. Elle yazılmış bir `toContain(...)` listesi burada **koruma değil kilittir**: yanlış cümleyi sabitler ve sonraki turlara "ölçülmüş" diye görünür.
 
 5. **Yazdığın cümlenin KAPSAMI ölçtüğün alanı aşmamalı — ve kapsam ÖZNEDE saklıdır.** Aynı olgu iki cümleyle anlatılabilir ve biri doğru, öteki yanlış olur: *"tarayıcı bilgisini kaydetmiyoruz"* **bütün** yolları (platform logları, önündeki nginx, sağlayıcılar) kapsar, *"talebinizin kaydına yazılmaz"* yalnız ölçtüğün yolu. Ölçtüğün şey ikincisiyse birincisini yazma. Ölçüt mekanik: cümleyi yazdıktan sonra **öznesini sor** — "kim/ne?" sorusunun cevabı ölçümünün kapsamından geniş mi? Geniş olduğu her yerde ya kapsamı daralt ya o alanı da ölç. Aynı sınır olumsuz beyanlar için ekstra sıkıdır ("…yapmıyoruz", "…tutulmaz", "…gitmez"): olumsuz cümleyi doğrulamak için **her** yolu ölçmen gerekir, oysa olumlu cümle için bir yol yeter.
+
+6. **İddianın KAYNAĞI da doğrulanır — devralınan bir ÖZET, devralınan bir iddia kadar risklidir.** Cümleyi kendi projenin bir gün önceki task'ından çıkan bir özete dayandırma; **ölçümün kendisine** dön. Özet tipik olarak yanlış değil **eksik** olur ve eksiklik ancak kaynakta görünür. Ayrıca aynı sağlayıcı için **iki ayrı ülke sorusu** vardır ve karıştırılırsa cümle yanlış olur: *nerede işliyor* (ölçülebilir: fonksiyon bölgesi, ağ kaydı, sağlayıcının kendi sözleşmesi) ile *şirket nerede* (yalnız "merkezli" demeye yeter). Bölge **ayarı** verinin evini söylemez.
 
 ## Neden — ölçülmüş iki hâl (TASK-2.09, 2026-09-23)
 
@@ -54,6 +56,14 @@ Yasal metnin işlenen-veri anlatımı ölçülmüş gerçeğe hizalanırken **bu
 İkincisi özellikle öğreticidir çünkü **B-024'ün kendi itirazının sınıfıdır**: bulgu, sitenin *"bu ölçüm … IP adresinizi tutmaz"* cümlesini tam bu gerekçeyle çürütmüştü (ölçüm sisteminin önündeki nginx ham IP tutuyor). Aynı turda aynı hatayı yapmamak, ancak cümleyi yazdıktan sonra öznesini sormakla mümkün oldu.
 
 **Yan kural — ölçülmemiş komşu cümleye dokunma, ama çelişki de üretme.** Aynı dosyada duran ve başka bir task'a ait iki cümle (`legal.ts` → Umami'nin IP'si · yalnız gezen ziyaretçi) bilinçle bırakıldı; yazılan yeni cümleler **talep yoluna** daraltıldığı için ikisiyle de kesişmedi. Kapsamı daraltmak yalnız doğruluk değil, **ayrıştırılabilirlik** de sağlıyor: 2.17 o cümleleri kendi ölçümüyle değiştirirken bu turun cümlelerine dokunmak zorunda kalmayacak.
+
+## Neden — 6. kural (TASK-2.17, 2026-09-23)
+
+Yasal metnin ölçüm cümlesi Umami'nin veritabanını anlatacaktı. Elde **aynı projenin bir gün önceki** ölçümünün özeti vardı (TASK-2.01): *"`session` yalnız türetilmiş ülke/bölge/şehir tutuyor."* Özet kullanılmadı, `information_schema` yeniden sorgulandı — ve özet **eksik** çıktı: IP sütunu gerçekten yok, ama `session` ayrıca `browser, os, device, screen, language` tutuyor. Yanlış değildi, **tam değildi**; olduğu gibi metne geçseydi B-024'ün kapattığı sınıfta yeni bir eksik beyan doğardı. Maliyet tek bir `SELECT`'ti.
+
+**İkinci yarısı, aynı turun tedarikçi ülkeleri.** Dördü de kaynağından ölçüldü ve üç ayrı ölçüm türü gerekti: **canlı yanıt başlığı** (Vercel fonksiyonu `x-vercel-id` → `iad1`, üç koşumda da; repoda `vercel.json`/`preferredRegion` yokluğu ayrıca doğrulandı), **ağ kaydı** (RDAP → Hetzner / `CLOUD-NBG1` / DE), **sağlayıcının kendi sözleşmesi** (Resend DPA → ABD). Dördüncüsü (Google Workspace) yalnız MX'ten görüldüğü için metne sadece *"ABD merkezli"* girdi — veri bölgesi ölçülmediği için yazılmadı.
+
+⚠️ **Bölge ayarı tuzağı sahada iki kez doğrulandı.** v1 bir kez *"Resend bölgesi İrlanda → veri AB'de"* diye yanlış sonuca varmıştı (`bunker-ortami.md`). Bu turda iki kalem **ayrı ayrı** ölçüldü: gönderim bölgesi gerçekten `eu-west-1` (İrlanda), ama sağlayıcının saklaması ABD. Metin ikisini ayrı cümlelerde yazar — birleştirmek yanlış olurdu, gönderim bölgesini hiç yazmamak ise v1'e göre gerileme.
 
 ## Pratik ölçüm deseni
 

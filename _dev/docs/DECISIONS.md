@@ -19,6 +19,36 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-23 — Yasal metin aktarımı olgu olarak yazar: dört tedarikçinin ülkesi sayılır, hukuki dayanak hukukçuya bırakılır
+
+**Bağlam:** 2026-09-22 «Ölçüm sunucusu ham IP tutuyor…» kararı metnin ne diyemeyeceğini sabitlemişti; ne **diyeceği** TASK-2.17'ye kalmıştı. Aynı turda aktarım maddesinin olgu tarafı da yazıldı. Ölçüm dört tedarikçinin dördü için de kaynağından yapıldı (döküm: `tasks/archive/TASK-2.17.md`).
+
+**Karar:** Metin aktarımı **koşullu ihtimal olarak değil olgu olarak** anlatır (`aktarılabilir` → `aktarılır`) ve tedarikçi listesi her kalemin **rolünü ve verinin işlendiği ülkeyi** söyler; liste 3 → 4 kaleme çıkar (ekip posta kutusu eklenir). Ölçüm beyanlarında *"IP tutulmaz"* sınıfı iddia kullanılmaz ve **hiçbir saklama süresi yazılmaz** — bunun yerine dokümanın yerleşik deyimi tekrarlanır: *"bugün için otomatik bir silme süresi işletmiyoruz."* Yurt dışı aktarımın **hukuki dayanağı (KVKK m.9) yazılmaz**; o B-008'de hukukçunundur.
+
+**Gerekçe:**
+- **Ölçülen yazılır, ölçülmeyen yazılmaz — ve ikisi aynı cümlede karışmaz.** Vercel için *nerede işlediği* ölçüldü (`x-vercel-id` üç koşumda `iad1`, repoda `vercel.json`/`preferredRegion` yok), Google için yalnız *şirketin nerede olduğu* biliniyor (MX Google'da; Workspace veri bölgesi ölçülmedi) — metin birincisini bölge adıyla, ikincisini yalnız "ABD merkezli" diye yazar.
+- **Gönderim bölgesi ile saklama yeri ayrı cümlelerde durur.** Resend `eu-west-1`'den gönderiyor ama kendi DPA'sında *"primary processing operations take place in the United States"* diyor. v1 bu ikisini bir kez birleştirip yanlış sonuca varmıştı (`bunker-ortami.md`); tekrarlanmaması için ayrım metne yerleştirildi.
+- **Süre vaadi vermemek, uydurma süre yazmaktan dürüsttür** (2026-09-22 kararının devamı). Rotasyon `altyapi/vps` tarafında düzeltilirse ≈ 30 günlük pencere doğar ve metin o gün bir süre yazabilir; bu yüzden metne *"Bir silme süresi işletmeye başladığımızda bu metne yazılacaktır"* çapası kondu.
+- **v1'den gerileme yok** (B-059 k.3): v1'in `RECIPIENTS` listesindeki beş kalemin beşi de karşılandı, `TRANSFER_FACT` karşılığı yazıldı; v2 iki yerde daha ileride (fonksiyon bölgesi adıyla; erişim kaydının kendisi v1'in metninde yok).
+
+**Bedel, bilerek kabul:** Metin yurt dışı aktarımı olgu olarak duyurur ama dayanağını kurmaz — bu boşluk **görünür** kalır ve hukukçu incelemesinde kapanır (B-008). Uydurma bir madde numarası yazmak bu boşluğu gizlerdi.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.17 (`tasks/archive/TASK-2.17.md`), B-024 kapanışı
+
+---
+
+### 2026-09-23 — Devralınan ölçüm ÖZETİ, devralınan iddia kadar risklidir: yasal cümle özetten değil ölçümün kendisinden yazılır
+
+**Bağlam:** TASK-2.17, Umami'nin veritabanı hakkında bir cümle yazacaktı. Elde TASK-2.01'in bir gün önceki özeti vardı: *"`session` yalnız türetilmiş ülke/bölge/şehir tutuyor."* Özet kullanılmadı, `information_schema` yeniden sorgulandı.
+
+**Karar:** Yasal metne giren her olgu, ondan üretilmiş bir **özetten değil ölçümün kendisinden** yazılır — özet aynı projenin bir gün önceki task'ından gelse bile. Ölçüm tekrarı pahalıysa cümle o kalemde yazılmaz.
+
+**Gerekçe:** Yeniden ölçüm özetin **eksik** olduğunu gösterdi: IP sütunu gerçekten yok, ama `session` ayrıca `browser, os, device, screen, language` tutuyor. Özet **yanlış değil, tam değildi** — ve yasal metin tam olmayan bir listeyle yazılsaydı tam olarak B-024'ün kapattığı sınıfta yeni bir eksik beyan doğardı. Maliyet tek bir `SELECT`'ti; bedeli yayındaki bir taahhütte eksik kalem olurdu. Bu, memory'deki *"yerine yazdığın cümle de bir iddiadır"* disiplininin bir basamak yukarısıdır: iddia kadar **iddianın kaynağı da** doğrulanır.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.17 (`tasks/archive/TASK-2.17.md`)
+
+---
+
 ### 2026-09-23 — Yasaklı iddia sözlüğünde rakip adı tutulmaz: ne düz metin ne hash; slot beyan edilir, mekanizma F6.4'e bırakılır
 
 **Bağlam:** TASK-2.15 görsel denetime iddia dalı ekledi ve sözlüğü `research/lib/claim-leak.mjs`'te tek kaynak olarak kurdu. Sözlüğün dayanağı `CLAIMS.md`'nin "Söylenemez" sütunu; o sütunun bir satırı **rakip adı**. Ama aynı sınır depoya da uzanıyor: M6 F6.4'ün edge case'i *"rakip adı repoda geçerse kendisi sızıntıdır"* diyor. Task dokümanı bu yüzden bir karar noktası bırakmıştı: düz metin mi, kalıp/hash mı.
