@@ -98,6 +98,20 @@ Hat yeniden koşturuldu (7 `.webp`, çıkış kodu 0, denetim sızıntı bildirm
 - Denetimin ad dalının tablodan beslenmesi → **TASK-2.14**; yasaklı iddia sözlüğü ve iddia dalı → **TASK-2.15** (atom orada kapanır).
 - `DROP_NODES` artık yedi ekranın **dördünü** kapsıyor (önce üç): antrenör · raporlar · takvim · üye-telefon; kabuk kuralı ayrıca yedisine birden biniyor.
 
+**TASK-2.14 (2026-09-23) — kök nedenin AD yarısı kapandı; atom AÇIK kalır (iddia dalı).**
+
+Bu atomun "Koruma Önerisi"nin birinci maddesi uygulandı: *"denetim … eşleme tablosundaki her adın her parçasını … yasaklı sözcük listesi olarak arar. Tablo zaten adları biliyor; denetimin onları regex'ten değil tablodan okuması hem daha basit hem daha sağlam."*
+
+- **Yasaklı küme türetiliyor, yazılmıyor:** `REPLACEMENTS`/`INITIALS`'ın **kaynak** tarafından 52 ad parçası + 13 avatar baş harfi. Tablonun **hedef** tarafı çıkarılır — denetim kendi çıktısını sızıntı sayamaz; çıkarma olmasaydı `Plus` (⊂ "Alpfit Plus") yedi ekranı birden kırmızıya çekerdi. Ad parçası **alt dize**, baş harfi **tam jeton** aranır.
+- **Kalıp kaldırılmadı, ikincil dala indi.** Tabloya **hiç girmemiş** bir adı yalnız o dal görebilir ve TASK-2.13'ün kendi kendini doğrulayan kapısı ona dayanıyor. `AUDIT_ALLOW` **yalnız** o dalı kapatır; tablo dallarında izin yok (fail-closed — yanlış alarmın çaresi tabloyu düzeltmek).
+- **Körlük kontrol gruplu ölçümle kapatıldı.** Bu atomun tarihsel tablosu geri kondu (TASK-2.13'ün eklediği üç çıplak-ad satırı çıkarıldı): **eski** denetim çıkış **0** verip *"sızıntı yok"* diyor ve `grup.webp`'i sızıntıyla üretiyor (`fe0ba19…` ≠ temiz `3a4caac…`) — yani atomun anlattığı arıza birebir yeniden üretildi; **yeni** denetim aynı girdide `«Gizem» ⊂ "Gizem Ö. · 17:00 · 60 dk"` deyip çıkış **1** veriyor, görsel ve `manifest.json` yazılmıyor. `"Simge & Gizem"` biçimi saf fonksiyon düzeyinde ayrıca çivilendi (`tests/iddia-metinleri.test.ts`).
+- **Atomun bir teşhisi keskinleştirildi:** kök neden yalnız "kalıp paylaşımı" değildi — denetimin gördüğü **kütle de bayattı**. `values` avatar senkronundan **önce** toplanıyordu (ölçüldü: antrenör senkron öncesi 6 baş harfi, sonrası 0), yani baş harfi dalı bağlanınca hattın kendi düzeltmesi sızıntı sayılırdı. Toplama tüm mutasyonların sonuna alındı.
+- **Ölçüm bir kalemi çürüttü:** `takvim.html:166`'daki `EK` avatarı **sızıntı değil** — tam da `<span class="nm">Melissa V.</span>` (→ **"Ege K."**) yanında duruyor, yani hedefin kendi baş harfi. `EK` kaynakta Ebrar Karakurt, hedefte `['MV','EK']`; iki harfli jetonun tanım gereği belirsizliği [B-044](B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) kalem 3'ün kendi tespiti ve hedef tarafı kazanıyor.
+
+**Kapanmayan — bu yüzden atom AÇIK:**
+- **İddia dalı hâlâ YOK.** Yüzde, ciro, üstünlük, tarih ve yol-haritası kalemleri "kalıp kaçırdı" değil **hiç kontrol edilmiyor** (B-044 k.3: 21 dizge, 20'si kör). Yasaklı iddia sözlüğü ve iddia dalı → **TASK-2.15**; atom orada kapanır.
+- **`AVATAR_SELECTOR`'a `.av` eklenmedi** — B-044 kalem 2'nin 25 düğümü haritanın dışında kalmaya devam ediyor; bu fazın kapsam dışı listesinde (eklemek çıktı görsellerini değiştirirdi).
+
 **Yeniden ölçüm (audit-product 2026-09-22) — bir kalem KAPANDI, ikisi aynen açık.**
 
 `public/product`, `research/lib` ve `render-product.mjs` 2026-09-13'ten beri **hiç değişmedi** (`git log --since=2026-09-13` → boş; ağaç temiz).

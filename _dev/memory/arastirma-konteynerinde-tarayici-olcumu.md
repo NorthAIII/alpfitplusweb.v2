@@ -134,3 +134,36 @@ dosya adları) her koşumda yazdır; "0 buldum" ile "yok" aynı şey değildir.
 Eşleme birebir değil: `diyetisyen: SHOTS.antrenor`, `antrenor: SHOTS.takvim`
 (`Roles.tsx:12-15`). "Antrenör sekmesine tıklayıp antrenör görselini ölçmek"
 boş döner.
+
+## `-v` ile mount noktası `/work`'ün İÇİNE düşerse repoya boş dosya bırakır (TASK-2.14, 2026-09-23)
+
+Yukarıdaki tarif betiği `/audit` gibi **ayrı** bir yola bağlıyor ve gerekçesi
+tam olarak budur. Betiği `/work`'ün altına bağlamak — `-v "$SP/probe.mjs:/work/probe.mjs:ro"`
+— sessizce **ana makinenin `research/` klasörüne 0 baytlık bir yer-tutucu yaratır**
+(sahibi `root`). Docker bind-mount hedefi yoksa onu oluşturur ve `/work` zaten
+`./research`'e bağlı olduğu için o dosya repoda doğar. Konteyner çıkınca mount
+kalkar, **yer-tutucu kalır** ve `git status`'ta izlenmeyen dosya olarak görünür;
+fark edilmezse bir sonraki commit'e girer.
+
+Ölçüldü (2026-09-23): iki sonda betiği `/work/probe*.mjs` olarak bağlandı,
+koşumlar doğru çalıştı, ardından `research/probe-derive.mjs` ve
+`research/probe2.mjs` **0 bayt, root sahipli** olarak ağaçta kaldı.
+
+Doğrusu iki hâlden biri:
+
+```bash
+# (a) mount noktasi /work'un DISINDA  → repoya hicbir sey dusmez
+docker run --rm -v "$PWD/research:/work" -v "$SP:/probe:ro" -w /work \
+  alpfitplus-web-research node /probe/probe.mjs        # import: '/work/lib/…'
+
+# (b) hattin CIKTI dizinini scratchpad'e cevir — ayni mekanizmanin mesru kullanimi
+docker run --rm -v "$PWD/research:/work" -v "$SP/out:/work/product-out" …
+```
+
+(b) meşrudur çünkü `product-out` **zaten var**: mevcut bir dizinin üzerine
+bağlanmak yer-tutucu yaratmaz, yalnız içeriğini gölgeler. Kural dosya/dizin
+ayrımı değil, **hedefin var olup olmadığıdır** — yoksa yaratılır.
+
+Aynı yöntem sonda için de doğrudur: `research/lib`'in **kopyasını** bozup
+`-v "$SP/libP1:/work/lib:ro"` ile bağlamak repoya dokunmaz (dizin var), ve
+kaynak yerine **girdiyi** bozma disiplinini korur.

@@ -78,14 +78,12 @@ async function renderScreen(browser, screen) {
       // 2) Metin duzeltmeleri — uzun eslesmeler once
       const reps = [...replacements].sort((a, b) => b[0].length - a[0].length);
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      const values = [];
       const nodes = [];
       while (walker.nextNode()) nodes.push(walker.currentNode);
       for (const n of nodes) {
         let v = n.nodeValue ?? '';
         for (const [from, to] of reps) if (v.includes(from)) v = v.split(from).join(to);
         n.nodeValue = v;
-        if (v.trim()) values.push(v);
       }
 
       // 3) Avatar bas harfleri adla senkron
@@ -111,6 +109,24 @@ async function renderScreen(browser, screen) {
         .map((el) => `${el.getAttribute('src') || ''} ${el.getAttribute('alt') || ''}`)
         .filter((v) => /weekend/i.test(v));
 
+      // 5) DENETIM GIRDISI EN SON TOPLANIR — mutasyonlarin hepsi bittikten sonra.
+      //    Onceden 2. adimin icinde toplaniyordu, yani `values` avatar
+      //    senkronundan ONCEKI hali tasiyordu. Denetim o zamanki iki daliyla
+      //    (iki-tam-sozcuk kalibi + marka) iki harfli bir jetonu zaten
+      //    goremedigi icin fark gorunmuyordu; TASK-2.14 bas harflerini de
+      //    tablodan tureterek denetime baglayinca bayat kutle OLCULDU ve
+      //    yanlis alarm uretti: antrenor ekrani senkron ONCESI 6 bas harfi
+      //    (EK·AG·KY·AŞ·CO·HÇ) raporluyor, SONRASI 0 (2026-09-23).
+      //    Kural: denetim son DOM'u gorur — yoksa hattin kendi duzeltmesini
+      //    sizinti sayar. Dusen dugumler ve kaldirilan gorseller bu kutlede
+      //    zaten yok, o davranis degismedi.
+      const finalWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      const values = [];
+      while (finalWalker.nextNode()) {
+        const v = finalWalker.currentNode.nodeValue ?? '';
+        if (v.trim()) values.push(v);
+      }
+
       return { values, drops, imgs, imgLeaks };
     },
     {
@@ -134,6 +150,22 @@ async function renderScreen(browser, screen) {
 
   if (imgLeaks.length) {
     throw new Error(`[${screen.id}] GÖRSEL DENETİMİ BAŞARISIZ — marka izi taşıyan img: ${JSON.stringify(imgLeaks)}`);
+  }
+
+  // BOS KAPSAM KAPISI — denetimin gordugu kutle `values`tir; bos ya da kaduk
+  // dondugunde auditTexts hicbir seye bakmadan "temiz" der ve uretim bedava
+  // yesil kosar. Alt sinir olculdu (2026-09-23, yedi ekran): cockpit 131 ·
+  // takvim 169 · finans 95 · antrenor 77 · raporlar 81 · grup 137 ·
+  // uye-telefon 169 — en dusuk 77. Esik bunun acikca altina konuldu ki olagan
+  // icerik dalgalanmasi kapiyi tetiklemesin, coken bir yuruyus tetiklesin.
+  // (Ayni disiplinin tablo tarafi: screen-cleanup-v2.mjs → MIN_FORBIDDEN_*.)
+  const MIN_AUDIT_VALUES = 40;
+  if (values.length < MIN_AUDIT_VALUES) {
+    throw new Error(
+      `[${screen.id}] DENETİM KAPSAMSIZ — yalnız ${values.length} metin değeri toplandı ` +
+        `(alt sınır ${MIN_AUDIT_VALUES}). Metin yürüyüşü ya da kırpma kökü bozulmuş olabilir; ` +
+        `boş kütleye "temiz" denmez.`,
+    );
   }
 
   const audit = auditTexts(values, screen.id);

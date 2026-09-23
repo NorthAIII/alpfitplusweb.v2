@@ -16,6 +16,9 @@
 - Çıktı 7 `.webp`; hiçbirinde eski marka, gerçek sporcu/semt adı yok (metin denetimi + görsel denetim)
 - Bir sızıntı tespit edilince betik sıfır-olmayan kodla çıkar, dosya yazmaz
 - Betik `../Alpfit.v1` dizinine yazmaz (salt okunur mount)
+- **Denetimin ad dalı temizlik tablosundan türer, kalıptan değil** (TASK-2.14): yasaklı küme `REPLACEMENTS`/`INITIALS`'ın **kaynak** tarafından üretilir, **hedef** tarafı çıkarılır; elle yazılmış ad listesi yoktur ve tabloya satır girdiğinde küme kendiliğinden büyür. İki-tam-sözcük kalıbı **ikincil** dal olarak kalır (tabloya hiç girmemiş ad için) ve `AUDIT_ALLOW` yalnız onu kapatır
+- **Kapsam çökerse denetim yeşil koşmaz:** yasaklı küme (`MIN_FORBIDDEN_PARTS`/`MIN_FORBIDDEN_INITIALS`) ya da toplanan metin kütlesi (`MIN_AUDIT_VALUES`) alt sınırın altına düşerse üretim durur
+- Denetim **son DOM'u** görür — metin değerleri tüm mutasyonlardan (düşürme, eşleme, avatar senkronu, görsel temizliği) sonra toplanır
 
 **Bağımlılık:** Yok
 

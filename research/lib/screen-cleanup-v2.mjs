@@ -177,16 +177,154 @@ export const AUDIT_ALLOW = {
 };
 
 /**
+ * YASAKLI AD KUMESI — TABLODAN TURER, KALIPTAN DEGIL (B-018 / TASK-2.14).
+ *
+ * Kok neden olculmustu: denetim temizligin KENDI varsayimini paylasiyordu
+ * (ad = iki tam sozcuk), yani temizligin kacirdigini yapisal olarak goremiyordu
+ * — "bagimsiz olmayan bir denetim, denetim degil teyittir". Kalibi genisletmek
+ * (secenek a) reddedildi: kalibi buyutmek korlugu tasir, kaldirmaz. Tablo
+ * kaynagin gercegidir, regex bir tahmindir (PHASE-2 → Degerlendirilen
+ * Yaklasimlar #2).
+ *
+ * KURAL: yasakli kume REPLACEMENTS/INITIALS'in **KAYNAK** tarafindan turetilir
+ * — tabloya yeni satir girdigi gun denetim kendiliginden buyur, elle yazilmis
+ * hicbir ad listesi yoktur.
+ *
+ * ## Neden HEDEF tarafi cikariliyor
+ *
+ * Tablonun hedef tarafi, temizligin BILEREK yazdigi seydir; denetim kendi
+ * ciktisini sizinti sayamaz. Cikarma olculdu (2026-09-23) ve bes parca dusuyor:
+ *   'Plus' · 'PLUS' · 'plus'  ← 'Weekend Plus' kaynagindan gelir ama hedef
+ *                                'Alpfit Plus'in da parcasidir (izin listesinde
+ *                                de oyle durur) — cikarilmasaydi yedi ekranin
+ *                                yedisi birden kirmizi olurdu
+ *   'Zehra'                   ← ['Zehra Güneş','Zehra G.'] — ilk ad BILINCLE
+ *                                korunmus, soyadi kisaltilmis
+ *   'Cansu'                   ← kaynakta 'Cansu Özbay', hedefte 'Cansu E.'
+ * Ayni kural bas harflerde 'EK'i dusurur: kaynak tarafinda Ebrar Karakurt'un
+ * bas harfi, hedef tarafinda ['MV','EK'] ile Ege K.'nin bas harfi. Iki harfli
+ * bir jeton tanim geregi belirsizdir (B-044 kalem 3 bunu adiyla yaziyor) ve
+ * OLCULDU (2026-09-23): takvim.html:166 `<span class="av">EK</span>` tam da
+ * `<span class="nm">Melissa V.</span>` (→ "Ege K.") yanindadir, yani oradaki
+ * EK bir sizinti degil hedefin kendi bas harfidir. Cikarma dogru sonucu verdi.
+ *
+ * ## Neden >= 3 harf
+ *
+ * Kisaltilmis satirlar ('Ebrar K.', 'Cansu Ö.') ikinci parca olarak tek harf +
+ * nokta birakir; 'K.' yasaklansa 'Deniz K.' · 'Ege K.' gibi NOTR hedef adlarin
+ * hepsi kirmizi olurdu. Esik parcanin kendi uzunlugudur, isim degil.
+ *
+ * ## Neden harfe DUYARLI
+ *
+ * Kucuk-harfe indirgeme olculdu (2026-09-23): 45 parcalik bir kume uretiyor ve
+ * bugunku yedi ekranda **0 ek vurus** getiriyor — yani bedava degil, bedelsiz
+ * de degil: kumeye 'ilkin' · 'aydın' · 'arda' · 'hande' · 'salih' gibi siradan
+ * Turkce sozcukler girer ve ileride yanlis alarm uretir. Tablo zaten gereken
+ * buyuk/kucuk varyantlari SATIR OLARAK tasiyor (marka 6, semt 6) — yani case
+ * bilgisi tablonun kendi gercegidir. (Ters yondeki ders — "grep harfe
+ * duyarlidir, B-040'in altinci cumlesini bu yuzden kacirdi" — orada aranan sey
+ * bizim yazdigimiz DUZYAZI bir kavramdi; burada aranan, kaynagin kendi ozel
+ * adlaridir ve tablo varyantlari sayiyor.) Kucuk harfli bir sizinti gozlenirse
+ * care satiri tabloya eklemektir, kurali genisletmek degil.
+ *
+ * ## Alt siniri neden var (bos kapsam)
+ *
+ * Kapsamini bir tablodan tureten kapi, tablo boslaninca HICBIR SEYE bakmadan
+ * yesil kosar. Alt sinir v1'in kendi `MIN_SINGLE_SOURCE_CONSUMERS` emsalidir:
+ * kume olculen degerin belirgin altina duserse denetim kapsamsiz kosmaz, HATA
+ * verir. Bugunku degerler: parca 52, bas harfi 13.
+ */
+export const MIN_FORBIDDEN_PARTS = 40;
+export const MIN_FORBIDDEN_INITIALS = 10;
+
+/** Bir tablo dizesini ad PARCALARINA ayirir: bosluk/`&`/virgul ile bol, kenar
+ *  noktalamayi soy, >= 3 harfli olanlari tut. `&` ozellikle ayrilir — "Simge &
+ *  Gizem" kaliba uymayan gecis sinifinin ta kendisiydi. */
+function nameParts(value) {
+  return value
+    .split(/[\s&,/]+/)
+    .map((word) => word.replace(/^[^\p{L}]+|[^\p{L}]+$/gu, ''))
+    .filter((word) => word.length >= 3);
+}
+
+/**
+ * Saf turetme — sentetik tabloyla sinanabilir olsun diye disaridan tablo alir.
+ * @param {[string,string][]} replacements
+ * @param {[string,string][]} initials
+ * @returns {{ parts: string[], tokens: string[] }}
+ */
+export function deriveForbidden(replacements, initials) {
+  const source = new Set();
+  const target = new Set();
+  for (const [from, to] of replacements) {
+    for (const part of nameParts(from)) source.add(part);
+    for (const part of nameParts(to)) target.add(part);
+  }
+  const parts = [...source].filter((part) => !target.has(part));
+
+  const initialSource = new Set();
+  const initialTarget = new Set();
+  for (const [from, to] of initials) {
+    if (from !== to) initialSource.add(from);
+    initialTarget.add(to);
+  }
+  const tokens = [...initialSource].filter((token) => !initialTarget.has(token));
+
+  if (parts.length < MIN_FORBIDDEN_PARTS || tokens.length < MIN_FORBIDDEN_INITIALS) {
+    throw new Error(
+      `[screen-cleanup] yasaklı küme çöktü — parça ${parts.length}/${MIN_FORBIDDEN_PARTS}, ` +
+        `baş harf ${tokens.length}/${MIN_FORBIDDEN_INITIALS}. Tablo boşalmış ya da hedef ` +
+        `tarafı kaynağı yutmuş olabilir; denetim kapsamsız koşmaz.`,
+    );
+  }
+  return { parts, tokens };
+}
+
+export const FORBIDDEN = deriveForbidden(REPLACEMENTS, INITIALS);
+
+/**
  * v1'in `auditTexts`'i kendi modul kapsamindaki AUDIT_ALLOW'u kapatir, yani
  * buradaki genisletilmis listeyi GOREMEZ. Karar fonksiyonu bu yuzden burada
- * yeniden yazildi; iki dal (ad kalibi + marka sizintisi) ve saflik korunuyor.
+ * yeniden yazildi; saflik korunuyor (girdi metin degerleri + ekran id'si).
+ *
+ * UC DAL, ve ucuncusu BILINCLE korundu:
+ *
+ *  1. TABLO — yasakli ad parcalari (birincil). Alt dize aranir, cunku sizinti
+ *     cogu zaman bir tamlamanin ICINDE gecer ("… Simge & Gizem hocalarin …").
+ *  2. TABLO — avatar bas harfleri (birincil). Burada alt dize DEGIL, TAM JETON
+ *     aranir: iki harfli bir dizi sayfanin her yerinde gecer ('SA' ⊂ 'SAHİL',
+ *     yani hedef adin kendisi) ve alt dize aramasi kapiyi kullanilamaz kilardi.
+ *     Avatar metni kendi dugumunde tek basina durur, tam jeton dogru olcudur.
+ *  3. KALIP — iki tam sozcuk (IKINCIL, kaba ag). Kaldirilmadi cunku tabloya
+ *     HIC girmemis bir adi yalniz bu dal gorebilir; ustelik TASK-2.13'un kendi
+ *     kendini dogrulayan kapisi buna dayaniyor ("Öğrenci Tutma" izin satiri
+ *     tablodan turetilerek cikarildi, dusurme sessizce basarisiz olursa bu dal
+ *     onu ad sizintisi sayip URETIMI DURDURUYOR — sondayla olculdu). Kaldirmak
+ *     o kapiyi sessizce sokerdi. AUDIT_ALLOW bu yuzden rolunu korur.
+ *
+ * AUDIT_ALLOW yalnizca 3. dali kapatir — 1 ve 2 icin izin YOK ve bu bilinclidir:
+ * izin listesi elle yazilmis MASUM TAMLAMA listesidir, tablo ise kaynagin
+ * gercegi. Tablodan gelen bir vurus yanlis alarmsa care izin satiri eklemek
+ * degil TABLOYU duzeltmektir (yanlis eslemeyi cikarmak ya da hedefi degistirmek).
+ * Bugunku olcum: yedi ekran, 859 metin degeri, tablo dallarindan **0 vurus**.
  */
 export function auditTexts(values, screenId) {
   const full = /[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}\s+[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}/g;
   const allowed = new Set(AUDIT_ALLOW[screenId] ?? []);
+  const forbiddenTokens = new Set(FORBIDDEN.tokens);
   const names = new Set();
   const brands = new Set();
   for (const value of values) {
+    // 1) Tablo — ad parcasi
+    for (const part of FORBIDDEN.parts) {
+      if (value.includes(part)) {
+        names.add(`«${part}» ⊂ "${value.trim().replace(/\s+/g, ' ').slice(0, 60)}"`);
+      }
+    }
+    // 2) Tablo — avatar bas harfi (tam jeton)
+    const token = value.trim();
+    if (forbiddenTokens.has(token)) names.add(`«${token}» (avatar baş harfi)`);
+    // 3) Kalip — kaba ag; yalniz bu dal izin listesine tabidir
     for (const m of value.matchAll(full)) {
       const label = m[0].replace(/\s+/g, ' ');
       if (!allowed.has(label)) names.add(label);

@@ -4,8 +4,17 @@ import { MODULES } from "@/content/product";
 import { SEGMENTS } from "@/content/segments";
 import { SHOTS } from "@/content/shots";
 // Gorsel uretim hattinin KENDI dusurme tablosu — alt metnin gercekle
-// karsilastirilacagi tek kaynak (TASK-2.13).
-import { DROP_NODES, SHELL_DROP_NODES } from "../research/lib/screen-cleanup-v2.mjs";
+// karsilastirilacagi tek kaynak (TASK-2.13). TASK-2.14 ayni dosyadan denetimin
+// karar fonksiyonunu ve tablodan turemis yasakli kumesini de okuyor.
+import {
+  DROP_NODES,
+  SHELL_DROP_NODES,
+  FORBIDDEN,
+  MIN_FORBIDDEN_PARTS,
+  MIN_FORBIDDEN_INITIALS,
+  auditTexts,
+  deriveForbidden,
+} from "../research/lib/screen-cleanup-v2.mjs";
 
 // TASK-2.09 — B-029'un bes karsiliksiz cumlesinin ZIYARETCIYE GORUNEN
 // yuzeylerdeki kapisi.
@@ -261,5 +270,107 @@ describe("TASK-2.13 — ürün görseli alt metni, hattın düşürdüğü kart�
     const alt = SHOTS.antrenor.alt.toLocaleLowerCase("tr");
     expect(alt).toContain("aylık pt ders performansı");
     expect(alt).toContain("öğrenci listesi");
+  });
+});
+
+// ── TASK-2.14 — denetimin AD DALI tablodan besleniyor ────────────────────
+//
+// Neden bu blok var: B-018'in kok nedeni "denetim, temizligin KENDI varsayimini
+// paylasiyor" idi — ad = iki tam sozcuk. O varsayim yuzunden "Gizem Ö." (ikinci
+// sozcuk tek harf) ve "Simge & Gizem" (araya `&` giriyor) hattan gecmisti.
+// Duzeltme kalibi buyutmek DEGIL, kaynagi degistirmek: yasakli kume
+// REPLACEMENTS/INITIALS tablosunun KAYNAK tarafindan turuyor.
+//
+// Bu blok denetimin karar fonksiyonunu SENTETIK girdiyle sinar; hattin kendisi
+// tarayici ister, bu dosya istemez (v1'in `auditTexts`'i saf birakma gerekcesi
+// — screen-cleanup.mjs basligi). Hat seviyesindeki sondalar (bozuk tablo,
+// korelmis avatar senkronu, bos kapsam) task dokumaninda rakamiyla duruyor.
+describe("TASK-2.14 — görsel denetimin ad dalı temizlik tablosundan türüyor", () => {
+  it("yasaklı küme dolu ve tabandan büyük (boş kapsam bekçisi)", () => {
+    // Kume cokerse asagidaki senaryolarin HEPSI bedava yesil kosardi.
+    // Olculdu 2026-09-23: parca 52, bas harfi 13.
+    expect(FORBIDDEN.parts.length).toBeGreaterThanOrEqual(MIN_FORBIDDEN_PARTS);
+    expect(FORBIDDEN.tokens.length).toBeGreaterThanOrEqual(MIN_FORBIDDEN_INITIALS);
+  });
+
+  it("tablo çökerse türetme hata verir — denetim kapsamsız koşmaz", () => {
+    expect(() => deriveForbidden([], [])).toThrow(/yasaklı küme çöktü/);
+    // Tek satirlik bir tablo da yeterli degildir.
+    expect(() => deriveForbidden([["Gizem Örge", "Yasemin U."]], [["GÖ", "YU"]])).toThrow(
+      /yasaklı küme çöktü/,
+    );
+  });
+
+  it("küme elle yazılmadı: tablonun kaynak tarafından türüyor", () => {
+    // Pozitif capa — kume gercekten tablodan geliyorsa bu parcalar ICINDE olmali.
+    expect(FORBIDDEN.parts).toContain("Gizem"); // 'Gizem Örge' kaynagindan
+    expect(FORBIDDEN.parts).toContain("Simge"); // 'Simge Aköz' kaynagindan
+    expect(FORBIDDEN.parts).toContain("Karakurt");
+    expect(FORBIDDEN.parts).toContain("Beşiktaş"); // gercek pilot semti
+    // Sentetik tabloya yeni bir ad girdiginde kume KENDILIGINDEN buyur.
+    const { parts } = deriveForbidden(
+      [...Array.from({ length: 45 }, (_, i) => [`Dolgu${i}x`, `Nötr${i}x`] as [string, string]),
+       ["Pelinsu Karaağaç", "Derya T."]],
+      Array.from({ length: 12 }, (_, i) => [`A${i}`, `B${i}`] as [string, string]),
+    );
+    expect(parts).toContain("Pelinsu");
+    expect(parts).toContain("Karaağaç");
+  });
+
+  it("bugün kaçan iki geçiş sınıfını yakalıyor (B-018'in tam nesnesi)", () => {
+    // Ikisi de iki-tam-sozcuk kalibinin DISINDA: tek harfli soyadi ve `&`.
+    const kisaltilmis = auditTexts(["Box · Gizem Ö. · 17:00 · 60 dk"], "grup");
+    expect(kisaltilmis.names.join(" ")).toContain("«Gizem»");
+
+    const veIleBagli = auditTexts(
+      ["Simge & Gizem hocaların doluluğu düşük — yeni üye yönlendirmesi buraya."],
+      "sube",
+    );
+    expect(veIleBagli.names.join(" ")).toContain("«Simge»");
+    expect(veIleBagli.names.join(" ")).toContain("«Gizem»");
+  });
+
+  it("kontrol grubu: eski iki-tam-sözcük kalıbı bu ikisini GÖREMEZ", () => {
+    // Sonda: yukaridaki yesil, yeni dalin degil eski dalin eseri olabilir mi?
+    // Eski kalip burada birebir yeniden kuruldu; ikisini de kacirdigi
+    // gorulmeden yukaridaki testin neyi olctugu bilinemez.
+    const eskiKalip = /[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}\s+[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}/g;
+    expect("Box · Gizem Ö. · 17:00 · 60 dk".match(eskiKalip)).toBeNull();
+    expect("Simge & Gizem hocaların doluluğu düşük".match(eskiKalip)).toBeNull();
+  });
+
+  it("nötr hedef adlar yanlış alarm üretmiyor", () => {
+    // Tablonun HEDEF tarafi temizligin bilerek yazdigi seydir; denetim kendi
+    // ciktisini sizinti sayamaz. Bu ayrim karisirsa hat hic yesile donmez.
+    const temiz = auditTexts(
+      ["Box · Yasemin U. · 17:00 · 60 dk", "Cüneyt V.", "Zehra G.", "Cansu E.", "Alpfit Plus"],
+      "grup",
+    );
+    expect(temiz.names).toEqual([]);
+    expect(temiz.brands).toEqual([]);
+  });
+
+  it("avatar baş harfi TAM JETON aranıyor, alt dize değil", () => {
+    // Tam jeton: senkronu kacmis bir avatar yakalanir.
+    expect(auditTexts(["AG"], "antrenor").names.join(" ")).toContain("«AG»");
+    // Alt dize OLSAYDI 'SA' ⊂ 'SAHİL' (hedef semt adi) her ekrani kirmiziya
+    // cekerdi; jeton karsilastirmasi bunu dogru birakir.
+    expect(auditTexts(["SAHİL"], "cockpit").names).toEqual([]);
+    // 'EK' iki yerde birden: kaynakta Ebrar Karakurt, hedefte Ege K. Iki harfli
+    // jeton tanim geregi belirsiz (B-044 k.3) — hedef tarafi kazanir ve bu
+    // OLCULDU: takvim.html:166 EK tam da "Melissa V." (→ "Ege K.") yanindadir.
+    expect(auditTexts(["EK"], "takvim").names).toEqual([]);
+  });
+
+  it("ikincil kalıp dalı ve izin listesi hâlâ yaşıyor", () => {
+    // Kalip dali TASK-2.13'un kendi kendini dogrulayan kapisini tasiyor:
+    // 'Öğrenci Tutma' izin satiri tablodan turetilerek cikarildi, yani dusurme
+    // sessizce basarisiz olursa denetim onu ad sizintisi sayar. Kalip dali
+    // kaldirilsaydi o kapi sessizce sokulmus olurdu.
+    expect(auditTexts(["Öğrenci Tutma"], "antrenor").names).toContain("Öğrenci Tutma");
+    // Ayni tamlama izin listesinde duran bir ekranda bulgu DEGILDIR.
+    expect(auditTexts(["Aylık Performans"], "antrenor").names).toEqual([]);
+    // Marka dali ayri kosuyor ve degismedi.
+    expect(auditTexts(["muhasebe@weekendplus.com"], "raporlar").brands.length).toBe(1);
   });
 });
