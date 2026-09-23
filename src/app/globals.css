@@ -1,6 +1,19 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────
+   OZEL VARYANT — aria-invalid
+
+   Tailwind 4.3.3'un yerlesik `aria-*` varyant listesi dokuz deger tasir
+   (busy, checked, disabled, expanded, hidden, pressed, readonly, required,
+   selected) ve `invalid` ONLARIN ARASINDA YOK — olculdu: paketin kendi
+   listesi grep'lendi. Varyant tanimlanmadan yazilan `aria-invalid:` sinifi
+   Tailwind'de SESSIZCE hicbir kural uretmez, yani hata da vermez. Demo
+   formunun gecersiz alan isareti (B-055 a) buna bagli oldugu icin varyant
+   burada acikca kaydedilir.
+   ───────────────────────────────────────────────────────────── */
+@custom-variant aria-invalid (&[aria-invalid="true"]);
+
+/* ─────────────────────────────────────────────────────────────
    FONTLAR
 
    Agirlik basina TEK dosya. Onceki kurulumda her agirlik icin latin ve

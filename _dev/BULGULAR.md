@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.05: B-055'in altı mekanik ayağından beşi kapandı (c · d · e · f · g), (b) **kısmen** — özet hata kutusunun alana eşlenen dört kodda mobil görünürlüğü TASK-2.06'ya (ayak a) kaldı, **atom orada kapanır**, açık bulgu sayısı **49**'da değişmedi. Gelen Kutusu'na bir satır eklendi: sonuç kutularında odak duyurusu + canlı bölge duyurusunun çift okuma yapıp yapmadığı ölçülemedi (projede ekran okuyucu kanalı yok).
+**Son Güncelleme:** 2026-09-23 — TASK-2.06: B-055'in son iki ayağı (a + (b)'nin alana eşlenen yarısı) kapandı ve **atom arşive taşındı** — geçersiz alan artık 2 px `neg` halka + `neg-wash` zemin alıyor (ölçüldü: 4 genişlikte fark 0/16 → 8/8) ve hata metni alanın altında duruyor (düğüm görünür 0/36 → 28/28). Açık bulgu sayısı **49 → 48**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -47,7 +47,7 @@
 
 - [PHASE-1] `npm outdated` dokuz paketi geride gösteriyor (Next 16.3.4→16.3.5, React 19.2.8→19.3.0, Vitest 4→5, TS 5.9→7); `npm audit` **0 açık** — aciliyet yok ama güncelleme kararı verilmemiş, kurulu bağımlılık botu da yok
 
-- [PHASE-1] **Ziyaretçi onayı iki kanalda birden kapalı olabiliyor:** ekran onayı mobilde görünmüyor (B-055) **+** talep sahibine onay e-postası yok (B-059, v1'de var). İkisi ayrı ayrı kayıtlı ama **birleşimi hiçbir atomda yazılı değil** — üst üste geldiğinde ziyaretçi talebinin ulaştığını hiçbir kanaldan öğrenemez. Bugün risk önizlemeyle sınırlı (canlıyı v1 sunuyor), alan adı geçişinde gerçek olur
+- [PHASE-1] **Ziyaretçi onayı iki kanalda birden kapalı olabiliyor:** ekran kanadı **kapandı** (B-055, TASK-2.05+2.06 — onay altı genişlikte de görünüyor), e-posta kanadı hâlâ açık (B-059, v1'de var) → TASK-2.07. Birleşim hiçbir atomda yazılı değildi; TASK-2.07 kapanınca bu kalem de düşer
 - [PHASE-1] **Dört açık bulgunun kanıt atıfları bu fazın yeniden adlandırmasıyla bayatladı** (B-024 · B-036 · B-037 · B-054): `toWebhook` → `toStore`, `LEAD_WEBHOOK_URL` → `LEAD_STORE_URL`, "e-tablo/Google" → kendi sunucudaki PocketBase; `route.ts` satır numaraları da kaydı (dosya 68 → 359 satır). Atomları kimse yanlış okumasın — evi audit-product uzlaştırması (M3 alanı), review-phase kanvasa yazmaz
 
 - [audit-product] Yerel `lead-store`'da bu denetim turunun **25 test kaydı** duruyor (`Ayse/Pilates`, `Deneme Kisi/Deneme Studyo`, `CSRF/K`, `Zemin/Kontrol`) — silinmedi; sonraki ölçüm bunları gerçek lead sanmasın
@@ -89,7 +89,6 @@
 - 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — 5/5 hâlâ açık; ürün ilerledi ama hiçbirinin karşılığı doğmadı → Faz 2
 - 🔴 [B-018 — Ürün görselinde gerçek kişi adı ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — `sube` kalemi kapandı; "Gizem Ö." ana sayfada duruyor, yasal metnin beyanı çürüyor → Faz 2
 - 🔴 [B-054 — İletişim kuralı ters eksende gevşek](bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md) — meşru yazımlar 422; `0532111223`/`0000000000` **200 `stored:true`** — ulaşılamaz numara artık kayda geçiyor
-- 🔴 [B-055 — Demo formunun gönderim sonrası hâli mobilde görünmüyor](bulgular/B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md) — 320/360'ta **başarı onayı da** ekran dışında; 412'de h1 yapışkan başlığın arkasında → Faz 2
 - 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok → Faz 2
 - 🔴 [B-032 — Ana sayfada ve segment sayfalarında ölçülmüş AA kontrast ihlalleri](bulgular/B-032-olculmus-aa-ihlalleri.md) — ürün turu soluk kartları 2,54:1, kapanış paragrafı 3,48:1; ILKELER pazarlıksız diyor
 - 🔴 [B-033 — 320 px'te Kurucu Programı bölümü içerik ve işlev kaybediyor](bulgular/B-033-320px-kurucu-programi-icerik-kaybi.md) — 18 metin düğümü 70 px kesiliyor, CTA etiketi dâhil; kapı yatay kaydırma görmediği için temiz diyor

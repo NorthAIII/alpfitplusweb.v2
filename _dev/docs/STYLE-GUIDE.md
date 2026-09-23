@@ -28,6 +28,8 @@
 
 Yeni renk eklerken **kontrastı ölç** (`a11y.mjs`), rakamı CSS yorumuna yaz — mevcut token yorumları bu geleneği kurdu.
 
+**Form hatası deyimi** (TASK-2.06): geçersiz alan 2 px `neg` halka + `neg-wash` zemin alır, hata metni (`text-neg`) alanın **hemen altında** durur — renk tek işaret değildir (WCAG 1.4.1). Ölçülen kontrast: metin form zemininde 5,25 · alan zemininde 4,96 · halka 5,25 (gri halka 1,46). ⚠️ `aria-invalid:` varyantı Tailwind 4.3.3'te **yerleşik değil** ve tanımsızken sessizce hiçbir kural üretmez; `globals.css` → `@custom-variant aria-invalid` ile kayıtlıdır. Odak halkası kırmızının üstünde kalmalı (`aria-invalid:focus:`), yoksa geçersiz alanda odak görünmez olur.
+
 ## Tipografi
 
 - **Sora** başlık (700/800), **Inter** gövde (400/500/600). Self-host, siteye özel daraltılmış: 153 karakter, 5 dosya, 95 KB.
@@ -64,4 +66,4 @@ Konuşma diline yakın, salon sahibine hitap; kurumsal jargon yok. Kullanıcı 2
 
 ---
 
-**Son Güncelleme:** 2026-09-11 — CLAUDE.md "Tasarım" bölümü, hafıza notu ve DURUM'daki ölçülmüş tuzaklar tek eve toplandı.
+**Son Güncelleme:** 2026-09-23 — TASK-2.06: form hatası deyimi (geçersiz alan halkası/zemini + alan bazlı metin) ölçülen kontrast rakamlarıyla eklendi.

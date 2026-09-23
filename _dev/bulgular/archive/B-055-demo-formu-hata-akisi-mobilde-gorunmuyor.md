@@ -132,7 +132,43 @@ $ sed -n '61,62p' src/components/sections/DemoForm.tsx
 
 ## Çözüm Kaydı
 
-—
+**Tarih:** 2026-09-23 — atom **kapandı**. Yedi ayak iki task'a bölündü: mekanik beşi + görünürlüğün bir yarısı **TASK-2.05**'te (c · d · e · f · g ve (b)'nin eşlenmeyen kodlar yarısı), görsel ayak + (b)'nin kalan yarısı **TASK-2.06**'da.
+
+### TASK-2.05 — odak ve durum mekaniği (c · d · e · f · g)
+
+Odak hata koduna göre ayrıştı (`missing`/`missing-contact`/`no-consent` → ilk **boş** alan, `bad-contact` → ilk **dolu** alan, eşlenmeyen kod ve ağ hatası → sonuç kutusu), `invalidFields` gönderim başında sıfırlanıyor, sonuç yüzeyine odak + **açık** `scrollIntoView({block:"start"})` taşınıyor. Ölçüm: onay kutusu altı genişlikte tam görünür **2/6 → 6/6** (mobilde 0/4 → 4/4), odak tablosu 54/54. Araştırmanın önerdiği düz `focus()`'un (g)'yi kapatmadığı ölçülerek görüldü — kutu zaten ekrandayken `focus()` hiç kaydırmıyor.
+
+**(b) yarım kaldı:** alana eşlenen dört kodda (`missing` · `missing-contact` · `bad-contact` · `no-consent`) odak doğru alana gidiyordu ama formun **sonundaki** özet kutusu 320/360/412 px'te hâlâ ekranın altındaydı (320'de +384..+561 px) — form 320 px'te ~1.100 px, alan ile kutu aynı ekrana sığmıyor. Kutuyu yukarı taşımak değil, **metni alana getirmek** gerekiyordu.
+
+### TASK-2.06 — alan bazlı işaret ve metin (a + (b)'nin kalanı)
+
+Üç değişiklik, iki dosya:
+
+1. **Görsel işaret.** `aria-invalid="true"` alan 2 px `neg` halka + `neg-wash` zemin alıyor (`DemoForm.tsx` → `field` sınıf dizgesi). ⚠️ `aria-invalid:` varyantı Tailwind 4.3.3'te **yerleşik değil** — paketin kendi aria listesi dokuz değer taşıyor ve `invalid` aralarında yok (ölçüldü); tanımsız varyant **sessizce** hiçbir kural üretir, hata da vermez. Varyant `globals.css`'te `@custom-variant aria-invalid (&[aria-invalid="true"]);` ile açıkça kaydedildi. `aria-invalid:focus:` ikilisi (özgüllük 0,2,0) odak halkasını kırmızının üstünde tutuyor, yoksa geçersiz alanda odak işareti görünmez olurdu.
+2. **Alan bazlı hata metni.** Her işaretli alanın kendi `<alan>-error` düğümü var, metin **uçtan** geliyor (bileşende yeniden yazılmıyor) ve `aria-describedby` genel kutu yerine kendi düğümünü + varsa ipucunu gösteriyor. Rıza kutusunun düğümü `<label>`ın **dışında** duruyor (label'ın içerik modeli phrasing content, `<p>` oraya giremez). Genel kutu **özet olarak yerinde kaldı** ve WhatsApp yolunu taşımaya devam ediyor.
+3. **İşaretlenen küme daraltıldı.** `FIELD_ERRORS` bir kodun dokunabileceği **tüm** alanları sayıyordu: ad doluyken kulüp boşsa `missing` ikisini birden işaretliyordu. İşaret yalnız ekran okuyucuya görünürken bu sessiz bir yanlışlıktı; görsel işaretin eklendiği an doğru doldurulmuş alanı da kırmızıya boyayan bir **yanlış alarma** dönüşecekti. Yeni kural odak kuralının yüklemini paylaşıyor (`bad-contact` → dolu alanlar, diğerleri → boş alanlar), odak da bu listenin ilkine gidiyor — tek yüklem, iki sonuç.
+
+**Ölçüm kontrol gruplu ve iki yönlü.** Aynı betik önce **3100'deki üretim imajına** (TASK-2.05'in ağacı, CSS'inde `aria-invalid` kuralı sayısı **0**) sonra 3000'e koştu; `/api/demo` `page.route` ile taklit edildi, canlı depoya kayıt yazılmadı ve hız sınırı tetiklenmedi. 4 genişlik × 6 senaryo.
+
+| Ölçüt | ÖNCE (3100) | SONRA (3000) |
+|---|---|---|
+| Geçersiz+odaksız ↔ geçerli+odaksız alanda **fark var** | **0/16** (`farklar: []`) | **8/8** (`boxShadow` + `backgroundColor`) |
+| Alan bazlı hata düğümü **görünür** | 0/36 | **28/28** |
+| `aria-describedby` kendi düğümünü gösteriyor ve hepsi DOM'da | 0/36 | **28/28** |
+| İşaret doğru alanlarda (yanlış alarm yok) | 16/24 | **24/24** |
+| Odak doğru (TASK-2.05 tablosu) | 24/24 | **24/24** |
+| Özet kutusu + WhatsApp bağlantısı duruyor | 24/24 | 24/24 |
+| *Kontrol grubu:* geçerli ↔ geçerli alanda fark **yok** | 24/24 | 24/24 |
+
+İşaretli alan toplamının 36 → 28'e düşmesi kaybı değil **düzeltmeyi** gösterir: sekiz yanlış alarm işareti kalktı. Kontrol grubu (geçerli ↔ geçerli) her iki koşumda da `farklar: []` verdi — yani düzenek "fark yok"u da doğru okuyor, "fark var" sonucu düzeneğin gürültüsü değil.
+
+**İkinci tur ölçüm bir ayağı daha kapattı.** İlk koşumda alan düğümü **25/28** çıktı: 390×844'te üç düğüm ekran dışındaydı ve üçü de **odaklanan** alana aitti — düz `focus()` alanı ekranın kenarına hizalıyor, metin alanın 6-77 px altında durduğu için dışarıda kalıyordu. Kaydırma `focus({preventScroll:true})` + `scrollIntoView({block:"center"})` ile ayrıldı; ikinci koşumda **28/28**. Ders TASK-2.05'in sonuç kutusunda öğrendiğiyle aynı: `focus()`'un kendi kaydırması yeterli değil.
+
+**Ölçülen kontrastlar** (`neg` #b34236): hata metni form zemininde (#f7f8f4) **5,25**, alan zemininde (#fceeec) **4,96**; geçersiz alanın kendi metni (#171a15 / #fceeec) **15,55**; kırmızı halka form zeminine karşı **5,25** (mevcut gri halka 1,46). Renk tek işaret değil — metin WCAG 1.4.1'i karşılıyor.
+
+**Koruma önerisinin kalıcı-betik ayağı kurulmadı.** Öneri "TASK-1.12'nin tarayıcı doğrulaması `research/scripts/` altında kalıcı bir betik olsun ve F6.2'nin tek komutuna girsin" diyordu; bu faz betiği kurmadı, ölçüm yine geçici betikle yapıldı. Evi **B-015 / M6 F6.2** ("Kalite kapıları otomatik" fazı) — bugün bu sınıfı yakalayan otomatik kapı **yok**: `mobile-audit.mjs` etkileşim durumunu hiç ölçmüyor ve toplamı bu turda da 157'de sabit kaldı.
+
+Detay: `tasks/archive/TASK-2.05.md` ve `tasks/archive/TASK-2.06.md` → Oturum Kayıtları.
 
 ---
 
