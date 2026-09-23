@@ -87,6 +87,19 @@ Glif ölçümü, teslim ölçümü ve preload sayımı scratchpad'de.
 - Preload listesi ölçülen ilk-ekran yüzlerine göre güncellenir (Inter 500 ve Sora 700 dâhil) ya da yorum ölçüme göre düzeltilir.
 - Hi-dpi tavanı için: bant slotları hattın ürettiği **2000×760 varyantını** kullanır (`salon-genis-wide.webp` bugün öksüz — [B-047](B-047-bakim-borcu-envanteri.md)); `-sm` varyantlarının kaynak genişliği kullanım boyutuna göre yeniden seçilir. OG kontrast rakamları `brand-assets.mjs` yorumuna yazılır (STYLE-GUIDE'ın "ölçümü rakamıyla yaz" geleneği bu dosyaya erişmiyor).
 
+**ÖLÇÜLDÜ ve KARARA BAĞLANDI — audit-product triyajı 2026-09-23.** `src/components/sections/Roles.tsx:12-15`'teki görsel eşlemesi **bir satır kaymış**:
+
+| Sekme | Bugün gösterdiği | Olması gereken |
+|---|---|---|
+| Üye | `SHOTS.uyeTelefon` | ✓ doğru |
+| **Antrenör** | `SHOTS.takvim` (rezervasyon takvimi) | **`SHOTS.antrenor`** — ekran zaten üretiliyor |
+| **Diyetisyen** | `SHOTS.antrenor` (antrenör ekranı) | karşılığı **yok** |
+| Yönetim | `SHOTS.cockpit` | ✓ doğru |
+
+- **Antrenör satırı bir hatadır ve düzeltilir** (tek satır): doğru ekran bugün üretilen kümede zaten var.
+- **Diyetisyen satırı AÇIK kalır ve bilinçli tercih olarak KAYDEDİLMEZ.** Ölçüm: ürünün kendisinde diyetisyen ekranları **var** (`../Alpfit.v1/web/src/pages/DietitianMembersPage.tsx` · `DietitianMemberDetailPage.tsx` · `components/dietitian/`), yani iddia karşılıklı; eksik olan **demo destesi** — `../Alpfit.v1/demo/` sekiz ekran taşıyor ve diyetisyen onlardan biri değil, o yüzden hat üretemiyor. Ağırlığı: `docs/CLAIMS.md` diyetisyen modülünü ürünün **tek "gerçek fark"ı** sayıyor (18 rakip üründe görülmedi) ve sitede o farkın kendi görüntüsü yok; gösterilen görselin alt metni başka bir ekranı anlatıyor (ekran okuyucu ve arama motoru onu okur).
+- **Kalıcı çözüm ürün deposunda:** demo destesine bir diyetisyen ekranı eklenmesi (kullanıcı tetikler — `../Alpfit.v1` bu oturumların dokunamadığı depo). Eklendiği gün bu hat onu olağan biçimde üretir ve temizler. Ödünç görsel bir yamadır; "bilinçli tercih" kaydı yazmak sonraki denetimlere yanlışlıkla "kapandı" sinyali verirdi.
+
 ## Çözüm Kaydı
 
 —

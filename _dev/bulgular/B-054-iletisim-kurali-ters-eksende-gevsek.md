@@ -124,6 +124,8 @@ Sunucu "önce temizle, sonra doğrula" yerine "olduğu gibi doğrula" yapıyor. 
 - **M3 F3.1 kabul kriterine biçim kuralı yazılsın.** Bugün kriterde yok; `147c5e8` M3'e dokunmadı.
 - **B-020 ile birlikte ele alınmalı.** Kural gevşekleşse de "doğrulamadan önce sayan kota" sınıfı B-020 kapanmadan sürer.
 
+**ROTA — Kıvanç, audit-product triyajı 2026-09-23.** Bu bulgu, demo talebi hattının diğer iki 🔴'sıyla (**B-020** · **B-054** · **B-037**) **birlikte, tek bir "lead hattı sertleştirme" fazında** ele alınacak — tek tek hızlı iş olarak değil. Gerekçe: üçü de aynı uca (`src/app/api/demo/route.ts`) dokunuyor ve bir arada ölçülmeleri daha ucuz. Fazın açılışı `discuss-phase`'in işi.
+
 ## Çözüm Kaydı
 
 —

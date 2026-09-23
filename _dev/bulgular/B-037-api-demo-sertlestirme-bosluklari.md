@@ -104,6 +104,8 @@ Uç, **güvenilmeyen girdiyi doğrulama** konusunda özenli (tip, uzunluk, rıza
 - `content-type` zorunlu tutulur (`application/json`) **ve** `Sec-Fetch-Site: same-origin` ya da `Origin` allow-list kontrolü eklenir. Bu, **hedef bağlanmadan önce** yapılmalı — sonrası e-tablo kirlenmesi demek.
 - 405 yanıtına `Allow` eklenir; `content-length` üst sınırı konur.
 
+**ROTA — Kıvanç, audit-product triyajı 2026-09-23.** Bu bulgu, demo talebi hattının diğer iki 🔴'sıyla (**B-020** · **B-054** · **B-037**) **birlikte, tek bir "lead hattı sertleştirme" fazında** ele alınacak — tek tek hızlı iş olarak değil. Gerekçe: üçü de aynı uca (`src/app/api/demo/route.ts`) dokunuyor ve bir arada ölçülmeleri daha ucuz. Fazın açılışı `discuss-phase`'in işi.
+
 ## Çözüm Kaydı
 
 —

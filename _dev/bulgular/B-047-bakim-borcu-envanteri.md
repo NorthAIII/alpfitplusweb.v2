@@ -51,7 +51,7 @@ Gövde metnini 15 px'ten 15,5 px'e çekme kararı bugün **52 yerlik** bir düze
 | Ölü şey | Kanıt |
 |---|---|
 | `ui/Card.tsx` → `Card`, `Chip` · `ui/BrandIcons.tsx:13-19` → `WhatsAppIcon` | 0 import (WhatsApp her yerde lucide `MessageCircle` ile çiziliyor) |
-| `CONTACT.phone.display` · `PRODUCT_STATUS.short` · `PRODUCT_STATUS.version` · `PRICING.annualPrepayBenefit` · `Segment.accent` (4 değer) | 0 tüketici. `Segment.accent` bir **tuzak**: biri `accent:"neg"` yazıp sayfanın rengini bekler, hiçbir şey olmaz |
+| `CONTACT.phone.display` · `PRICING.annualPrepayBenefit` · `Segment.accent` (4 değer) | 0 tüketici (yeniden ölçüldü 2026-09-23, audit-product). `Segment.accent` bir **tuzak**: biri `accent:"neg"` yazıp sayfanın rengini bekler, hiçbir şey olmaz. — **İki kalem bu listeden mezun oldu:** `PRODUCT_STATUS.short` TASK-2.08'de **silindi**; `PRODUCT_STATUS.version` TASK-2.10'da tüketicisine bağlandı ve bugün **üç** yerden okunuyor (`faq.ts:60` · `chat.ts:136` · `FounderProgram.tsx:98`) |
 | `SHOTS.sube` + `public/product/sube.webp` (62.494 B) | 0 tüketici; hat üretiyor, site kullanmıyor, adres 200 dönüyor → [B-044](B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) |
 | `public/foto/salon-genis-wide.webp` (200.878 B, 2000×760 — `public/`'in **en büyük dosyası**) · `grup-dersi.webp` (84.294 B) | `src/` içinde 0 referans. İlki tam-genişlik bant için üretilmiş; site 3:2 kaynakları bant slotlarına kırpıyor → [B-046](B-046-gorsel-teslim-katmani.md) |
 | `public/next.svg`, `vercel.svg`, `globe.svg`, `window.svg`, `file.svg` (3.314 B) | `create-next-app` kalıntısı; **`next.svg`/`vercel.svg` ticari bir sitede üçüncü-taraf marka dosyası olarak servis ediliyor** |

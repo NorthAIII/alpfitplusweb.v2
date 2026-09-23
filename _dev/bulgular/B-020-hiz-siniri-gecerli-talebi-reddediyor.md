@@ -72,6 +72,13 @@ Hız sınırı "en ucuz noktada kes" mantığıyla en öne konmuş — bot trafi
 - İstemci fetch'ine zaman aşımı eklenir (`AbortSignal.timeout`), sunucudaki sekiz saniyelik sınırla uyumlu bir değerle; zaman aşımında mevcut dürüst hata yolu ve WhatsApp yedeği devreye girer.
 - Kalıcı koruma: `/api/demo` için istek testleri repoda zaten var (`research/lead-sheet.test.mjs` deseni). "Beş geçersiz + bir geçerli → geçerli olan kabul edilmeli" bu bataryanın bir senaryosu olur. Test yazılırken senaryo başına ayrı `X-Forwarded-For` gerekir — bu tuzak `_dev/memory/hiz-sinirli-uca-test-bataryasi.md`'de zaten kayıtlı.
 
+**KARAR — Kıvanç, audit-product triyajı 2026-09-23.** Sıralama **bilinçli değil**, düzeltilecek. Yön:
+- ✅ **Birinci madde uygulanır:** kota yalnız doğrulamayı geçmiş isteği sayar (kapıda kontrol kalır, sayım doğrulamadan sonraya alınır). Gerekçe: kotanın koruduğu şey pahalı uçtur — depoya yazma + iki e-posta; doğrulamada düşen istek hiçbir yere yazmıyor, yani sayaç bugün yanlış şeyi ölçüyor.
+- ❌ **İkinci madde (istemci doğrulaması) UYGULANMAZ.** Gerekçe ölçüldü: TASK-2.06 alan bazlı **kendi** hata deyimini kurdu (ölçülmüş kontrast, alan altında metin, `aria-invalid`); tarayıcının yerleşik doğrulamasını açmak ikinci bir hata dili getirir, JS'te elle kontrol ise sunucunun kurallarını ikinci kez yazar (tek-kaynak disiplinine aykırı). M3 F3.1'in kriteri birinci maddeyle zaten karşılanıyor — kullanıcı düzeltip yeniden gönderdiğinde kabul ediliyor.
+- ⚠️ Bu iyileştirme **aciliyeti artırdı, azaltmadı:** TASK-2.05/2.06 hatayı görünür yapıp odağı ona taşıdı, yani kullanıcı artık düzeltip tekrar denemeye teşvik ediliyor ve her deneme kotadan yiyor.
+
+**ROTA — Kıvanç, audit-product triyajı 2026-09-23.** Bu bulgu, demo talebi hattının diğer iki 🔴'sıyla (**B-020** · **B-054** · **B-037**) **birlikte, tek bir "lead hattı sertleştirme" fazında** ele alınacak — tek tek hızlı iş olarak değil. Gerekçe: üçü de aynı uca (`src/app/api/demo/route.ts`) dokunuyor ve bir arada ölçülmeleri daha ucuz. Fazın açılışı `discuss-phase`'in işi.
+
 ## Çözüm Kaydı
 
 —
