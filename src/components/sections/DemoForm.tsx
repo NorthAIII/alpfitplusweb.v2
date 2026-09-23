@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, Loader2, MessageCircle, Send, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -27,10 +27,55 @@ const FIELD_ERRORS: Record<string, readonly string[]> = {
 
 const ERROR_ID = "demo-form-error";
 
+// Hangi alana odaklanilacagi hata KODUNA baglidir (B-055 c). `bad-contact`
+// kullanicinin doldurup BOZDUGU alandir -> ilk dolu alan; `missing` /
+// `missing-contact` / `no-consent` eksik olani ister -> ilk BOS alan. Eski
+// kural yalniz `bad-contact` icin yazilmisti ama FIELD_ERRORS tablosunun
+// tamamina uygulaniyordu, bu yuzden `missing`'de odak suclu bos alana degil
+// dolu alana gidiyordu (olculdu: ad bos + kulup dolu -> odak #club).
+// Alana eslenmeyen kod (no-sink, rate-limited) ve ag hatasi null doner:
+// odak hata kutusuna tasinir.
+function focusFieldFor(
+  code: string,
+  fields: readonly string[],
+  data: Record<string, FormDataEntryValue>,
+): string | null {
+  if (fields.length === 0) return null;
+  const filled = (name: string) => String(data[name] ?? "").trim().length > 0;
+  const pick = code === "bad-contact" ? fields.find(filled) : fields.find((n) => !filled(n));
+  return pick ?? fields[0];
+}
+
 export function DemoForm() {
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState("");
   const [invalidFields, setInvalidFields] = useState<readonly string[]>([]);
+  // Sonuc yuzeyi: basari kutusu (role=status) ya da hata kutusu (role=alert).
+  // Ikisi ayni anda DOM'da olmaz, tek ref ikisine de yeter.
+  const resultRef = useRef<HTMLElement | null>(null);
+  // Alana eslenen hatada odaklanacak alan; null ise odak sonuc kutusuna gider.
+  const fieldToFocus = useRef<HTMLElement | null>(null);
+
+  // Odak RENDER SONRASINA ertelenir: sonuc kutusu gonderim aninda henuz
+  // DOM'da degildir. Kutuya odaklanirken kaydirma AYRICA ve kosulsuz yapilir --
+  // `focus()`'un kendi "gerekirse gorunur yap" davranisi kutu zaten ekrandayken
+  // hic kaydirmaz ve sayfa basligi yapiskan basligin arkasinda yarim kalir
+  // (olculdu: 390/412 px, scrollY 151'de h1 34..168, baslik bandi 0..68).
+  // `block: "start"` mevcut `scroll-padding-top: 5.5rem` offsetini
+  // onurlandirir (globals.css) -- yerel bir `scroll-margin-top` EKLENMEZ,
+  // ayni offseti iki yerden yonetmek olur.
+  useEffect(() => {
+    if (state !== "ok" && state !== "error") return;
+    const field = fieldToFocus.current;
+    if (field) {
+      field.focus();
+      return;
+    }
+    const box = resultRef.current;
+    if (!box) return;
+    box.focus({ preventScroll: true });
+    box.scrollIntoView({ block: "start" });
+  }, [state]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -38,6 +83,13 @@ export function DemoForm() {
     const data = Object.fromEntries(new FormData(form).entries());
     setState("sending");
     setError("");
+    // Onceki turun isaretleri gonderim BASINDA silinir: kutu DOM'dan kalkarken
+    // alanlar `aria-describedby` ile artik DOM'da olmayan bir kimligi
+    // gosteriyordu (B-055 e). Kullanici yazarken degil, burada sifirlanir --
+    // duzeltilen alanda `aria-invalid`'in yeniden gonderime kadar surmesi
+    // yaygin desendir (ARIA 1.2, GOV.UK).
+    setInvalidFields([]);
+    fieldToFocus.current = null;
     try {
       const res = await fetch("/api/demo", {
         method: "POST",
@@ -51,34 +103,34 @@ export function DemoForm() {
         // (TASK-1.08).
         track("demo-submit", "demo-form");
         setState("ok");
-        setInvalidFields([]);
         form.reset();
       } else {
         setState("error");
         setError(json.message ?? "Bir sorun oldu. Lütfen WhatsApp'tan yazın.");
-        const fields = FIELD_ERRORS[typeof json.code === "string" ? json.code : ""] ?? [];
+        const code = typeof json.code === "string" ? json.code : "";
+        const fields = FIELD_ERRORS[code] ?? [];
         setInvalidFields(fields);
-        // "missing-contact"/"bad-contact" iki alanı birden isaretler (tablo,
-        // yukarida) ama gercek suclu -- kullanicinin doldurup bozdugu alan --
-        // her zaman ilki degildir: yalniz e-posta doluyken bos telefona degil,
-        // dolu-ama-bozuk alana odaklan. Hicbiri doluysa (ör. missing-contact,
-        // ikisi de bos) ilk alana duser.
-        const focusTarget =
-          fields.find((name) => String(data[name] ?? "").trim().length > 0) ?? fields[0];
-        if (focusTarget) {
-          form.querySelector<HTMLElement>(`[name="${focusTarget}"]`)?.focus();
-        }
+        const target = focusFieldFor(code, fields, data);
+        // Alan elemani bu dalda DOM'dan kalkmiyor, referansi simdi alinir;
+        // odagin kendisi yukaridaki efektte, render sonrasinda uygulanir.
+        fieldToFocus.current = target
+          ? form.querySelector<HTMLElement>(`[name="${target}"]`)
+          : null;
       }
     } catch {
       setState("error");
       setError("Bağlantı kurulamadı. Lütfen WhatsApp'tan yazın veya telefonla arayın.");
-      setInvalidFields([]);
+      // Ag hatasinda isaretlenecek alan yok: odak hata kutusuna gider.
     }
   }
 
   if (state === "ok") {
     return (
       <div
+        ref={(el) => {
+          resultRef.current = el;
+        }}
+        tabIndex={-1}
         role="status"
         aria-live="polite"
         data-surface={SURFACES.demoForm}
@@ -216,6 +268,10 @@ export function DemoForm() {
       {state === "error" ? (
         <p
           id={ERROR_ID}
+          ref={(el) => {
+            resultRef.current = el;
+          }}
+          tabIndex={-1}
           role="alert"
           aria-live="assertive"
           className="mt-5 flex items-start gap-2.5 rounded-xl bg-neg-wash px-4 py-3.5 text-sm leading-relaxed text-neg ring-1 ring-neg/20"

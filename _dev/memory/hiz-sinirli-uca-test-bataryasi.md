@@ -24,5 +24,22 @@ Kural (TASK-1.05'te ölçüldü):
 Sınır bilinçli olarak örnek başınadır (Fluid Compute'ta paylaşımlı sayaca
 taşınmadı — `BULGULAR.md` → Bilinçli Tercihler), yani bu disiplin kalıcıdır.
 
+## Arayüz ölçen tarayıcı turunda ucu taklit et
+
+Formun **kendi arayüzünü** (odak, kaydırma, durum geçişleri) ölçen tarayıcı
+turları uca gerçekten istek atmak zorunda değildir: Playwright'ta
+`page.route("**/api/demo", …)` ile yanıt taklit edilir. İki sorun birden düşer —
+kota hiç saymaz (senaryo sayısı serbest) ve **canlı `leads_preview` deposuna
+test kaydı yazılmaz**; orada bugün Faz 1'in bilinçli test kayıtları duruyor ve
+her yeni tur o sayıyı kirletir.
+
+Taklit edilecek kodlar `src/app/api/demo/route.ts`'ten birebir kopyalanır:
+`missing` / `missing-contact` / `bad-contact` / `no-consent` → **422**,
+`rate-limited` → **429**, `no-sink` → **503**, ağ hatası → `route.abort("failed")`.
+
+Ucun **sözleşmesi** ölçülecekse taklit kullanılmaz — o zaman yukarıdaki IP
+kuralı geçerlidir. İkisi birlikte de kullanılabilir (TASK-2.05: arayüz taklitle
+ölçüldü, senaryolar yine senaryo başına ayrı `X-Forwarded-For` taşıdı).
+
 İlgili: [Alternatif env ile üretim derlemesi](alternatif-env-ile-uretim-derlemesi.md)
 — batarya serving katmanında koşuyorsa konteyner kurulumu oradadır.

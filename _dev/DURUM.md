@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.04 ✅: fiyat hesaplayıcısının iki mobil ana çağrısı 24 px'ten **52 px**'e döndü (`flex-1` → `sm:flex-1`, iki satır); altı rotadaki 12 örneğin 12'si eşiği geçiyor (önce 0'ı geçiyordu), masaüstü davranışı rakamı rakamına değişmedi. B-034 kapandı ve arşive taşındı. Sıradaki adım `/devflow:run-task` (TASK-2.05).
+**Son Güncelleme:** 2026-09-23 — TASK-2.05 ✅: demo formunda gönderim sonrası odak sonuç yüzeyine taşınıyor; onay kutusu altı genişlikte de **88 px**'te görünüyor (taban 2/6), odak tablosu 54/54, (g) kapandı. Özet kutusunun alana eşlenen dört kodda görünürlüğü TASK-2.06'ya kaldı.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 3/19 (TASK-2.01 ✅, TASK-2.02 ✅, TASK-2.03 ❌ iptal, TASK-2.04 ✅). Sıra TASK-2.05'te.
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 4/19 (TASK-2.01 ✅, TASK-2.02 ✅, TASK-2.03 ❌ iptal, TASK-2.04 ✅, TASK-2.05 ✅). Sıra TASK-2.06'da.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,9 +35,9 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g)
+**Task:** TASK-2.06 — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a)
 **Durum:** ⬜ Bekliyor
-**İlerleme:** TASK-2.04 kapandı, sıradaki adım `/devflow:run-task`. TASK-2.05 dar odaklı bir arayüz task'ı — 320-412 px'te formun onayı ve hatası görünür olacak, odak hata türüne göre doğru yere gidecek.
+**İlerleme:** TASK-2.05 kapandı, sıradaki adım `/devflow:run-task`. TASK-2.06 B-055'in son ayağı: hatalı alan kendi üstünde görünür olacak — TASK-2.05'in kapatamadığı "özet kutusu mobilde görünmüyor" yarısı da onunla kapanır ve atom orada kapanır.
 **Not:**
 - **Yerel üretim provası (3100) artık hedefsiz** (TASK-2.02): `web-prod`'a `LEAD_STORE_URL` / `LEAD_FILE_PATH` / `RESEND_API_KEY` açıkça **boş** veriliyor ve uç geçerli talebe `503 no-sink` dönüyor. Bu **doğru** davranıştır (M3 F3.1) — 3100'e POST atıp `stored:true` bekleyen bir iş önce `docker-compose.yml`'deki `web-prod` yorumunu okusun; gerçek depoya karşı prova `--profile lead` + `http://lead-store:8090` ile açılır. Derleme sonrası kalıcı `ls /app/.env` kapısı **kurulmadı**, M6 F6.2'ye devredildi.
 - **Yasal metin için bağlayıcı ölçüm (TASK-2.01, 2026-09-22):** ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **bugün hiçbir saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. Yani metin *"IP tutulmaz"* diyemez ve **hiçbir süre yazamaz** — cümlenin son hâli TASK-2.17'nin işi.
@@ -48,6 +48,7 @@
 - **Sıra değişti:** "Görsel ve mobil iyileştirme" fazı alan adı geçişinin **önüne** alındı (kullanıcı kararı) — ölçülmüş AA kontrast ihlalleri (B-032) canlıya çıkmasın. B-032 · B-033 · B-031 o faza atandı.
 - **Kullanıcı gözü bekleyen iki kalem (Faz 1 milestone'unun doğrulama ayakları, kapanışı engellemedi):** (1) `DEMO_TO`'ya giden e-postanın **gelen kutusunda mı spam'de mi** olduğu; (2) **Umami panelinin arayüzünde** v2 kaydının gözle görülmesi. İkisinin de ürün tarafı ölçüldü; kayıt `phases/PHASE-1.md` → Milestone kapanış notu.
 - **Canlı depodaki test kayıtları:** `leads_preview` 15 kayıt (Faz 1'in bilinçli test turları; `leads` 2 → değişmedi). 12 aylık saklama işi siler. ⚠️ IP tuzu döndürülünce bu kayıtların `ip_hash`'i yeni kayıtlarla karşılaştırılamaz olur (bilinçli, `docs/DECISIONS.md`).
+- **TASK-2.05'ten devreden tek ölçüm (2026-09-23):** alana eşlenen dört hata kodunda (`missing` · `missing-contact` · `bad-contact` · `no-consent`) odak artık doğru alana gidiyor, ama formun **sonundaki** özet hata kutusu 320/360/412 px'te ekranın altında kalıyor (320'de 1.040..1.114, ekran 568) — form 320'de ~1.100 px, alan ile kutu aynı ekrana sığmıyor. Bu ayak TASK-2.05'in mekanizmasıyla kapanamaz; çözümü alan bazlı hata metni (**TASK-2.06**) ve **B-055 atomu orada kapanır**.
 - **Yerel `lead-store` konteyneri hâlâ ayakta** (25 test kaydıyla) — kaldırma/erişim komutları `memory/yerel-lead-deposu-docker-profili.md`.
 
 ---
@@ -60,7 +61,7 @@
 | 2.02 | TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058) | ✅ Tamamlandı |
 | 2.03 | TASK-2.03 — İki anahtarın döndürülmesi (B-058) | ❌ İptal — ön koşul ölçümle düştü (2026-09-23) |
 | 2.04 | TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034) | ✅ Tamamlandı |
-| 2.05 | TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g) | ⬜ Bekliyor |
+| 2.05 | TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g) | ✅ Tamamlandı |
 | 2.06 | TASK-2.06 — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a) | ⬜ Bekliyor |
 | 2.07 | TASK-2.07 — Talep sahibine onay e-postası + `notify_lead` (B-059) | ⬜ Bekliyor |
 | 2.08 | TASK-2.08 — Yetenek ve yol haritası tek kaynağı (B-029, B-040) | ⬜ Bekliyor |
@@ -87,6 +88,20 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-2.05 — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g)
+
+**Durum:** ✅ Tamamlandı — 2026-09-23
+**Detay:** `tasks/archive/TASK-2.05.md`
+
+**Özet:**
+- **Onay artık her telefonda görünüyor:** gönderim sonrası odak sonuç kutusuna taşınıyor ve kaydırma açıkça `scrollIntoView({block:"start"})` ile yapılıyor — kutu altı genişlikte de tam **88 px**'te oturuyor (= mevcut `scroll-padding-top: 5.5rem`). Kontrol gruplu: kutu tam görünür **2/6 → 6/6**, mobilde **0/4 → 4/4**. Yeni `scroll-margin-top` eklenmedi (araştırma kararı korundu).
+- **Araştırmanın seçtiği düz `focus()` (g)'yi kapatmıyordu — ölçüldü:** kutu zaten ekrandayken `focus()` hiç kaydırmıyor; bulgunun koşulunda (gönderim öncesi h1 34..168, yapışkan başlık bandı 0..68) scrollY 151'de kalıyor ve başlığın ilk satırı kesik kalmaya devam ediyordu. Açık kaydırmayla h1 −295..−161'e çıktı; 390 ve 412 px'te (g) kapandı.
+- **Odak tablosu 54/54, kırık `aria-describedby` bitti; (b)'nin yarısı TASK-2.06'ya kaldı:** `missing` boş alana, `bad-contact` dolu-ama-bozuk alana, eşlenmeyen üç kod hata kutusuna gidiyor (taban: dolu alan / `body`). Alana eşlenen dört kodda özet kutusu mobilde hâlâ ekranın altında — form 320 px'te ~1.100 px, alan ile kutu aynı ekrana sığmıyor; o ayak alan bazlı hata metniyle kapanır, **B-055 atomu TASK-2.06'da kapanıyor**.
+
+**Test:** Ölçüm dev sunucusuna (3000) karşı, araştırma konteynerinde geçici Playwright betiğiyle; **önce ve sonra aynı betik** koştu. `/api/demo` `page.route` ile taklit edildi — canlı `leads_preview` deposuna hiçbir kayıt yazılmadı ve hız sınırı hiç tetiklenmedi (senaryolar yine senaryo başına ayrı `X-Forwarded-For` taşıyor). Taban mobilde 0/4 "kutu ekran dışı" verdiği için düzeneğin kırmızıyı gösterebildiği kanıtlı; ayrıca iki mekanizma (düz `focus()` ↔ açık kaydırma) yan yana sınandı. `a11y` 8 rota **TOPLAM SORUN 0**; `mobile-audit` 9/9 rotada **yatay kaydırma yok**, dokunma hedefi sayımı **157** (TASK-2.04 ve PHASE-1 UAT ile birebir); `scan` 390×844 `/demo` 6 kare / 4.412 px **konsol temiz**; `npm test` 6 dosya **66 geçti + 1 atlandı** (taban birebir); `npx tsc --noEmit` çıkış 0. Üretim derlemesi imajın builder katmanında hatasız (paylaşılan `next_cache`'e dokunulmadı); 3100 yeni imaja alındı, paketi yeni mekanizmanın izini taşıyor, `/demo` HTTP 200 / 73.998 B.
+
+---
+
 ### TASK-2.04 — Fiyat sayfasının mobil ana çağrısı 52 px'e döner (B-034)
 
 **Durum:** ✅ Tamamlandı — 2026-09-23
@@ -98,20 +113,6 @@
 - **Kapı bu düzeltmeyi göremedi — önce de sonra da:** `mobile-audit.mjs` toplamı 157'de sabit kaldı, çünkü buton 302 px geniş olup `rc.width < 200` muafiyetine takılıyor. Sabit kalan sayı körlüğün kanıtıdır, düzeltmenin değil. Mekanik kural bilinçli olarak eklenmedi (depodaki beş meşru `flex-1` yanlış alarm verirdi); kapı tarafı B-015/B-031 ile "Kalite kapıları otomatik" fazında. B-034 kapandı ve arşive taşındı.
 
 **Test:** Ölçüm dev sunucusuna (3000) karşı geçici Playwright betiğiyle, önce ve sonra aynı betikle yapıldı; taban 0/12 "KALDI" verdiği için düzeneğin kırmızıyı gösterebildiği kanıtlı. `mobile-audit` 9/9 rotada **yatay kaydırma: yok** (M6 çizgisi karşılandı); 157'lik dokunma hedefi sayımı TASK-1.09 ve PHASE-1 UAT'ta kayıtlı sayıyla birebir. `a11y` 8 rota **TOPLAM SORUN 0**. `scan` 390×844'te `/fiyat` (10 kare / 7 734 px) ve `/segmentler/crossfit` (11 kare / 9 190 px) **konsol temiz**. `npm test` 6 dosya / **66 geçti + 1 atlandı** (taban birebir; saf fonksiyon testleri bu değişikliği kapsamıyor). Üretim derlemesi imajın builder katmanında hatasız — paylaşılan `next_cache` hacmine dokunulmadı. 3100 tazelik kontrol grubuyla ölçüldü (önce `flex-1` sunuyordu, yeni imaja alındıktan sonra `sm:flex-1`, HTTP 200).
-
----
-
-### TASK-2.02 — `.dockerignore` + `web-prod` bilinçli env (B-058)
-
-**Durum:** ✅ Tamamlandı — 2026-09-23
-**Detay:** `tasks/archive/TASK-2.02.md`
-
-**Özet:**
-- **Üretim imajı artık `.env` taşımıyor:** `.dockerignore`'daki `.env*.local` (create-next-app varsayılanı, `.env`'i eşlemiyordu) yerini `.env` + `.env.*` + `!.env.example`'a bıraktı. Ölçüm kontrol gruplu: aynı komut önce `369 B /app/.env` gösteriyordu, yeniden derlenen imajda `No such file` (çıkış 2); imaj genelinde hiçbir `.env` izi yok.
-- **Yerel prova bilinçli olarak hedefsiz:** `web-prod`'a üç kayıt yolunun baş anahtarı (`LEAD_STORE_URL` / `LEAD_FILE_PATH` / `RESEND_API_KEY`) açıkça boş veriliyor; uç geçerli talebe `503 no-sink` dönüyor (M3 F3.1'in doğru davranışı), yani 3100'e bakan ölçüm turları hiçbir depoya satır yazamıyor.
-- **Boş değer gerçek bir ikinci katman** (ölçüldü): Next'in dotenv yükleyicisi yalnız `process.env`'de **hiç tanımlı olmayan** anahtarı doldurur, boş string'i ezmez — `.env` bir gün imaja geri sızsa bile prova hedefsiz kalır. B-058 kapandı; kalıcı derleme-sonrası kapı M6 F6.2'ye devredildi.
-
-**Test:** İmaj katmanı kontrol gruplu ölçüldü (önce 369 B → sonra yok). Uç iki ayaklı sınandı, hiçbir yere kayıt yazmadan: `{}` → 422 `missing` (istek yolu sağlam, yani 503 çökmeden değil), geçerli gövde → 503 `no-sink`; konteyner logu `Depo yapılandırması eksik` diyor. `printenv` çıkış kodu: üç anahtar tanımlı-ve-boş, `LEAD_STORE_TOKEN`/`IP_HASH_SALT` hiç yok. Ana sayfa 200 (345 531 B). `npm test` 6 dosya / 66 geçti + 1 atlandı (taban birebir). `npm run build` imajın builder katmanında hatasız (paylaşılan `next_cache`'e dokunmamak için `exec` yolu bilinçli seçilmedi). `font-guard` temiz (153 karakter / 16 sayfa / 80 487 karakter); `perf` ısınmış koşumda ana sayfa masaüstü 144 KB · mobil 133 KB — başlangıç çizgisiyle birebir aynı, LCP 80 ms (çizgi 96 ms).
 
 ---
 
@@ -140,7 +141,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.05.md` ⬜ — Demo formunda odak ve durum mekaniği (B-055 b·c·d·e·f·g)
+**Aktif Task:** `tasks/TASK-2.06.md` ⬜ — Alan bazlı hata metni ve `aria-invalid` işareti (B-055 a)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

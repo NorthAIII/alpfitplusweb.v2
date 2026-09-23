@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.04: **B-034 kapandı** ve atomu `bulgular/archive/`e taşındı (fiyat hesaplayıcısının iki mobil ana çağrısı 24 px → **52 px**; kontrol gruplu ölçüm, 12 örneğin 12'si eşiği geçiyor, masaüstü değişmedi). Kapı ayağı kurulmadı — `mobile-audit.mjs`'in genişlik muafiyeti düzeltmeyi önce de sonra da görmedi (toplam 157'de sabit), evi B-015/B-031. Açık bulgu 50 → **49**.
+**Son Güncelleme:** 2026-09-23 — TASK-2.05: B-055'in altı mekanik ayağından beşi kapandı (c · d · e · f · g), (b) **kısmen** — özet hata kutusunun alana eşlenen dört kodda mobil görünürlüğü TASK-2.06'ya (ayak a) kaldı, **atom orada kapanır**, açık bulgu sayısı **49**'da değişmedi. Gelen Kutusu'na bir satır eklendi: sonuç kutularında odak duyurusu + canlı bölge duyurusunun çift okuma yapıp yapmadığı ölçülemedi (projede ekran okuyucu kanalı yok).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -69,6 +69,8 @@
 - [audit-product SORU] Vercel fonksiyon bölgesi **`iad1`** (Washington DC), kenar `fra1` — Türkiye-tek-pazar sitede `/api/demo` Atlantik'i geçiyor; ölçüm: fonksiyon başına ~+105-110 ms, ilk çağrı 987 ms — önerim: F7.5 kapsam tartışmasına girsin
 - [audit-product SORU] Roller bölümünde **antrenör** sekmesi masaüstü panosunu telefon çerçevesinde gösteriyor (244×129 px) ve **diyetisyen** sekmesi antrenör ekranını gösteriyor. Vekil bilinçli mi? CLAIMS'in "gerçek fark" dediği tek kalemin sitede kendi görüntüsü yok (B-046)
 - [audit-product SORU] `Assistant.tsx`'te `donanim` düğümü **tek yön kapı**: dokuz düğümün hiçbirinin devam sorusunda yok. Bilinçli daraltma mı? — önerim: bir-iki düğümün `next`'ine eklensin ya da chip kümesi her zaman bir kök konusu içersin
+
+- [TASK-2.05] Demo formunun onay ve hata kutularına artık odak taşınıyor, ama kutular `role="status"` / `role="alert"` canlı bölgesini de taşımaya devam ediyor — ekran okuyucu içeriği **iki kez** duyurabilir (bir kez canlı bölge, bir kez odak). Projede ekran okuyucu ölçüm kanalı yok, ölçülemedi; ayırt edici `DemoForm.tsx` sonuç kutularının `aria-live` değeri
 
 ## Açık Bulgular
 
