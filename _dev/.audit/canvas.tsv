@@ -1,9 +1,9 @@
 # DevFlow audit canvas — otomatik üretildi (kaynak: canvas.db). Elle düzenleme.
-# meta: current_convention_version=1; schema_version=2
+# meta: current_convention_version=2; schema_version=2
 id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	added_at	size_accepted
 1	CLAUDE.md	pending					0	2026-09-12	
-2	_dev/BULGULAR.md	pending					0	2026-09-12	
-3	_dev/DURUM.md	pending					0	2026-09-12	
+2	_dev/BULGULAR.md	pending					0	2026-09-12	2026-09-23|c2cdeef3591197b1a1f7866ce283c761d08b1ca90abae7562a5ad2a9b6b30730|verify-plan (Faz 3): kanvas dokuman, kanon BOLMEYI yasakliyor (CLAUDE.md -> Bolunmeyen dokumanlar; BULGULAR'in kendi KURAL'i: 'BOLUNMEZ ... bu bir triyaj cagrisidir'). Asim bu oturumdan ONCE vardi: HEAD 20.443 token olculdu. Bu tur dokuman BUYUDU (+151 token): menu cubugunun kontrast olcumune girmemesi kullanici karariyla sonraki kapi fazina ertelendi ve B-063 olarak kanvasa yazildi -> acik bulgu 42 -> 43. Teshis (c) mesru birikim: 43 acik bulgu, rehber esik ~30. Supap triyaj turudur ve evi audit-product'tir; verify-plan plan gozden gecirme oturumudur, stok eritemez. Doluluk bilincle kabul edildi, raporlandi.
+3	_dev/DURUM.md	conformant		2	2026-09-22	5dfef07ace9bcd1dff6fa24e355592bddf950492d0e528e3eb3b5b132f9db3e5	0	2026-09-12	
 4	_dev/GIT-STRATEJI.md	pending					0	2026-09-12	
 5	_dev/ILKELER.md	pending					0	2026-09-12	
 6	_dev/INDEX.md	pending					0	2026-09-12	
@@ -25,7 +25,6 @@ id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	a
 22	_dev/bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md	pending					0	2026-09-12	
 23	_dev/bulgular/B-019-uretim-konteyneri-bayat-olcumler-gecersiz.md	pending					0	2026-09-12	
 24	_dev/bulgular/B-020-hiz-siniri-gecerli-talebi-reddediyor.md	pending					0	2026-09-12	
-25	_dev/bulgular/B-021-iletisim-formati-dogrulanmiyor.md	pending					0	2026-09-12	
 26	_dev/bulgular/B-022-mobilde-ilk-ekranda-donusum-yuzeyi-yok.md	pending					0	2026-09-12	
 27	_dev/bulgular/B-023-fiyat-ve-iletisim-tek-kaynak-disinda.md	pending					0	2026-09-12	
 28	_dev/bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md	pending					0	2026-09-12	
@@ -42,7 +41,6 @@ id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	a
 39	_dev/bulgular/B-035-perf-agirlik-muhasebesi-kor.md	pending					0	2026-09-12	
 40	_dev/bulgular/B-036-lead-kaybi-yollari.md	pending					0	2026-09-12	
 41	_dev/bulgular/B-037-api-demo-sertlestirme-bosluklari.md	pending					0	2026-09-12	
-42	_dev/bulgular/B-038-lead-sheet-operasyonel-sessizlikleri.md	pending					0	2026-09-12	
 43	_dev/bulgular/B-039-metin-bilesende.md	pending					0	2026-09-12	
 44	_dev/bulgular/B-040-urun-yol-haritasi-dort-evde.md	pending					0	2026-09-12	
 45	_dev/bulgular/B-041-yasal-sayfalar-noindex-eziyor.md	pending					0	2026-09-12	
@@ -55,6 +53,17 @@ id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	a
 52	_dev/bulgular/B-048-asistan-durum-hatalari.md	pending					0	2026-09-12	
 53	_dev/bulgular/B-049-segment-rakip-fiyat-iddiasi.md	pending					0	2026-09-12	
 54	_dev/bulgular/B-050-segment-sayfalarinda-pilot-nitelemesi-yok.md	pending					0	2026-09-12	
+98	_dev/bulgular/B-051-ana-sayfada-ikon-kart-izgaralari.md	pending					0	2026-09-22	
+99	_dev/bulgular/B-052-urun-gorseli-cikti-klasoru-temizlenmiyor.md	pending					0	2026-09-22	
+100	_dev/bulgular/B-053-claude-md-olmayan-next-komutunu-oneriyor.md	pending					0	2026-09-22	
+101	_dev/bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md	pending					0	2026-09-22	
+102	_dev/bulgular/B-055-demo-formu-hata-akisi-mobilde-gorunmuyor.md	pending					0	2026-09-22	
+103	_dev/bulgular/B-056-umami-hidrasyonsuz-gonderimde-kisisel-veri.md	pending					0	2026-09-22	
+104	_dev/bulgular/B-057-segment-lcp-dekoratif-gorsel-ve-font-takasi.md	pending					0	2026-09-22	
+105	_dev/bulgular/B-058-env-uretim-imajina-gomulu.md	pending					0	2026-09-22	
+106	_dev/bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md	pending					0	2026-09-22	
+107	_dev/bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md	pending					0	2026-09-22	
+108	_dev/bulgular/B-061-lead-deposu-yedegi-ayni-sunucuda.md	pending					0	2026-09-22	
 55	_dev/bulgular/archive/B-001-eski-logo-urun-ekranlarinda.md	pending					0	2026-09-12	
 56	_dev/bulgular/archive/B-002-takvimde-sms-karti.md	pending					0	2026-09-12	
 57	_dev/bulgular/archive/B-003-ana-sayfa-mobil-yatay-kayma.md	pending					0	2026-09-12	
@@ -62,21 +71,26 @@ id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	a
 59	_dev/bulgular/archive/B-005-sora-tl-isareti-yok.md	pending					0	2026-09-12	
 60	_dev/bulgular/archive/B-006-font-agirligi-yuzde-82.md	pending					0	2026-09-12	
 61	_dev/bulgular/archive/B-007-ekran-ustu-etiketler.md	pending					0	2026-09-12	
+109	_dev/bulgular/archive/B-021-iletisim-formati-dogrulanmiyor.md	pending					0	2026-09-22	
+110	_dev/bulgular/archive/B-038-lead-sheet-operasyonel-sessizlikleri.md	pending					0	2026-09-22	
 62	_dev/claude/CALISMA-PRENSIPLERI.md	pending					0	2026-09-12	
 63	_dev/claude/COMMIT.md	pending					0	2026-09-12	
 64	_dev/claude/DOKUMAN-DISIPLINI.md	pending					0	2026-09-12	
 65	_dev/claude/DOKUMAN-KURALLARI.md	pending					0	2026-09-12	
 66	_dev/docs/CLAIMS.md	pending					0	2026-09-12	
+131	_dev/docs/DECISIONS-2026-09-10..2026-09-13.md	pending					0	2026-09-22	
 67	_dev/docs/DECISIONS.md	pending					0	2026-09-12	
 68	_dev/docs/STYLE-GUIDE.md	pending					0	2026-09-12	
 69	_dev/memory/alternatif-env-ile-uretim-derlemesi.md	pending					0	2026-09-12	
+111	_dev/memory/anahtar-kasasi-config-alpfit.md	pending					0	2026-09-22	
 70	_dev/memory/arastirma-konteynerinde-tarayici-olcumu.md	pending					0	2026-09-12	
 71	_dev/memory/asama-bagimli-davranis-ara-hal-sinamasi.md	pending					0	2026-09-12	
 72	_dev/memory/hiz-sinirli-uca-test-bataryasi.md	pending					0	2026-09-12	
+112	_dev/memory/kendi-sunucu-n8n-bunker-umami.md	pending					0	2026-09-22	
 73	_dev/memory/kivanc-tasarim-tercihleri.md	pending					0	2026-09-12	
-74	_dev/memory/saf-fonksiyon-testi-node-tip-soyma.md	pending					0	2026-09-12	
 75	_dev/memory/vercel-proje-kimlikleri.md	pending					0	2026-09-12	
 76	_dev/memory/vercel-standalone-cikti-catismasi.md	pending					0	2026-09-12	
+113	_dev/memory/yerel-lead-deposu-docker-profili.md	pending					0	2026-09-22	
 77	_dev/modules/M1-Icerik-ve-Iddia-Kaynagi.md	pending					0	2026-09-12	
 78	_dev/modules/M2-Sayfalar-ve-Bolumler.md	pending					0	2026-09-12	
 79	_dev/modules/M3-Lead-Hatti.md	pending					0	2026-09-12	
@@ -85,16 +99,28 @@ id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	a
 82	_dev/modules/M6-Kalite-Kapilari.md	pending					0	2026-09-12	
 83	_dev/modules/M7-Yayin-ve-Altyapi.md	pending					0	2026-09-12	
 84	_dev/phases/PHASE-1-ARASTIRMA.md	pending					0	2026-09-12	
+114	_dev/phases/PHASE-1-OLCUMLER.md	pending					0	2026-09-22	
 85	_dev/phases/PHASE-1.md	pending					0	2026-09-12	
-86	_dev/tasks/TASK-1.04.md	pending					0	2026-09-12	
-87	_dev/tasks/TASK-1.06.md	pending					0	2026-09-12	
-88	_dev/tasks/TASK-1.07.md	pending					0	2026-09-12	
-89	_dev/tasks/TASK-1.08.md	pending					0	2026-09-12	
-90	_dev/tasks/TASK-1.09.md	pending					0	2026-09-12	
 91	_dev/tasks/TASKS-README.md	pending					0	2026-09-12	
 92	_dev/tasks/archive/TASK-1.01.md	pending					0	2026-09-12	
 93	_dev/tasks/archive/TASK-1.02.md	pending					0	2026-09-12	
 94	_dev/tasks/archive/TASK-1.03.md	pending					0	2026-09-12	
+115	_dev/tasks/archive/TASK-1.04.md	pending					0	2026-09-22	
 95	_dev/tasks/archive/TASK-1.05.md	pending					0	2026-09-12	
+116	_dev/tasks/archive/TASK-1.06.md	pending					0	2026-09-22	
+117	_dev/tasks/archive/TASK-1.07-OTURUM-KAYITLARI.md	pending					0	2026-09-22	
+118	_dev/tasks/archive/TASK-1.07.md	pending					0	2026-09-22	
+119	_dev/tasks/archive/TASK-1.08.md	pending					0	2026-09-22	
+120	_dev/tasks/archive/TASK-1.09.md	pending					0	2026-09-22	
 96	_dev/tasks/archive/TASK-1.10.md	pending					0	2026-09-12	
+121	_dev/tasks/archive/TASK-1.11-BUNKER-KESFI.md	pending					0	2026-09-22	
+122	_dev/tasks/archive/TASK-1.11-ENVANTER.md	pending					0	2026-09-22	
+123	_dev/tasks/archive/TASK-1.11.md	pending					0	2026-09-22	
+124	_dev/tasks/archive/TASK-1.12.md	pending					0	2026-09-22	
+125	_dev/tasks/archive/TASK-1.13.md	pending					0	2026-09-22	
+126	_dev/tasks/archive/TASK-1.14.md	pending					0	2026-09-22	
+127	_dev/tasks/archive/TASK-1.15.md	pending					0	2026-09-22	
+128	_dev/tasks/archive/TASK-1.16.md	pending					0	2026-09-22	
+129	_dev/tasks/archive/TASK-1.17.md	pending					0	2026-09-22	
+130	_dev/tasks/archive/TASK-1.18.md	pending					0	2026-09-22	
 97	_dev/tasks/quick/QUICK-001-sube-webp-yayindan-cek.md	pending					0	2026-09-12	

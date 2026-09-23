@@ -82,6 +82,7 @@ src/content/product.ts                 # yalnız sıra/gruplama gerekirse (cüml
 - [ ] `mobile-audit.mjs` 320 ve 390 px'te kırpma 0, kritik dokunma hedefi temiz
 - [ ] `font-guard.mjs` kümede olmayan karakter bulmuyor
 - [ ] `scan.mjs` konsol temiz
+- [ ] `docker compose exec web npm test` geçiyor — `src/content/product.ts`'te sıra/gruplama değişirse `tests/iddia-metinleri.test.ts` ve `tests/capabilities.test.ts` `MODULES`/`CAPABILITIES`'i hasat ediyor
 - [ ] Ana sayfanın mobil uzunluğu ölçüldü ve öncesiyle karşılaştırıldı (taban: 26.399 px)
 
 ---

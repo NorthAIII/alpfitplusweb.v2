@@ -94,6 +94,7 @@ src/content/shots.ts                # diyetisyen vekilinin alt metni
 - [ ] Antrenör sekmesindeki görsel okunabilir ölçekte — telefon çerçevesinde 244×129 px'lik masaüstü panosu kalmadı
 - [ ] Diyetisyen sekmesinin alt metni sekmeyle çelişmiyor
 - [ ] Dört sekmenin hepsi 320 · 390 · 1440 px'te tıklanıp görselleri gözlendi
+- [ ] `docker compose exec web npm test` geçiyor — alt metin `src/content/shots.ts`'te değişiyor ve `tests/iddia-metinleri.test.ts` **`SHOTS` alt metinlerini hasat ediyor** (boş kapsam bekçisi dâhil)
 - [ ] Beş ölçüm regresyon çizgisini koruyor
 
 ---

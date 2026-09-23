@@ -49,6 +49,7 @@ Araştırma dedektörü prototipledi ve muafiyet kuralını ölçtü: **muafiyet
   - Kırpan ata `overflow-x: auto|scroll` ise **muaf**
   - Düğümün ata zincirinde **çalışan bir CSS animasyonu** varsa muaf (kayan tanıtım şeridi)
   - Muaf sayılanlar **ayrı bir sayıda** raporlanır, gizlenmez
+  - **Bilinçli ekran-dışı yüzey muaf sayılır ve ayrı sayılır.** Bu, yeni kırpma dalının değil betiğin **bugünkü yatay taşma dalının** kalemidir (`overflow` dizisi): demo formundaki bal küpü `absolute left-[-9999px]` + `aria-hidden` ile ekran dışında duruyor ve üç düğümü (`div` · `label` · `input`) `rc.left < -1.5` koşulunu sağlayıp `overflowCount`'a giriyor. Ölçüt kalıp değil **beyan** olsun: `aria-hidden` taşıyan ve ekranın tamamen dışında (sağ kenarı 0'ın solunda) kalan altağaç muaftır
 
 - [ ] **4. Kaydırılabilir şerit ölçütü**
   - Kaydırılabilir bir kapta **tek bir çocuk öğe** kabın görünür genişliğinden genişse ihlal
@@ -73,6 +74,7 @@ research/scripts/mobile-audit.mjs   # 320 px, kırpma dedektörü, muafiyet, şe
 - **Muafiyetsiz dedektör kurma.** Ölçüldü: 59 sahte pozitif. Muafiyet gizleme değil, **ayrı sayma**dır.
 - **Roller şeridi kırpma dedektörüne görünmez** — kaydırılabilir olduğu için muafiyete düşer. Şerit ölçütü tam da bu boşluğu kapatır; ikisi ayrı sayılır.
 - **Bu task'tan sonra kapı kırmızı dönecek** (320 px'te 19 düğüm + Roller şeridi). Düzeltmeler TASK-3.14 ve TASK-3.15'te.
+- ⚠️ **Bal küpü muafiyeti olmadan kapı KALICI kırmızı kalır.** TASK-3.03 betiğe çıkış kodu verdi; bal küpünün üç düğümü `/demo`'da `TOPLAM SORUN`'a giriyor ve **hiçbir düzeltme task'ı onları kaldırmayacak** — kaldırmamalı da, tuzağın ekran dışında olması doğru tasarım. Muafiyet yazılmazsa fazın *"beş ölçüm yeşil"* hedefi ulaşılamaz hâle gelir (kaynak: `BULGULAR.md` → Gelen Kutusu, `[PHASE-1]` satırı; kod: `DemoForm.tsx:222-225`).
 - **Dayanağı bozup kırmızıyı gör:** `FounderProgram`'ın ızgara çocuklarına geçici `min-w-0` verildiğinde 320 px'teki kırpılan düğüm sayısı **0'a** düşmeli (araştırmada ölçüldü: grid 370 → 280, kalan kırpma 0 px). Geri al, kırmızı geri gelsin.
 - **Sayfayı gezmeden ölçme** — betik bugün sayfayı kaydırarak geziyor (tembel yüklenen içerik için); bu davranış korunur.
 - **3100 bayat olabilir** — `docker compose --profile prod up -d web-prod`.
@@ -87,6 +89,8 @@ research/scripts/mobile-audit.mjs   # 320 px, kırpma dedektörü, muafiyet, şe
 - [ ] Roller şeridi ölçütü 320 px'te ihlal veriyor, 390 px'te vermiyor
 - [ ] Geçici `min-w-0` deneyi kırmızıyı yeşile çeviriyor; geri alınınca kırmızı dönüyor
 - [ ] Gerçek kırpılmış düğüm varken çıkış kodu **1**
+- [ ] `/demo`'da bal küpünün üç düğümü taşma sayısından düştü ve muaf sayıda göründü; **bu sayfada başka taşma kalemi yoksa `/demo` temiz** (eski hâlde `overflowCount` 3'tü)
+- [ ] Muafiyet beyana bağlı, kalıba değil: deneysel olarak `aria-hidden` kaldırıldığında üç düğüm **geri sayılıyor**
 
 ---
 

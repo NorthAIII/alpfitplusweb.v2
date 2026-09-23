@@ -68,7 +68,7 @@ src/app/segmentler/[slug]/page.tsx         # dekoratif kahraman alt=""
 - **`aria-hidden` kontrast ölçümünü de etkiler** — TASK-3.04'ün ölçümü `aria-hidden` öğeleri dışarıda bırakıyor; bu değişiklik ölçülen eleman sayısını düşürebilir. Düşüş **beklenen**dir ve kapsam eşiğini kırmamalı.
 - **`inert` tarayıcı desteği:** `aria-hidden` daha güvenli; `inert` ayrıca odağı da keser ve geçiş görselleri odaklanabilir değil, yani `aria-hidden` yeterli.
 - **Gerçek ekran okuyucu denemesi kapsam dışı** — doğrulama erişilebilirlik ağacı üzerinden yapılır (`page.accessibility.snapshot()` ya da eşdeğeri).
-- **Segment kahramanı TASK-3.20'de de ele alınıyor** (LCP/`sizes`) — çakışmamak için sıra: önce 3.20, sonra bu.
+- **Segment kahramanına TASK-3.22 de dokunuyor** (LCP/`sizes`) ve o **bu task'tan sonra** koşuyor. İki değişiklik aynı `<Image>`'ın ayrı nitelikleridir (`alt` ↔ `sizes`/`priority`), çakışmazlar — ama TASK-3.22 iki yolundan birini (*"görseli CSS arka planına almak"*) seçerse eleman tümüyle kalkar ve buradaki `alt=""` düşer. O yolu seçerse TASK-3.22 bu kalemi kapanışta yeniden doğrular.
 
 ---
 

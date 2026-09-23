@@ -38,6 +38,7 @@ B-046 kalem (4). Milestone bu dalı adıyla istiyor: *"yazı tipi kümesindeki h
 **Güncellenmesi Gereken (Task Sonunda):**
 - `_dev/DURUM.md` · `_dev/phases/PHASE-3.md` — durum ve özet
 - `_dev/modules/M5-Gorsel-Varlik-Hatti.md` — F5.3'e ikinci dal kriteri
+- `_dev/modules/M6-Kalite-Kapilari.md` — **regresyon çizgisi tablosu yenilenir** (aşağıda → Alt Görev 5)
 - `_dev/docs/STYLE-GUIDE.md` — okların Sora'da bulunmadığı (bugün hiçbir yerde kayıtlı değil)
 
 ---
@@ -60,6 +61,12 @@ B-046 kalem (4). Milestone bu dalı adıyla istiyor: *"yazı tipi kümesindeki h
 
 - [ ] **4. Raporla**
   - Çıktı: `küme: N karakter · woff2'de eksik: M (muaf: K)`; muaf olmayan eksik > 0 → çıkış kodu 1
+
+- [ ] **5. Regresyon çizgisini yeni yöntemle yeniden yaz**
+  - `modules/M6-Kalite-Kapilari.md` → Teknik Notlar'daki başlangıç tablosu 2026-09-11'de, **8 rotada ve eski yöntemle** ölçüldü; "Kontrast ihlali: 0" ve "Yatay kaydırma: 0" satırları bu fazdan sonra çok daha geniş bir şeyi anlatıyor (16 rota · piksel kontrastı · gradyan metin dalı · başlık hiyerarşisi · kırpılmış taşma · iki kulvarlı dokunma hedefi)
+  - Bu task fazın **son kapı task'ıdır** ve bütün düzeltmelerden sonra koşar — satırları dürüstçe yeniden ölçebilecek tek yer burası
+  - Üç a11y/mobil satırı yeniden ölçülüp **kapsamıyla birlikte** yazılır ("16 rotada, piksel yöntemiyle"); font satırı bu task'ın kendi ölçümünden gelir. Dokunulmayan satırlar (perf, ağırlık, CLS, üretim derlemesi) **olduğu gibi kalır** — onların yöntemi bu fazda değişmedi (B-035 kapsam dışı)
+  - Gerekçe: bir sonraki faz (F6.2 tek komut) eşiklerini doğrudan bu tablodan alacak
 
 ---
 
@@ -93,6 +100,7 @@ public/fonts/                          # font-subset.mjs yeniden koşarsa (betik
 - [ ] Muaf olmayan eksik kalmadığında çıkış kodu **0**; deneysel olarak kümeye olmayan bir karakter eklendiğinde **1**
 - [ ] Birinci dal (site metni ⊆ küme) hâlâ çalışıyor ve 16 sayfada eksik karakter bulmuyor
 - [ ] Font ağırlığı ölçüldü (`perf.mjs`); 95 KB tabanına göre değişim rakamıyla kaydedildi
+- [ ] M6'daki regresyon çizgisinin a11y/mobil/font satırları yeni yöntemle yeniden ölçülüp **kapsam ibaresiyle** yazıldı; dokunulmayan satırlar değişmedi
 
 ---
 

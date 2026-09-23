@@ -14,6 +14,8 @@
 
 **Milestone:** Site 320 / 390 / 412 / 768 / 1440 px'te, %200 ve %400 büyütmede, hareket azaltma açıkken, JavaScript kapalıyken ve yatay tutuşta bölüm bölüm gezildi; gerçek telefonda uçtan uca tur koşuldu ve çıkan bulgular kanvasa düşüp triyaj edildi. Ölçülmüş beş kontrast ihlali kalmadı ve 320 px'te kesilen metin ya da işlev yok. Telefonda her sayfanın ilk ekranında demoya çıkan bir yol var ve dönüşüme dokunan her hedef en az 44 px. Kontrast ve mobil kapıları 16 sayfanın hepsini geziyor, **boyanan gerçek rengi** ölçüyor, ölçemediğini sayıyor ve eşik altında sıfır-olmayan çıkış kodu veriyor. Ana sayfanın iki kart ızgarası reddedilen kalıptan çıktı; Roller sekmeleri doğru ekranı gösteriyor; yazı tipi kümesindeki her karakterin dosyada gerçekten bulunduğu doğrulandı. Beş ölçüm yeşil.
 
+**Not (verify-plan 2026-09-23):** *"Roller sekmeleri doğru ekranı gösteriyor"* iki ayaklıdır ve yalnız biri koşulsuzdur. **Eşleme düzeltmesi koşulsuz** (TASK-3.15: antrenör sekmesi bugün rezervasyon takvimini gösteriyor, doğru içerik üretilen kümede var). **Diyetisyen sekmesinin kendi ekranı ise ürün deposuna iki ekranın eklenmesine bağlıdır** (TASK-3.24, koşullu — kapsam kararı: *"faz bu adıma kilitlenmez"*). Ekranlar gelmezse sekme ödünç görselle kalır; kriterin o ayağı **açık** sayılır, B-046 kanvasta durur ve "bilinçli tercih" kaydı yazılmaz.
+
 ### Feature Listesi
 
 (MODULE-MAP ve modules/ referansı)
@@ -167,7 +169,8 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.13 | TASK-3.13 | ⬜ Bekliyor | 404 / çöküş — dev rakam dekoratif olur, başlık hiyerarşisi düzelir |
 | 3.14 | TASK-3.14 | ⬜ Bekliyor | 320 px'te kesilen içerik ve işlev — `Button` tabanı + `FounderProgram` ızgarası |
 | 3.15 | TASK-3.15 | ⬜ Bekliyor | Roller — sekme şeridi 320 px'te sığar, görsel eşlemesi düzelir |
-| 3.16 | TASK-3.16 | ⬜ Bekliyor | Mobilde ilk ekranda demoya çıkan bir yol (+ WhatsApp yedeği yazılanları taşır) |
+| 3.16 | TASK-3.16 | ⬜ Bekliyor | Mobilde ilk ekranda demoya çıkan bir yol — menüye "Demo", yüzen düğme erken |
+| 3.25 | TASK-3.25 | ⬜ Bekliyor | Form 503 verdiğinde WhatsApp bağlantısı yazılanları taşır |
 | 3.17 | TASK-3.17 | ⬜ Bekliyor | Dönüşüme dokunan 19 hedef 44 px'e çıkar |
 | 3.18 | TASK-3.18 | ⬜ Bekliyor | Faydalar bölümünün 8 eşit kartı reddedilen kalıptan çıkar |
 | 3.19 | TASK-3.19 | ⬜ Bekliyor | Modüller bölümünün tırtıklı 5'li ızgarası yeniden kurulur |
@@ -183,6 +186,8 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 
 - **Kapı düzeltmelerden önce gelir.** Kullanıcı kararı *"kontrast ihlallerinin tamamı düzelir — kayıtlı beş kalem değil, ölçümün bulduğu küme"* demişti; o kümeyi **tanımlayan** şey yeni kapının kendisidir. Kapı önce kurulunca her düzeltme task'ı hem listesini oradan alır hem kırmızıyı yeşile çevirerek kendini doğrular. Bedeli: TASK-3.03'ten itibaren kapılar faz boyunca kırmızı koşar — CI olmadığı için bu hiçbir şeyi bloke etmez ve kapının çalıştığının kanıtıdır.
 - **İki keşif turu kapıdan da önce.** Turlar kapıların kapsamadığı eksenleri (büyütme, JS kapalı, yatay tutuş) tarar ve düzeltme listesini eksiksiz yapar. İkisi de **keşif ayağıdır**: kalan task'ların doğruluğunu değiştiren bir bulgu çıkarsa ayak ✅ kapanır, DURUM Adım'ı `plan`'a çekilir ve `plan-phase` revizyon modu devralır.
+
+**Numara sırası tablo sırasından sapıyor (bilinçli):** `verify-plan` TASK-3.16'yı ikiye böldü — lead hattına ait olan ayak (form düşünce WhatsApp'ın yazılanları taşıması) ayrı bir modülün işi, ayrı dosyaya dokunuyor ve kişisel veriyi bağlantı adresine koyduğu için kendi çağrı-sitesi süpürmesini gerektiriyor. Yeni task en büyük numarayı alır (TASK-3.25) ama **tabloda kaynağının hemen ardında** koşar; ölçüt tablo sırasıdır (TASKS-README → Lineer Çalıştırma).
 
 **Fazı kilitlemeyen iki kalem:** TASK-3.24 ürün deposuna iki ekranın eklenmesine bağlıdır ve gelmezse ❌ İptal edilir (B-046 kanvasta açık kalır); kullanıcının gerçek telefon turu ise task değil, `verify-phase` UAT'ının konusudur.
 

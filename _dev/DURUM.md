@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — **Faz 3'ün task listesi yazıldı** (plan-phase): **24 task, dört küme**, sıra keşif → kapı → düzeltme → görsel/performans. Yapısal karar: **kapı düzeltmelerden önce kurulur** — "ölçümün bulduğu kümenin tamamı düzelir" kararındaki kümeyi tanımlayan şey kapının kendisi; her düzeltme task'ı listesini oradan alır ve kırmızıyı yeşile çevirerek kendini doğrular. Faz dokümanı task tablosuyla kırmızı çizgiyi aştı (20.506 token) ve **faz hâlâ aktifken bölündü**: araştırma detayı `PHASE-3-ARASTIRMA.md`'ye taşındı, parent 16.016 token'a indi.
+**Son Güncelleme:** 2026-09-23 — **Faz 3'ün planı doğrulandı** (verify-plan): 24 task fresh context ile okundu, çapalar kodda tek tek sınandı; **7 mekanik düzeltme** yapıldı (eksik bağımlılık, yanlış task atfı, üç task'ta eksik test bataryası, çağrı-sitesi süpürmesi, M6 güncelleme kalemi) ve **5 yapısal kalem onaylandı**. En önemlisi: demo formundaki bal küpü ekran dışında durduğu için mobil kapıya "taşan eleman" görünüyordu — çıkış kodu eklendiği an kapı `/demo` yüzünden **kalıcı kırmızı** kalacaktı; muafiyet TASK-3.07'ye yazıldı. TASK-3.16 ikiye bölündü (**TASK-3.25** — lead hattına ait WhatsApp ön-doldurması), menü çubuğunun ölçülmemesi borç olarak **B-063**'e kaydedilip sonraki kapı fazına ertelendi. Task sayısı **25**.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 3 — Görsel ve mobil iyileştirme
 **Milestone:** Site dar telefondan büyütülmüş yazıya kadar bölüm bölüm gezildi (gerçek cihaz dâhil) ve çıkanlar triyaj edildi; ölçülmüş beş kontrast ihlali ve 320 px'te kesilen içerik kalmadı; telefonda her sayfanın ilk ekranında demoya çıkan bir yol var ve dönüşüme dokunan her hedef ≥ 44 px; kontrast ve mobil kapıları 16 sayfanın hepsini geziyor, boyanan gerçek rengi ölçüyor ve eşik altında kırmızıya dönüyor; ana sayfanın iki kart ızgarası reddedilen kalıptan çıktı; beş ölçüm yeşil. Tam metin ve kapsam kararları: `phases/PHASE-3.md`.
-**Adım:** verify-plan
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · **task yazımı ✅** — 24 task dokümanı yazıldı, hiçbiri çalıştırılmadı. Sıradaki adım plan doğrulama (`verify-plan`).
+**Adım:** task
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ · **plan doğrulama ✅** — 25 task dokümanı hazır, hiçbiri çalıştırılmadı. Sıradaki adım task çalıştırma (`run-task`).
 **Faz Dokümanı:** `phases/PHASE-3.md` 🔄 (çocuğu: `PHASE-3-ARASTIRMA.md`) · son kapanan: `phases/PHASE-2.md` ✅ (çocukları: `PHASE-2-KAPSAM.md` · `PHASE-2-ARASTIRMA.md` · `PHASE-2-UAT.md` · `PHASE-2-RETROSPEKTIF.md`)
 
 ---
@@ -35,9 +35,9 @@
 
 ## Aktif Task
 
-**Task:** — yok · 24 task yazıldı ama hiçbiri başlamadı; sıradaki adım plan doğrulama (`verify-plan`), ondan sonra sırayla `run-task`
-**Durum:** ⬜ Tablo sırasındaki ilk task **TASK-3.01** (genişlik turu)
-**İlerleme:** 0 / 24
+**Task:** **TASK-3.01** — Genişlik turu (16 sayfa × 320/390/412/768/1440 px) · `tasks/TASK-3.01.md`
+**Durum:** ⬜ Bekliyor — plan doğrulandı, çalıştırılmaya hazır
+**İlerleme:** 0 / 25
 **Not:**
 - ⚠️ **TASK-3.03'ten itibaren kapılar faz boyunca KIRMIZI koşar ve bu beklenen sonuçtur.** Kapı önce kurulur (16 rota + çıkış kodu + piksel kontrast + kırpma dedektörü), düzeltmeler ondan sonra gelir; her düzeltme task'ı kendi kalemini yeşile çevirir. CI olmadığı için kırmızı hiçbir şeyi bloke etmez — kapının çalıştığının kanıtıdır.
 - ⚠️ **İki keşif turu (TASK-3.01 · TASK-3.02) keşif ayağıdır:** kalan task'ların doğruluğunu değiştiren bir bulgu çıkarsa ayak ✅ kapanır, arşive gider, DURUM Adım'ı `plan`'a çekilir ve `plan-phase` revizyon modu devralır.
@@ -49,7 +49,7 @@
 
 ## Task Durumu (Aktif Faz)
 
-**Tablo sırası = çalıştırma sırasıdır.** Dört küme: keşif (01-02) → kapı (03-08) → düzeltme (09-17) → tasarım ve görsel/performans (18-24).
+**Tablo sırası = çalıştırma sırasıdır.** Dört küme: keşif (01-02) → kapı (03-08) → düzeltme (09-17, arada 3.25) → tasarım ve görsel/performans (18-24). ⚠️ **TASK-3.25 numarasıyla değil tablodaki yeriyle koşar** — verify-plan TASK-3.16'yı ikiye böldü, yeni task en büyük numarayı aldı ama kaynağının hemen ardında çalışır.
 
 | # | Task | Durum | Açıklama |
 |---|------|-------|----------|
@@ -69,6 +69,7 @@
 | 3.14 | TASK-3.14 | ⬜ Bekliyor | 320 px'te kesilen içerik — `Button` tabanı + `FounderProgram` |
 | 3.15 | TASK-3.15 | ⬜ Bekliyor | Roller — sekme şeridi sığar, görsel eşlemesi düzelir |
 | 3.16 | TASK-3.16 | ⬜ Bekliyor | Mobilde ilk ekranda demoya çıkan bir yol |
+| 3.25 | TASK-3.25 | ⬜ Bekliyor | Form 503 verdiğinde WhatsApp bağlantısı yazılanları taşır |
 | 3.17 | TASK-3.17 | ⬜ Bekliyor | Dönüşüme dokunan 19 hedef 44 px'e çıkar |
 | 3.18 | TASK-3.18 | ⬜ Bekliyor | Faydalar'ın 8 eşit kartı reddedilen kalıptan çıkar |
 | 3.19 | TASK-3.19 | ⬜ Bekliyor | Modüller'in tırtıklı 5'li ızgarası yeniden kurulur |
@@ -115,7 +116,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok · sıradaki `tasks/TASK-3.01.md` ⬜ (önce `verify-plan`); son kapanan `tasks/archive/TASK-2.21.md` ✅
+**Aktif Task:** `tasks/TASK-3.01.md` ⬜ (plan doğrulandı, çalıştırılabilir); son kapanan `tasks/archive/TASK-2.21.md` ✅
 **Aktif Faz:** `phases/PHASE-3.md` 🔄 (araştırma detayı: `PHASE-3-ARASTIRMA.md`) · son kapanan: `phases/PHASE-2.md` ✅ (kapsam: `PHASE-2-KAPSAM.md` · araştırma: `PHASE-2-ARASTIRMA.md` · UAT: `PHASE-2-UAT.md` · retrospektif ve kalite: `PHASE-2-RETROSPEKTIF.md`)
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

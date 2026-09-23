@@ -33,7 +33,7 @@ Araştırma kararı (PHASE-3 → 4. yaklaşım): `sitemap.ts` araştırma kontey
 **Güncellenmesi Gereken (Task Sonunda):**
 - `_dev/DURUM.md` — Task durumu ve özet
 - `_dev/phases/PHASE-3.md` — Task Listesi tablosunda durum
-- `_dev/modules/M6-Kalite-Kapilari.md` — F6.1'in kabul kriterleri artık ölçülü; rota kaynağı ve hedef değişikliği Teknik Notlar'a
+- `_dev/modules/M6-Kalite-Kapilari.md` — F6.1'in kabul kriterleri artık ölçülü; rota kaynağı ve hedef değişikliği Teknik Notlar'a. F6.1'in Edge Case satırı bugün *"`perf.mjs` ve `font-guard.mjs` üretim konteyneri ayakta değilse…"* diyor — bu task'tan sonra kural **dört** betiği kapsar (`a11y` ve `mobile-audit` de 3100'e bakar), satır gerçeğe çekilir
 
 ---
 
