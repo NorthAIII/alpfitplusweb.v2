@@ -254,14 +254,16 @@ docker compose exec web npm test                       # Vitest — web konteyne
 | `perf.mjs` | TTFB, FCP, LCP, CLS, sayfa ağırlığı | üretim konteyneri (3100) ayakta olmalı |
 | `scan.mjs <yol> <etiket> <en> <boy>` | Sayfayı ekran ekran gezer, konsol hatası toplar | konsol temiz |
 | `render-product.mjs` | Ürün ekran görüntülerini üretir | denetim: sızıntı yok |
-| `npm test` (Vitest, `tests/`) | Aşama türetimi + `/api/demo` sözleşme bataryası + depo sözleşme paketi (env'le, aşağı bak) | çıkış kodu 0 |
+| `npm test` (Vitest, `tests/`) | Aşama türetimi + `/api/demo` sözleşme bataryası + yetenek/iddia kapıları + yasal beyan kapısı + depo sözleşme paketi (ikisi env'le, aşağı bak) | çıkış kodu 0 |
 
 Başlangıç çizgisi (regresyon eşiği) `_dev/modules/M6-Kalite-Kapilari.md` → Teknik Notlar'da; ölçüm sonucu rakamıyla task/faz dokümanına yazılır.
 
 - **Ürün görselleri elle konmaz.** `render-product.mjs` üretir; eski marka, gerçek sporcu adı ve karşılanmayan iddiayı temizler, sızıntı kalırsa **üretim durur**.
 - **Fotoğraflar** Pexels lisanslı; kaynak listesi `research/FOTOGRAF-KAYNAKLARI.txt` — önce listeye yaz, sonra `photos-build.mjs`.
 - **Fontlar** siteye özel daraltıldı (153 karakter, 5 dosya, 95 KB). Yeni karakter girerse `font-guard.mjs` yakalar; küme `research/FONT-KARAKTER-KUMESI.txt` + `font-subset.mjs` ile genişletilir.
-- **Depo sözleşme paketi** (`tests/lead-store.contract.test.ts`, TASK-1.13) sitenin canlı `LEAD_STORE_*` anahtarlarından ayrı bir env kapısı taşır — `LEAD_CONTRACT_URL` tanımsızken atlanır, `npm test`'in geri kalanını etkilemez. Tanımlıyken host yerel değilse (`lead-store`/`localhost`/`127.0.0.1` dışı) istek atmadan hata verir. Yerel `lead-store`'a karşı tam koşum komutu (geçici superuser dahil) dosyanın başlık yorumunda.
+- **Bataryada env kapılı İKİ dal var ve ikisi de varsayılan koşumda atlanır** — `docker compose exec web npm test` bu yüzden **209 geçti + 2 atlandı** gösterir; bu arıza değil, iki kapının kapalı olmasıdır.
+  - **Depo sözleşme paketi** (`tests/lead-store.contract.test.ts`, TASK-1.13) sitenin canlı `LEAD_STORE_*` anahtarlarından ayrı bir env kapısı taşır — `LEAD_CONTRACT_URL` tanımsızken atlanır. Tanımlıyken host yerel değilse (`lead-store`/`localhost`/`127.0.0.1` dışı) istek atmadan hata verir. Yerel `lead-store`'a karşı tam koşum komutu (geçici superuser dahil) dosyanın başlık yorumunda.
+  - **Yasal beyan kapısının çapraz-depo dalı** (`tests/legal-consistency.test.ts` → dal 9, TASK-2.19) `LEGAL_CONTRACT_HOOKS_DIR` ile açılır; değer bir dizin yoludur, sır değil. Tam koşum: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **216 geçti + 1 atlandı**. ⚠️ Bağlama `docker compose restart web` ile **gelmez**, `up -d web` gerekir.
 
 ### Kod kuralları
 

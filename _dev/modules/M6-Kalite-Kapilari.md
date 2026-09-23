@@ -58,18 +58,20 @@
 
 ### F6.4: İddia sızıntı denetimi (metin) → Phase —
 
-**Açıklama:** `src/content/`, bileşenler ve render edilmiş sayfalarda yasaklı kalıpları tarar: rakip adları (liste `../alpfit-plus-satis/rekabet/` kaynaklı, repoda yalnız kalıp), "canlı", "sahada", "müşterilerimiz", yüzde iyileşme, "sadece bizde". `docs/CLAIMS.md`'nin otomatik hali. Aynı faz konusu.
+**Açıklama:** `src/content/`, bileşenler ve render edilmiş sayfalarda yasaklı kalıpları tarar: "canlı", "sahada", "müşterilerimiz", yüzde iyileşme, "sadece bizde", ROI/projeksiyon, üstünlük. `docs/CLAIMS.md`'nin otomatik hali. Aynı faz konusu. **Sözlük artık var ve devralınır** (Faz 2, TASK-2.15): `research/lib/claim-leak.mjs` — 20 kalıp, beş sınıf; bugünkü tek tüketicisi görsel üretim hattı, ikincisi bu feature olacak. Dosya `research/` altındadır çünkü ölçülmüş kısıt odur: iki konteynerin ortak gördüğü tek dizin orasıdır (araştırma konteyneri yalnız `research/`, `web` tüm depoyu görür).
 
 **Kabul Kriterleri:**
 - Yasaklı kalıp geçen bir test cümlesi eklendiğinde denetim kırmızı, dosya ve satır gösterir
-- Kalıp listesi tek dosyada, `CLAIMS.md` ile hizalı
+- **Kalıp listesi `research/lib/claim-leak.mjs`'ten okunur — ikinci bir liste açılmaz** (`docs/CLAIMS.md` → Sızıntı Denetimi; `modules/M5-Gorsel-Varlik-Hatti.md` → F5.1). Ayraç aynen devralınır: projeksiyon/üstünlük/büyüme kıyası yasak, nötr gösterge değeri (ciro tutarı, doluluk yüzdesi) serbest
+- Karşılaştırma Türkçe yerelde normalleştirilir (`trLower()`); regex'e `/i` bayrağı **eklenmez** — "EN HIZLI" örneğinde `/i` de `.toLowerCase()` de kaçırıyor (ölçüldü)
 - Pilot cümlesinin `PRODUCT_STATUS` dışında tekrarını yakalar
+- **Rakip adı mekanizması bu feature'ın işidir** (Faz 2 kararı, aşağı bak): doğru jeton sınırını seçmek sınıfın gerçek girdisine — site metnine — bakmayı gerektiriyor
 
 **Bağımlılık:** F6.2
 
 **Edge Case'ler:**
-- Yasal metinler ve karşılaştırma yöntemi açıklaması meşru istisna olabilir — izin listesi dosya bazlı tutulur
-- Rakip adı listesi repoda geçerse kendisi sızıntıdır; kalıp dosyası `.gitignore` dışı ama adlar hash veya ayrı gizli dosyadan gelir — discuss'ta karar
+- Yasal metinler ve karşılaştırma yöntemi açıklaması meşru istisna olabilir — izin listesi dosya bazlı tutulur. ⚠️ Görsel taraftaki izin listesi (`CLAIM_ALLOW`) **tam değere** bakar, eşleşen parçaya değil: parçaya izin vermek terimi o yüzeyde tamamen körleştirir
+- **Rakip adı sözlükte tutulmaz — ne düz metin ne hash** (`docs/DECISIONS.md` 2026-09-23; ölçüm: 18 gerçek rakip adının 0'ı görsel hattın girdisinde geçiyor, kaba ad eşlemesi ise sıradan bir Türkçe sözcüğü rakip sandı). Sözlük bugün yalnız **slotu beyan eder**; adların nasıl tutulacağı (hash, ayrı gizli dosya ya da jeton sınırlı kalıp) bu feature'ın kendi kararıdır ve kaynağı `../alpfit-plus-satis/rekabet/`tir. Bilinçle kabul edilen bedel: görsel hat bugün bir rakip adını göremez
 
 ---
 

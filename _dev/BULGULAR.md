@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.21 kapandı (onay e-postası artık adres başına tavanlı ve metni ziyaretçinin yazdığı hiçbir şeyi taşımıyor); UAT senaryo 26'nın evi düzeltme task'ıydı, kendi atomu açılmadığı için **açık bulgu sayısı değişmedi: 43**. Gelen Kutusu'na bir satır düştü: `docs/DECISIONS.md` kırmızı çizgiyi aşmış durumda (26.383 token) ve kesim yargısı reaktif `audit-docs` turuna ait. Kutu doğrudan sayıldı: **32 satır**.
+**Son Güncelleme:** 2026-09-23 — Faz 2 ✅ kapandı (review-phase). Kapsam-içi yeni bulgu **çıkmadı**, düzeltme task'ı açılmadı; **açık bulgu sayısı değişmedi: 43**. Gelen Kutusu'ndan **üç satır mezun edildi**: `docs/DECISIONS.md`'nin kırmızı çizgi kalemi bu turda çözüldü (2026-09-14..09-22 aralığı arşiv çocuğuna taşındı, 28.492 → 11.601 token) ve `[PHASE-2]` DevFlow kalemi faz retrosunun «DevFlow'a Öneri» bölümüne yazıldı. Kutu doğrudan sayıldı: **29 satır**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -50,7 +50,6 @@
 - [PHASE-1] `npm outdated` dokuz paketi geride gösteriyor (Next 16.3.4→16.3.5, React 19.2.8→19.3.0, Vitest 4→5, TS 5.9→7); `npm audit` **0 açık** — aciliyet yok ama güncelleme kararı verilmemiş, kurulu bağımlılık botu da yok
 
 - [PHASE-1] **Üç açık bulgunun kanıt atıfları bu fazın yeniden adlandırmasıyla bayatladı** (B-036 · B-037 · B-054; dördüncüsü B-024 2026-09-23'te kapanıp arşive gitti): `toWebhook` → `toStore`, `LEAD_WEBHOOK_URL` → `LEAD_STORE_URL`, "e-tablo/Google" → kendi sunucudaki PocketBase; `route.ts` satır numaraları da kaydı (dosya 68 → 359 satır). Atomları kimse yanlış okumasın — evi audit-product uzlaştırması (M3 alanı), review-phase kanvasa yazmaz
-- [TASK-2.10 · yeniden ölçüldü TASK-2.17] `docs/DECISIONS.md` kırmızı çizgiyi aştı ve her turda büyüyor: bugün **26.383 token** — sınırın (20.000) **6.383 üstünde** ve altı turda 20.023'ten buraya geldi (son ölçüm 2026-09-23, TASK-2.17 iki karar ekledi: +2.196). Boyut kabulü **yazılmadı** ve satır bilerek denetimde açık bırakıldı — doluluk kabul edilmiş değil, bölme sırada). Dokümanın kendi KURAL'ı supabı yazıyor: en eski kapanan aralık `DECISIONS-<ilk>..<son>.md`'ye taşınır — ama aralığın **bitiş tarihi** kurallı değil, tekleştirilmesi gereken bir kesim kararı; evi `audit-docs` (2026-09-22'de aynı işi o yaptı)
 
 - [audit-product] Yerel `lead-store`'da **88 test kaydı** duruyor (ölçüldü 2026-09-23, TASK-2.17; denetim turunun 25'i + faz turlarının eklediği) (`Ayse/Pilates`, `Deneme Kisi/Deneme Studyo`, `CSRF/K`, `Zemin/Kontrol`) — silinmedi; sonraki ölçüm bunları gerçek lead sanmasın
 - [audit-docs] Kök `CLAUDE.md` → `### Oturum Kapanışı:` gövdesi motorun güncel şablonundan eski (2 satırlık blok ↔ 4 satırlık blok + Terfi kuralı · Ön-hazırlık · dört özel durum · `engel:`/`önerilir:` önek kümesi). Göç ÖLÇÜLDÜ: +7.901 token, parent'ı 15.857 → ~23,8k yapıp kırmızı çizgiyi aşırıyor ve kanonun çaresi ("önce bölme") bu projede tükenmiş — karar gerekiyor; erteleme kaydı `CLAUDE.md` → Oturum Disiplini KURAL yorumunda
@@ -68,13 +67,11 @@
 - [audit-product SORU] Vercel fonksiyon bölgesi **`iad1`** (Washington DC), kenar `fra1` — Türkiye-tek-pazar sitede `/api/demo` Atlantik'i geçiyor; ölçüm: fonksiyon başına ~+105-110 ms, ilk çağrı 987 ms — önerim: F7.5 kapsam tartışmasına girsin
 - [audit-product SORU] `Assistant.tsx`'te `donanim` düğümü **tek yön kapı**: dokuz düğümün hiçbirinin devam sorusunda yok. Bilinçli daraltma mı? — önerim: bir-iki düğümün `next`'ine eklensin ya da chip kümesi her zaman bir kök konusu içersin
 
-- [PHASE-2] `discuss-phase` Adım 7 DURUM'un `Adım` alanına **her hâlde `research`** yazdırıyor; oysa Adım 6 aktif bir fazın *yeniden* tartışılabileceğini kendisi tanıyor. Bu turda harfiyen uygulansaydı 19 task'ı bitmiş bir faz araştırma adımına geri gönderilecekti — `verify` yazıldı ve gerekçesi rapora kondu. DevFlow yönteminin geneline dair; evi faz retrosunun "DevFlow'a Öneri" bölümü (review-phase triyajı)
 
 - [PHASE-2] Ürün görseli hattının çıktısı **bir kez** farklı yükseklik verdi: `finans.webp` altı koşumun birinde 1440×**606**, kalan beşinde 1440×**601** ve beş koşumun md5'i birebir aynı (yayındaki dosyayla da aynı). Yineletilemedi, mekanizma tahmin: başsız render'da yerleşim/font yarışı. Önemi: `src/content/shots.ts` yükseklikleri elle çivili (CLS için) — hat sessizce 5 px kaydırırsa boyut bildirimi bayatlar ve kimse görmez. Ölçüm verify-phase 2026-09-23 oturumunda, kopya tabloyla koşuldu
 
 - [TASK-2.05] Demo formunun onay ve hata kutularına artık odak taşınıyor, ama kutular `role="status"` / `role="alert"` canlı bölgesini de taşımaya devam ediyor — ekran okuyucu içeriği **iki kez** duyurabilir (bir kez canlı bölge, bir kez odak). Projede ekran okuyucu ölçüm kanalı yok, ölçülemedi; ayırt edici `DemoForm.tsx` sonuç kutularının `aria-live` değeri
 
-- [TASK-2.21] `_dev/docs/DECISIONS.md` **kırmızı çizginin üstünde**: `doc-scan.sh` 26.383 token (eşik ~20.000), 392 satır. Dokümanın kendi KURAL'ı çareyi zaten yazıyor — en eski kapanan aralık `DECISIONS-<ilk>..<son>.md`'ye mezun edilir ve buraya tek satırlık pointer düşer (bir kez yapıldı: 2026-09-10..2026-09-13). Bu turda yeni bir karar eklendi, yani ölçüm bir miktar daha yükseldi. Kesim sınırının nereye konacağı (hangi tarih aralığı kapanmış sayılır) yargı istiyor; evi reaktif `audit-docs` turu
 
 ## Açık Bulgular
 

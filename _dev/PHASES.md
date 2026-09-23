@@ -20,7 +20,7 @@ Faz numaraları **global, sürekli ve append-only**'dir — versiyon değişse b
 | Faz | Konu | Milestone | Durum |
 |-----|------|-----------|-------|
 | 1 | Önizleme yayını, lead hattı ve analitik | v2 ayrı Vercel projesinde önizlemede ve noindex; gerçek demo talebi v1'in lead deposunda (önizleme koleksiyonu) kayda düşüyor ve e-postayla geliyor; üç olay kendi Umami'de yüzey etiketiyle sayılıyor; v1'e dokunulmadı | ✅ Tamamlandı |
-| 2 | Yayın öncesi düzeltmeler | Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px | 🔄 Devam ediyor |
+| 2 | Yayın öncesi düzeltmeler | Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px | ✅ Tamamlandı |
 
 **Durum simgeleri:**
 - 🔄 **Devam ediyor** — discuss-phase başladı (aktif faz)
@@ -77,11 +77,12 @@ Dış aktöre bağlı işler (hukukçu onayı, logo, kurucu programı kontenjan�
 | → Faz 1 | 2026-09-11 | İlk faza girildi; sıra değişti (DECISIONS 2026-09-11) |
 | Faz 1 ✅ | 2026-09-22 | 19/19 task sonuçlandı (18 ✅ + 1 iptal); UAT 32/34; milestone kısmen — bkz. PHASE-1 |
 | → Faz 2 | 2026-09-22 | Yayın öncesi düzeltmeler; kapsama sır sızıntısı (B-058) ve iki dönüşüm kalemi (B-034, B-055) eklendi. Sıradaki Fazlar'da **sıra değişti**: görsel ve mobil iyileştirme alan adı geçişinin önüne alındı |
+| Faz 2 ✅ | 2026-09-23 | 21 task sonuçlandı (19 ✅ + 2 iptal); UAT 2 tur, 31/31; milestone tam. B-011 kapsam kararıyla alan adı geçişine taşındı (bulgu bilançosu 8/8) |
 
 <!-- KURAL: Her geçiş için TEK satır + kısa not. Geçiş gerekçesi/detayı PHASE-N.md retrospektifindedir, burada tekrar edilmez. "Önceki:" prefix veya HTML comment ile detay yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---
 
-**Son Güncelleme:** 2026-09-23 — Faz 2 yeniden tartışması: milestone'un *"`destek@alpfitplus.com` test postası alıyor"* ayağı **düştü** ve iş "Alan adı geçişi" fazına taşındı (kullanıcı kararı) — kalan kalem kullanıcının DNS adımına bağlıydı, ILKELER pazarlıksız maddesi böyle bir işin fazı kilitlemesini yasaklıyor. Fazın repo tarafında iş kalmadı; sıra kabul testinde.
+**Son Güncelleme:** 2026-09-23 — **Faz 2 ✅ kapandı** (review-phase): 21 task sonuçlandı (19 ✅ + 2 iptal), kabul testi iki turda 31/31, milestone'un yedi ayağı da ölçülerek karşılandı ve kapanış notu gerekmedi. Kalite kontrolü on eksende dokuz ✅ + bir ⚠️ (güvenlik — işaret kapsam dışı açık bulgulardan). Sıradaki faz "Görsel ve mobil iyileştirme" (henüz numara almadı, `discuss-phase` promosyonu yapar).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->

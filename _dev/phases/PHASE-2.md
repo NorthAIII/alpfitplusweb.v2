@@ -1,6 +1,6 @@
 # Phase 2: Yayın öncesi düzeltmeler
 
-**Durum:** 🔄 Devam ediyor
+**Durum:** ✅ Tamamlandı
 
 <!-- KURAL: Yukarıdaki **Durum:** alanı tek değer taşır (menüden biri) ve PHASES.md'deki faz durumuyla AYNI olmalıdır. Yazan üç komut vardır: doğuşta discuss-phase (`🔄 Devam ediyor`), kapanışta — ikisi de son meşru anda — review-phase Adım 6 (`✅ Tamamlandı`, PHASES ✅ ile aynı anda) ve prd-review erken-sonlandırma arşivlemesi (`⚠️ Erken sonlandırıldı`). Faz ✅/⚠️ damgalandıktan sonra doküman tarihseldir — alan bir daha düzeltilemez, bu yüzden atlanamaz. -->
 <!-- KURAL: Bu doküman tek-okunabilir kalmalı (CLAUDE.md → Boyut ve Bölünme). Doküman kırmızı çizgiyi (~20k token) **AŞARSA** (ölçüm dosya bazlıdır: `doc-scan.sh _dev/phases/PHASE-2.md`) faz HÂLÂ AKTİFKEN `PHASE-2-<EK>.md`'ye bölünür (**ek BÜYÜK — parent'ın casing'ini izler**; geri-linkteki `<tip>` küçük harf kalır) — parent'ta self-yeten özet + pointer kalır, çocuğun başına `← PHASE-2 · <tip>` geri-linki konur, içerik taşınıp silinir, parent o fazın mini-index'i olur. Kapanış damgasından sonra bölme yasaktır; research-phase, verify-phase ve review-phase faz hâlâ aktifken boyutu kontrol eder. -->
@@ -9,7 +9,7 @@
 ---
 
 **Bölme çocukları** (faz hâlâ aktifken bölündü; parent bu fazın mini-index'idir):
-`PHASE-2-KAPSAM.md` — kapsam-tartışması · `PHASE-2-ARASTIRMA.md` — araştırma-detayı · `PHASE-2-UAT.md` — uat
+`PHASE-2-KAPSAM.md` — kapsam-tartışması · `PHASE-2-ARASTIRMA.md` — araştırma-detayı · `PHASE-2-UAT.md` — uat · `PHASE-2-RETROSPEKTIF.md` — retrospektif-ve-kalite
 
 ---
 
@@ -183,44 +183,31 @@ Gerekçelerin tam metni → `PHASE-2-ARASTIRMA.md` → Teknik Kararlar.
 
 ## Retrospektif
 
-> Bu bölüm `/devflow:review-phase` oturumunda doldurulur.
+> `/devflow:review-phase` oturumunda dolduruldu (2026-09-23).
+>
+> **Bölme çocuğu:** `PHASE-2-RETROSPEKTIF.md` — retrospektifin tam metni (ne iyi/ne kötü gitti, sonraki faz önerileri, task-spesifik teknik öğrenimler, DevFlow'a öneri) **ve** on eksenlik Kalite Kontrol tablosu (retrospektif-ve-kalite).
 
-### Ne İyi Gitti?
-- [Tekrarlanması gereken pratikler]
+**İyi giden — özet:** bulgu cümle cümle değil **yapıyla** kapandı (`CAPABILITIES`) ve yan ürün olarak fail-closed bir yayın kapısı doğdu; kapılar yazılırken sınandı (12 + 14 negatif kontrol, ikisi kapının kendi fail-open'ını buldu) ve devralınan dört iddia ölçümle çürütülüp üç yanlış düzeltme önlendi; üç kapsam daralması ölçülünce büyüdü ve büyümüş hâl teslim edildi.
 
-### Ne Kötü Gitti?
-- [Sorunlar ve darboğazlar]
+**Kötü giden — özet:** ölçüm aracının kendisi üç kez kusurluydu ve üçünü de kontrol yakaladı (sahte yeşil veren `sed` · uydurma hata koduyla kurulan sonda · sondayla düzeltilen tarama); bayat üretim konteyneri (3100, **B-019**) ikinci fazın ölçüm turlarını da bozdu; UAT iki tur koştu çünkü *"alıcıyı kim doğruluyor"* sorusu yeni gönderim yüzeyini açan task'ın kriterlerinde yoktu (→ TASK-2.21); ve kapılar hâlâ kırmızıya dönemiyor (**B-030**), yani bütün "yeşil" ölçümler elle okundu.
 
-### Sonraki Faz İçin Öneriler
+**Sonraki faza taşınan dört kalem:** (1) "Görsel ve mobil iyileştirme" fazının ilk kararı, B-031'in düzeltmesinin B-030 ile **aynı turda** yürüyüp yürümeyeceğidir; (2) yeni bir dış gönderim/çağrı yüzeyi açan her task *"alıcıyı/hedefi kim doğruluyor"* sorusunu kendi test kriterine yazsın; (3) B-019'un çaresi (ölçüm betiklerinin hedefi env ile yönlendirilebilsin) F6.2'nin kapsamına adıyla girsin; (4) alan adı geçişi fazı üç env değeri **+ B-011**'i devraldı — dördü de o fazın UAT senaryosu olsun.
 
-<!-- Alınan dersler ve tavsiyeler. Memory'den MEZUN EDİLEN öğrenimlerin çapalı tek satırlık kaydı da buraya düşer ("<öğrenim> artık <test/lint/CI/validator/guard> tarafından yakalanıyor — memory'den mezun edildi") — kanon: .claude/commands/devflow/lib/memory-sistemi.md → Supaplar. Kayıt faz ✅ damgalanmadan ÖNCE yazılır. -->
-- [Alınan dersler, tavsiyeler]
+**Memory bu turda ne büyüdü ne mezun verdi** (bilinçli; gerekçe çocukta): fazın tekrar eden dersleri hâlihazırdaki atomlara yazılmıştı, ve yeni kapılar **belirli** sabitleri çiviliyor — atomların taşıdığı **genel** disiplini değil.
 
-### Task-Spesifik Teknik Öğrenimler
-
-<!-- OPSİYONEL: Bu fazdaki task'larda öğrenilen ama proje genelinde geçerli olmayan teknik nüanslar (araç davranışı, framework bug'ı, vb.). MEMORY.md'nin değil, faz retrosunun evidir. Bu fazda böyle bir nüans çıkmadıysa bu alt bölümü tamamen sil. -->
-- [...]
-
-### DevFlow'a Öneri
-
-<!-- OPSİYONEL: Bu fazda fark edilen, DevFlow yönteminin geneline dair (proje-özel OLMAYAN) iyileştirmeler — aracın kendisinin nasıl çalışması gerektiği. Buraya yazılır + kullanıcıya bildirilir; DevFlow'a ayrı oturumda taşınır. Disiplin çıkmadıysa bu alt bölümü tamamen sil. -->
-- [...]
+**DevFlow'a öneri çıktı ve kullanıcıya bildirilir:** `discuss-phase` Adım 7 DURUM'un `Adım` alanına her hâlde `research` yazdırıyor; bu turda harfiyen uygulansaydı 19 task'ı bitmiş bir fazı araştırmaya geri gönderecekti. Tam metin çocukta; DevFlow'a ayrı bir oturumda taşınır.
 
 ---
 
 ## Kalite Kontrol Sonuçları
 
-> Bu bölüm `/devflow:review-phase` oturumunda doldurulur.
+> Tam tablo (on eksen, ölçüm rakamlarıyla) ve kullanıcı-yolculuğu değerlendirmesi → `PHASE-2-RETROSPEKTIF.md` → Kalite Kontrol Sonuçları.
 
-| Eksen | Durum | Not |
-|-------|-------|-----|
-| Modülerlik | ✅ / ⚠️ / ❌ | ... |
-| Güvenlik | ✅ / ⚠️ / ❌ | ... |
-| Bakım Maliyeti | ✅ / ⚠️ / ❌ | ... |
-| Performans | ✅ / ⚠️ / ❌ | ... |
-| Hata Yönetimi | ✅ / ⚠️ / ❌ | ... |
-| Test Kapsamı | ✅ / ⚠️ / ❌ | ... |
-| Erişilebilirlik | ✅ / N/A | ... |
+**Sonuç: dokuz eksen ✅, bir eksen ⚠️.** Güvenlik ⚠️ çünkü fazın **kendi** yüzeyi kapandı (TASK-2.21'in iki kapısı) ve faz penceresinde (`e31331f..HEAD` — 30 commit / 99 dosya) **yeni bulgu yok**; işaret, kapsam dışı ve kanvasta duran açık kalemlerden geliyor (B-037 · B-054 · B-020 · B-016 · B-062).
+
+**Ölçülen çapalar:** batarya **216 geçti + 1 atlandı** (anahtarsız 209 + 2) · `tsc --noEmit` çıkış **0** · `a11y.mjs` TOPLAM SORUN **0** · `mobile-audit` 9/9 rotada yatay kaydırma yok · perf masaüstü 141 KB / LCP 84 ms / CLS 0,005 ve mobil 132 KB / LCP 64 ms / CLS 0 (çizgi 144/133 KB, 96 ms — **regresyon yok**).
+
+**UAT tazeliği:** son `docs(phase-2): UAT` commit'i HEAD'in kendisidir — tablodaki ✅'ler bugünkü kodun üstünde ölçüldü, araya ürün kodu girmedi.
 
 ---
 
