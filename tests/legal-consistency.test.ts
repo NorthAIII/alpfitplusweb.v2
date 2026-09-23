@@ -392,6 +392,28 @@ describe("dal 4 — site kayıt deposundan okuma yapmıyor", () => {
   const FRAGMENT_READ = "var olan kayıtları okuyamaz";
   const FRAGMENT_RULES = "dışarıya açık okuma kuralları kapalıdır";
 
+  /**
+   * METNIN SAYDIGI YETKILER <-> UCUN DEPOYA ATTIGI HTTP YONTEMLERI (B-062).
+   *
+   * Yayindaki cumle anahtarin "yalnizca iki sey yapabilir" dedigi yetkileri
+   * TEK TEK sayar. Buradaki her satir o sayimin bir kalemini, ucun gercekte
+   * kullandigi yonteme baglar. Sozluk metni KOPYALAMAZ — parca kisadir ve
+   * metinle birlikte bayatlar (dosya basligi: "parca metinle birlikte bayatlar
+   * ve bu BILINCLIDIR").
+   *
+   * Kapi iki yonludur ve asagidaki olcumde kosar: yontem kumesi buyurse metin
+   * onu saymaz -> kirmizi; metin daraltilirsa olculen kume fazla gelir ->
+   * kirmizi. B-062 tam bu bosluktan dogmustu: TASK-2.07 `PATCH` yolunu acti,
+   * cumle kimse fark etmeden bayatladi.
+   */
+  const YETKI_IFADELERI: ReadonlyArray<{ yontem: string; ifade: string }> = [
+    { yontem: "POST", ifade: "yeni bir talep kaydı oluşturabilir" },
+    {
+      yontem: "PATCH",
+      ifade: "bildirim ve onay e-postalarının gönderilip gönderilmediğini kayda yazabilir",
+    },
+  ];
+
   type Cagri = { url: string; method: string };
   const cagrilar: Cagri[] = [];
 
@@ -431,6 +453,14 @@ describe("dal 4 — site kayıt deposundan okuma yapmıyor", () => {
   it("beyanların ikisi de KVKK metninde tam birer kez geçiyor", () => {
     claimOnce(KVKK, "KVKK", FRAGMENT_READ);
     claimOnce(KVKK, "KVKK", FRAGMENT_RULES);
+  });
+
+  it("metnin saydığı yetkilerin her biri KVKK'da tam bir kez geçiyor", () => {
+    expect(
+      YETKI_IFADELERI.length,
+      "yetki sozlugu bos — asagidaki iki yonlu olcum bedava yesil kosar",
+    ).toBeGreaterThan(0);
+    for (const { ifade } of YETKI_IFADELERI) claimOnce(KVKK, "KVKK", ifade);
   });
 
   it("dayanak (davranış): uç depoya yalnız yazma yöntemleriyle gidiyor", async () => {
@@ -477,16 +507,64 @@ describe("dal 4 — site kayıt deposundan okuma yapmıyor", () => {
         "cagri varsa site depodan OKUYOR ya da yeni bir hedefe gidiyor; KVKK'nin " +
         "'var olan kayitlari okuyamaz' cumlesi yeniden olculmeli",
     ).toEqual([`PATCH ${STORE_URL}/lead/kapi123sonda456`, `POST ${STORE_URL}/lead`]);
+
+    // --- IKINCI AYAK (B-062): YONTEM KUMESI <-> METNIN SAYDIGI YETKILER ---
+    //
+    // Yukaridaki cift listesi kumeyi DONDURUR ama metne BAGLAMAZ: listeyi
+    // guncelleyen biri yasal cumleye hic bakmadan yesile donebilir. Asagisi o
+    // boslugu kapatir — olculen yontem kumesi ile KVKK metninin SAYDIGI
+    // yetkiler birebir esit olmali.
+    //
+    // Onek suzgeci burada FAIL-OPEN DEGILDIR: yukaridaki cift olcumu suzgecsiz
+    // kosar ve listede olmayan her cifti zaten kirar; bu satira gelindiginde
+    // depo disi bir cagri bulunmadigi ISPATLANMISTIR.
+    const depoYontemleri = [
+      ...new Set(
+        cagrilar.filter((c) => c.url.startsWith(`${STORE_URL}/lead`)).map((c) => c.method),
+      ),
+    ].sort();
+
+    // Duyarlilik capasi: kume bos kalirsa asagidaki iki karsilastirma da bedava
+    // yesil kosardi (iki bos listenin esitligi).
+    expect(
+      depoYontemleri.length,
+      "depoya hic cagri olculemedi — kume bos, yetki karsilastirmasi anlamsiz",
+    ).toBeGreaterThan(0);
+
+    // (a) Sozlukte karsiligi olmayan bir yontem: metin o yetkiyi SAYMIYOR.
+    const sozluktekiYontemler = YETKI_IFADELERI.map((y) => y.yontem);
+    expect(
+      depoYontemleri.filter((y) => !sozluktekiYontemler.includes(y)),
+      "uc depoya, KVKK metninde karsiligi sayilmayan bir yontemle gidiyor — anahtarin " +
+        "yetkisi metinde yazandan GENIS: once yayindaki cumleye yaz, sonra YETKI_IFADELERI'ne ekle",
+    ).toEqual([]);
+
+    // (b) Metnin saydigi yetkiler ile olculen kume BIREBIR esit.
+    const kvkkMetni = bodyTexts(KVKK).join("\n");
+    const metninSaydigi = YETKI_IFADELERI.filter((y) => kvkkMetni.includes(y.ifade))
+      .map((y) => y.yontem)
+      .sort();
+    expect(
+      depoYontemleri,
+      `uc depoya ${JSON.stringify(depoYontemleri)} yontemleriyle gidiyor, KVKK metni ise ` +
+        `${JSON.stringify(metninSaydigi)} yetkisini sayiyor — ikisi ayristi. Ya yeni bir yetki ` +
+        "kullanilmaya baslandi ve cumle bayatladi (B-062'nin sinifi), ya da cumle olculenden " +
+        "dar/genis yazildi; metni yeniden olcup guncelle",
+    ).toEqual(metninSaydigi);
   });
 
   /**
    * ÖLÇÜLEMEYEN — bu dal beyanin YALNIZ pratik yarisini civiler.
    *
-   * Yukaridaki olcum sunu soyler: SITENIN KODU depodan okuma yapmiyor. Sunu
-   * SOYLEMEZ: sitenin anahtari okuyamaz. Anahtarin yetki yuzeyi ve koleksiyon
-   * kurallari komsu depoda yasar (../Alpfitplus-website.v1/pocketbase — hook
-   * uclari + `List/View/Create/Update/Delete` kurallari) ve BU DEPODAN
-   * olculemez; capraz depo dali TASK-2.19'undur.
+   * Yukaridaki olcum sunu soyler: SITENIN KODU depodan okuma yapmiyor ve depoya
+   * yalniz metnin saydigi yetkilerle gidiyor. Sunu SOYLEMEZ: anahtarin kendisi
+   * bundan fazlasini yapamaz. Anahtarin yetki yuzeyi ve koleksiyon kurallari
+   * komsu depoda yasar (../Alpfitplus-website.v1/pocketbase — hook uclari +
+   * `List/View/Create/Update/Delete` kurallari) ve BU DEPODAN olculemez;
+   * capraz depo dali TASK-2.19'undur.
+   *
+   * Yani ikinci ayak (B-062) TAVANI degil KULLANIMI civiler: metin genisleyen
+   * bir kullanimi saymadigi an kirmizi doner — B-062'nin sinifi buydu.
    *
    * Devralinan bir beyani olculmus gibi baglamamak icin burada yalnizca
    * olculebilen taraf baglandi (memory -> urun-iddiasi-capa-dogrulamasi.md).

@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — **Faz 2 ✅ kapandı** (review-phase): milestone'un yedi ayağı da ölçülerek karşılandı, kapanış notu gerekmedi; kalite kontrolü on eksende 9 ✅ + 1 ⚠️ (güvenlik — işaret kapsam dışı açık bulgulardan). Faz dokümanı dondurulmadan önce `PHASE-2-RETROSPEKTIF.md`'ye bölündü (24.073 → 16.612 token) ve `docs/DECISIONS.md`'nin 2026-09-14..09-22 aralığı arşiv çocuğuna mezun edildi. Sırada Faz 3'ün kapsam tartışması.
+**Son Güncelleme:** 2026-09-23 — **QUICK-002 (yasal metindeki anahtar yetkisi cümlesi) ✅ tamamlandı**: cümle ölçülene daraltıldı (anahtar kayıt oluşturur **ve** bildirim/onay e-postalarının gönderilip gönderilmediğini kayda yazar; *"okuyamaz"* yarısı korundu), `tests/legal-consistency.test.ts` dal 4'e metin ↔ yöntem kümesi iki yönlü bağı eklendi (batarya 216 → 217, üç negatif kontrol kırmızı verdi) ve **B-062 arşive mezun edildi** (açık bulgu 43 → 42). Faz döngüsünün konumu değişmedi: sırada Faz 3'ün kapsam tartışması.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 

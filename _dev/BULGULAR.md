@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — Faz 2 ✅ kapandı (review-phase). Kapsam-içi yeni bulgu **çıkmadı**, düzeltme task'ı açılmadı; **açık bulgu sayısı değişmedi: 43**. Gelen Kutusu'ndan **üç satır mezun edildi**: `docs/DECISIONS.md`'nin kırmızı çizgi kalemi bu turda çözüldü (2026-09-14..09-22 aralığı arşiv çocuğuna taşındı, 28.492 → 11.601 token) ve `[PHASE-2]` DevFlow kalemi faz retrosunun «DevFlow'a Öneri» bölümüne yazıldı. Kutu doğrudan sayıldı: **29 satır**.
+**Son Güncelleme:** 2026-09-23 — QUICK-002: **B-062 çözüldü ve arşive mezun edildi** (yasal metindeki anahtar yetkisi cümlesi ölçülene daraltıldı, `tests/legal-consistency.test.ts` dal 4'e yöntem kümesi ↔ metnin saydığı yetkiler iki yönlü bağı eklendi). **Açık bulgu sayısı: 43 → 42.** Gelen Kutusu'na bir satır düştü (`[QUICK-002]` — komşu deponun rota kümesi bu depodan çivilenebilir); kutu doğrudan sayıldı: **30 satır**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -53,6 +53,7 @@
 
 - [audit-product] Yerel `lead-store`'da **88 test kaydı** duruyor (ölçüldü 2026-09-23, TASK-2.17; denetim turunun 25'i + faz turlarının eklediği) (`Ayse/Pilates`, `Deneme Kisi/Deneme Studyo`, `CSRF/K`, `Zemin/Kontrol`) — silinmedi; sonraki ölçüm bunları gerçek lead sanmasın
 - [audit-docs] Kök `CLAUDE.md` → `### Oturum Kapanışı:` gövdesi motorun güncel şablonundan eski (2 satırlık blok ↔ 4 satırlık blok + Terfi kuralı · Ön-hazırlık · dört özel durum · `engel:`/`önerilir:` önek kümesi). Göç ÖLÇÜLDÜ: +7.901 token, parent'ı 15.857 → ~23,8k yapıp kırmızı çizgiyi aşırıyor ve kanonun çaresi ("önce bölme") bu projede tükenmiş — karar gerekiyor; erteleme kaydı `CLAUDE.md` → Oturum Disiplini KURAL yorumunda
+- [QUICK-002] Dal 4'ün *"anahtarın yetki tavanı bu depodan ölçülemez"* sınırı **kısmen aşılabilir**: komşu deponun `pb_hooks`'u zaten `:ro` bağlı (`docker-compose.yml` → `web`, dal 9 kullanıyor) ve token'ın açtığı rota kümesi oradan okunabiliyor — bugün elle ölçüldü (`lead.pb.js` :20 `POST /lead` + :111 `PATCH /lead/{id}`, başka rota yok). Koleksiyon kuralları hâlâ dışarıda (mount yalnız `pb_hooks`). Kapı kurulursa cümledeki *"yalnızca"* da çivilenmiş olur
 - [audit-docs] Kök neden motor düzeyinde: DevFlow'un kendi `templates/CLAUDE-MD.md`'si **20.114 token** (kırmızı çizgide) ve `Oturum Disiplini`'nin doktrin çocuğu yok — proje-özgü kuralı olan hiçbir parent tam uygunlukta çizginin altında kalamıyor. Rota DevFlow'un kendi deposu, bu repo değil
 - [audit-docs] `_dev/claude/DOKUMAN-DISIPLINI.md:47` tek satırda 2.141 karakter (1.500 eşiğinin üstünde) — metin motor template'inden birebir geliyor, rota yine DevFlow'un kendi deposu
 - [audit-docs] `docs/DECISIONS.md`'deki task atıfları arşivlemede **sistemik** kırılıyor (`tasks/TASK-1.04/1.07/1.09.md` → gerçek yer `tasks/archive/`); dokümanın kendi KURAL'ı "yazılmış karar düzeltilmez" dediği için düzeltilmedi — kural kararı gerekiyor (her arşivleme yeni bir kırık atıf doğuruyor)
@@ -95,7 +96,6 @@
 - 🔴 [B-031 — `a11y.mjs`'in kontrast yöntemi üç kör nokta taşıyor](bulgular/B-031-a11y-kontrast-yontemi-kor-noktalari.md) — dördü de satır satır yerinde; kökte tek gradyan ölçüleni 157'den 0'a düşürüyor
 - 🔴 [B-035 — `perf.mjs` ağırlığı JS ve CSS'e kör, ilan edilmiş regresyon çizgisi geçersiz](bulgular/B-035-perf-agirlik-muhasebesi-kor.md) — `content-length` muhasebesi, sabit BASE, eşiksiz; yöntem bit-bit aynı
 - 🔴 [B-015 — Kalite kapıları açılan katmanları ölçmüyor](bulgular/B-015-kalite-kapilari-etkilesim-durumunu-olcmuyor.md) — `a11y`/`mobile-audit` 0 tıklama; desen `font-guard:28-33`'te zaten çalışıyor, kardeşlere taşınmamış
-- 🟡 [B-062 — Yasal metin depo anahtarının yetkisini olduğundan dar gösteriyor](bulgular/B-062-yasal-metin-anahtar-yetkisini-dar-gosteriyor.md) — *"yalnızca yeni kayıt oluşturabilir"* ölçümle çürüdü; uç aynı anahtarla `PATCH` de atıyor → QUICK-002
 - 🟡 [B-036 — Dört ayrı yol talebi "başarılı" gösterip sessizce kaybediyor](bulgular/B-036-lead-kaybi-yollari.md) — üçü açık; kırpılan e-posta hâlâ 200 `stored:true` alıyor, bal küpü tek log satırı taşımıyor
 - 🟡 [B-056 — Umami açıldığı gün hidrasyonsuz gönderimde form verisi analitiğe gidiyor](bulgular/B-056-umami-hidrasyonsuz-gonderimde-kisisel-veri.md) — izleyici tarafı kapandı ve canlıda doğrulandı; zincir artık **aktif**, kaynak tarafı (B-036) ve (b) bot sahte yeşili açık
 - 🟡 [B-059 — Alan adı geçişinde v1'in lead hattı ve yasal metin davranışları geriler](bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md) — onay e-postası ve `notify_lead` ayağı **Faz 2'de kapandı** (TASK-2.07); açık kalan: alan adı geçişinde metnin bugünkünden az bilgi vermesi → alan adı geçişi fazı

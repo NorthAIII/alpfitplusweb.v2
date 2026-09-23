@@ -152,12 +152,28 @@ export const KVKK: LegalDoc = {
     //    olculen tam listeye gore yazildi.
     // "Birlestirilmez" bir TAAHHUTTUR, olcum degil. Hukuki sebep bolumune
     // dokunulmadi: m.9 dayanagi hukukcunundur (B-008).
+    //
+    // Anahtarin yetkisi (QUICK-002 / B-062). Cumle TASK-1.15'te yazildi ve o gun
+    // DOGRUYDU; TASK-2.07 bildirim durumunu geri yazan `PATCH` yolunu acinca
+    // sessizce bayatladi -- "yalnizca yeni kayit olusturabilir" artik olculenden
+    // DARDI. 2026-09-23'te iki taraf da yeniden olculdu (devralinan ozet degil):
+    //  - Ucun depoya attigi yontem kumesi: `src/app/api/demo/route.ts` ->
+    //    `toStore` POST /lead, `notifyStore` PATCH /lead/{id}. Baska depo
+    //    cagrisi yok, okuma cagrisi hic yok.
+    //  - Anahtarin yetki yuzeyi (komsu depo, salt okunur):
+    //    ../Alpfitplus-website.v1/pocketbase/pb_hooks/lead.pb.js -> token'la
+    //    acilan TAM IKI rota (`routerAdd('POST','/lead')` :20 +
+    //    `routerAdd('PATCH','/lead/{id}')` :111); PATCH beyaz listesi
+    //    lead_lib.js:69-70 -> yalniz `notify_team` / `notify_lead`. Okuma rotasi
+    //    yok, yani cumlenin "okuyamaz" yarisi CURUMEDI ve oldugu gibi korundu.
+    // Kapi: tests/legal-consistency.test.ts dal 4 -- olculen yontem kumesi ile
+    // metnin saydigi yetkiler iki yonlu eslesir; biri kayarsa kirmizi doner.
     {
       title: "Aktarım",
       blocks: [
         {
           type: "p",
-          text: "Demo talebiniz, kendi sunucumuzdaki bir kayıt veritabanına yazılır. Sunucu bize aittir ve Almanya'da (Nürnberg) bir veri merkezinde durur; kaydın tutulduğu yer burasıdır ve aşağıda saydığımız tedarikçiler dışında hiç kimseye veri gitmez. Kayıtları yalnızca yetkili yönetici hesabımız görebilir: veritabanının dışarıya açık okuma kuralları kapalıdır ve sitenin kullandığı anahtar yalnızca yeni kayıt oluşturabilir, var olan kayıtları okuyamaz.",
+          text: "Demo talebiniz, kendi sunucumuzdaki bir kayıt veritabanına yazılır. Sunucu bize aittir ve Almanya'da (Nürnberg) bir veri merkezinde durur; kaydın tutulduğu yer burasıdır ve aşağıda saydığımız tedarikçiler dışında hiç kimseye veri gitmez. Kayıtları yalnızca yetkili yönetici hesabımız görebilir: veritabanının dışarıya açık okuma kuralları kapalıdır ve sitenin kullandığı anahtar yalnızca iki şey yapabilir — yeni bir talep kaydı oluşturabilir, bir de bildirim ve onay e-postalarının gönderilip gönderilmediğini kayda yazabilir; var olan kayıtları okuyamaz.",
         },
         {
           type: "p",
