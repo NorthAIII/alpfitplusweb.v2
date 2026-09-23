@@ -12,6 +12,8 @@
  *  - Bilmedigimiz sey uydurulmaz, kisiye baglanir.
  */
 import { PRICING, monthlyFor, tl } from "./pricing";
+import { capabilityProse, capabilityTitle, moduleProse, stageNote, upcomingCapability } from "./product";
+import { PRODUCT_STATUS } from "./site";
 
 export type ChatTopic = {
   id: string;
@@ -84,7 +86,9 @@ export const CHAT_TOPICS: ChatTopic[] = [
     q: "Turnike almam gerekiyor mu?",
     a: [
       "Hayır. Alpfit Plus donanıma bağlı değildir, web paneli ve mobil uygulama üzerinden çalışır.",
-      "QR ve turnike ile giriş kontrolü yol haritasındadır, bugünkü ürünün parçası değildir. Yolda olanı bugün varmış gibi anlatmıyoruz.",
+      // Kalem adi ve kademe sabitten gelir (B-040). Kalem yayinlandigi gun
+      // upcomingCapability derlemeyi durdurur — cumlenin kendisi de degismeli.
+      `${capabilityTitle(upcomingCapability("qr-turnike"))} kontrolü ${stageNote("qr-turnike")}dır, bugünkü ürünün parçası değildir. Yolda olanı bugün varmış gibi anlatmıyoruz.`,
     ],
     links: [{ label: "Ne var, ne yolda", href: "/ozellikler" }],
     next: ["asama", "mobil"],
@@ -122,9 +126,16 @@ export const CHAT_TOPICS: ChatTopic[] = [
   {
     id: "asama",
     q: "Ürün hangi aşamada?",
+    // B-014 + B-040: bu dugumun govdesinin TAMAMI tek kaynaktan gelir. Surum
+    // adi ve pilot cumlesi site.ts → PRODUCT_STATUS, modul sayimi ve iki
+    // kademe product.ts → CAPABILITIES. Eskiden ucu de elle yaziliydi ve
+    // kardes faq.ts'ten farkli sayiyordu. Iki kademe AYRI paragrafta:
+    // "yolda" TASK-2.08/2.09'dan sonra uc degil yedi kalem tasiyor, tek
+    // paragrafta okunmuyordu. Kademe adlari cumlenin kendi ekidir.
     a: [
-      "v1 hazır ve şu anda bir stüdyoda pilot olarak test ediliyor. Randevu, grup dersleri, üyelik ve paket, finans ve ciro, çok şube cockpit, raporlar, diyetisyen modülü ve bildirimler bugün çalışıyor.",
-      "Kampanya derinleşmesi, gelişmiş raporlama ve churn paneli yolda. Online ödeme, QR ve turnike girişi ile yapay zekâ destekli analiz yol haritasında.",
+      `${PRODUCT_STATUS.version} hazır. ${PRODUCT_STATUS.sentence} ${moduleProse()} bugün çalışıyor.`,
+      `${capabilityProse("yolda")} yolda.`,
+      `${capabilityProse("sonra")} yol haritasında.`,
       "Pilot sonucumuz henüz çıkmadı, bu yüzden size ciro artışı gibi bir rakam söylemiyoruz.",
     ],
     links: [{ label: "Yol haritası", href: "/ozellikler" }],

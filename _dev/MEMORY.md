@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.09: yeni atom + index satırı (Süreç Disiplinleri) — devralınan ürün-iddiası bulgusu uygulanmadan önce yeniden ölçülür ve ürünün kendi "v1.5 / ertelendi" notu çapa sayılmaz; B-029'un bir satırı tam bu yüzden yanlıştı (ölçüldü, cümle doğruymuş).
+**Son Güncelleme:** 2026-09-23 — TASK-2.11: mevcut atom genişletildi (Ortam & Araç Notları → araştırma konteynerinde tarayıcı ölçümü), yeni dosya açılmadı. Asistan paneli ile SSS akordiyonu **aynı soru metnini** taşıyor; locator `[role="dialog"]`'a daraltılmazsa tıklama arkadaki SSS'ye gidiyor ve betik hatasız "temiz" basıyor — ayrıca asistan cevapları sabitten türediği için HTML/paket grep'i render edilmiş cümleyi bulamaz.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 

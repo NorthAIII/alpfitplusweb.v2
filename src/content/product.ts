@@ -403,11 +403,53 @@ export function moduleProse(): string {
 
 /** Kalemi id'siyle getirir; bilinmeyen id derleme degil calisma hatasi verir. */
 export function capability(id: string): Capability {
-  for (const stage of Object.keys(CAPABILITIES) as CapabilityStage[]) {
+  for (const stage of CAPABILITY_STAGES) {
     const hit = CAPABILITIES[stage].find((c) => c.id === id);
     if (hit) return hit;
   }
   throw new Error(`Bilinmeyen yetenek kalemi: ${id}`);
+}
+
+/** Kalemin BUGUN durdugu kademe; bilinmeyen id hata verir. */
+export function capabilityStage(id: string): CapabilityStage {
+  for (const stage of CAPABILITY_STAGES) {
+    if (CAPABILITIES[stage].some((c) => c.id === id)) return stage;
+  }
+  throw new Error(`Bilinmeyen yetenek kalemi: ${id}`);
+}
+
+/**
+ * HENUZ YAYINLANMAMIS bir kalemi duzyazi cumle icinde anmak icin (TASK-2.11).
+ * Kalemi dondurur, ama kalem "bugun var" kademesine gectigi gun HATA VERIR.
+ *
+ * Gerekce: bu cagri yerleri kalemi yalnizca ADIYLA anmiyor, ONUN HENUZ
+ * OLMADIGINI soyleyen bir cumle kuruyor ("... yol haritamizda", "... bugunku
+ * urunun parcasi degil"). Adi sabitten almak ADI hizalar ama CUMLEYI
+ * hizalamaz: kalem yayinlandigi gun ad dogru kalir, cumle sessizce yanlis
+ * olur — ve bu, B-040'in olctugu ayrismanin ters yonlu esidir. Sessiz yanlis
+ * yerine gurultulu durus: derleme durur ve cumle elden gecirilir. Sinirin
+ * kendisi budur; ayrica yorumla tekrarlanmaz.
+ */
+export function upcomingCapability(id: string): Capability {
+  const stage = capabilityStage(id);
+  if (stage === "simdi") {
+    throw new Error(
+      `"${id}" artık "${STAGE_LABEL.simdi}" kademesinde — ` +
+        `onu yol haritası kalemi gibi anan cümleler elden geçirilmeli ` +
+        `(product.ts → upcomingCapability)`,
+    );
+  }
+  return capability(id);
+}
+
+/**
+ * Kademenin CUMLE ICI eki: "yolda" ya da "yol haritasında". Cagri yeri kendi
+ * ekini yapistirir ("...dır", "(...)"), bu yuzden burada nokta ve parantez yok.
+ * "bugun var" kademesinde hata verir — gerekce upcomingCapability'de.
+ */
+export function stageNote(id: string): string {
+  const kalem = upcomingCapability(id);
+  return STAGE_LABEL[capabilityStage(kalem.id)].toLocaleLowerCase("tr");
 }
 
 export type Benefit = { title: string; body: string; icon: string };

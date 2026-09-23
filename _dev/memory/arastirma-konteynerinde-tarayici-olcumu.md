@@ -48,6 +48,28 @@ timeout 900 docker compose --profile research run --rm --name audit-<etiket> \
 - Saf fonksiyonlar artık `web` konteynerinde `npm test` (Vitest, `tests/`) ile sınanır —
   ayrı bir betik/kopyalama tarifi gerekmez (TASK-1.16).
 
+## Locator tuzağı — aynı metin iki yerde (TASK-2.11, 2026-09-23)
+
+Sitenin **asistan paneli ve SSS akordiyonu aynı soruları taşıyor** ("Ürün hangi aşamada?",
+"Turnike…"). `page.getByRole('button', { name: soru })` bu yüzden **iki** düğme buluyor;
+`.first()` sayfadaki SSS düğmesine gidiyor, asistan hiç açılmıyor ve betik **hatasız**
+"konsol temiz" basıyor — yani ölçüm sessizce hiçbir şey ölçmüyor. İki koşum bu yüzden boş
+döndü. Locator panele daraltılır:
+
+```js
+const panel = p.getByRole('dialog');
+await panel.getByRole('button', { name: soru, exact: true }).click();
+const metin = await panel.evaluate((el) => el.innerText);
+```
+
+Ayrıca **asistan tek soru-cevap gösteriyor**: ikinci soruyu tıklamak birincinin cevabını
+değiştiriyor. Her düğümün metnini ayrı sayfa/bağlamda ölç.
+
+⚠️ **Asistan metni HTML'de ve paket dosyasında ARANMAZ.** Cevaplar `product.ts`'ten şablonla
+türediği için (TASK-2.11) hem sunucu HTML'inde hem de JS chunk'ında yalnız `${...}` çağrıları
+duruyor; render edilmiş cümle **yalnız tarayıcıda** oluşur. `grep` ile "yeni cümle var mı"
+diye bakmak boş döner ve yanlışlıkla "değişmemiş" diye okunur.
+
 ## İzleyici ve hidrasyon sınamaları (audit-product 2026-09-13'te doğrulandı)
 
 - **Umami izleyicisi canlı kuruluma veri göndermeden sınanır.** `umami.kiwiailab.com` kullanıcının

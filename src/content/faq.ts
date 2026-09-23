@@ -2,6 +2,13 @@
  * SSS — kaynak: rekabet/mevcut-duzen.md (degisim maliyeti itirazlari) +
  * fiyat/model.md + SATIS-SPEC.md. Cevaplarda vaat siniri korunur.
  */
+import {
+  capability,
+  capabilityProse,
+  capabilityTitle,
+  stageNote,
+  upcomingCapability,
+} from "./product";
 import { PRODUCT_STATUS } from "./site";
 
 export type Faq = { q: string; a: string };
@@ -21,7 +28,7 @@ export const FAQ_HOME: Faq[] = [
   },
   {
     q: "Turnike veya kart okuyucu almam gerekiyor mu?",
-    a: "Hayır. Alpfit Plus donanıma bağlı değildir. Panel ve mobil uygulama üzerinden çalışır. Turnike ve QR ile giriş kontrolü yol haritasındadır, bugünkü ürünün parçası değildir.",
+    a: `Hayır. Alpfit Plus donanıma bağlı değildir. Panel ve mobil uygulama üzerinden çalışır. ${capabilityTitle(upcomingCapability("qr-turnike"))} kontrolü ${stageNote("qr-turnike")}dır, bugünkü ürünün parçası değildir.`,
   },
   {
     q: "Üye mobil uygulaması ayrı ücretli mi?",
@@ -36,8 +43,11 @@ export const FAQ_HOME: Faq[] = [
     a: "Eğitmen ve üye sayısında limit yoktur. Şube sayısında da limit yoktur, fiyat şube başınadır. İlk şube 1.500 ₺, ikinci şubeden itibaren her şube 1.200 ₺'dir. Tüm fiyatlar KDV hariçtir.",
   },
   {
-    q: "Online ödeme alabiliyor muyum?",
-    a: "Bugün hayır. Alpfit Plus satışı, tahsilatı ve kalan borcu kaydeder ve raporlar, ancak kart ile online tahsilat bugünkü sürümde yoktur. Online ödeme yol haritasındadır.",
+    // Soru kalemin ADINI tasir ama YAYIN KAPISI TASIMAZ (capability, ondan
+    // upcomingCapability degil): kalem yayinlandiginda soru gecerli kalir,
+    // degisen yalniz cevap olur. Cevabin son cumlesi ise kapiyi tasir.
+    q: `${capabilityTitle(capability("online-odeme"))} alabiliyor muyum?`,
+    a: `Bugün hayır. Alpfit Plus satışı, tahsilatı ve kalan borcu kaydeder ve raporlar, ancak kart ile online tahsilat bugünkü sürümde yoktur. ${capabilityTitle(upcomingCapability("online-odeme"))} ${stageNote("online-odeme")}dır.`,
   },
   {
     q: "Verilerim nerede duruyor?",
@@ -45,7 +55,9 @@ export const FAQ_HOME: Faq[] = [
   },
   {
     q: "Ürün hangi aşamada?",
-    a: `v1 hazır. ${PRODUCT_STATUS.sentence} Kampanya derinleşmesi, churn paneli ve gelişmiş raporlama yolda. Online ödeme, QR ve turnike girişi ile yapay zekâ destekli analiz yol haritasında.`,
+    // Surum adi + pilot cumlesi PRODUCT_STATUS, iki kademe CAPABILITIES
+    // (B-040). Kardes ev chat.ts "asama" dugumu — ikisi ayni kaynaktan.
+    a: `${PRODUCT_STATUS.version} hazır. ${PRODUCT_STATUS.sentence} ${capabilityProse("yolda")} yolda. ${capabilityProse("sonra")} yol haritasında.`,
   },
 ];
 

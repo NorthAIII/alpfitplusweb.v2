@@ -18,6 +18,7 @@ import {
   RIVAL_MULTI_BRANCH,
   tl,
 } from "@/content/pricing";
+import { stageNote } from "@/content/product";
 import { SITE } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -26,9 +27,19 @@ export const metadata: Metadata = {
   alternates: { canonical: "/fiyat" },
 };
 
+/**
+ * Pakete DAHIL OLMAYANLAR. Ilk iki satir bir ALT KUMEDIR: sabitin tamami
+ * buraya dokulmez, yalniz fiyat baglamina giren iki kalem anilir ve metin
+ * ucretlendirmenin kendi dilini korur ("kart ile tahsilat", "parmak izi
+ * donanimi" — ikisi de kalemin sabitteki adindan genis). Sabitten turetilen
+ * sey PARANTEZ ICI KADEME'dir (B-040): kalem "yolda"ya tasinirsa satir
+ * kendiliginde hizalanir, "bugun var"a gecerse stageNote derlemeyi durdurur
+ * — pakete dahil olmayanlar listesinde duran bir kalem sessizce yayinlanmis
+ * olmasin diye.
+ */
 const NOT_INCLUDED = [
-  "Online kart ile tahsilat (yol haritasında)",
-  "Turnike, QR ve parmak izi donanımı (yol haritasında)",
+  `Online kart ile tahsilat (${stageNote("online-odeme")})`,
+  `Turnike, QR ve parmak izi donanımı (${stageNote("qr-turnike")})`,
   "Markalı, mağazada ayrı yayınlanan özel mobil uygulama",
   "Kulübünüz için web sitesi yapımı",
 ];

@@ -35,6 +35,7 @@
      Not task'a dönüştüğünde veya atomlaştığında satır
      SİLİNİR — bilgi yeni evine taşınmıştır (mezuniyet). Olgun hal: boş kutu. -->
 
+- [TASK-2.11] Rakip tarama rakamı dört evde iki biçimde: `chat.ts` ve `WhyUs.tsx` "9 yerli ve 9 global", `product.ts` ve `karsilastirma.ts` "18" — çelişmiyor (9+9=18) ama dördü de `karsilastirma.ts` → `ARASTIRMA` sabitinden türemiyor. B-014'ün Koruma Önerisi'nde duruyordu, atom kapanırken buraya taşındı
 - [TASK-2.01] `bunker-nginx` erişim kaydı ham IP tutuyor ve rotasyonsuz büyüyor (155 MB / 31 gün); `daemon.json`'daki `50m × 3` kuralı konteyner ondan önce oluşturulduğu için inmiyor — yeniden oluşturma ≈ 30 günlük pencere açar. Evi `altyapi/vps` projesi (bu repo değil); ölçüm `tasks/archive/TASK-2.01.md`, metne etkisi `docs/DECISIONS.md` 2026-09-22
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px, referans rakip de benzer — kısaltılsın mı? Karar kullanıcıda (`modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
 - [TASK-1.07 / run-phase] Umami giriş ucunda hız sınırı ve kilitlenme yok, panel internete açık — evi `altyapi/vps` projesi, kayıp olmasın diye burada
@@ -49,7 +50,7 @@
 
 - [PHASE-1] **Ziyaretçi onayı iki kanalda birden kapalı olabiliyor:** ekran kanadı **kapandı** (B-055, TASK-2.05+2.06 — onay altı genişlikte de görünüyor), e-posta kanadı hâlâ açık (B-059, v1'de var) → TASK-2.07. Birleşim hiçbir atomda yazılı değildi; TASK-2.07 kapanınca bu kalem de düşer
 - [PHASE-1] **Dört açık bulgunun kanıt atıfları bu fazın yeniden adlandırmasıyla bayatladı** (B-024 · B-036 · B-037 · B-054): `toWebhook` → `toStore`, `LEAD_WEBHOOK_URL` → `LEAD_STORE_URL`, "e-tablo/Google" → kendi sunucudaki PocketBase; `route.ts` satır numaraları da kaydı (dosya 68 → 359 satır). Atomları kimse yanlış okumasın — evi audit-product uzlaştırması (M3 alanı), review-phase kanvasa yazmaz
-- [TASK-2.10] `docs/DECISIONS.md` kırmızı çizgiyi aştı (ölçüldü 20.023 token, sınır 20.000; bu turun kaydıyla ~20.9k). Dokümanın kendi KURAL'ı supabı yazıyor: en eski kapanan aralık `DECISIONS-<ilk>..<son>.md`'ye taşınır — ama aralığın **bitiş tarihi** kurallı değil, tekleştirilmesi gereken bir kesim kararı; evi `audit-docs` (2026-09-22'de aynı işi o yaptı)
+- [TASK-2.10 · yeniden ölçüldü TASK-2.11] `docs/DECISIONS.md` kırmızı çizgiyi aştı ve her turda büyüyor: **20.023 → 21.344 → 22.783 token** (sınır 20.000; son ölçüm 2026-09-23). Dokümanın kendi KURAL'ı supabı yazıyor: en eski kapanan aralık `DECISIONS-<ilk>..<son>.md`'ye taşınır — ama aralığın **bitiş tarihi** kurallı değil, tekleştirilmesi gereken bir kesim kararı; evi `audit-docs` (2026-09-22'de aynı işi o yaptı)
 
 - [audit-product] Yerel `lead-store`'da bu denetim turunun **25 test kaydı** duruyor (`Ayse/Pilates`, `Deneme Kisi/Deneme Studyo`, `CSRF/K`, `Zemin/Kontrol`) — silinmedi; sonraki ölçüm bunları gerçek lead sanmasın
 - [TASK-2.08] `B-047` envanterinin "0 tüketici" satırı kısmen bayatladı: `PRODUCT_STATUS.short` **silindi**, `PRODUCT_STATUS.version` tüketicisi TASK-2.10'da doğacağı için **bırakıldı** (karar `docs/DECISIONS.md` 2026-09-23). Satırın kalan kalemleri (`CONTACT.phone.display`, `PRICING.annualPrepayBenefit`, `Segment.accent`) aynen açık — atomu bu oturum yeniden yazmadı, triyaj kendi turunda görsün
@@ -88,7 +89,7 @@
 
 - 🔴 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — `content-type` kontrolsüz çapraz-site POST **artık depoya satır yazıyor**; `null` gövde 500; 5 MB gövde kabul
 - 🔴 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — dört kalem açık; "IP saklamaz" beyanı ölçülen nginx logu gerçeğiyle çelişiyor, `ip_hash` 12 ay saklanıyor → Faz 2
-- 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — TASK-2.09: dördü düzeltildi, beşincisi (yetki geri alma) ölçümle çürütüldü — cümle doğruymuş, yerinde kaldı. Atom açık: sınıfın tamamı taranmadı → TASK-2.12
+- 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — TASK-2.09: dördü düzeltildi, beşincisi ölçümle çürütüldü. Atom açık: sınıfın tamamı taranmadı, ayrıca B-040'ın segment-işareti ayağı buraya devredildi → TASK-2.12
 - 🔴 [B-018 — Ürün görselinde gerçek kişi adı ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — `sube` kalemi kapandı; "Gizem Ö." ana sayfada duruyor, yasal metnin beyanı çürüyor → Faz 2
 - 🔴 [B-054 — İletişim kuralı ters eksende gevşek](bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md) — meşru yazımlar 422; `0532111223`/`0000000000` **200 `stored:true`** — ulaşılamaz numara artık kayda geçiyor
 - 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok → Faz 2
@@ -99,7 +100,6 @@
 - 🔴 [B-031 — `a11y.mjs`'in kontrast yöntemi üç kör nokta taşıyor](bulgular/B-031-a11y-kontrast-yontemi-kor-noktalari.md) — dördü de satır satır yerinde; kökte tek gradyan ölçüleni 157'den 0'a düşürüyor
 - 🔴 [B-035 — `perf.mjs` ağırlığı JS ve CSS'e kör, ilan edilmiş regresyon çizgisi geçersiz](bulgular/B-035-perf-agirlik-muhasebesi-kor.md) — `content-length` muhasebesi, sabit BASE, eşiksiz; yöntem bit-bit aynı
 - 🔴 [B-015 — Kalite kapıları açılan katmanları ölçmüyor](bulgular/B-015-kalite-kapilari-etkilesim-durumunu-olcmuyor.md) — `a11y`/`mobile-audit` 0 tıklama; desen `font-guard:28-33`'te zaten çalışıyor, kardeşlere taşınmamış
-- 🔴 [B-014 — Chat ağacı pilot cümlesini tek kaynaktan değil elle yazıyor](bulgular/B-014-chat-agaci-pilot-cumlesini-yeniden-yaziyor.md) — `site.ts` importu hâlâ yok; `faq.ts` doğru deseni zaten taşıyor
 - 🟡 [B-036 — Dört ayrı yol talebi "başarılı" gösterip sessizce kaybediyor](bulgular/B-036-lead-kaybi-yollari.md) — üçü açık; kırpılan e-posta hâlâ 200 `stored:true` alıyor, bal küpü tek log satırı taşımıyor
 - 🟡 [B-056 — Umami açıldığı gün hidrasyonsuz gönderimde form verisi analitiğe gidiyor](bulgular/B-056-umami-hidrasyonsuz-gonderimde-kisisel-veri.md) — izleyici tarafı kapandı ve canlıda doğrulandı; zincir artık **aktif**, kaynak tarafı (B-036) ve (b) bot sahte yeşili açık
 - 🟡 [B-060 — Yayındaki yasal beyanları koruyan test yok](bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) — "12 ay", `data-exclude-search` ve görsel beyanı tek satıra bağlı; v1'de çalışan kapı v2'ye taşınmadı → Faz 2
@@ -111,7 +111,6 @@
 - 🟡 [B-042 — Paylaşım kartı sayfa başına türemiyor, `/foto` önbelleksiz](bulgular/B-042-paylasim-karti-ve-yayin-yuzeyi.md) — `canonical`/`<title>` kapandı, `FAQPage` eklendi; `og:url` hâlâ 15/15 ana sayfa
 - 🟡 [B-043 — F7.5 geçiş yüzeyi tabloda yazandan geniş](bulgular/B-043-f75-gecis-yuzeyi-tablodan-genis.md) — altı varlık adresi 404'e düşecek, `www` haritada yok, 20 adreslik harita bugünkü canlıya karşı doğrulanmadı
 - 🟡 [B-039 — Metin bileşende: `SectionHead`/`PageHero`'nun 103 değerinden yalnız 3'ü içerikten](bulgular/B-039-metin-bilesende.md) — "Metin tonu" fazının ön koşulu; eski kanıt komutu geçersizdi, yeni yöntem atomda
-- 🟡 [B-040 — Ürün yol haritası dört evde ve zaten ayrışmış](bulgular/B-040-urun-yol-haritasi-dort-evde.md) — 5/4/3/3 ayrışması birebir duruyor; "Kurumsal üyelik" dördün birinde → Faz 2 (yetenek listesi kapsamında)
 - 🟡 [B-050 — Dört segment sayfasında pilot nitelemesi hiç geçmiyor](bulgular/B-050-segment-sayfalarinda-pilot-nitelemesi-yok.md) — kaynakta 0, yayındaki HTML'de 0; `PRODUCT_STATUS`'un tek tüketicisi ana sayfa
 - 🟡 [B-023 — Fiyat ve iletişim değerleri tek kaynak dışında](bulgular/B-023-fiyat-ve-iletisim-tek-kaynak-disinda.md) — 8 fiyat + 4 iletişim + yeni `Frames.tsx:10`; `CONTACT.phone.display` hâlâ hiç kullanılmıyor
 - 🟡 [B-012 — Erişilebilirlik ve mobil kapıları rotaların yarısını gezmiyor](bulgular/B-012-olcum-betikleri-rota-kapsami-eksik.md) — 16 rotadan `a11y` 8, `mobile-audit` 9; üç yasal sayfa ikisinde de yok

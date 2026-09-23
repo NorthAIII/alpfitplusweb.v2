@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** tutarsızlık / tek-kaynak ihlali | **Alan:** M1 — İçerik ve iddia kaynağı
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** → Faz 2 (yetenek listesi kapsamında)
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -53,4 +53,22 @@ $ grep -rn "PRODUCT_STATUS.short\|PRODUCT_STATUS.version" src/ | grep -v content
 
 ## Çözüm Kaydı
 
-—
+✅ **Yol haritası ayrışması kapandı — beş evin beşi de tek sabitten okuyor.** Üç task:
+
+- **TASK-2.08** sabiti kurdu: `src/content/product.ts` → `CAPABILITIES` (`simdi` 12 · `yolda` 7 · `sonra` 5), kalemler `{id, label, modul?}`. Koruma önerisindeki `ROADMAP` adı bilinçle değişti — "roadmap" ilk kademeyi ("bugün var") yanlış çatı altına alıyordu. `PRODUCT_STATUS.modules` artık o listeden türüyor; `short` silindi (0 tüketici).
+- **TASK-2.10** iki bileşen-içi evi bağladı: `/ozellikler`'in üç kolonu ve `FounderProgram`'ın üç durum satırı. `PRODUCT_STATUS.version`'ın ilk tüketicisi orada doğdu.
+- **TASK-2.11** kalan dördünü bağladı: `chat.ts` · `faq.ts` · `/fiyat` `NOT_INCLUDED` · `karsilastirma.ts`. Yukarıdaki kanıt komutu **15 → 3 satır / 6 → 1 dosya**; kalan üçü `product.ts`'in kendisidir (2 etiket + 1 yorum — meşru tek kaynak).
+
+**Ayrışmanın kendisi de kapandı:** *"Kurumsal üyelik"* dört kopyanın yalnız birindeyken artık beş yüzeyde de görünüyor; chat ve SSS 3+3 kalem sayarken bugün dört yüzey de **7+5** sayıyor.
+
+**Atomun kapsamındaki yan kalemler:**
+- `PRODUCT_STATUS.short` ve `.version` tüketicisizliği → `short` silindi, `version`'ın bugün **üç** tüketicisi var (`FounderProgram` · `chat.ts` · `faq.ts`). B-047'nin bu kalemi kapandı.
+- `chat.ts:126`'nın elle kopyaladığı modül listesi → türetiliyor; [B-014](B-014-chat-agaci-pilot-cumlesini-yeniden-yaziyor.md) aynı turda kapandı.
+
+**Kalıcı koruma kuruldu:** `tests/capabilities.test.ts` — altı tüketici dosyası diskten okunuyor, sabite bağlı oldukları çivileniyor ve `yolda`+`sonra` etiketlerinin hiçbirinin kaynakta elle geçmediği taranıyor. Kapsam bilinçle `yolda`+`sonra`; `simdi` dışarıda çünkü modül düzeyli etiketleri meta açıklamada meşru geçiyor. Ters yön ayrıca kapatıldı: `upcomingCapability`/`stageNote` bir kalem `simdi`'ye taşındığında modül yüklenmesini durduruyor (`docs/DECISIONS.md` 2026-09-23).
+
+⚠️ **KAPANMAYAN AYAK — "kullanım koşullarının taahhüdü" bölümü.** Bu atomun *"`segments.ts` içinde 'yolda' / 'yol haritası' ifadesi 0 kez geçiyor"* gözlemi **hâlâ geçerli** (yeniden ölçüldü 2026-09-23: `grep -c` → **0**); `legal.ts:271`'in *"ayrı ayrı belirtilir"* taahhüdü dört segment sayfasında yapısal olarak korunmuyor. O ayak bu üç task'ın kapsamında değildi — evi [B-029](B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) → **TASK-2.12** (riskli alt küme taraması) ve hukukçu onayı tarafı [B-008](B-008-yasal-metin-hukukcu-onayi.md).
+
+**Ölçümün gösterdiği bir kör nokta:** yukarıdaki kanıt komutu **harfe duyarlıdır** ve `karsilastirma.ts`'in küçük harfli *"kartla online ödeme"* satırını hiç görmemişti — altıncı tekil cümle TASK-2.11'in harfe duyarsız tüketici kapısıyla çıktı ve bağlandı.
+
+Detay: `tasks/archive/TASK-2.08.md` · `tasks/archive/TASK-2.10.md` · `tasks/archive/TASK-2.11.md` → Oturum Kayıtları.

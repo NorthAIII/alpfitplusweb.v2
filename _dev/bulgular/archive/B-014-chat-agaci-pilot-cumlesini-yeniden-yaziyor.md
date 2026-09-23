@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** tutarsızlık / tek-kaynak ihlali | **Alan:** M1 — İçerik ve iddia kaynağı / M4 — Site asistanı
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -50,4 +50,15 @@ a: `v1 hazır. ${PRODUCT_STATUS.sentence} Kampanya derinleşmesi, ...`
 
 ## Çözüm Kaydı
 
-—
+✅ **TASK-2.11 (2026-09-23) — gözlemin üç ayağı da kapandı, ölçüldü.**
+
+- `src/content/chat.ts` artık `./site`'i **import ediyor** (`PRODUCT_STATUS`) — atomun *"tek importu `./pricing`"* gözlemi geçersiz.
+- *"Ürün hangi aşamada?"* cevabının ilk paragrafı şablonla kuruluyor: sürüm adı `PRODUCT_STATUS.version`, pilot cümlesi `PRODUCT_STATUS.sentence`, modül sayımı `moduleProse()` (yani `PRODUCT_STATUS.modules` ile **aynı** liste).
+- **Sitede pilot cümlesinin sabit dışında hiçbir kopyası kalmadı:** `grep -rn "stüdyoda pilot" src/` → yalnız `content/site.ts` (ölçüldü 2026-09-23).
+- Modül sayımı aynı hamlede **8 → 9** oldu ("antrenör performansı" — karşılığı TASK-2.08'de ürün koduna karşı ölçülmüştü); atomun *"ürünün on modülünün sekizini sayıyor"* notu artık geçerli değil.
+
+Kardeş ev `faq.ts` de aynı turda tam bağlandı (yalnız `sentence`'ı değil `version`'ı ve iki kademe listesini de sabitten alıyor). Kalıcı koruma `tests/capabilities.test.ts` → *"aşama cevabı — chat ve SSS aynı kaynaktan"*: iki evin de pilot cümlesini ve modül sayımını sabitten aldığı çivileniyor; kapı sondayla kırmızıya döndürüldü.
+
+⚠️ **KAPSANMAYAN — Koruma Önerisi'ndeki ikinci örnek.** *"Rakip tarama rakamı dört ayrı yerde, iki farklı biçimde"* (`chat.ts` ve `WhyUs.tsx` "9 yerli ve 9 global" derken `product.ts` ve `karsilastirma.ts` "18" diyor) **bu turda ele alınmadı**; rakamlar çelişmiyor (9+9=18) ama dördü de `ARASTIRMA` sabitinden türemiyor. Ayrı bir sınıf olduğu için `BULGULAR.md` → Gelen Kutusu'na taşındı.
+
+Detay: `tasks/archive/TASK-2.11.md` → Oturum Kaydı.

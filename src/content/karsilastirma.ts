@@ -12,6 +12,7 @@
  *  - Her saticiya sorulabilecek sorular ve BIZIM cevabimiz.
  * Rakip hakkinda tek bir olumsuz iddia kurulmuyor.
  */
+import { capabilityTitle, upcomingCapability } from "./product";
 import { PRICING, tl } from "./pricing";
 
 export const ARASTIRMA = {
@@ -77,7 +78,10 @@ export const QUESTIONS: Question[] = [
   {
     q: "Turnike ya da kart okuyucu almak zorunda mıyım?",
     why: "Donanım merkezli ürünlerde kurulum maliyeti yazılım fiyatının üstüne biner.",
-    ours: "Hayır. Panel ve mobil uygulama yeter. QR ve turnike ile giriş yol haritamızda, bugünkü ürünün parçası değil.",
+    // Kalem adi sabitten (B-040). "yol haritamizda" sayfanin kendi sahiplik
+    // dili; kademe eki degil, o yuzden stageNote kullanilmiyor — kapiyi
+    // upcomingCapability tasiyor.
+    ours: `Hayır. Panel ve mobil uygulama yeter. ${capabilityTitle(upcomingCapability("qr-turnike"))} yol haritamızda, bugünkü ürünün parçası değil.`,
     weight: "fark",
   },
   {
@@ -122,11 +126,11 @@ export const QUESTIONS: Question[] = [
 export const NOT_US = [
   {
     t: "Turnike ve geçiş kontrolü ürünü değiliz",
-    b: "Donanım ekosistemi kurmak istiyorsanız bugün doğru adres biz değiliz. QR ve turnike yol haritamızda.",
+    b: `Donanım ekosistemi kurmak istiyorsanız bugün doğru adres biz değiliz. ${capabilityTitle(upcomingCapability("qr-turnike"))} yol haritamızda.`,
   },
   {
     t: "Online tahsilat yapmıyoruz",
-    b: "Satışı, tahsilatı ve kalan borcu kaydedip raporluyoruz; kartla online ödeme bugünkü sürümde yok.",
+    b: `Satışı, tahsilatı ve kalan borcu kaydedip raporluyoruz; kartla ${upcomingCapability("online-odeme").label} bugünkü sürümde yok.`,
   },
   {
     t: "Spor okulu ve veli takibi ürünü değiliz",

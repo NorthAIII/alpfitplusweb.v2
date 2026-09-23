@@ -19,6 +19,30 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-23 — Yayınlanan yetenek kalemi, onu "henüz yok" diye anan cümleyi derleme hatasına çevirir
+
+**Bağlam:** TASK-2.11 yol haritasının son dört evini `CAPABILITIES`'e bağlarken şu sınıf ortaya çıktı: yedi düzyazı cümle kalemi **adıyla** anıyor ve o adın **henüz olmadığını** söylüyor ("QR ve turnike ile giriş **yol haritamızda**", "kartla online ödeme **bugünkü sürümde yok**"). Adı sabitten almak **adı** hizalar; kalem yayınlandığı gün ad doğru kalır, **cümle sessizce yanlış olur** — B-040'ın ölçtüğü ayrışmanın ters yönü.
+
+**Seçenekler:**
+1. Yalnız adı türet, sınırı kod yorumuna yaz (task dokümanının önerisi).
+2. Adı türet + kademeyi de türet, ama `simdi` kademesinde sessizce "bugün var" bas.
+3. Adı türet + kalem `simdi`'ye geçtiğinde **hata fırlat** (fail-closed).
+
+**Karar:** 3. `product.ts` → `upcomingCapability(id)` kalemi döndürür, `stageNote(id)` cümle-içi kademe ekini (`yolda` · `yol haritasında`) `STAGE_LABEL`'dan türetir; ikisi de kalem `simdi` kademesindeyse `Error` atar.
+
+**Gerekçe:**
+- **Kod yorumu bir kapı değildir** — bu projede tam olarak bu ölçüldü: ürünün kendi "v1.5 / ertelendi" yorumları bayatlamıştı (2026-09-23 sürüm etiketi kararı). Sınırı yorumda bırakmak onu bayatlamaya açık bırakırdı.
+- **Sessiz "bugün var" en kötü hâl:** 2. seçenek "pakete dâhil değil" listesinde *"Online kart ile tahsilat (bugün var)"* gibi anlamsız ve yanlış bir satır üretirdi.
+- **Fail-closed ucuz ve gürültülü:** fonksiyonlar modül düzeyinde çağrıldığı için hata **import anında** doğuyor. Sondada ölçüldü: `qr-turnike` `simdi`'ye taşındığında test suite yüklenemedi ve dev sunucusunda `/`, `/fiyat`, `/yazilim-secerken` **500** döndü. Bir kalemi yayına almanın bedeli, onu anan cümleleri elden geçirmektir — bu bilinçli bir maliyettir.
+
+**Bedel, bilerek kabul:** `CAPABILITIES`'te bir kalemi `yolda`/`sonra` → `simdi` taşımak **tek satırlık bir iş değildir**; derleme durur ve ilgili cümleler düzeltilene kadar site ayağa kalkmaz. Ters yön (yeni kalem eklemek, `sonra` → `yolda` taşımak) etkilenmez — `stageNote` kendiliğinden hizalanır. Bu sınır DURUM'un aktif task notunda da duruyor ki sıradaki tur şaşırmasın.
+
+**Kapsam notu:** SSS'nin *"Online ödeme alabiliyor muyum?"* **sorusu** bu kapıyı taşımaz (`capability()` kullanır) — kalem yayınlandığında soru geçerli kalır, değişen yalnız cevaptır. Kapı cevabın son cümlesindedir.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.11 (`tasks/archive/TASK-2.11.md`)
+
+---
+
 ### 2026-09-23 — Site sürüm etiketi ürünün sürüm haritasına çapalanır; `nextVersion` açılmaz (aynı günün 7. kararı geçersiz)
 
 **Bağlam:** TASK-2.10 `FounderProgram`'ın üç durum satırını sabite bağlarken orta satırın başlığını (`"v1.5 yolda"`) `PRODUCT_STATUS.nextVersion`'a taşıyacaktı — aynı günün bir önceki kararının 7. maddesi bunu açıkça devrediyordu. Bağlamadan önce ölçüldü.

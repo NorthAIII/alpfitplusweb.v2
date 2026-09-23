@@ -3,6 +3,8 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
+import { CHAT_ROOT, CHAT_TOPICS } from "@/content/chat";
+import { FAQ_HOME } from "@/content/faq";
 import {
   CAPABILITIES,
   CAPABILITY_STAGES,
@@ -10,8 +12,11 @@ import {
   type CapabilityStage,
   capability,
   capabilityProse,
+  capabilityStage,
   capabilityTitle,
   moduleProse,
+  stageNote,
+  upcomingCapability,
 } from "@/content/product";
 import { PRODUCT_STATUS } from "@/content/site";
 
@@ -180,10 +185,27 @@ describe("düzyazı türetmesi", () => {
 // kademesi DISARIDA ve bu olculdu — modul duzeyli etiketleri ("antrenör
 // performansı", "diyetisyen modülü") sayfanin meta aciklamasinda ve modul
 // basliklarinda mesru olarak geciyor; o sinifin taramasi TASK-2.12'nin isi.
+// TASK-2.11 listeyi ikiden ALTIYA cikardi (B-040'in kapanisi): chat agaci,
+// SSS, karsilastirma sayfasi ve fiyat sayfasi da ayni sabiti okuyor.
+// `iceAktarim` ayri bir alan cunku src/content icindekiler goreli yolla
+// (`./product`), sayfa ve bilesenler takma adla (`@/content/product`) baglanir
+// — tek bir kalibi aramak dordunu sessizce muaf tutardi.
 /** Sabite baglanmis tuketiciler + her birinin baglanti kaniti olan sembol. */
 const TUKETICILER = [
-  { yol: "src/app/ozellikler/page.tsx", baglanti: "CAPABILITY_STAGES" },
-  { yol: "src/components/sections/FounderProgram.tsx", baglanti: "capabilityProse" },
+  {
+    yol: "src/app/ozellikler/page.tsx",
+    iceAktarim: '@/content/product',
+    baglanti: "CAPABILITY_STAGES",
+  },
+  {
+    yol: "src/components/sections/FounderProgram.tsx",
+    iceAktarim: '@/content/product',
+    baglanti: "capabilityProse",
+  },
+  { yol: "src/content/chat.ts", iceAktarim: "./product", baglanti: "capabilityProse" },
+  { yol: "src/content/faq.ts", iceAktarim: "./product", baglanti: "capabilityProse" },
+  { yol: "src/content/karsilastirma.ts", iceAktarim: "./product", baglanti: "upcomingCapability" },
+  { yol: "src/app/fiyat/page.tsx", iceAktarim: '@/content/product', baglanti: "stageNote" },
 ] as const;
 
 const kaynakOku = (yol: string) =>
@@ -202,10 +224,10 @@ describe("tüketiciler — boş kapsam", () => {
     expect(YOL_HARITASI_ETIKETLERI.length).toBeGreaterThan(5);
   });
 
-  it.each(TUKETICILER)("$yol okunuyor ve sabite bağlı", ({ yol, baglanti }) => {
+  it.each(TUKETICILER)("$yol okunuyor ve sabite bağlı", ({ yol, iceAktarim, baglanti }) => {
     const kaynak = kaynakOku(yol);
     expect(kaynak.length).toBeGreaterThan(1000);
-    expect(kaynak).toContain('from "@/content/product"');
+    expect(kaynak).toContain(`from "${iceAktarim}"`);
     expect(kaynak).toContain(baglanti);
   });
 });
@@ -221,5 +243,107 @@ describe("B-040 — yol haritası kalemi bileşende elle yazılmaz", () => {
 describe("kademe sırası", () => {
   it("üç kademe de açık sırada sayılıyor", () => {
     expect([...CAPABILITY_STAGES]).toEqual(STAGES);
+  });
+});
+
+// ── TASK-2.11 — YAYIN KAPISI (B-040'in ters yonu) ─────────────────────────
+//
+// Yukaridaki tuketici kapisi "kalem adi elle yazilmasin" diyor. Bu blok
+// baska bir seyi civiliyor: adi sabitten alan bir cumle, kalem YAYINLANDIGI
+// gun hala "bu bizde yok" diyor olabilir. Ad hizalanir, cumle yanlis kalir.
+// upcomingCapability/stageNote o gun derlemeyi durdurur; burada durdugu
+// olculuyor.
+describe("yayın kapısı — yayınlanmış kalem yol haritası cümlesinde anılamaz", () => {
+  const YOL_HARITASI_CUMLESI_KURAN = ["qr-turnike", "online-odeme"] as const;
+
+  it.each(YOL_HARITASI_CUMLESI_KURAN)("%s hâlâ yayınlanmamış", (id) => {
+    expect(capabilityStage(id)).not.toBe("simdi");
+    expect(() => upcomingCapability(id)).not.toThrow();
+  });
+
+  it.each(YOL_HARITASI_CUMLESI_KURAN)("%s için kademe eki cümleye hazır", (id) => {
+    expect(["yolda", "yol haritasında"]).toContain(stageNote(id));
+  });
+
+  // Kontrol grubu: kapi gercekten "simdi"yi reddediyor mu? Bu ayak olmadan
+  // ustteki iki kontrol, kapi hic calismasa da yesil kalirdi.
+  it.each(["takvim-rezervasyon", "mobil-uygulama"])(
+    "'bugün var' kalemi %s kapıdan geçemiyor",
+    (id) => {
+      expect(capabilityStage(id)).toBe("simdi");
+      expect(() => upcomingCapability(id)).toThrow(/elden geçirilmeli/);
+      expect(() => stageNote(id)).toThrow(/elden geçirilmeli/);
+    },
+  );
+
+  it("bilinmeyen kalem sessizce geçmiyor", () => {
+    expect(() => upcomingCapability("olmayan-kalem")).toThrow(/Bilinmeyen yetenek kalemi/);
+  });
+});
+
+// ── TASK-2.11 — "Ürün hangi aşamada?" iki evde de sabitle aynı ────────────
+//
+// B-040'in olctugu ayrisma tam buydu: chat agaci uc kalem sayarken SSS ucu,
+// `/ozellikler` besi sayiyordu. Asagisi ikisinin de sabitten turedigini ve
+// birbirinden AYRISAMAYACAGINI civiliyor.
+const chatAsama = () => {
+  const dugum = CHAT_TOPICS.find((t) => t.id === "asama");
+  if (!dugum) throw new Error("chat ağacında 'asama' düğümü yok");
+  return dugum;
+};
+
+const faqAsama = () => {
+  const soru = FAQ_HOME.find((f) => f.q === "Ürün hangi aşamada?");
+  if (!soru) throw new Error("SSS'de 'Ürün hangi aşamada?' sorusu yok");
+  return soru;
+};
+
+describe("aşama cevabı — chat ve SSS aynı kaynaktan", () => {
+  it("iki ev de hasat ediliyor (boş kapsam)", () => {
+    expect(chatAsama().a.join(" ").length).toBeGreaterThan(200);
+    expect(faqAsama().a.length).toBeGreaterThan(200);
+  });
+
+  it.each([
+    ["chat", () => chatAsama().a.join(" ")],
+    ["SSS", () => faqAsama().a],
+  ])("%s cevabı pilot cümlesini yeniden yazmıyor (B-014)", (_ad, metin) => {
+    const govde = metin();
+    expect(govde).toContain(PRODUCT_STATUS.sentence);
+    expect(govde).toContain(`${PRODUCT_STATUS.version} hazır`);
+  });
+
+  it.each([
+    ["chat", () => chatAsama().a.join(" ")],
+    ["SSS", () => faqAsama().a],
+  ])("%s cevabı iki kademeyi de sabitten sayıyor (B-040)", (_ad, metin) => {
+    const govde = metin();
+    expect(govde).toContain(capabilityProse("yolda"));
+    expect(govde).toContain(capabilityProse("sonra"));
+  });
+
+  it("chat modül sayımını PRODUCT_STATUS ile aynı listeden alıyor (B-014)", () => {
+    expect(chatAsama().a[0]).toContain(moduleProse());
+    expect(PRODUCT_STATUS.modules).toBe(`${moduleProse()}.`);
+  });
+});
+
+// Agacin cikis disiplini F1.3'un kabul kriteri; "asama" dugumu bu turda
+// yeniden yazildigi icin kapi burada duruyor (kardesi hemen ustte).
+describe("chat ağacı — çıkışsız düğüm yok", () => {
+  it("ağaç hasat ediliyor", () => {
+    expect(CHAT_TOPICS.length).toBeGreaterThan(5);
+    expect(CHAT_ROOT.length).toBeGreaterThan(2);
+  });
+
+  it.each(CHAT_TOPICS.map((t) => t.id))("%s düğümü çıkış taşıyor", (id) => {
+    const dugum = CHAT_TOPICS.find((t) => t.id === id) as (typeof CHAT_TOPICS)[number];
+    expect((dugum.next?.length ?? 0) + (dugum.links?.length ?? 0)).toBeGreaterThan(0);
+  });
+
+  it("devam soruları ve kök başlıklar ağaçta karşılığı olan düğümler", () => {
+    const idler = new Set(CHAT_TOPICS.map((t) => t.id));
+    for (const t of CHAT_TOPICS) for (const sonraki of t.next ?? []) expect(idler).toContain(sonraki);
+    for (const kok of CHAT_ROOT) expect(idler).toContain(kok);
   });
 });
