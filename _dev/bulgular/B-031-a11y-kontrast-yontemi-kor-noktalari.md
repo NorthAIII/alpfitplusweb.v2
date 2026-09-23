@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** test-kapsamı / sahte yeşil | **Alan:** M6 — Kalite kapıları
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → Faz 3
 
 ## Gözlem
 

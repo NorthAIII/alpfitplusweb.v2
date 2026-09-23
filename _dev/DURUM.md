@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — **QUICK-002 (yasal metindeki anahtar yetkisi cümlesi) ✅ tamamlandı**: cümle ölçülene daraltıldı (anahtar kayıt oluşturur **ve** bildirim/onay e-postalarının gönderilip gönderilmediğini kayda yazar; *"okuyamaz"* yarısı korundu), `tests/legal-consistency.test.ts` dal 4'e metin ↔ yöntem kümesi iki yönlü bağı eklendi (batarya 216 → 217, üç negatif kontrol kırmızı verdi) ve **B-062 arşive mezun edildi** (açık bulgu 43 → 42). Faz döngüsünün konumu değişmedi: sırada Faz 3'ün kapsam tartışması.
+**Son Güncelleme:** 2026-09-23 — **Faz 3 "Görsel ve mobil iyileştirme" açıldı** (discuss-phase): kapsam devralınan üç bulgudan **dokuza** çıktı — kullanıcı B-022 · B-046 · B-051 · B-057'yi ekledi, B-031'in "aynı turda" uyarısı gereği B-030 ve B-012'nin a11y/mobil ayakları da alındı. Üç bekleyen soru karara bağlandı (ana sayfa kısaltılmıyor · dokunma hedefi kuralı kademeli · 404'teki dev rakam dekoratif ilan ediliyor); keşif turu fazın içinde ve dört yeni eksen kazandı (%200/%400 büyütme, hareket azaltma, JS kapalı, yatay tutuş).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -8,11 +8,11 @@
 
 ## Aktif Faz
 
-**Faz:** Phase 3 — Görsel ve mobil iyileştirme *(geçici ad ve numara; promosyonu `discuss-phase` yapar — `PHASES.md` → Sıradaki Fazlar)*
-**Milestone:** — henüz yazılmadı; kapsam tartışmasında belirlenir. Konunun bugünkü tanımı ve devredilen küme (B-032 · B-033 · B-031) `PHASES.md` → Sıradaki Fazlar'da.
-**Adım:** discuss
-**İlerleme:** Faz henüz başlamadı. Faz 2 ✅ kapandı (21 task: 19 ✅ · 2 iptal · UAT 2 tur, 31/31).
-**Faz Dokümanı:** — henüz yok (`discuss-phase` oluşturur) · son kapanan: `phases/PHASE-2.md` ✅ (çocukları: `PHASE-2-KAPSAM.md` · `PHASE-2-ARASTIRMA.md` · `PHASE-2-UAT.md` · `PHASE-2-RETROSPEKTIF.md`)
+**Faz:** Phase 3 — Görsel ve mobil iyileştirme
+**Milestone:** Site dar telefondan büyütülmüş yazıya kadar bölüm bölüm gezildi (gerçek cihaz dâhil) ve çıkanlar triyaj edildi; ölçülmüş beş kontrast ihlali ve 320 px'te kesilen içerik kalmadı; telefonda her sayfanın ilk ekranında demoya çıkan bir yol var ve dönüşüme dokunan her hedef ≥ 44 px; kontrast ve mobil kapıları 16 sayfanın hepsini geziyor, boyanan gerçek rengi ölçüyor ve eşik altında kırmızıya dönüyor; ana sayfanın iki kart ızgarası reddedilen kalıptan çıktı; beş ölçüm yeşil. Tam metin ve kapsam kararları: `phases/PHASE-3.md`.
+**Adım:** research
+**İlerleme:** Kapsam tartışması ✅ tamamlandı — dokuz bulgu + keşif turu kapsama alındı. Task listesi henüz yazılmadı (`plan-phase`).
+**Faz Dokümanı:** `phases/PHASE-3.md` 🔄 · son kapanan: `phases/PHASE-2.md` ✅ (çocukları: `PHASE-2-KAPSAM.md` · `PHASE-2-ARASTIRMA.md` · `PHASE-2-UAT.md` · `PHASE-2-RETROSPEKTIF.md`)
 
 ---
 
@@ -35,19 +35,19 @@
 
 ## Aktif Task
 
-**Task:** — yok · Faz 3'ün task listesi henüz yazılmadı
-**Durum:** ✅ Bekleyen, devam eden ya da duraklatılmış task yok — sıradaki adım yeni fazın kapsam tartışması (`discuss-phase`)
+**Task:** — yok · Faz 3'ün task listesi `plan-phase` oturumunda yazılacak
+**Durum:** ✅ Bekleyen, devam eden ya da duraklatılmış task yok — sıradaki adım fazın teknik araştırması (`research-phase`)
 **İlerleme:** —
 **Not:**
-- ⚠️ **Kullanıcı gözü bekleyen beş doğrulama kalemi duruyor** (hiçbiri faz kapanışını engellemedi, hepsi *doğrulama kanalı* — ürün tarafı ölçüldü): Faz 2'den (1) gerçek telefonda form denemesi, (2) onay e-postasının gelen kutusunda mı spam'de mi düştüğü, (3) ekran okuyucuda onay kutusunun iki kez duyurulup duyurulmadığı (kaydı `BULGULAR.md` → Gelen Kutusu, `[TASK-2.05]`); Faz 1'den (4) `DEMO_TO`'ya giden e-postanın yerleşimi, (5) Umami panelinin **arayüzünde** v2 kaydının gözle görülmesi (kaydı `phases/PHASE-1.md` → Milestone kapanış notu).
-- ⚠️ **Sıradaki faz ölçüm betiklerini yoğun koşacak ve 3100 bayat olabilir** (B-019, mekanizması Faz 2'de taze kanıtlandı): `docker compose build web-prod` imajı tazeler ama **konteyneri yeniden yaratmaz** — `docker compose --profile prod up -d web-prod` gerekir. `perf.mjs` ve `font-guard.mjs` 3100'e çivili ve env ile yönlendirilemiyor; ölçmeden güvenme (`memory/alternatif-env-ile-uretim-derlemesi.md`).
-- **Kapsam tartışmasının ilk sorusu hazır:** B-031'in (a11y kontrast yönteminin kör noktaları) düzeltmesi **B-030 ile aynı turda** mı yürüsün? Atom öyle istiyor — yöntem düzeltilip çıkış kodu eklenmezse ihlaller görünür olur ama kapı yine yeşil kalır; B-030'un bugünkü evi "Kalite kapıları otomatik" fazı. Faz 2 bunu bilinçle karara bağlamadı (`phases/PHASE-2-KAPSAM.md` → Kapsam Dışı).
+- ⚠️ **Kullanıcıya bağlı iki iş bu fazın içinde ve ikisi de fazı kilitlemeyecek biçimde yerleştirilecek:** (1) **gerçek telefonla uçtan uca tur** — fazın sonunda, doğrulama olarak koşar (Faz 2'den devredilen form denemesi de bunun içinde); (2) **ürün deposunun demo destesine bir diyetisyen ekranı eklenmesi** — eklendiği gün görsel hattı onu olağan biçimde üretir; gelmezse Roller sekmesi ödünç görselle kalır ve B-046 kanvasta açık durur.
+- ⚠️ **Kullanıcı gözü bekleyen dört doğrulama kalemi duruyor** (hiçbiri faz kapanışını engellemedi, hepsi *doğrulama kanalı* — ürün tarafı ölçüldü): Faz 2'den (1) onay e-postasının gelen kutusunda mı spam'de mi düştüğü, (2) ekran okuyucuda onay kutusunun iki kez duyurulup duyurulmadığı (kaydı `BULGULAR.md` → Gelen Kutusu, `[TASK-2.05]`; gerçek ekran okuyucu denemesi Faz 3'ün de kapsamı dışında); Faz 1'den (3) `DEMO_TO`'ya giden e-postanın yerleşimi, (4) Umami panelinin **arayüzünde** v2 kaydının gözle görülmesi (kaydı `phases/PHASE-1.md` → Milestone kapanış notu).
+- ⚠️ **Bu faz ölçüm betiklerini yoğun koşacak ve 3100 bayat olabilir** (B-019, mekanizması Faz 2'de taze kanıtlandı): `docker compose build web-prod` imajı tazeler ama **konteyneri yeniden yaratmaz** — `docker compose --profile prod up -d web-prod` gerekir. `perf.mjs` ve `font-guard.mjs` 3100'e çivili ve env ile yönlendirilemiyor; ölçmeden güvenme (`memory/alternatif-env-ile-uretim-derlemesi.md`).
 
 ---
 
 ## Task Durumu (Aktif Faz)
 
-— yok · Faz 3'e henüz girilmedi; task listesi `plan-phase` oturumunda doğar.
+— yok · Faz 3 açıldı ama task listesi henüz yazılmadı; `plan-phase` oturumunda doğar.
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -87,6 +87,6 @@
 ## Hızlı Erişim
 
 **Aktif Task:** — yok · yeni faz henüz başlamadı; son kapanan `tasks/archive/TASK-2.21.md` ✅
-**Aktif Faz:** — henüz yok (Faz 3 kapsam tartışmasında doğar) · son kapanan: `phases/PHASE-2.md` ✅ (kapsam: `PHASE-2-KAPSAM.md` · araştırma: `PHASE-2-ARASTIRMA.md` · UAT: `PHASE-2-UAT.md` · retrospektif ve kalite: `PHASE-2-RETROSPEKTIF.md`)
+**Aktif Faz:** `phases/PHASE-3.md` 🔄 · son kapanan: `phases/PHASE-2.md` ✅ (kapsam: `PHASE-2-KAPSAM.md` · araştırma: `PHASE-2-ARASTIRMA.md` · UAT: `PHASE-2-UAT.md` · retrospektif ve kalite: `PHASE-2-RETROSPEKTIF.md`)
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

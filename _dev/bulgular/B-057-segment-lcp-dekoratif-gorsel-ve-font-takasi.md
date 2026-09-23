@@ -2,7 +2,7 @@
 
 **Önem:** 🟢 | **Tip:** öneri-performans (ilk ölçüm) | **Alan:** M2 — segment sayfası · M5 — font teslimi · M6 — ölçüm yöntemi
 **Kaynak:** audit-product (performansın ilk ölçümü) | **Tarih:** 2026-09-13
-**Durum:** Açık
+**Durum:** → Faz 3 (yalnız (a) LCP görseli ve (b) font metrik eşlemesi; (c) ölçüm yönteminin yeniden çizilmesi "Kalite kapıları otomatik" fazında)
 
 ## Gözlem
 

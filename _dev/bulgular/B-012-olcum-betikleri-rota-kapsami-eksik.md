@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** test-kapsamı / kapı kör noktası | **Alan:** M6 — Kalite kapıları
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → Faz 3 (yalnız `a11y.mjs` ve `mobile-audit.mjs` → 16 rota; `perf`/`scan` rota listeleri "Kalite kapıları otomatik" fazında)
 
 ## Gözlem
 

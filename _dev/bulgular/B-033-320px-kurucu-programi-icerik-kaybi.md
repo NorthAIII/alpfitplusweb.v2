@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / erişilebilirlik-düzen | **Alan:** M2 — Sayfalar ve bölümler (`ui/Button` tabanlı)
 **Kaynak:** audit-product (Gelen Kutusu `[TASK-1.07]` notunun mezuniyeti) | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → Faz 3
 
 ## Gözlem
 

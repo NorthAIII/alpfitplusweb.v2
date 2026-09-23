@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** tutarsızlık / öneri-ui-ux | **Alan:** M2 — Sayfalar ve bölümler (F2.1 Ana sayfa)
 **Kaynak:** audit-product (Gelen Kutusu `[TASK-1.07]` notunun mezuniyeti) | **Tarih:** 2026-09-13
-**Durum:** Açık
+**Durum:** → Faz 3 (yalnız `Benefits`'in 8 kartı ve `Modules`'ün tırtıklı ızgarası; 5'li ikon şeridi kullanıcı kararıyla kapsam dışı)
 
 ## Gözlem
 

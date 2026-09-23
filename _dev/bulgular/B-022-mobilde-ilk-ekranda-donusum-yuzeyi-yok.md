@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** öneri-ui-ux / dönüşüm | **Alan:** M2 — Sayfalar ve bölümler (`Header.tsx`, `Assistant.tsx`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → Faz 3
 
 ## Gözlem
 

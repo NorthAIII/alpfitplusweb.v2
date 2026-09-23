@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / erişilebilirlik | **Alan:** M2 — Sayfalar ve bölümler
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → Faz 3
 
 ## Gözlem
 

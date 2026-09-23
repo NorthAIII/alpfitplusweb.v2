@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** test-kapsamı / kapı bütünlüğü | **Alan:** M6 — Kalite kapıları
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → Faz 3 (yalnız a11y ve mobil ayağı: çıkış kodu, kapsam eşiği, kırpılmış taşma; `perf`/`scan`/`font-guard`, HTTP durumu ve depo şema kapısı "Kalite kapıları otomatik" fazında)
 
 ## Gözlem
 
