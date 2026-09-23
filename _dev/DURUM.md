@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.19 ✅: Yasal beyan kapısının **çapraz depo dalı** kuruldu ve **B-060 kapandı** (açık bulgu 43 → 42). `web` servisi komşu deponun `pb_hooks`'unu **salt okunur** bağlıyor (hedef `/app` dışında — içi repoya root sahipli dizin bırakıyor, ölçüldü); dal 9 "12 ay" saklamayı mekanizmanın evinden (`RETENTION_MONTHS`) okuyor ve **beyan parçasını ölçülen sayıdan türetiyor** — yön olgu → metin. Kapı `LEGAL_CONTRACT_HOOKS_DIR` ile açılıyor: tanımsızken atlanıyor (**geçen sayısı 204 birebir korundu**, atlanan 1 → 2), tanımlıyken batarya **211** / dosya 24 → **31 test**. **On dört negatif kontrolün on dördü kırmızı**; kaynak dokunulmaz olduğu için mutasyonlar **kopya** üzerinde koşturuldu ve kaynağın md5'i tur başıyla birebir. Biri kazanç getirdi: üç paragraftan yalnız biri güncellendiğinde **yalnız bölüm geneli kontrolü** yakaladı. Beş ölçüm taban birebir.
+**Son Güncelleme:** 2026-09-23 — TASK-2.20 ⏸️: KVKK başvuru adresinin DNS yönergesi yazıldı ve kaynağından doğrulandı (Squarespace **Add preset → Google Workspace MX** kararlaştırılan beş kayıtla birebir), ama **kayıtlar henüz girilmedi** — apex MX iki çözümleyicide de NODATA. Ölçülen taban alındı (TXT/NS/SOA + apex A `76.76.21.21`); bugün posta **örtük MX** ile web IP'sine düşüyor, temiz red değil. Batarya **211 geçti + 1 atlandı**, kod değişmedi. Sıra kullanıcıda.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 18/19 (TASK-2.01 → 2.19 tamamlandı; TASK-2.03 ❌ iptal). Sıra TASK-2.20'de — kalan tek task MX kaydı. Yasal **metin** tarafı, **depo içi kapı** ve **çapraz depo dalı** bitti; B-060 kapandı.
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 18/19 (TASK-2.01 → 2.19 tamamlandı; TASK-2.03 ❌ iptal). **TASK-2.20 ⏸️ duraklatıldı** — ölçülebilir yarısı bitti (yönerge + taban ölçümü), kalan iki ayak kullanıcının Squarespace adımına bağlı. Fazın repo tarafında yapılacak işi kalmadı.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -36,8 +36,8 @@
 ## Aktif Task
 
 **Task:** TASK-2.20 — KVKK başvuru adresi: MX kayıtları ve test postası (B-011)
-**Durum:** ⬜ Bekliyor
-**İlerleme:** TASK-2.19 kapandı ve arşive gitti; yasal beyanların **dokuz olgusunun dokuzu da** çivili (`tests/legal-consistency.test.ts`, 9 dal / 31 test; anahtarsız 204 geçti + 2 atlandı, anahtarlı **211**). **B-060 kapandı ve arşive gitti** (43 → 42 açık bulgu). Fazda **tek task kaldı:** TASK-2.20 — `destek@alpfitplus.com` için beş MX kaydı, DoH ile ölçüm ve gerçek test postası (B-011). ⚠️ **DNS adımı kullanıcıdadır** (Squarespace); kayıt girilmezse task ⏸️ duraklar, faz kilitlenmez. Sıradaki adım `/devflow:run-task`.
+**Durum:** ⏸️ Duraklatıldı — kullanıcının DNS adımı bekleniyor (planlı el değişimi, engel değil)
+**İlerleme:** TASK-2.20'nin **ölçülebilir yarısı bitti**: Squarespace yönergesi kaynağından doğrulanarak yazıldı (task dokümanında), bugünkü hâl ve bozulmama tabanı ölçüldü. **Kayıtlar henüz girilmedi** — apex MX iki bağımsız çözümleyicide de `Answer` yok (NODATA), yani öngörülen ⏸️ hâli gerçekleşti. Kalan iki ayak (beş kaydın ölçümü + gerçek test postası) **tek bir dış girdiye** bağlı. Sıradaki adım kullanıcı kaydı girdikten sonra `/devflow:resume`; fazın repo tarafında iş kalmadı. Açık bulgu **42** (B-011 açık).
 **Not:**
 - ⚠️ **Yasal beyan kapısı TAMAMLANDI (TASK-2.18 + 2.19) — 9 dal / 31 test.** Sekiz dal depo içinden ölçüyor, dokuzuncusu komşu depodan: `web` servisi `../Alpfitplus-website.v1/pocketbase/pb_hooks`'u `/opt/v1-pb-hooks`'a **salt okunur** bağlıyor ve dal `RETENTION_MONTHS`'ı metin olarak okuyor. **Kapı `LEGAL_CONTRACT_HOOKS_DIR` env'i ile açılır; tanımsızken atlanır** — yani düz `docker compose exec web npm test` bundan sonra **204 geçti + 2 atlandı** gösterir (ikinci atlanan bu daldır, arıza değil). Tam koşum: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **211**. ⚠️ Bağlama `restart` ile **gelmez**, `docker compose up -d web` gerekir. TASK-2.17'de ölçülen **depo dışı** olgular (Hetzner/DE · Resend ABD + `eu-west-1` · Google MX · Umami şemasında IP sütunu yokluğu · erişim kaydında rotasyon yokluğu) **bilerek çivilenmedi** — kaynakları canlı sistemler; çapaları `legal.ts`'in Aktarım yorumunda. Kapının kendi `ÖLÇÜLEMEYEN` blokları iki yüzeyi daha adıyla dışarıda bırakıyor: depo anahtarının **yetki yüzeyi** (komşu depo sözleşmesi) ve başvuru adresinin gerçekten **posta alması** (DNS → 2.20).
 - ⚠️ **Kapı yazarken ölçülen üç fail-open — sonraki kapılar için geçerli:** (1) bir deseni **dosya genelinde** aramak yorum satırlarını da sayar (`data-exclude-search` `layout.tsx`'te 1 öznitelik + 1 yorum); (2) **iki jetonlu** desen araya giren bir cast'le kör kalır (`window.umami` ↔ `(window as unknown as {…}).umami`); (3) bir **önek süzgeci** aynı çağrının başka biçimini kaçırır (mutlak URL süzülüyor, göreli URL geçiyor). Üçü de negatif kontrolle bulundu, tahminle değil. Ayrıntı: `memory/urun-iddiasi-capa-dogrulamasi.md` → 7. kural.
@@ -49,7 +49,9 @@
 - ⚠️ **Görsel hattın iki mekanik kapısı metin tarafına da dokunuyor:** (1) `tests/iddia-metinleri.test.ts` `research/lib/screen-cleanup-v2.mjs`'i import ediyor ve "alt metin, hattın o ekrandan düşürdüğü kartı anamaz" kuralını koşuyor; (2) aynı dosya yasaklı iddia sözlüğünün yol-haritası terimlerini `CAPABILITIES.simdi`'ye karşı doğruluyor — bir kalem yayınlanırsa test kırmızı döner ve sözlük satırı çıkarılmalıdır.
 - **Görsel hattın bugünkü hâli (TASK-2.15 sonrası):** denetim **dört dallı**; yasaklı iddia sözlüğü `research/lib/claim-leak.mjs` (20 kalıp, beş sınıf), izin listesi `CLAIM_ALLOW` **tam değere** bakıyor ve bugün tek cümle içeriyor. Ad tablosu (`REPLACEMENTS`) ile iddia tablosu (`CLAIM_REPLACEMENTS`) **ayrıdır** — birleştirmek yasaklı ad kümesini "ciro"/"doluluk" gibi sıradan sözcüklerle doldurur (ölçüldü). Düşürme sözleşmesi artık "tam N eşleşme" (üçüncü alan). `sube.webp` hâlâ hattın dışında.
 - **B-044 açık kalan kalemler:** avatar baş harfleri (semt + `.av` sınıfının 25 düğümü) ve **tarih/makullük sınıfı** (`Açılış: Şubat 2026 · 4 aylık`, `Ekipte: Mar 2023`) — ikincisi sözlüğe **bilinçle alınmadı** (kalıp alınsaydı finans ekranının "son 6 ay" ekseni ve "Haziran 2026" başlığı kırmızıya düşerdi) ve Gelen Kutusu'nda kullanıcı kararı bekliyor. Hero'daki elle yazılmış "%78" kartı hattın çıktısı olmadığı için yapısal olarak görülemiyor → M6 F6.4.
-- **TASK-2.20 (MX kayıtları) kullanıcı eliyle ilerler** — DNS adımı Squarespace'te kullanıcıdadır; faz yönergeyi yazar, ölçer ve gerçek test postasıyla doğrular. Kullanıcı kaydı girmezse task ⏸️ duraklar, faz kilitlenmez.
+- ⚠️ **TASK-2.20 ⏸️ DURAKLADI — kullanıcıda iki adım var, ikisi de Squarespace/Google tarafında.** (1) `alpfitplus.com` DNS ekranında **Add preset → Google Workspace MX** (hazır seçenek kararlaştırılan beş kaydı birebir yazıyor — Squarespace'in kendi belgesinden doğrulandı; elle giriş yedeği task dokümanında). (2) Google yönetiminde `destek@alpfitplus.com`'un kullanıcı/takma ad/grup olarak **var olduğunun** teyidi — MX postayı yönlendirir ama kutuyu açmaz, bu adım atlanırsa test postası yine düşer ve sebebi DNS olmaz. Tam yönerge + ölçülen taban tablosu: `tasks/TASK-2.20.md` → Oturum Kayıtları.
+- **MX yokluğunun bugünkü biçimi ölçüldü ve devralınan özetten farklı:** apex'in `A` kaydı var (`76.76.21.21`, Vercel), o yüzden posta temiz bir "bu alan posta kabul etmiyor" reddi almıyor — **örtük MX** kuralıyla web sunucusunun IP'sine 25. porttan bağlanmaya çalışıyor. Bölgenin SOA serisi hâlâ `1` ve hostmaster `cloud-dns-hostmaster.google.com`: bölge Google Domains'ten taşındığından beri hiç düzenlenmemiş — B-011'in "MX hiç girilmedi" kök neden yönünü bağımsız destekliyor.
+- **Yasal metnin otuz gün taahhüdü İKİ yerde duruyor,** bir yerde değil: `legal.ts:230` (KVKK başvurusu) ve `:316` (silme talebi). Adres dört yerde geçiyor (`:48, 230, 316, 391`) ve **dördü de** `CONTACT.support` üzerinden — `src/` altında elle yazılmış tek adres yok (ölçüldü 2026-09-23). Devralınan satır çapaları (`site.ts:22`, `legal.ts:157/234/309`) TASK-2.16/2.17 sonrası çürümüştü, task dokümanında düzeltildi.
 - **Tarayıcı katmanlı kriterler `kanal: UAT` işaretli** (TASK-2.04 · 2.05 · 2.06 · 2.20; ilk üçü ölçülerek kapandı): projenin otomatik katmanı gerçek tarayıcı yerleşimini ve odağını ölçmüyor; kalıcı tarayıcı betiği bilinçli olarak "Kalite kapıları otomatik" fazına bırakıldı.
 - **Faz 2 kapsamı dokuz bulgu:** B-029 ✅ · B-018 ✅ · B-024 ✅ · B-011 · B-058 ✅ · B-034 ✅ · B-055 ✅ · B-060 ✅ · B-059'un onay-e-postası ayağı ✅ (yan kazanç B-040 ✅). **Kalan tek bulgu B-011** (2.20). ⚠️ B-024 kapandı ama **hukuki dayanak (KVKK m.9) ayağı B-008'de devam ediyor** — o hukukçunun işi, fazı kilitlemiyor.
 - **Sıra değişti:** "Görsel ve mobil iyileştirme" fazı alan adı geçişinin **önüne** alındı (kullanıcı kararı) — ölçülmüş AA kontrast ihlalleri (B-032) canlıya çıkmasın. B-032 · B-033 · B-031 o faza atandı.
@@ -84,7 +86,7 @@
 | 2.17 | TASK-2.17 — Ölçüm ve aktarım beyanları (B-024 kapandı) | ✅ Tamamlandı |
 | 2.18 | TASK-2.18 — Yasal beyan testi — depo içi sekiz olgu (B-060) | ✅ Tamamlandı |
 | 2.19 | TASK-2.19 — Yasal beyan testi — çapraz depo "12 ay" dalı (B-060 kapandı) | ✅ Tamamlandı |
-| 2.20 | TASK-2.20 — KVKK başvuru adresi: MX kayıtları ve test postası (B-011) | ⬜ Bekliyor |
+| 2.20 | TASK-2.20 — KVKK başvuru adresi: MX kayıtları ve test postası (B-011) | ⏸️ Duraklatıldı |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -95,6 +97,21 @@
 ## Son Task Özetleri
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
+
+### TASK-2.20 — KVKK başvuru adresi: yönerge yazıldı ve ölçüldü, DNS adımı kullanıcıda
+
+**Durum:** ⏸️ Duraklatıldı — 2026-09-23
+
+**Detay:** `tasks/TASK-2.20.md`
+
+**Özet:**
+- **Yönerge hafızadan değil kaynağından yazıldı.** Squarespace'in kendi belgesi doğruladı: `account.squarespace.com/domains` → alan adı → **DNS** → **Add preset** → **Google Workspace MX** seçeneği tam olarak kararlaştırılan beş kaydı yazıyor (`1 aspmx` · `5 alt1` · `5 alt2` · `10 alt3` · `10 alt4`), yani kullanıcının beş satırı elle girmesi gerekmiyor; elle giriş yolu (`Type`/`Name`=`@`/`Priority`/`Mail Server`) yedeğe alındı. Yönergeye **ikinci bir kullanıcı adımı** eklendi: MX postayı Google'a yönlendirir ama kutuyu açmaz — `destek@alpfitplus.com`'un kullanıcı/takma ad/grup olarak var olduğu ayrıca teyit edilmeli, yoksa test postası DNS doğruyken bile düşer.
+- **Dört ölçüm, hepsi bu turda.** (1) Apex MX **hâlâ NODATA** — `dns.google` ve `cloudflare-dns.com` ikisi de `Answer` yok + yalnız SOA, yani kayıt girilmemiş ve öngörülen ⏸️ hâli gerçekleşti. (2) Hedef küme tahmin değil kopya: `kiwiailab.com` bugün 5/5 kaydı aynı önceliklerle taşıyor. (3) **Bozulmama tabanı** alındı (SPF · site doğrulaması · Google DKIM · Resend DKIM · DMARC · 4 NS · SOA, TTL'leriyle) — Test Kriteri 2 kayıt girildikten sonra bu tabloya karşı doğrulanacak. (4) Apex `A` = `76.76.21.21`, `AAAA` yok: bugün posta **örtük MX** kuralıyla web sunucusunun IP'sine deneniyor, temiz red değil — devralınan "posta alamıyor" özeti doğru ama biçimi eksikmiş.
+- **İki devralınan çapa çürütüldü.** Task dokümanının satır çapaları (`site.ts:22`, `legal.ts:48/157/234/309`) TASK-2.16/2.17 sonrası kaymış; ölçülen hâl `site.ts:24` ve `legal.ts:48/230/316/391` ve otuz gün taahhüdü **iki** yerde duruyor (başvuru + silme), bir yerde değil. Dört geçişin dördü de `CONTACT.support` üzerinden — elle yazılmış adres yok. **Gerçek gönderim sınaması bilinçle koşturulmadı:** kanıtlayacağı olgu iki çözümleyiciyle zaten ölçülü ve başarısızlık sınıfı A kaydıyla ücretsiz belirlendi; karşılığında yeni olgu vermeyen bir dış servis çağrısı yapılmadı.
+
+**Test:** `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **211 geçti + 1 atlandı** (8 dosya geçti, 1 atlandı; 213 ms) — tur 19'un anahtarlı tabanıyla **birebir**, bu tur kod değiştirmediği için beklenen sonuç ve tabanı bağımsız doğruluyor. **Kaynak kodda değişiklik yok** (`src/` ve `research/` altında tek satır yok — task zaten "repo dosyası değişmez" diyor). **Kapsam uyarısı:** batarya adresin posta aldığını **ölçmez ve ölçemez** — `legal-consistency` dal 7 yalnız adresin `CONTACT.support`'tan geldiğini çiviliyor, `contact.test.ts`'in 20 testi telefon/e-posta **biçim** doğrulamasıdır ve alan adına hiç bakmaz; MX olgusunun kalıcı kapısı bilerek yok, evi M6 F6.3/F6.4. **Beş ölçüm betiği koşturulmadı** — render edilen yüzey bu turda hiç değişmedi.
+
+---
 
 ### TASK-2.19 — Yasal beyan kapısının çapraz depo dalı: "12 ay" mekanizmanın evinden okunuyor
 
@@ -108,27 +125,6 @@
 - **On dört negatif kontrolün on dördü kırmızı — ve biri kapıyı büyüttü.** Kaynak dokunulmaz olduğu için mutasyonlar `pb_hooks`'un scratchpad **kopyasına** uygulandı, test kopyaya `:ro` bağlanarak ayrı bir konteynerde koşturuldu; tur sonunda kaynağın md5'i tur başıyla birebir. Düzeneğin kendi pozitif çapası önce koşturuldu (bozulmamış kopya → çıkış 0 / 31 geçti) ve her mutasyon `cmp` ile doğrulandı. Üç paragraftan **yalnız biri** güncellendiğinde fragman kontrolü yeşil kaldı → **bölüm geneli ay kontrolü** eklendi ve tek o yakaladı. **B-060 kapandı ve arşive gitti** (43 → 42 açık bulgu).
 
 **Test:** Anahtarsız `npm test` **204 geçti + 2 atlandı** (taban 204 geçti + 1 atlandı — *geçen* birebir), anahtarlı **211 geçti + 1 atlandı**. `docker compose exec web npx tsc --noEmit` çıkış 0. Üretim derlemesi `docker compose build web-prod` çıkış 0. **Kaynak dosyalarda kalıcı değişiklik yok** — `src/`/`research/` altında tek satır değişmedi; iki negatif kontrol `legal.ts`'i geçici bozdu, ikisi de scratchpad yedeğinden `cp` ile geri alındı ve **md5 ile doğrulandı** (`git checkout`/`git restore` kullanılmadı). **Komşu depo dokunulmadı:** `lead_lib.js`/`retention.pb.js` md5'leri tur başıyla birebir. **Beş ölçüm** (render edilen yüzey bu turda hiç değişmedi, rakamlar tabanı bağımsız doğruluyor): `a11y` 8 rota **TOPLAM SORUN 0** · `mobile-audit` **9/9 yatay kaydırma yok**, dokunma hedefi **157** (taban birebir) · `font-guard` 16 sayfa / **85.015** karakter (taban birebir), eksik karakter yok · `scan` 390×844 `/kvkk` **9 kare / 7.373 px, konsol temiz** (taban birebir) · `perf` (3100) CLS ≤ 0,001, LCP 28-60 ms. **3100 bayatlık sondası:** üretim konteyneri saklama bölümünün üç cümlesini de döndürüyor (2/2/2 vuruş), yani ölçülen yüzey güncel.
-
----
-
-### TASK-2.18 — Yasal beyanları koruyan ilk kapı: depo içi sekiz olgu çivilendi
-
-**Durum:** ✅ Tamamlandı — 2026-09-23
-
-**Detay:** `tasks/archive/TASK-2.18.md`
-
-**Özet:**
-- **`tests/legal-consistency.test.ts` açıldı: 8 dal / 24 test, batarya 180 → 204 (dosya 8 → 9).** Paket yasal metni **kopyalamaz, ilişkiyi doğrular** — her dal cümleden kısa bir parça alıp o parçanın ilgili dokümanda **tam bir kez** geçtiğini ölçer (0 da >1 de kırar), sonra dayanağı ayrıca ölçer. Sessiz geçmeye karşı üç katman: iki yönlü `claimOnce` · her taramanın **boş kapsam bekçisi** (dosya sayısı tabanı + korpusta bilinen bir nişan dizesi) · karar fonksiyonlarının **pozitif çapa sondası**. Sekizinci dal task dokümanında yoktu, DURUM'un Not bloğundan geldi (bölge cümlesinin depo içi yarısı) — task dokümanı plan anında, Not bloğu bir gün sonra yazılmıştı, yenisi kazandı.
-- **On iki negatif kontrolün on ikisi kırmızı verdi — ve ikisi kapının KENDİ fail-open'ını buldu.** Dal 4 depo çağrılarını URL önekiyle süzüyordu, **göreli** bir okuma çağrısı süzgecin dışına düşüp yeşil kalıyordu; dal 2'nin yüzey deseni (`window.umami`) araya giren bir **TypeScript cast'i** yüzünden doğrudan izleyici çağrısını kaçırıyordu. İkisi de genişletildi (tüm `fetch` çağrılarının yöntem+URL kümesi · `umami…​.track(` çağrı deseni) ve dört biçimde ayrı ayrı kırmızı verdirildi. Sınama **düzeneğinin kendisi** de bir tur fail-open koştu — ANSI kodları temizlenmeden grep'lendiği için boş çıktı verdi, "hata yok" diye okunabilirdi; düzeneğe de pozitif çapa eklendi. Dal 3'ün sondası tek örnekten (**"Weekend"** — eski marka parçası, oysa dalın cümlesi gerçek **kişi** verisi hakkında) **52 parçanın ve 13 baş harfin tamamına** genişletildi.
-- **İki sınır bilerek çizildi, bir yan bulgu düşürüldü.** (a) *"Anahtar yalnızca yeni kayıt oluşturabilir, var olan kayıtları okuyamaz"* — anahtarın **yetkisi** komşu depoda yaşar; dal yalnız ölçülebilen yarıyı (*"sitenin kodu okumuyor"*) çiviler, devralınan yarı **çivilenmedi**. (b) Başvuru adresinin gerçekten posta alması DNS olgusudur, `npm test` ağ çağrısı yapmaz → 2.20. İkisi de kapının `ÖLÇÜLEMEYEN` yorum bloklarında yazılı. **Yan bulgu:** o cümlenin *"yalnızca oluşturabilir"* yarısı, ucun aynı anahtarla var olan kayda **PATCH** attığı gerçeğinden dar — metin düzeltmesi kapsam dışı, Gelen Kutusu'na düştü.
-
-**Test:** `npm test` **204 geçti + 1 atlandı** (taban 180 + 1). `docker compose exec web npx tsc --noEmit` çıkış 0. Üretim derlemesi `docker compose build web-prod` çıkış 0. **Kaynak dosyalarda hiçbir değişiklik yok** — `git diff HEAD -- src/ research/` boş; on iki negatif kontrol kırılmasının tamamı scratchpad yedeğinden geri alındı ve **md5 ile doğrulandı** (`git checkout`/`git restore` kullanılmadı). **Beş ölçüm** (render edilen yüzey HEAD ile birebir aynı olduğu için rakamlar TASK-2.17'nin tabanını bağımsız olarak doğruluyor): `a11y` 8 rota **TOPLAM SORUN 0** · `mobile-audit` **9/9 yatay kaydırma yok**, dokunma hedefi **157** (taban birebir) · `font-guard` 16 sayfa / **85.015** karakter (taban birebir), eksik karakter yok · `scan` 390×844 `/kvkk` 9 kare / 7.373 px, **konsol temiz** · `perf` (3100) CLS ≤ 0,001, LCP 28-280 ms. **3100 bayatlık sondası:** üretim konteyneri TASK-2.17'nin üç yeni cümlesini de döndürüyor (1/1/1 vuruş), yani ölçülen yüzey güncel — varsayılmadı, ölçüldü.
-
----
-
----
-
----
 
 ---
 
@@ -146,7 +142,10 @@
 
 <!-- Bu bölüm sadece /devflow:pause kullanıldığında doldurulur. Devam edildiğinde veya iş iptal edildiğinde silinir. -->
 
-> ⏸️ **Duraklatma yok** — Aktif çalışma devam ediyor.
+> ⏸️ **Duraklatıldı:** 2026-09-23
+> **Adım:** task çalıştırma — TASK-2.20 (KVKK başvuru adresi, B-011)
+> **Detay:** Task'ın repo tarafı bitti: Squarespace yönergesi kaynağından doğrulanarak yazıldı, bugünkü hâl ve bozulmama tabanı ölçüldü (apex MX hâlâ NODATA, iki çözümleyici). Kalan iki ayak — beş kaydın ölçümü ve gerçek test postası — **kullanıcının iki adımına** bağlı: (1) Squarespace DNS ekranında **Add preset → Google Workspace MX**, (2) Google yönetiminde `destek@alpfitplus.com` kutusunun/takma adının var olduğunun teyidi. İkisi bitince `/devflow:resume`.
+> **Handoff:** Task dokümanında — `tasks/TASK-2.20.md` → Oturum Kayıtları (kullanıcı yönergesi, ölçülen taban tablosu, "Sonraki Adım Detayı" beş maddelik sıra).
 
 <!-- Duraklatma durumunda format:
 > ⏸️ **Duraklatıldı:** [tarih]
@@ -157,7 +156,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.20.md` ⬜ — KVKK başvuru adresi: MX kayıtları ve test postası (B-011)
+**Aktif Task:** `tasks/TASK-2.20.md` ⏸️ — KVKK başvuru adresi: MX kayıtları ve test postası (B-011) · kullanıcının DNS adımı bekleniyor
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
