@@ -68,6 +68,8 @@
 - [audit-product SORU] Vercel fonksiyon bölgesi **`iad1`** (Washington DC), kenar `fra1` — Türkiye-tek-pazar sitede `/api/demo` Atlantik'i geçiyor; ölçüm: fonksiyon başına ~+105-110 ms, ilk çağrı 987 ms — önerim: F7.5 kapsam tartışmasına girsin
 - [audit-product SORU] `Assistant.tsx`'te `donanim` düğümü **tek yön kapı**: dokuz düğümün hiçbirinin devam sorusunda yok. Bilinçli daraltma mı? — önerim: bir-iki düğümün `next`'ine eklensin ya da chip kümesi her zaman bir kök konusu içersin
 
+- [PHASE-2] `discuss-phase` Adım 7 DURUM'un `Adım` alanına **her hâlde `research`** yazdırıyor; oysa Adım 6 aktif bir fazın *yeniden* tartışılabileceğini kendisi tanıyor. Bu turda harfiyen uygulansaydı 19 task'ı bitmiş bir faz araştırma adımına geri gönderilecekti — `verify` yazıldı ve gerekçesi rapora kondu. DevFlow yönteminin geneline dair; evi faz retrosunun "DevFlow'a Öneri" bölümü (review-phase triyajı)
+
 - [TASK-2.05] Demo formunun onay ve hata kutularına artık odak taşınıyor, ama kutular `role="status"` / `role="alert"` canlı bölgesini de taşımaya devam ediyor — ekran okuyucu içeriği **iki kez** duyurabilir (bir kez canlı bölge, bir kez odak). Projede ekran okuyucu ölçüm kanalı yok, ölçülemedi; ayırt edici `DemoForm.tsx` sonuç kutularının `aria-live` değeri
 
 ## Açık Bulgular
