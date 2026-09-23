@@ -90,6 +90,7 @@
 **Bağımlılık:** F7.3, F7.4, M6 F6.3 yeşil, M3 F3.2–F3.3 çalışıyor
 
 **Edge Case'ler:**
+- **Apex'te MX kaydı yok — KVKK başvuru adresi posta almıyor** (B-011; Faz 2'nin kapsam kararıyla 2026-09-23'te bu faza taşındı). Yasal metin `destek@alpfitplus.com`'a otuz gün taahhüdü veriyor (`legal.ts:230` başvuru + `:316` silme, ikisi de `CONTACT.support` üzerinden) ve taahhüt **tam da bu fazda** gerçek olur: site alan adına bağlandığı anda metin ziyaretçiye görünür hâle gelir. İki adım kullanıcıdadır (Squarespace'te beş MX kaydı + Google'da kutunun/takma adın var olması); kaynağından doğrulanmış yönerge, TXT/NS/SOA bozulmama tabanı, bugünkü başarısızlık biçimi (örtük MX) ve kapanış ölçümünün sırası `bulgular/B-011-apex-mx-kaydi-yok.md` → Çözüm Yolu'nda hazır — bu faz sıfırdan başlamaz. ⚠️ Yukarıdaki `DEMO_FROM` kriteriyle **karıştırma**: giden posta bugün zaten çalışıyor (SPF + iki DKIM yayında, lead bildirimi `delivered`), eksik olan yalnız **gelen** postadır
 - TR adresler v2'de aynı yolda (`/demo`, `/fiyat`…) — 301 gerekmez ama ölçülür
 - Geri dönüş: DNS'i v1 projesine geri çevirmek; `GIT-STRATEJI.md` (kickoff-verify'da doğar) geri dönüş yönünü yazar
 - **Env taşıma — Production'da üç değer değişir** (bugün önizlemeye göre kurulu):

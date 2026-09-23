@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — audit-product triyaj turu (step-by-step): gelen kutusu **37 → 29**. Üç satır mezun oldu (cevabı alınmış soru · TASK-2.07 ile düşen kalem · compose yorumu ölçümle düzelmiş), üç satır tazelendi (bayat kanıt atıfları 4→3 · yerel depo 25→**88** kayıt · yetenek sabitinin ölü alan envanteri), bir işaret düştü (B-059'un Faz 2 etiketi). **Dört soru karara bağlandı:** anahtar yetkisi cümlesi → **B-062 + QUICK-002** · tarih/makullük sınıfı → **Bilinçli Tercihler** (ölçüm soruyu üçte iki küçülttü) · hız sınırı sıralaması → **B-020'de yön kararı** (sayaç doğrulamadan sonra; istemci doğrulaması reddedildi) · Roller eşlemesi → **B-046'da ölçüldü** (antrenör satırı hata, diyetisyen açık kalıyor). Üç 🔴 lead hattı bulgusu (B-020 · B-054 · B-037) **tek fazda** ele alınacak (kullanıcı kararı). Açık bulgu 42 → **43** (B-062).
+**Son Güncelleme:** 2026-09-23 — Faz 2 yeniden kapsam tartışması: **B-011 fazdan çıktı ve "Alan adı geçişi" fazına taşındı** (kullanıcı kararı) — kalan iki ayağı kullanıcının DNS adımına bağlıydı, ILKELER gereği fazı kilitlemez. Index satırından `→ Faz 2` işareti kalktı, atomun **Durum**'u Açık'a döndü. TASK-2.20'nin ürettiği ölçülmüş zemin **atoma mezun edildi** — arşive gömülseydi kimseye görünmezdi: Squarespace yönergesi (kaynağından doğrulandı) + ikinci kullanıcı adımı (Google'da kutu) + TXT/NS/SOA bozulmama tabanı + örtük-MX başarısızlık biçimi + kapanış ölçümünün sırası; çürük satır çapaları da düzeltildi (`site.ts:22`→`:24`, `legal.ts:133/198/273`→`:230/316/391`). Gelen kutusu **29** (değişmedi), açık bulgu **43** (değişmedi — B-011 kapanmadı, evi değişti).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -84,7 +84,7 @@
 
 - 🔴 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — `content-type` kontrolsüz çapraz-site POST **artık depoya satır yazıyor**; `null` gövde 500; 5 MB gövde kabul
 - 🔴 [B-054 — İletişim kuralı ters eksende gevşek](bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md) — meşru yazımlar 422; `0532111223`/`0000000000` **200 `stored:true`** — ulaşılamaz numara artık kayda geçiyor
-- 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok → Faz 2
+- 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — hâlâ NODATA (ölçüldü 2026-09-23); ölçülmüş yönerge atomda, iş alan adı geçişi fazına taşındı
 - 🔴 [B-032 — Ana sayfada ve segment sayfalarında ölçülmüş AA kontrast ihlalleri](bulgular/B-032-olculmus-aa-ihlalleri.md) — ürün turu soluk kartları 2,54:1, kapanış paragrafı 3,48:1; ILKELER pazarlıksız diyor
 - 🔴 [B-033 — 320 px'te Kurucu Programı bölümü içerik ve işlev kaybediyor](bulgular/B-033-320px-kurucu-programi-icerik-kaybi.md) — 18 metin düğümü 70 px kesiliyor, CTA etiketi dâhil; kapı yatay kaydırma görmediği için temiz diyor
 - 🔴 [B-020 — Hız sınırı doğrulamadan önce sayıyor, geçerli talep reddediliyor](bulgular/B-020-hiz-siniri-gecerli-talebi-reddediyor.md) — beş kez hata yapan kullanıcının düzeltilmiş talebi 429; 2026-09-22'de yeniden üretildi

@@ -1,6 +1,6 @@
 # TASK-2.20: KVKK başvuru adresi posta alır — MX kayıtları ve test postası (B-011)
 
-**Durum:** ⏸️ Duraklatıldı
+**Durum:** ❌ İptal
 
 <!-- KURAL: Durum alanı tek değer taşır ve değer kümesinin TEK KAYNAĞI TASKS-README → Durum Kodları'dır (⬜ Bekliyor · 🔄 Devam ediyor · ⏸️ Duraklatıldı · ✅ Tamamlandı · 🔴 Bloke · ❌ İptal). Buraya kısaltılmış bir menü kopyalama: kopya bir kez eksik yazıldı (⏸️/🔴/❌ düşmüştü) ve iki ev sessizce ayrıştı. -->
 **Modül:** M7 — Yayın ve Altyapı (`modules/M7-Yayin-ve-Altyapi.md`) · M1 yasal metin
@@ -229,9 +229,23 @@ Task'ın ölçülebilir yarısı bitti: bugünkü hâl, hedef küme, bozulmama t
 
 ---
 
+### Oturum — 2026-09-23 (kapanış)
+
+**Durum:** ❌ İptal — task bitirilmedi; **konusu kapsam kararıyla fazdan çıktı**, işin kendisi iptal edilmedi.
+
+**Ne oldu:** Faz 2'nin yeniden kapsam tartışmasında (`/devflow:discuss-phase`, 2026-09-23) kullanıcı B-011'i **"Alan adı geçişi" fazına taşıdı**. Gerekçe ILKELER'in pazarlıksız maddesidir: bu task'ın kalan iki ayağı (beş MX kaydının girilmesi + gerçek test postası) **kullanıcı tarafındaki bir DNS adımına** bağlıydı ve proje-dışı/kullanıcı-tarafı iş hiçbir fazın bitişini kilitleyemez. Hedef faz keyfi seçilmedi: bu task'ın kendi Feature alanı zaten *"F7.5'in ön koşulu"* diyordu ve otuz gün taahhüdü ancak site `alpfitplus.com`'a bağlandığında birine görünür hâle gelir — bugün site noindex bir önizleme adresinde, alan adını hâlâ v1 sunuyor. Fazın milestone'undan *"`destek@alpfitplus.com` test postası alıyor"* ayağı bu kararla düştü.
+
+**Üretilen iş kaybolmadı — mezun edildi.** Bu turun ölçülmüş çıktısının tamamı `_dev/bulgular/B-011-apex-mx-kaydi-yok.md` atomuna taşındı, çünkü arşiv tarihsel bir kayıttır ve oraya bırakılan kalan iş kimseye görünmez (BULGULAR → Bulgu Sistemi kuralı). Atoma giden dört şey: **(1)** Squarespace yönergesi (kaynağından doğrulanmış **Add preset → Google Workspace MX** yolu + beş satırlık elle giriş yedeği + "duran kaydı silme" uyarısı), **(2)** ikinci kullanıcı adımı (Google'da kutunun/takma adın var olması — MX postayı yönlendirir, kutuyu açmaz), **(3)** bozulmama tabanı tablosu (TXT/NS/SOA, TTL'leriyle) ve **(4)** bugünkü başarısızlık biçimi (apex A `76.76.21.21` → **örtük MX** ile web IP'sine 25. port denemesi, temiz red değil). Kapanış ölçümünün beş adımlık sırası ve negatif önbellek ayrımı da atoma yazıldı. Atomun **Durum**'u `→ Faz 2`'den **Açık**'a döndü ve index satırından faz işareti kalktı.
+
+**Yan kazanç — çürük çapalar atoma da işlendi.** Bu turda ölçülen doğru satır numaraları artık bulgunun kendi evinde duruyor: `site.ts:22` → **`:24`**, `legal.ts:133/198/273` → **`:230/316/391`**; ayrıca otuz gün taahhüdünün **iki** yerde durduğu (başvuru `:230` + silme `:316`) yazıldı. Atom bunu taşımasaydı sonraki faz aynı çürük çapalarla başlayacaktı.
+
+**Kod değişikliği yok** — task zaten "repo dosyası değişmez" diyor; DNS bölgesi Squarespace'te. Bu kapanış turunda `src/` ve `research/` altında tek satır değişmedi ve test koşturulmadı: kod değişmediği için ölçecek yeni bir şey yok, tur 19'un anahtarlı tabanı (**211 geçti + 1 atlandı**) geçerli kalır.
+
+---
+
 ## Sonuç Özeti
 
-<!-- Task tamamlanınca doldurulacak -->
+**❌ İptal — 2026-09-23.** Task'ın ölçülebilir yarısı yapıldı (yönerge kaynağından doğrulandı; bugünkü hâl, hedef küme, bozulmama tabanı ve başarısızlık biçimi ölçüldü); bitirilemeyen yarısı tek bir dış girdiye — kullanıcının Squarespace DNS adımına — bağlıydı. Kapsam kararıyla B-011 "Alan adı geçişi" fazına taşındı, üretilen ölçülmüş zemin bulgunun atomuna mezun edildi. **Bulgu açık kalır**; hiçbir şey kaybolmadı, yalnızca evi değişti.
 
 ---
 
