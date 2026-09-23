@@ -97,105 +97,94 @@ Bu faz bir **bulgu fazıdır**: yeni yetenek getirmez, tamamlanmış feature'lar
 
 ## Araştırma Bulguları
 
-> `/devflow:research-phase` oturumunda dolduruldu (2026-09-23). Bu turun bütün rakamları bu oturumda ölçüldü; devralınan rakamlar ayrıca **yeniden** ölçüldü (aşağıda → Devralınan iddiaların ölçümü).
+> `/devflow:research-phase` oturumunda dolduruldu (2026-09-23). Bu turun bütün rakamları bu oturumda ölçüldü; devralınan rakamlar ayrıca **yeniden** ölçüldü.
+>
+> **Bölme çocuğu:** `PHASE-3-ARASTIRMA.md` — değerlendirilen yaklaşımların tam karşılaştırması, devralınan dokuz iddianın ölçüm tablosu, ölçülmüş tuzakların tamamı ve tanımlayıcı kaynakları (araştırma-detayı).
 
-### Değerlendirilen Yaklaşımlar
+### Seçilen Yaklaşımlar — özet
 
-**1. Kontrast ölçümü — hesaplanmış stil mi, piksel mi**
+Tam karşılaştırma (elenenler, ölçüm çıktıları, rakamlar) → `PHASE-3-ARASTIRMA.md`. Seçilenler:
 
-- *Hesaplanmış stil (bugünkü model), kör noktalar yamayla kapatılır:* ucuz ama gradyan/fotoğraf zemini ve gradyanla boyanmış metin **yapısal olarak** temsil edilemez — tek renk yoktur, metnin rengi `transparent`'tır. Yama sayısı arttıkça `skipped` büyür, sıfır dar kalır.
-- *Piksel ölçümü:* iki kare (normal / metni görünmez) farkından glif maskesi; **metin rengi CSS'ten**, zemin maskenin altındaki **gerçek pikselden**; ata opaklık çarpımı renge uygulanır.
-- **Seçilen: piksel ölçümü.** Bu oturumda sıfırdan prototiplendi ve çalıştı: B-032'nin kayıtlı rakamlarını **birebir** yeniden üretti (kapanış paragrafı `p02=3,97 / min=3,83` — kayıt `3,97 / 3,83-3,90`; desenli zemin `p02=4,06 / min=3,95 / med=4,63` — kayıt birebir aynı). Tek değişiklikle B-031'in (1), (2) ve (3) numaralı kör noktalarını birden kapatıyor.
+1. **Kontrast ölçümü piksele taşınır.** İki karenin (normal / metni görünmez) farkından glif maskesi; **metin rengi CSS'ten**, zemin maskenin altındaki **gerçek pikselden**; ata opaklık çarpımı renge uygulanır. Bu oturumda sıfırdan prototiplendi ve B-032'nin kayıtlı rakamlarını **birebir** yeniden üretti. Tek değişiklikle B-031'in üç kör noktasını birden kapatır.
+2. **Metin rengi pikselden ALINMAZ.** Prototipin ilk turu bunu yaptı ve 100 ölçümün **95'ini** eşik altı gösterdi — okunan şey metin değil **antialias kenarıydı**. Morfolojik erozyon ince yazıda çalışmıyor. Düzeltmeden sonra eşik altı 95 → 1'e düştü.
+3. **Ölçüm penceresi kaydırmalıdır.** Tek ekran ölçümü B-032'nin kalemlerinin **hiçbirini** görmüyor (1440 px'te ilk ekranda 0, sayfa tamamında 21). Sayfa `0,9 × viewport` adımlarla gezilir.
+4. **Rota listesi `/sitemap.xml`'den türer.** Araştırma konteyneri yalnız `./research`'ü görüyor, `sitemap.ts` import edilemez. Ölçüldü: **15 + 1 = 16 rota** ve yeni sayfa eklendiğinde liste kendiliğinden büyür.
+5. **Kırpma dedektörü muafiyetsiz kurulamaz.** Ham hâli **59 sahte pozitif** verdi (kayan şerit ve yatay kaydırılabilir kaplar bilerek kırpılır). Muafiyetle sonuç: **320 px'te 19 gerçek kırpılmış düğüm, 390 px'te 0.**
+6. **Hareket azaltma bir tercih değil, ölçümün ön koşuludur.** Ata opaklık çarpımı uygulandığı anda `Reveal`'in geçiş ortası opaklıkları sahte ihlal üretiyor (beş ara değer ölçüldü). Aynı koşum M2 F2.3'ün hiç ölçülmemiş kriterini de doğruladı: hareket azaltma açıkken ara opaklık kalmıyor.
 
-**2. Glif çekirdeğini kenar pikselinden ayırma — ölçülmüş tek doğru yol**
+**Yeni bağımlılık gerekmiyor** — playwright + sharp (ikisi de araştırma konteynerinde kurulu) yetiyor.
 
-Prototipin ilk turu metin rengini **boyanan pikselden** aldı ve 100 ölçümün **95'ini** eşik altı gösterdi; rakamların `med`'i 17'ye çıkarken `p02`'si 1,1'de kalıyordu — yani okunan şey metin değil **antialias kenarıydı**. Glif gövdesini morfolojik erozyonla (4-komşu testi) ayıklamak ince yazıda işe yaramıyor: 11-15 px gövde metninin inmesi çoğu yerde tek piksel, iç pikseli yok. **Doğru yol:** fg CSS'ten gelir (antialias hiç karışmaz), piksel yalnız **zemini** verir. Bu düzeltmeden sonra aynı sayfalarda eşik altı 95 → 1'e düştü ve kalan tek kalem 404'teki dev rakamdı.
+### Devralınan dokuz iddianın ölçümü — sonuçlar
 
-**3. Ölçüm penceresi — tek ekran mı, kaydırmalı mı**
+Tam tablo (rakamlar ve gerekçeler) → `PHASE-3-ARASTIRMA.md`. Kapsamı değiştiren dört sonuç:
 
-Tek ekran (viewport) ölçümü B-032'nin kalemlerinin **hiçbirini** görmüyor; hepsi ilk ekranın altında (ölçüldü: 1440 px'te ilk ekranda ihlal 0, sayfa tamamında 21). **Seçilen:** sayfa `0,9 × viewport` adımlarla ekran ekran gezilir, her adımda iki kare alınır. Ana sayfa 1440 px'te 13 adım, `/ozellikler` 10 adım.
+- ⚠️ **"Çalışan piksel-kontrast uygulaması ve kırpma dedektörü scratchpad'de, devralınabilir" — ÇÜRÜDÜ.** Adı geçen altı betiğin hiçbiri makinede yok. **İkisi de bu oturumda sıfırdan yazıldı** ve task planı *"devralınan kodu uyarla"* değil **"yaz"** olarak boyutlandı.
+- ⚠️ **"Ölçülmüş beş kontrast ihlali" — EKSİK, gerçek küme daha geniş.** Soluk kartların **başlıkları** kayıttaki hiçbir rakamdan kötü (**1,13:1**); iki yeni yüzey (**3,47** ve **3,65**); gradyanla boyanmış metin 5 değil **11 benzersiz** yerde. Kullanıcı kararı: **hepsi düzelir.**
+- ⚠️ **"Antrenör satırı tek satırlık hata, doğru ekran kümede zaten var" — İDDİA EKSİK.** Doğru içerik var ama görsel **1200×866, bir masaüstü ekranı**; antrenör rolü `device: "mobil"`. Ürünün demo destesinde `.phone` yüzeyi üç dosyada var, **antrenör telefonu yok** — bu yüzden istenen ekran sayısı ikiye çıktı.
+- ⚠️ **"Font preload HTML'de iki kez yazılmış" — ÇÜRÜDÜ.** Yayınlanan HTML'de **2 etiket**; tekrar yok. Bu alt kalem kapsamdan düştü.
 
-**4. Rota listesinin tek kaynağı — `sitemap.ts` import edilemez**
+Doğrulananlar: B-032'nin dört kalemi (rakamlar birebir) · B-033 (320 px'te 19 düğüm, 390 px'te 0) · B-022 (390 px'te 6 sayfa, **320 px'te 16 sayfanın 13'ü**) · "157 küçük hedef" → **19 benzersiz kritik hedef** + 324 gövde metni bağlantısı · B-051 (karar günlüğünün üç dosyasında da kayıt yok) · B-046'nın font ayağı (küme doğru, fontlar hiç değişmemiş). B-057'nin **mekanizmaları** kodda doğrulandı ama **rakamları bayat** — düzeltme task'ı kendi öncesi/sonrası ölçümünü kendisi alır.
 
-Araştırma konteyneri depoyu değil **yalnız `./research` dizinini** görüyor (`docker-compose.yml` → `research.volumes`), yani `src/app/sitemap.ts` ya da `src/content/segments.ts` doğrudan okunamaz. **Seçilen:** liste ayakta olan siteden `/sitemap.xml` ile HTTP üzerinden türetilir, `/olmayan-sayfa` elle eklenir. Ölçüldü: **15 + 1 = 16 rota** — hedeflenen kapsamın tam karşılığı, ve yeni sayfa eklendiğinde liste kendiliğinden büyür.
+### Tuzaklar — kısa liste
 
-**5. Kırpılmış taşma dedektörü ve zorunlu muafiyeti**
+Tam metin ve ölçümleri → `PHASE-3-ARASTIRMA.md`. Başlıklar: metin rengini pikselden alma · kırpma dedektörünü muafiyetsiz kurma · kontrastı hareket azaltma olmadan ölçme · **yapışkan katmanlar ölçüm dışı bırakıldı ve bu bir borçtur** (Header'ın gezinme bağlantıları hiç ölçülmüyor; kapı onları ayrı bir pasta, kaydırma sıfırdayken ölçmeli) · Roller şeridinin 320 px kalemi kırpma dedektörüne **görünmez** (ayrı ölçüt gerekir) · **3100 bayat olabilir** (`build` konteyneri yeniden yaratmaz, `up -d` gerekir) · **bulamayan seçici betiği yeşil bırakır** (her tur eşleşme sayısını basar).
 
-Ölçüt: metin taşıyan düğümün sınır kutusu, onu kırpan atasının kutusunun **dışına** taşıyor mu. Ham hâliyle çalışmıyor — **muafiyetsiz 59 sahte pozitif** verdi (kayan tanıtım şeridi ve yatay kaydırılabilir kaplar bilerek kırpılır ve içerik zamanla/kaydırmayla erişilebilir). **Seçilen:** kırpan ata `overflow-x: auto|scroll` ise ya da düğümün ata zincirinde çalışan bir CSS animasyonu varsa kalem **muaf** sayılır ve ayrı sayılır. Muafiyetle birlikte sonuç: **320 px'te 19 gerçek kırpılmış düğüm, 390 px'te 0.**
-
-**6. Hareket azaltma — kontrast ölçümünün ön koşulu, tercih değil**
-
-Ata opaklık çarpımı uygulandığı anda `Reveal` sarmalayıcısının **geçiş ortası** opaklıkları ölçüme giriyor (ölçülen ara değerler: 0,459 · 0,618 · 0,666 · 0,711 · 0,818) ve sahte ihlaller üretiyor. B-031'in "Reveal kapıyı kör etmiyor" gözlemi **eski model için** doğruydu (orada yalnız elemanın kendi opaklığı okunuyordu); kör noktayı kapatmak bu sınıfı açıyor. **Seçilen:** kontrast ölçümü `prefers-reduced-motion: reduce` altında koşar. Aynı koşum **M2 F2.3'ün bugüne dek hiç ölçülmemiş kriterini de doğruladı**: hareket azaltma açıkken ara opaklık kalmıyor, yani Reveal tercihe gerçekten saygı gösteriyor.
-
-### Kullanılacak Araçlar/Kütüphaneler
-
-- **playwright** (araştırma konteynerinde kurulu, `Dockerfile.research`) — ekran görüntüsü, `reducedMotion`, `javaScriptEnabled`, `deviceScaleFactor`, viewport.
-- **sharp** (aynı konteynerde kurulu) — ham piksel erişimi (`raw().toBuffer()`).
-- **Yeni bağımlılık gerekmiyor.** Piksel yöntemi, kırpma dedektörü, zoom ve hareket-azaltma eksenlerinin hepsi bu ikisiyle kuruluyor — prototiplerle doğrulandı.
-
-### Dikkat Edilecekler
-
-**Devralınan iddiaların ölçümü** (kapsam bunların üzerine kurulmuştu; hepsi bu oturumda yeniden ölçüldü):
-
-| # | Devralınan iddia | Sonuç |
-|---|---|---|
-| 1 | "Çalışan piksel-kontrast uygulaması ve kırpma dedektörü scratchpad'de bırakıldı, **devralınabilir**" (B-031, B-033) | **ÇÜRÜDÜ.** Adı geçen altı betiğin hiçbiri makinede yok (dosya sistemi geneli arandı). Scratchpad oturuma özgü. **İkisi de bu oturumda sıfırdan yazıldı** — task planı "devralınan kodu uyarla" değil "yaz" olarak boyutlanır |
-| 2 | B-032 kalem 1/2/4/5 — soluk kartlar, kapanış paragrafı, desenli zemin, 404 rakamı | **DOĞRULANDI**, rakamlar birebir: soluk kart gövdesi 2,52-2,53 · etiket 2,98-3,00 · kapanış paragrafı `p02` 3,97 · desenli zemin `p02` 4,06 · 404 rakamı 1,12 |
-| 3 | "**Ölçülmüş beş** kontrast ihlali" (milestone ve kapsam) | **EKSİK — gerçek küme daha geniş.** (a) soluk kartların **başlıkları** da eşik altı ve kayıttaki hiçbir rakamdan kötü: **1,13:1** (gereken 3) — "Gün, tek ekranda" · "Şubeler yan yana"; (b) iki yeni yüzey: "Kulübünüzün diyetisyeni aynı platformda…" **3,47** ve boks sayfasında "Gelmedi kolonu raporda ayrı" **3,65**; (c) gradyanla boyanmış metin 5 değil **11 benzersiz** yerde. Kullanıcı kararı: **hepsi düzelir** (→ Teknik Kararlar) |
-| 4 | B-033 — 320 px'te içerik ve işlev kaybı, 390 px'te yok | **DOĞRULANDI:** 320 px'te **19** gerçek kırpılmış metin düğümü, 390 px'te **0**; 16 rotanın hiçbirinde yatay kaydırma yok (kapının bugünkü geçme şartı hâlâ sağlanıyor, yani kırpma yine sessiz). `Button.tsx`'in temel sınıfındaki `whitespace-nowrap` yerinde duruyor |
-| 5 | B-022 — mobilde ilk ekranda dönüşüm yüzeyi yok (4 sayfa + 3 yasal) | **DOĞRULANDI ve genişledi.** 390 px'te tam olarak sayılan 6 sayfa: `/fiyat` · `/segmentler` · `/demo` · üç yasal sayfa. **320 px'te 16 sayfanın 13'ü** boş — dar telefonda sorun çok daha geniş. `Header.tsx:94` (`lg:flex`) ve `Assistant.tsx:43` (`scrollY > 480`) mekanizmaları yerinde |
-| 6 | "157 küçük dokunma hedefi" (kademeli kural buna dayanıyordu) | **SINIFLANDIRILDI.** Alt bilgi ve içerik yolu dışarıda tutulduğunda **19 benzersiz kritik hedef** kalıyor (16 sayfada 61 örnek); gövde metni içi bağlantı **324**. Kritik kümenin tamamı somut: şube seçici butonları (63-66×36), "WhatsApp'tan sorun" (172×20), telefon bağlantısı (147×20), form alanı (250×24) ve **onay kutusu (18×18)** |
-| 7 | B-046 — "Antrenör satırı **tek satırlık** bir hatadır, doğru ekran üretilen kümede **zaten var**" | **İDDİA EKSİK.** Doğru *içerik* var (`SHOTS.antrenor`) ama o görsel **1200×866 — bir masaüstü ekranı**; antrenör rolü `device: "mobil"`, yani tek satırlık düzeltmeden sonra da telefon çerçevesinde masaüstü panosu durur. Ürünün demo destesi tarandı: `.phone` yüzeyi **üç** dosyada var (`takvim.html` → üye, `grup.html` → üye, `patron-mobil.html` → patron) — **antrenör telefonu yok**. Kullanıcı kararı: diyetisyenle birlikte o da eklenecek |
-| 8 | B-057/B-046 — "font preload HTML'de iki kez yazılmış (4 etiket)" | **ÇÜRÜDÜ.** Yayınlanan HTML'de font preload'u **2 etiket** (`inter-400`, `sora-800`); tekrar yok. Bu alt kalem kapsamdan düşer |
-| 9 | B-051 — ızgaralar hakkında bilinçli tercih kaydı yok | **DOĞRULANDI**, bu kez karar günlüğünün **üç** dosyasının hepsinde arandı (aktif seri + iki arşiv aralığı): ikon ızgarası, `Benefits` ya da `Modules` hakkında kayıt yok. Izgaralar da yerinde (`Benefits` 8 kart / `lg:grid-cols-4`, `Modules` 5 kart / `lg:grid-cols-3`) |
-| 10 | B-057 — segment LCP'si ve font takası | **Mekanizmalar kodda doğrulandı** (`priority` + `sizes="100vw"` dekoratif kahraman görselinde; hiçbir `@font-face`'te `size-adjust`/`ascent-override` yok). **Rakamlar doğrulanmadı** — kayıttaki ölçüm `147c5e8` dağıtımına ait ve Faz 2 o günden beri çok sayıda commit gönderdi. Düzeltme task'ı kendi öncesi/sonrası ölçümünü kendisi alır |
-| 11 | B-046 — Sora'nın taşımadığı beş karakter | **Küme tarafı doğrulandı:** `₺` ve dört ok (`←↑→↓`) kümede **var** (153 karakter) ve font dosyaları daraltma commit'inden beri **hiç değişmedi** — yani beyan ↔ font sözleşmesindeki boşluk aynen duruyor |
-
-**Tuzaklar ve nasıl kaçınılacak:**
-
-- **Metin rengini boyanan pikselden alma.** Antialias kenarı ölçümün %95'ini sahte kırmızı yapar (ölçüldü). fg CSS'ten, zemin pikselden.
-- **Kırpma dedektörünü muafiyetsiz kurma.** Kayan tanıtım şeridi ve yatay kaydırılabilir kaplar 59 sahte pozitif üretir (ölçüldü).
-- **Kontrastı hareket azaltma olmadan ölçme.** Reveal'in geçiş ortası opaklıkları ihlal gibi okunur (ölçüldü — beş ayrı ara değer).
-- **Yapışkan ve sabit katmanlar ekran ekran ölçümde her adımda yeniden görünür** ve koordinatları kayar; prototipte bu sınıf ölçüm dışı bırakıldı (3 sayfada 335 örnek) — **ama bu bir çözüm değil, bir borç:** Header'ın gezinme bağlantıları böylece hiç ölçülmüyor. Kapı bu sınıfı **ayrı bir pasta**, kaydırma sıfırdayken ölçmeli.
-- **Roller sekme şeridinin 320 px kalemi kırpma dedektörüne görünmez** — şerit yatay kaydırılabilir olduğu için muafiyete düşer. Ayrı ölçüt gerekir: kaydırılabilir şeritte **tek bir öğe** pencereden genişse kart hiçbir zaman tümüyle görünmez.
-- **3100 bayat olabilir.** Kapılar artık yayın kopyasını ölçecek: `docker compose build web-prod` imajı tazeler ama konteyneri **yeniden yaratmaz** — `docker compose --profile prod up -d web-prod` gerekir (`memory/alternatif-env-ile-uretim-derlemesi.md`).
-- **Bulamayan seçici betiği yeşil bırakır.** Her ölçüm turu "kaç düğüm buldum" sayısını basmalı; prototiplerde bu kural uygulandı ve iki kez kör seçici yakalandı.
-
-**Tanımlayıcıların kaynağı** (plan ve task'lar bu çapaları yeniden türetmez — ⚠️ satır numaraları faz ilerledikçe kayar, kullanmadan önce `grep -n` ile yeniden konumlandır):
-
-| Tanımlayıcı | Kaynak |
-|---|---|
-| `research/scripts/a11y.mjs` · `mobile-audit.mjs` | repoda tanımlı — bu fazda değişecek iki kapı |
-| Rota listesi (16) | repoda tanımlı: `src/app/sitemap.ts` + `src/content/segments.ts` → **`/sitemap.xml`** üzerinden okunur |
-| `src/components/ui/Button.tsx` — temel sınıfta `whitespace-nowrap` | repoda tanımlı — B-033'ün tabanı |
-| `src/components/sections/ProductStory.tsx:223` `lg:opacity-45` · `:156` `priority={i === 0}` (`hidden lg:block` içinde) · `:159` `opacity-0` (`aria-hidden` yok) | repoda tanımlı |
-| `src/components/sections/FinalCta.tsx:31` `text-ink-deep/75` | repoda tanımlı — tek değişiklik beş sayfayı düzeltir |
-| `src/app/globals.css:203` `.text-gradient-sage` | repoda tanımlı — 9 bölüm dosyasında kullanılıyor, 11 benzersiz metin |
-| `src/app/not-found.tsx:14` dev rakam · `src/app/global-error.tsx` eşi | repoda tanımlı — `aria-hidden` **yok**; sayfanın `h1`'i hatayı zaten söylüyor (doğrulandı), yani dekoratif ilan bilgi kaybı üretmiyor |
-| `src/components/sections/Roles.tsx:11-16` `VISUAL` eşlemesi · `src/content/shots.ts` yedi anahtar | repoda tanımlı |
-| `src/components/layout/Header.tsx:94` (`lg:flex`) · `Assistant.tsx:43` (`scrollY > 480`) · `src/content/site.ts:21` (`wa.me`, `?text=` yok) | repoda tanımlı — B-022'nin üç mekanizması |
-| `public/foto/salon-genis-wide.webp` (2000×760) | repoda **var ama öksüz** — hiçbir yerden referans verilmiyor; bant slotlarının adayı |
-| Antrenör telefon ekranı · diyetisyen ekranı | **dış + yeni** — `../Alpfit.v1/demo/` (salt okunur, kullanıcı ekler); bugün deste sekiz ekran taşıyor ve ikisi de yok |
-| `size-adjust` / `ascent-override` yedek yüz tanımları | **yeni** — `src/app/globals.css`'te bugün hiç yok |
+**Tanımlayıcıların kaynağı** (dosya yolları, hangi çapanın repoda var / yeni / dış olduğu) → `PHASE-3-ARASTIRMA.md`. ⚠️ Satır numaraları faz ilerledikçe kayar; kullanmadan önce `grep -n` ile yeniden konumlandır.
 
 ### Teknik Kararlar
 
-- **Kontrast ihlallerinin tamamı bu fazda düzelir** (kullanıcı kararı, 2026-09-23) — kayıtlı beş kalem değil, ölçümün bulduğu küme. Gerekçe: yeni kapı hepsini kırmızıya çevirecek; düzeltilmeyen kalem için kapıya adıyla muafiyet yazmak gerekirdi ve muafiyet listesi zamanla unutulur. **Milestone'un "beş" sayısı ölçümle eskidi; cümle yeniden yazılmaz**, gerçek küme bu bölümdeki tablodadır (3. satır).
-- **Kontrast ve mobil kapıları yayın kopyasını ölçer** (kullanıcı kararı) — bugünkü geliştirme sunucusu hedefi yerine üretim konteyneri. Gerekçe: ölçülen ile yayınlanan aynı şey olur; bedeli her koşumdan önce imaj tazeliği ve bunun kendi tuzağı yukarıda yazılı.
-- **Dokunma hedefi kuralının mekanik ölçütü:** buton · form alanı · sekme · menü (`header`/`nav`) · `/demo`, `wa.me` ve `tel:` hedefli bağlantılar **kırmızıya düşürür** (19 hedef); alt bilgi **ve içerik yolu** bağlantıları ölçülür ve raporlanır ama düşürmez (kullanıcı kararı — ikisi de gezinme yüzeyi, dönüşüm yüzeyi değil).
-- **Antrenör ve diyetisyen ekranları birlikte istenir** (kullanıcı kararı): ürünün demo destesine iki ekran eklenecek, görsel hattı ikisini de olağan biçimde üretecek. **Faz bu adıma kilitlenmez** — gelmezse antrenör sekmesi tek satırlık düzeltmeyi alır (doğru içerik, hâlâ masaüstü çerçevede) ve iki kalem de kanvasta açık durur.
-- **Kontrast ölçümü hareket azaltma altında koşar.** Bu bir eksen tercihi değil, ölçümün doğruluk koşulu (yukarıda 6. yaklaşım). Turun diğer üç yeni ekseni (%200/%400 büyütme, JavaScript kapalı, yatay tutuş) keşif turunda kalır ve kapıya girmez — kapsam kararı bu fazın kapı işini a11y/mobil ayağıyla sınırlamıştı.
-- **Gradyanla boyanmış metin piksel yöntemiyle de ölçülemez** (rengi CSS'te yok) ve ayrı ele alınır: 11 benzersiz metnin rengi kaynağındaki en açık duraktan okunur ve zemine karşı sınanır. Bu sınıf kapıda **"ölçülemeyen"** değil, kendi dalı olarak sayılır — yoksa düzeltildikten sonra da eşikte görünmez kalır.
+- **Kontrast ihlallerinin tamamı bu fazda düzelir** (kullanıcı kararı, 2026-09-23) — kayıtlı beş kalem değil, ölçümün bulduğu küme. Gerekçe: yeni kapı hepsini kırmızıya çevirecek; düzeltilmeyen kalem için kapıya adıyla muafiyet yazmak gerekirdi ve muafiyet listesi zamanla unutulur. **Milestone'un "beş" sayısı ölçümle eskidi; cümle yeniden yazılmaz**, gerçek küme çocuk dokümandaki tablodadır.
+- **Kontrast ve mobil kapıları yayın kopyasını ölçer** (kullanıcı kararı) — geliştirme sunucusu yerine üretim konteyneri; bedeli her koşumdan önce imaj tazeliği.
+- **Dokunma hedefi kuralının mekanik ölçütü:** buton · form alanı · sekme · menü (`header`/`nav`) · `/demo`, `wa.me` ve `tel:` hedefli bağlantılar **kırmızıya düşürür** (19 hedef); alt bilgi **ve içerik yolu** bağlantıları ölçülür ve raporlanır ama düşürmez.
+- **Antrenör ve diyetisyen ekranları birlikte istenir** (kullanıcı kararı); **faz bu adıma kilitlenmez** — gelmezse antrenör sekmesi tek satırlık düzeltmeyi alır ve iki kalem de kanvasta açık durur.
+- **Kontrast ölçümü hareket azaltma altında koşar.** Turun diğer üç yeni ekseni (%200/%400 büyütme, JavaScript kapalı, yatay tutuş) keşif turunda kalır ve **kapıya girmez**.
+- **Gradyanla boyanmış metin piksel yöntemiyle de ölçülemez** (rengi CSS'te yok) ve ayrı ele alınır: 11 benzersiz metnin rengi kaynağındaki **en açık duraktan** okunur ve zemine karşı sınanır. Bu sınıf kapıda **"ölçülemeyen" değil, kendi dalı** olarak sayılır — yoksa düzeltildikten sonra da eşikte görünmez kalır.
 
 ---
 
 ## Task Listesi
 
-> Bu bölüm `/devflow:plan-phase` oturumunda doldurulur.
+> `/devflow:plan-phase` oturumunda yazıldı (2026-09-23). **Tablo sırası = çalıştırma sırasıdır** (TASKS-README → Lineer Çalıştırma).
 
 <!-- KURAL: Task Listesi yalnızca özet tablodur (#, Task, Durum, kısa açıklama). Task'ın icra detayı / oturum kaydı / çalışma notu buraya değil `tasks/TASK-N.md`'ye yazılır — bu bölüme sızan detay şişmedir, temizlenir (bölme değil). -->
 
+Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksiz yapar) → **kapı** (ölçen kurulur; düzeltmeler ondan sonra hem tanımlanır hem doğrulanır) → **düzeltme** → **görsel/performans**.
+
+| # | Task | Durum | Açıklama |
+|---|------|-------|----------|
+| 3.01 | TASK-3.01 | ⬜ Bekliyor | Genişlik turu — 16 sayfa × 320/390/412/768/1440 px, bölüm bölüm |
+| 3.02 | TASK-3.02 | ⬜ Bekliyor | Dört yeni eksen turu — %200/%400 büyütme, hareket azaltma, JS kapalı, yatay tutuş |
+| 3.03 | TASK-3.03 | ⬜ Bekliyor | Kapı zemini — 16 rota tek kaynaktan, yayın kopyası hedefi, çıkış kodu, kapsam eşiği |
+| 3.04 | TASK-3.04 | ⬜ Bekliyor | Kontrast ölçümü piksele taşınır — glif maskesi, ata opaklığı, ekran ekran, hareket azaltma |
+| 3.05 | TASK-3.05 | ⬜ Bekliyor | Gradyanla boyanmış metin kapıda kendi dalı olur |
+| 3.06 | TASK-3.06 | ⬜ Bekliyor | Başlık hiyerarşisi kontrolü kapıya girer |
+| 3.07 | TASK-3.07 | ⬜ Bekliyor | Kırpılmış taşma dedektörü, 320 px ve kaydırılabilir şerit ölçütü |
+| 3.08 | TASK-3.08 | ⬜ Bekliyor | Dokunma hedefi — kritik küme kırmızı, gezinme yüzeyi raporlanır |
+| 3.09 | TASK-3.09 | ⬜ Bekliyor | Ürün turunun soluk adım kartları AA'ya çıkar (etiket · başlık · gövde) |
+| 3.10 | TASK-3.10 | ⬜ Bekliyor | Kapanış çağrısı paragrafı gradyan bant üzerinde AA'ya çıkar (5 sayfa) |
+| 3.11 | TASK-3.11 | ⬜ Bekliyor | Gradyanla boyanmış metnin durakları koyulaştırılır |
+| 3.12 | TASK-3.12 | ⬜ Bekliyor | Desenli zemin ve kalan iki kontrast yüzeyi |
+| 3.13 | TASK-3.13 | ⬜ Bekliyor | 404 / çöküş — dev rakam dekoratif olur, başlık hiyerarşisi düzelir |
+| 3.14 | TASK-3.14 | ⬜ Bekliyor | 320 px'te kesilen içerik ve işlev — `Button` tabanı + `FounderProgram` ızgarası |
+| 3.15 | TASK-3.15 | ⬜ Bekliyor | Roller — sekme şeridi 320 px'te sığar, görsel eşlemesi düzelir |
+| 3.16 | TASK-3.16 | ⬜ Bekliyor | Mobilde ilk ekranda demoya çıkan bir yol (+ WhatsApp yedeği yazılanları taşır) |
+| 3.17 | TASK-3.17 | ⬜ Bekliyor | Dönüşüme dokunan 19 hedef 44 px'e çıkar |
+| 3.18 | TASK-3.18 | ⬜ Bekliyor | Faydalar bölümünün 8 eşit kartı reddedilen kalıptan çıkar |
+| 3.19 | TASK-3.19 | ⬜ Bekliyor | Modüller bölümünün tırtıklı 5'li ızgarası yeniden kurulur |
+| 3.20 | TASK-3.20 | ⬜ Bekliyor | `priority`, `sizes` ve hi-dpi varyant tavanı gerçek yerleşime çekilir |
+| 3.21 | TASK-3.21 | ⬜ Bekliyor | Geçiş görselleri ağaçtan düşer, dekoratif bantların alt metni boşalır |
+| 3.22 | TASK-3.22 | ⬜ Bekliyor | Segment LCP görseli ve yedek yazı tipinin metrik eşlemesi |
+| 3.23 | TASK-3.23 | ⬜ Bekliyor | `font-guard` ikinci dal — küme ⊆ woff2 |
+| 3.24 | TASK-3.24 | ⬜ Bekliyor | **(koşullu)** Diyetisyen ve antrenör telefon ekranları üretilir |
+
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
+
+**Planlamanın iki yapısal kararı:**
+
+- **Kapı düzeltmelerden önce gelir.** Kullanıcı kararı *"kontrast ihlallerinin tamamı düzelir — kayıtlı beş kalem değil, ölçümün bulduğu küme"* demişti; o kümeyi **tanımlayan** şey yeni kapının kendisidir. Kapı önce kurulunca her düzeltme task'ı hem listesini oradan alır hem kırmızıyı yeşile çevirerek kendini doğrular. Bedeli: TASK-3.03'ten itibaren kapılar faz boyunca kırmızı koşar — CI olmadığı için bu hiçbir şeyi bloke etmez ve kapının çalıştığının kanıtıdır.
+- **İki keşif turu kapıdan da önce.** Turlar kapıların kapsamadığı eksenleri (büyütme, JS kapalı, yatay tutuş) tarar ve düzeltme listesini eksiksiz yapar. İkisi de **keşif ayağıdır**: kalan task'ların doğruluğunu değiştiren bir bulgu çıkarsa ayak ✅ kapanır, DURUM Adım'ı `plan`'a çekilir ve `plan-phase` revizyon modu devralır.
+
+**Fazı kilitlemeyen iki kalem:** TASK-3.24 ürün deposuna iki ekranın eklenmesine bağlıdır ve gelmezse ❌ İptal edilir (B-046 kanvasta açık kalır); kullanıcının gerçek telefon turu ise task değil, `verify-phase` UAT'ının konusudur.
 
 ---
 
