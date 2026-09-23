@@ -181,7 +181,7 @@ Gerekçelerin tam metni → `PHASE-2-ARASTIRMA.md` → Teknik Kararlar.
 | 2.18 | TASK-2.18 | ✅ Tamamlandı | Yasal beyan kapısı kuruldu: `tests/legal-consistency.test.ts`, **8 dal / 24 test** (sekizinci dal DURUM Not bloğundan — bölge cümlesinin depo içi yarısı), batarya 180 → **204**. Metin kopyalanmaz, ilişki doğrulanır; sessiz geçmeye karşı üç katman. **12 negatif kontrolün 12'si kırmızı**, ikisi kapının kendi fail-open'ını buldu (göreli URL'li depo okuması · cast'li doğrudan izleyici çağrısı). Anahtar yetkisi ve MX olgusu bilerek çivilenmedi (komşu depo / DNS) |
 | 2.19 | TASK-2.19 | ✅ Tamamlandı | "12 ay" dalı komşu depodan okunuyor: `web`'e `pb_hooks` `:ro` bağlandı (hedef `/app` dışında — içi repoya root sahipli dizin bırakıyor, ölçüldü), kapı `LEGAL_CONTRACT_HOOKS_DIR` ile açılıyor. Beyan parçası **ölçülen sayıdan türetiliyor**. Anahtar tanımsız 204 geçti + 2 atlandı (geçen taban birebir), tanımlı **211**; dosya 24 → 31 test. **14 negatif kontrolün 14'ü kırmızı** (kopya üzerinde — kaynak dokunulmaz); biri bölüm-geneli kontrolün hakkını verdi. **B-060 kapandı** |
 | 2.20 | TASK-2.20 | ❌ İptal | KVKK başvuru adresi posta alır (B-011) — **kapsam kararıyla "Alan adı geçişi" fazına taşındı** (2026-09-23). Ölçülebilir yarısı bu fazda yapıldı ve B-011 atomuna mezun edildi: Squarespace yönergesi kaynağından doğrulandı (**Add preset → Google Workspace MX**, kararlaştırılan beş kayıtla birebir), apex MX hâlâ NODATA (iki çözümleyici), referans küme `kiwiailab.com`'da 5/5, TXT/NS/SOA tabanı alındı, apex A `76.76.21.21` → bugünkü posta **örtük MX** ile web IP'sine düşüyor. Kalan iki ayak kullanıcının DNS adımına bağlıydı |
-| 2.21 | TASK-2.21 | ⬜ Bekliyor | Onay e-postası yalnızca doğrulanabilir bir alıcıya gider — UAT senaryo 26: uç, istek gövdesinde yazan her biçimsel geçerli adrese doğrulanmış göndericimizden e-posta yolluyor; sınırlayan kapılar ölçüldü (IP başına 5/10 dk, bal küpü, onay kutusu), adres sahipliği kapısı yok |
+| 2.21 | TASK-2.21 | ✅ Tamamlandı | Onay e-postası yalnızca doğrulanabilir bir alıcıya gider (UAT senaryo 26). İki kapı kondu: **adres başına tavan** (24 saatte 3, `confirmCapped`) ve **parametresiz onay metni** (ziyaretçinin yazdığı hiçbir şey alıcıya ulaşmıyor). Çift-katılım bilinçle alınmadı — dönüşüm yoluna dokunuyor, jeton yeni kişisel veri alanı açıyor (`docs/DECISIONS.md` 2026-09-23). Ziyaretçinin yanıtı, kayıt ve ekip bildirimi değişmedi |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -194,19 +194,19 @@ Gerekçelerin tam metni → `PHASE-2-ARASTIRMA.md` → Teknik Kararlar.
 > **Bölme çocuğu:** `PHASE-2-UAT.md` — 30 senaryonun tam tablosu ve otomatik kontrol dökümü (uat).
 
 **Tarih:** 2026-09-23
-**Toplam Senaryo:** 30 | **Geçen:** 29 | **Kalan:** 1 — **düzeltme task'ı doğurdu** (TASK-2.21)
+**Toplam Senaryo:** 30 | **Geçen:** 29 | **Kalan:** 1 — düzeltme task'ı doğurdu ve **TASK-2.21 ile kapandı** (2026-09-23)
 
 **Ölçüm yüzeyi:** yerel üretim imajı (3100, HEAD'ten yeniden derlendi), dev sunucusu (3000), canlı önizleme (`alpfitplus-web-v2.vercel.app`), `web` konteynerinde Vitest (9 dosya), araştırma konteynerinde Playwright (320/360/390/412/1440 px), görsel üretim hattı (kopya tablo ile, kaynak dokunulmadan), beş kapı betiği ve Vercel dağıtım listesi.
 
 **Kapıların kendisi sınandı — yeşiller kör değil.** Sekiz ters-çevirme koşuldu ve sekizi de kırmızı verdi: yayın kapısı (kalem «bugün var»a taşındı → 4 test dosyası düştü + dört rota HTTP 500), tüketici kapısı, yasal beyan kapısının iki yanı (metin ve kod), görsel denetimin ad ve iddia dalları, sözlüğün alt sınırı, `notify_lead` üç dalı, bal küpü kapısı. Bozulan her hâlde **girdi** bozuldu, kaynak değil; `src/` ve `research/` ağacı md5 ile geri yüklendi (`git status` temiz, `git checkout`/`git restore` kullanılmadı).
 
-**Kalan tek kalem:**
+**Kalan tek kalem — kapandı:**
 
 | # | Senaryo | Sonuç | Rota |
 |---|---------|-------|------|
-| 26 | Uç, talep sahibinin yazdığı adrese doğrulama yapmadan onay e-postası gönderiyor | ❌ Kaldı | → TASK-2.21 |
+| 26 | Uç, talep sahibinin yazdığı adrese doğrulama yapmadan onay e-postası gönderiyor | ❌ Kaldı → ✅ **kapandı** | TASK-2.21 (2026-09-23) |
 
-**Ölçülen sınırlayıcılar (kalan kalem için):** IP başına 10 dk / 5 istek (6. istek 429 — ölçüldü), bal küpü, onay kutusu zorunlu. Adresin sahipliğini gösteren kapı yok.
+**Ölçülen sınırlayıcılar (bulgu anında):** IP başına 10 dk / 5 istek (6. istek 429 — ölçüldü), bal küpü, onay kutusu zorunlu. Adresin sahipliğini gösteren kapı yoktu. **Bugün:** adres başına 24 saatte 3 onay e-postası (kötüye kullanım sondası: 6 denemede 3 gitti / 3 takıldı) ve onay metni ziyaretçinin yazdığı hiçbir şeyi taşımıyor. Adresin sahipliği hâlâ **doğrulanmıyor** — çift-katılım bilinçle alınmadı; kalan yüzey tavanlı ve içeriksiz.
 
 **Üç kalem otonom kolda kapanamadı ve kullanıcıya soruldu** (kullanıcı kararı: üçü de sorulsun): gerçek telefonda form denemesi · onay e-postasının gelen kutusu/spam yerleşimi · ekran okuyucuda onay kutusunun iki kez duyurulup duyurulmadığı. Üçü de bu fazın milestone kriterlerini **değil**, doğrulama kanalını ilgilendiriyor.
 

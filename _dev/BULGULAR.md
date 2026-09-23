@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — Faz 2 kabul testi (`verify-phase`): 30 senaryonun 29'u geçti. Kapsam-içi tek bulgu **TASK-2.21**'e bağlandı (uç, talep sahibinin yazdığı adrese doğrulama yapmadan onay e-postası gönderiyor) — kendi atomu açılmadı, evi düzeltme task'ı. Gelen Kutusu'na **bir** kapsam-dışı satır düştü: görsel hattının bir kez ölçülen çıktı-yüksekliği farkı. Faza dokunan kutu notları ve işaretsiz açık bulgular süpürüldü — **çözülmüş çıkan olmadı**; B-013 yarı kapandı (compose yorumundaki port düzeldi, README hâlâ 3001) ve tam kapanmadığı için mezun edilmedi. Gelen kutusu **30**, açık bulgu **43** (değişmedi).
+**Son Güncelleme:** 2026-09-23 — TASK-2.21 kapandı (onay e-postası artık adres başına tavanlı ve metni ziyaretçinin yazdığı hiçbir şeyi taşımıyor); UAT senaryo 26'nın evi düzeltme task'ıydı, kendi atomu açılmadığı için **açık bulgu sayısı değişmedi: 43**. Gelen Kutusu'na bir satır düştü: `docs/DECISIONS.md` kırmızı çizgiyi aşmış durumda (26.383 token) ve kesim yargısı reaktif `audit-docs` turuna ait. Kutu doğrudan sayıldı: **32 satır**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -73,6 +73,8 @@
 - [PHASE-2] Ürün görseli hattının çıktısı **bir kez** farklı yükseklik verdi: `finans.webp` altı koşumun birinde 1440×**606**, kalan beşinde 1440×**601** ve beş koşumun md5'i birebir aynı (yayındaki dosyayla da aynı). Yineletilemedi, mekanizma tahmin: başsız render'da yerleşim/font yarışı. Önemi: `src/content/shots.ts` yükseklikleri elle çivili (CLS için) — hat sessizce 5 px kaydırırsa boyut bildirimi bayatlar ve kimse görmez. Ölçüm verify-phase 2026-09-23 oturumunda, kopya tabloyla koşuldu
 
 - [TASK-2.05] Demo formunun onay ve hata kutularına artık odak taşınıyor, ama kutular `role="status"` / `role="alert"` canlı bölgesini de taşımaya devam ediyor — ekran okuyucu içeriği **iki kez** duyurabilir (bir kez canlı bölge, bir kez odak). Projede ekran okuyucu ölçüm kanalı yok, ölçülemedi; ayırt edici `DemoForm.tsx` sonuç kutularının `aria-live` değeri
+
+- [TASK-2.21] `_dev/docs/DECISIONS.md` **kırmızı çizginin üstünde**: `doc-scan.sh` 26.383 token (eşik ~20.000), 392 satır. Dokümanın kendi KURAL'ı çareyi zaten yazıyor — en eski kapanan aralık `DECISIONS-<ilk>..<son>.md`'ye mezun edilir ve buraya tek satırlık pointer düşer (bir kez yapıldı: 2026-09-10..2026-09-13). Bu turda yeni bir karar eklendi, yani ölçüm bir miktar daha yükseldi. Kesim sınırının nereye konacağı (hangi tarih aralığı kapanmış sayılır) yargı istiyor; evi reaktif `audit-docs` turu
 
 ## Açık Bulgular
 

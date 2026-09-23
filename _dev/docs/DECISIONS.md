@@ -19,6 +19,28 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-23 — Onay e-postasının alıcısı doğrulanmıyor: adres başına tavan + selamlamadaki serbest metnin kaldırılması
+
+**Bağlam:** TASK-2.07 (B-059) talep sahibine onay e-postasını açtı. Faz 2'nin kabul testi (senaryo 26, 2026-09-23) uçta şunu ölçtü: e-posta, **istek gövdesinde yazan her biçimsel geçerli adrese** gidiyor, doğrulanmış `alpfitplus.com` göndericisinden çıkıyor ve selamlamada istek sahibinin 120 karakterine kadar metnini taşıyor. Sınırlayan kapılar ölçüldü — IP başına 10 dk / 5 istek (6. istek `429`), bal küpü, onay kutusu — ama **adresin sahipliğini gösteren kapı yok**. Zarar içerik değil, gönderici itibarı ve istenmeyen posta. `isValidEmail`'i sıkılaştırmak çözüm değil: gevşekliği bilinçli (B-021/TASK-1.12) ve sorun biçim değil sahiplik.
+
+**Seçenekler:**
+1. **Adres başına tavan** — aynı alıcıya belirli bir pencerede en fazla N onay. Akışa dokunmaz; hacmi kırpar, kapatmaz.
+2. **Selamlamadaki serbest metni kaldır** — istek sahibinin yazdığı metin alıcıya hiç ulaşmaz; e-posta yine gider. Kötüye kullanımı **içeriksiz** bırakır.
+3. **Onayı ikinci adıma bağla** (çift katılım) — e-posta yalnız doğrulama bağlantısına tıklanınca gider. En sağlamı; yeni durum, saklanan jeton ve yasal metin revizyonu getirir, dönüşüm yoluna dokunur.
+
+**Karar:** **1 + 2 birlikte; 3 reddedildi.** Tavan **24 saatte 3** onay e-postası, anahtar `email.trim().toLowerCase()` (`api/demo/route.ts` → `confirmCapped`). Onay metni artık **parametre almaz** (`content/mail.ts` → `text` sabit bir dizge, `Merhaba ${name},` → `Merhaba,`). Tavana takılan gönderim kayda `skipped` yazar — `notify_lead` kümesi **büyütülmez** (alan adı geçişinde v1 ile aynı koleksiyon okunacak). Ziyaretçinin gördüğü yanıt, kayıt ve ekip bildirimi **hiç değişmez**.
+
+**Gerekçe:**
+- **Tek başına hiçbiri bulguyu kapatmıyordu.** 1 tek başına saldırganın **kendi yazdığı metni** üçüncü bir adrese tavan kadar göndermesine izin verirdi; 2 tek başına gönderici itibarını yiyen hacmi hiç kırpmazdı. Bedeli üç dosya ve **sıfır akış değişikliği**, yani ikisini birden almamak için bir gerekçe yok.
+- **3 ILKELER'in 1. ekseniyle (Dönüşüm) doğrudan çatışıyor.** Saklanan jeton yeni bir kişisel veri alanıdır ve M3 F3.2'nin kalıcı koruma kriterini (aynı turda yasal metin revizyonu) ateşler; pilot aşamadaki bir tanıtım sitesinin bugünkü hacmiyle orantısız. Kapanmayan artık — adres sahipliğinin **gerçekten** doğrulanması — bu seçenekte durur ve ihtiyaç doğarsa kendi bulgusuyla açılır.
+- **Metnin parametresiz olması biçimsel bir kapıdır.** Parametre yoksa enjekte edilecek yer de yoktur; kişiselleştirmeyi geri isteyen her değişiklik aynı soruyu yeniden açar ve bunu kod yorumunda yazılı bulur.
+- **Sayaç `HITS`'in ölçülmüş kusurlarını tekrarlamaz** (B-037 k.2): reddedilen deneme sayaca yazılmaz, harita dolduğunda `clear()` ile herkesin sayacı silinmez. **Bilinen sınırlar, bilinçle:** sayaç bellek içi ve örnek başınadır (`HITS` ile aynı tercih) ve alt-adresleme (`ad+etiket@…`) normalleştirilmez — o normalleştirme farklı iki **gerçek** adresi aynı sayaca koyup meşru bir onayı düşürebilirdi; kalan yüzey 2 sayesinde içeriksizdir.
+- **Yasal metin değişmedi ve gerekçesi yazıldı** (M3 F3.2): yeni hedef, kayda yeni alan ve yeni sağlayıcı yok; adres yalnız sunucunun geçici belleğinde tutuluyor. Metnin IP paragrafının öznesi *"IP adresiniz"*dir, İşleme amaçları listesi zaten *"aynı adresten gelen talep sayısını sınırlamak"* diyor — hiçbir yaşayan cümle yanlışlaşmıyor.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.21 (`tasks/archive/TASK-2.21.md`), UAT senaryo 26 (`phases/PHASE-2-UAT.md`)
+
+---
+
 ### 2026-09-23 — Yasal metin aktarımı olgu olarak yazar: dört tedarikçinin ülkesi sayılır, hukuki dayanak hukukçuya bırakılır
 
 **Bağlam:** 2026-09-22 «Ölçüm sunucusu ham IP tutuyor…» kararı metnin ne diyemeyeceğini sabitlemişti; ne **diyeceği** TASK-2.17'ye kalmıştı. Aynı turda aktarım maddesinin olgu tarafı da yazıldı. Ölçüm dört tedarikçinin dördü için de kaynağından yapıldı (döküm: `tasks/archive/TASK-2.17.md`).

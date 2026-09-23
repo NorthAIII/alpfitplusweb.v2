@@ -9,7 +9,7 @@
 ## UAT Sonuçları — tam tablo
 
 **Tarih:** 2026-09-23
-**Toplam Senaryo:** 30 | **Geçen:** 29 | **Kalan:** 1
+**Toplam Senaryo:** 30 | **Geçen:** 29 | **Kalan:** 1 — **TASK-2.21 ile kapandı** (2026-09-23; satır 26'da döküm)
 
 | # | Senaryo | Sonuç | Not |
 |---|---------|-------|-----|
@@ -38,7 +38,7 @@
 | 23 | Talep sahibine onay e-postası gidiyor; `notify_lead` üç değerin doğrusunu taşıyor (`sent` / `skipped` / `failed`), hiçbir kayıt `pending` kalmıyor | ✅ Geçti | **ters-çevirme:** `notify_lead` «sent»e sabitlenince 4 kırmızı — dördü de kendi dalını adıyla söylüyor (failed/skipped/skipped/failed) |
 | 24 | Onay gönderimi ziyaretçinin yanıtını değiştirmiyor: üç dalda da aynı `200` ve aynı gövde alanları | ✅ Geçti | aynı ters-çevirmede «uç yine 200 `stored:true`» testi kırmızı verdi → dal gerçekten ölçülüyor |
 | 25 | Bal küpü dolu istek: kayıt yok, e-posta yok, HTTP `200` (bot yanıltması korunuyor) | ✅ Geçti | **ters-çevirme:** bal küpü kapısı sökülünce ilgili test kırmızı · canlı uçta bal küpü dolu istek 200, kayıt yok |
-| 26 | **Adversarial / güvenlik:** uç, talep sahibinin yazdığı adrese doğrulama yapmadan e-posta gönderiyor mu — ve bunu hangi kapılar sınırlıyor? | ❌ Kaldı | **Uç, ziyaretçinin yazdığı adrese doğrulama yapmadan e-posta gönderiyor.** Doğrulanmış `alpfitplus.com` göndericisinden, selamlamada 120 karaktere kadar istek sahibinin metni. Sınırlayan kapılar ölçüldü: IP başına 10 dk / 5 istek (6. → 429), bal küpü, onay kutusu zorunlu. Adresin sahipliğini gösteren hiçbir kapı yok · **→ TASK-2.21** |
+| 26 | **Adversarial / güvenlik:** uç, talep sahibinin yazdığı adrese doğrulama yapmadan e-posta gönderiyor mu — ve bunu hangi kapılar sınırlıyor? | ❌ Kaldı → ✅ **TASK-2.21 ile kapandı** (2026-09-23) | **Bulgu anında:** uç, ziyaretçinin yazdığı adrese doğrulama yapmadan e-posta gönderiyordu — doğrulanmış `alpfitplus.com` göndericisinden, selamlamada 120 karaktere kadar istek sahibinin metni; sınırlayan kapılar IP başına 10 dk / 5 istek (6. → 429), bal küpü, onay kutusu. **Bugün:** adres başına 24 saatte 3 onay e-postası (sonda: 6 denemede **3 gitti / 3 takıldı**, takılanlar `notify_lead: skipped`) ve onay metni **parametre almıyor** — ziyaretçinin yazdığı hiçbir şey alıcıya ulaşmıyor. Dört ters çevirmenin dördü kırmızı (tavan sökümü · hiç göndermeme · metni geri koyma · küçük-harf anahtarını bozma). **Kapanmayan artık, bilinçle:** adresin sahipliği hâlâ *doğrulanmıyor* — çift-katılım dönüşüm yoluna dokunduğu için alınmadı (`docs/DECISIONS.md` 2026-09-23) |
 | 27 | Beş ölçüm başlangıç çizgisinin altında: a11y TOPLAM SORUN 0 · yatay kaydırma yok · eksik karakter yok · konsol temiz · ağırlık ve LCP | ✅ Geçti | a11y **TOPLAM SORUN 0** · mobile-audit **9/9 yatay kaydırma yok** (dokunma hedefi 157, taban birebir) · font-guard 16 sayfa / 85.015 karakter, eksik yok · scan `/demo` `/kvkk` `/fiyat` **konsol temiz** · perf 141/132 KB, LCP 88/60 ms, CLS 0,005/0 → çizgi 144/133 KB, 96 ms: **regresyon yok** |
 | 28 | `npm test` yeşil, `tsc --noEmit` çıkış 0, üretim derlemesi hatasız | ✅ Geçti | batarya 211+1 · `tsc --noEmit` 0 · `docker compose build web-prod` 0 |
 | 29 | Ölçüm yükünde kişisel veri yok; arama sorgusu ölçüme gitmiyor (`data-exclude-search`) | ✅ Geçti | **gerçek tarayıcıda, önizleme yüzeyinde:** `script.js` yüklendi, `data-website-id` VAR, `data-tag=preview`, `data-exclude-search="true"`, dış istek yalnız kendi Umami'miz (2 adet). ⚠️ curl sondası `afterInteractive` betiğini **göremiyor** — kör kalıyordu |

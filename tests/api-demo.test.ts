@@ -20,6 +20,14 @@ import { LEAD_CONFIRMATION } from "@/content/mail";
 // Hiz sinirlayici (`HITS`) modul kapsaminda ve dosya boyunca yasar (memory ->
 // hiz-sinirli-uca-test-bataryasi.md): her senaryo kendi `x-forwarded-for` degerini
 // tasir, yalniz 429 (app-level) senaryosu paylasilan bir IP'de alti istekle olculur.
+//
+// TASK-2.21'den beri AYNI DISIPLIN IKINCI BIR SAYAC icin de gecerli: onay
+// e-postasinin ADRES BASINA tavani (`CONFIRM_HITS`, 24 saat / 3) da modul
+// kapsamindadir ve dosya boyunca yasar. Yani her senaryo kendi IP'sinin YANINDA
+// kendi E-POSTA ADRESINI de tasir; paylasilan bir adres kullanan iki senaryo
+// birbirinin kotasini yer ve ucuncusu sahte bir kirmizi okur. Sayac yalniz
+// RESEND_* tanimliyken (kanal acikken) isler, bu yuzden dosyanin geri kalani
+// etkilenmez.
 
 const STORE_URL = "https://fake-lead-store.test";
 const STORE_TOKEN = "test-store-token";
@@ -122,13 +130,22 @@ vi.stubGlobal("fetch", fetchMock);
 
 const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
+// TASK-2.21: varsayilan e-posta adresi HER CAGRIDA farklidir. Onay
+// e-postasinin adres basina tavani (`CONFIRM_HITS`) modul kapsamindadir ve
+// dosya boyunca yasar — sabit bir varsayilan adres, mail kanalini acan yedi
+// senaryo boyunca tukenir ve sonrakilere SAHTE bir "tavan doldu" kirmizisi
+// tasirdi (olculdu: bu satir sabitken TASK-2.07'nin ilk senaryosu 2 yerine 1
+// e-posta gordu). Adresin DEGERI hicbir olcumun konusu degil; konu oldugu
+// senaryolar kendi adresini zaten acikca yaziyor.
+let payloadSeq = 0;
+
 function validPayload(overrides: Record<string, unknown> = {}) {
   return {
     name: "Ayşe Yılmaz",
     club: "Form Spor Kulübü",
     branches: "Merkez",
     phone: "05551234567",
-    email: "ayse@example.com",
+    email: `talep-${++payloadSeq}@example.com`,
     segment: "orta",
     message: "Demo talep ediyorum.",
     consent: true,
@@ -617,9 +634,12 @@ describe("POST /api/demo — TASK-2.07: talep sahibine onay e-postasi + notify_l
     expect(confirmation?.reply_to).toBe(TEAM);
     expect(confirmation?.from).toBe(FROM);
     expect(confirmation?.subject).toBe(LEAD_CONFIRMATION.subject);
-    expect(confirmation?.text).toBe(LEAD_CONFIRMATION.text(payload.name));
-    // Metin ziyaretcinin adini tasir ve HTML degil duz metindir.
-    expect(String(confirmation?.text)).toContain(payload.name);
+    expect(confirmation?.text).toBe(LEAD_CONFIRMATION.text);
+    // TASK-2.21: metin ziyaretcinin YAZDIGI hicbir seyi TASIMAZ (eskiden
+    // selamlama `Merhaba ${name},` idi). Alicinin talep sahibine ait oldugu
+    // dogrulanmadigi icin o selamlama ucuncu bir kisiye saldirganin metnini
+    // tasiyan bir yuzeydi. HTML degil duz metindir.
+    expect(String(confirmation?.text)).not.toContain(payload.name);
     expect(confirmation?.html).toBeUndefined();
 
     const patchBody = JSON.parse(fetchCalls.find((c) => c.method === "PATCH")?.body ?? "{}");
@@ -666,9 +686,11 @@ describe("POST /api/demo — TASK-2.07: talep sahibine onay e-postasi + notify_l
   it("saglayici YALNIZ onayi reddeder -> notify_lead:failed, notify_team:sent, uc yine 200 stored:true", async () => {
     openMailChannel();
     storeMode = "ok";
-    resendRejectFor.add("ayse@example.com");
+    // TASK-2.21: senaryo kendi adresini tasir (dosya basligi) -- adres basina
+    // tavan modul kapsamindadir, paylasilan adres sonraki senaryonun kotasini yer.
+    resendRejectFor.add("onay-red@example.com");
 
-    const payload = validPayload({ email: "ayse@example.com" });
+    const payload = validPayload({ email: "onay-red@example.com" });
     const res = await POST(request(JSON.stringify(payload), "10.0.9.4"));
     const json = await res.json();
 
@@ -686,7 +708,7 @@ describe("POST /api/demo — TASK-2.07: talep sahibine onay e-postasi + notify_l
     storeMode = "ok";
     resendRejectFor.add(TEAM);
 
-    const payload = validPayload({ email: "ayse@example.com" });
+    const payload = validPayload({ email: "ekip-red@example.com" });
     const res = await POST(request(JSON.stringify(payload), "10.0.9.5"));
     const json = await res.json();
 
@@ -695,7 +717,7 @@ describe("POST /api/demo — TASK-2.07: talep sahibine onay e-postasi + notify_l
 
     const mails = mailsByRecipient();
     expect(mails.size).toBe(2);
-    expect(mails.has("ayse@example.com")).toBe(true);
+    expect(mails.has("ekip-red@example.com")).toBe(true);
 
     const patchBody = JSON.parse(fetchCalls.find((c) => c.method === "PATCH")?.body ?? "{}");
     expect(patchBody).toEqual({ notify_team: "failed", notify_lead: "sent" });
@@ -722,5 +744,145 @@ describe("POST /api/demo — TASK-2.07: talep sahibine onay e-postasi + notify_l
 
     expect(seen.map((s) => s.status)).toEqual([200, 200, 200]);
     for (const s of seen) expect(s.keys).toEqual(["mailed", "ok", "stored"]);
+  });
+});
+
+// TASK-2.21 (UAT senaryo 26 — guvenlik): uc, talep sahibinin SAHIPLIGI
+// gosterilmemis bir adrese onay e-postasi gonderiyordu. Iki kapi kondu:
+//  (a) ADRES BASINA TAVAN -- ayni adrese 24 saatte en fazla CONFIRM_LIMIT onay;
+//  (b) METINDE SERBEST METIN YOK -- selamlama artik parametre almiyor.
+// Ikisi de ziyaretcinin akisina DOKUNMAZ: uc yine 200, kayit yine yazilir,
+// ekip bildirimi yine gider (TASK-2.07 sozlesmesi + ILKELER -> 1. eksen).
+describe("POST /api/demo — TASK-2.21: onay e-postasinin alicisi dogrulanmis degil, o yuzden tavanli", () => {
+  const TEAM = "sales@example.com";
+  const FROM = "noreply@example.com";
+  /** route.ts -> CONFIRM_LIMIT. Degisirse bu sabit de degisir (tek yerde). */
+  const CAP = 3;
+
+  function openMailChannel() {
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = TEAM;
+    process.env.DEMO_FROM = FROM;
+  }
+
+  /**
+   * Tek istek. Her cagri KENDI IP'sini tasir ki hiz siniri (10 dk / 5) araya
+   * girmesin — olculen sey adres sayaci, IP sayaci degil.
+   */
+  async function gonder(email: string, ip: string) {
+    fetchCalls.length = 0;
+    const res = await POST(request(JSON.stringify(validPayload({ email })), ip));
+    const json = (await res.json()) as Record<string, unknown>;
+    const patch = fetchCalls.find((c) => c.method === "PATCH");
+    return {
+      status: res.status,
+      keys: Object.keys(json).sort(),
+      onayGitti: fetchCalls.some((c) => c.url === RESEND_URL && recipientOf(c.body) === email),
+      ekipGitti: fetchCalls.some((c) => c.url === RESEND_URL && recipientOf(c.body) === TEAM),
+      notifyLead: (JSON.parse(patch?.body ?? "{}") as { notify_lead?: string }).notify_lead,
+    };
+  }
+
+  it("kotuye kullanim sondasi: ucuncu bir adrese art arda tetikleme ilk 3'te tavana takiliyor", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    const kurban = "kurban-tavan@example.com";
+
+    const turlar = [];
+    for (let i = 1; i <= 6; i++) turlar.push(await gonder(kurban, `10.0.21.${i}`));
+
+    // Pozitif capa (bos kapsam bekcisi): ilk turlar GERCEKTEN e-posta uretti.
+    // Uretmeselerdi "tavan calisiyor" olcumu bos bir kume uzerinde bedava yesil
+    // kosardi — hicbir sey gondermeyen bir uc de bu testi gecerdi.
+    expect(turlar.filter((t) => t.onayGitti).length).toBe(CAP);
+    expect(turlar.slice(0, CAP).every((t) => t.onayGitti)).toBe(true);
+    expect(turlar.slice(CAP).some((t) => t.onayGitti)).toBe(false);
+
+    // Tavana takilan gonderim `failed` DEGIL `skipped` yazar: gonderim
+    // DENENMEDI, saglayici reddetmedi. Kume buyutulmedi (v1 paritesi).
+    expect(turlar.map((t) => t.notifyLead)).toEqual([
+      "sent",
+      "sent",
+      "sent",
+      "skipped",
+      "skipped",
+      "skipped",
+    ]);
+
+    // Ziyaretcinin gordugu yanit ve ekip bildirimi HIC degismedi.
+    expect(turlar.map((t) => t.status)).toEqual([200, 200, 200, 200, 200, 200]);
+    for (const t of turlar) expect(t.keys).toEqual(["mailed", "ok", "stored"]);
+    expect(turlar.every((t) => t.ekipGitti)).toBe(true);
+  });
+
+  it("tavan anahtari buyuk/kucuk harfe duyarsiz — yazimi degistirerek atlatilamiyor", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    const yazimA = "Karisik.Yazim@Example.COM";
+    const yazimB = "karisik.yazim@example.com";
+
+    for (let i = 1; i <= CAP; i++) {
+      expect((await gonder(yazimA, `10.0.22.${i}`)).onayGitti).toBe(true);
+    }
+
+    const farkliYazim = await gonder(yazimB, "10.0.22.9");
+    expect(farkliYazim.onayGitti).toBe(false);
+    expect(farkliYazim.notifyLead).toBe("skipped");
+  });
+
+  it("mesru akis bozulmadi: taze bir adres ilk denemede onayini aliyor (notify_lead:sent)", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    const t = await gonder("taze-talep@example.com", "10.0.23.1");
+    expect(t.status).toBe(200);
+    expect(t.onayGitti).toBe(true);
+    expect(t.ekipGitti).toBe(true);
+    expect(t.notifyLead).toBe("sent");
+  });
+
+  it("kanal kapaliyken sayac YANMIYOR: gonderilmeyen e-postalar adresin tavanini tuketmiyor", async () => {
+    storeMode = "ok";
+    const adres = "kanal-kapali@example.com";
+
+    // beforeEach RESEND_* siliyor — kanal kapali, hicbir e-posta gitmiyor.
+    for (let i = 1; i <= CAP + 2; i++) {
+      const t = await gonder(adres, `10.0.24.${i}`);
+      expect(t.onayGitti).toBe(false);
+      // Kanal yapilandirilmamis: mevcut sozlesme (TASK-2.07) korunur.
+      expect(t.notifyLead).toBe("failed");
+    }
+
+    openMailChannel();
+    const ilkGercekDeneme = await gonder(adres, "10.0.24.9");
+    expect(ilkGercekDeneme.onayGitti).toBe(true);
+    expect(ilkGercekDeneme.notifyLead).toBe("sent");
+  });
+
+  it("adversarial: ziyaretcinin yazdigi metin onay e-postasina HIC girmiyor", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    const kotuAd = "ACIL: hesabinizi dogrulayin https://kotu.example";
+    const alici = "metin-sondasi@example.com";
+
+    fetchCalls.length = 0;
+    const res = await POST(
+      request(JSON.stringify(validPayload({ name: kotuAd, email: alici })), "10.0.25.1"),
+    );
+    expect(res.status).toBe(200);
+    await res.json();
+
+    const onay = fetchCalls.find((c) => c.url === RESEND_URL && recipientOf(c.body) === alici);
+    expect(onay).toBeDefined();
+    const onayGovde = JSON.parse(onay?.body ?? "{}") as { text?: string };
+    expect(onayGovde.text).toBe(LEAD_CONFIRMATION.text);
+    expect(String(onayGovde.text)).not.toContain(kotuAd);
+    expect(String(onayGovde.text)).not.toContain("kotu.example");
+
+    // Kontrol grubu: ayni metin EKIP bildiriminde DURUYOR. Durmasaydi
+    // "sizinti yok" olcumu, alanin hic tasinmadigi bir uc icin de gecerdi.
+    const ekip = fetchCalls.find((c) => c.url === RESEND_URL && recipientOf(c.body) === TEAM);
+    expect(ekip).toBeDefined();
+    const ekipGovde = JSON.parse(ekip?.body ?? "{}") as { text?: string };
+    expect(String(ekipGovde.text)).toContain(kotuAd);
   });
 });

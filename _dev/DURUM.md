@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — Faz 2 **kabul testi koşuldu** (`verify-phase`, otonom kol): 30 senaryo, **29 geçti / 1 kaldı**. Kapılar ters çevirmeyle sınandı (sekiz ters-çevirmenin sekizi kırmızı) — yeşiller kör değil. Tek bulgu güvenlik merceğinden geldi: uç, talep sahibinin yazdığı adrese **doğrulama yapmadan** onay e-postası gönderiyor → **TASK-2.21**. Faz dokümanı kırmızı çizgiyi aştığı için UAT bölümü `PHASE-2-UAT.md`'ye bölündü (faz hâlâ aktifken). Kod değişmedi; iki ters-çevirme ağacı geçici bozdu, ikisi de md5 ile geri yüklendi.
+**Son Güncelleme:** 2026-09-23 — TASK-2.21 kapandı: onay e-postası artık **adres başına tavanlı** (24 saatte 3) ve ziyaretçinin yazdığı metni taşımıyor; UAT senaryo 26 kapandı, batarya 211 → **216**, dört ters çevirmenin dördü kırmızı. **Fazın task listesi bitti.**
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
-**Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ · kapsam revizyonu ✅ · task çalıştırma **18/18 tamamlandı** (TASK-2.03 ve TASK-2.20 ❌ iptal) · **kabul testi ✅** (2026-09-23: 30 senaryo, 29 geçti). Kalan tek kalem bir düzeltme task'ına bağlandı: **TASK-2.21**.
+**Adım:** verify
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ · kapsam revizyonu ✅ · **kabul testi ✅** (2026-09-23: 30 senaryo, 29 geçti) · kalan tek kalem düzeltme task'ına bağlandı ve **TASK-2.21 ile kapandı**. Task çalıştırma **19/19 tamamlandı** (TASK-2.03 ve TASK-2.20 ❌ iptal); fazda bekleyen task yok.
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocukları: `phases/PHASE-2-ARASTIRMA.md` · `phases/PHASE-2-UAT.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,11 +35,12 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.21 — Onay e-postası yalnızca doğrulanabilir bir alıcıya gider (`tasks/TASK-2.21.md`)
-**Durum:** ⬜ Bekliyor — kabul testinin kapsam-içi tek bulgusu
-**İlerleme:** Kabul testi (`verify-phase`, 2026-09-23) 30 senaryonun 29'unu yeşil kapattı. Kalan senaryo 26: uç, **istek gövdesinde yazan her biçimsel geçerli adrese** doğrulanmış `alpfitplus.com` göndericisinden onay e-postası yolluyor ve selamlamada istek sahibinin 120 karakterine kadar metnini taşıyor. Sınırlayan kapılar ölçüldü — IP başına 10 dk / 5 istek (6. istek `429`), bal küpü, onay kutusu zorunlu — ama **adresin sahipliğini gösteren kapı yok**. Bu bir kayıp/sızıntı bulgusu değil: lead hattı, kayıt, `notify_lead` ve dönüşüm yolu doğru çalışıyor (senaryo 23-25 ✅). Task üç seçenek sunuyor ve **hangisinin seçileceği kullanıcıya sorulacak** (adres başına tavan · selamlamadaki serbest metni kaldırmak · onayı ikinci adıma bağlamak).
+**Task:** — yok · Faz 2'nin task listesi tamamlandı (21 satır: 19 ✅ · 2 ❌ iptal)
+**Durum:** ✅ Bekleyen, devam eden ya da duraklatılmış task yok — sıradaki adım kabul testi (`verify-phase`)
+**İlerleme:** Son kapanan kalem, kabul testinin kapsam-içi tek bulgusuydu (senaryo 26): uç, talep sahibinin **sahipliği gösterilmemiş** bir adrese onay e-postası gönderiyordu. İki kapı kondu ve ikisi de ziyaretçinin akışına dokunmuyor — **adres başına tavan** (24 saatte 3; kötüye kullanım sondası: 6 denemede 3 gitti / 3 takıldı) ve **parametresiz onay metni** (ziyaretçinin yazdığı hiçbir şey alıcıya ulaşmıyor). Adresin sahipliği hâlâ *doğrulanmıyor*: çift-katılım bilinçle alınmadı (dönüşüm yoluna dokunuyor, saklanan jeton yeni bir kişisel veri alanı açıyor) — kalan yüzey tavanlı ve içeriksiz.
 **Not:**
-- ⚠️ **Yasal beyan kapısı TAMAMLANDI (TASK-2.18 + 2.19) — 9 dal / 31 test.** Sekiz dal depo içinden ölçüyor, dokuzuncusu komşu depodan: `web` servisi `../Alpfitplus-website.v1/pocketbase/pb_hooks`'u `/opt/v1-pb-hooks`'a **salt okunur** bağlıyor ve dal `RETENTION_MONTHS`'ı metin olarak okuyor. **Kapı `LEGAL_CONTRACT_HOOKS_DIR` env'i ile açılır; tanımsızken atlanır** — yani düz `docker compose exec web npm test` bundan sonra **204 geçti + 2 atlandı** gösterir (ikinci atlanan bu daldır, arıza değil). Tam koşum: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **211**. ⚠️ Bağlama `restart` ile **gelmez**, `docker compose up -d web` gerekir. TASK-2.17'de ölçülen **depo dışı** olgular (Hetzner/DE · Resend ABD + `eu-west-1` · Google MX · Umami şemasında IP sütunu yokluğu · erişim kaydında rotasyon yokluğu) **bilerek çivilenmedi** — kaynakları canlı sistemler; çapaları `legal.ts`'in Aktarım yorumunda. Kapının kendi `ÖLÇÜLEMEYEN` blokları iki yüzeyi daha adıyla dışarıda bırakıyor: depo anahtarının **yetki yüzeyi** (komşu depo sözleşmesi) ve başvuru adresinin gerçekten **posta alması** (DNS → 2.20).
+- ⚠️ **Onay e-postasının iki yeni kapısı var (TASK-2.21) ve ikisi de `/api/demo`'yu tekrar açan her işi ilgilendiriyor:** (1) `confirmCapped` **adres başına 24 saatte 3** sayar — sayaç `HITS` gibi bellek içi ve örnek başınadır, ve **yalnız `RESEND_*` tanımlıyken** işler (kanal kapalıyken hiç danışılmaz, yoksa gönderilmeyen e-postalar kotayı yakardı). (2) `content/mail.ts` → `text` **parametre almaz**; kişiselleştirmeyi geri getiren her değişiklik sahiplik sorusunu yeniden açar. ⚠️ **Test tarafına yansıması:** sayaç modül kapsamında ve dosya boyunca yaşıyor, o yüzden uca yazılan her senaryo kendi IP'sinin yanında **kendi e-posta adresini** de taşır (`validPayload()` varsayılanı artık her çağrıda tekil). Alt-adresleme (`ad+etiket@…`) bilinçle normalleştirilmedi.
+- ⚠️ **Yasal beyan kapısı TAMAMLANDI (TASK-2.18 + 2.19) — 9 dal / 31 test.** Sekiz dal depo içinden ölçüyor, dokuzuncusu komşu depodan: `web` servisi `../Alpfitplus-website.v1/pocketbase/pb_hooks`'u `/opt/v1-pb-hooks`'a **salt okunur** bağlıyor ve dal `RETENTION_MONTHS`'ı metin olarak okuyor. **Kapı `LEGAL_CONTRACT_HOOKS_DIR` env'i ile açılır; tanımsızken atlanır** — yani düz `docker compose exec web npm test` **209 geçti + 2 atlandı** gösterir (ikinci atlanan bu daldır, arıza değil — rakam TASK-2.21 ile 204'ten yükseldi). Tam koşum: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **216 geçti + 1 atlandı**. ⚠️ Bağlama `restart` ile **gelmez**, `docker compose up -d web` gerekir. TASK-2.17'de ölçülen **depo dışı** olgular (Hetzner/DE · Resend ABD + `eu-west-1` · Google MX · Umami şemasında IP sütunu yokluğu · erişim kaydında rotasyon yokluğu) **bilerek çivilenmedi** — kaynakları canlı sistemler; çapaları `legal.ts`'in Aktarım yorumunda. Kapının kendi `ÖLÇÜLEMEYEN` blokları iki yüzeyi daha adıyla dışarıda bırakıyor: depo anahtarının **yetki yüzeyi** (komşu depo sözleşmesi) ve başvuru adresinin gerçekten **posta alması** (DNS → 2.20).
 - ⚠️ **Kapı yazarken ölçülen üç fail-open — sonraki kapılar için geçerli:** (1) bir deseni **dosya genelinde** aramak yorum satırlarını da sayar (`data-exclude-search` `layout.tsx`'te 1 öznitelik + 1 yorum); (2) **iki jetonlu** desen araya giren bir cast'le kör kalır (`window.umami` ↔ `(window as unknown as {…}).umami`); (3) bir **önek süzgeci** aynı çağrının başka biçimini kaçırır (mutlak URL süzülüyor, göreli URL geçiyor). Üçü de negatif kontrolle bulundu, tahminle değil. Ayrıntı: `memory/urun-iddiasi-capa-dogrulamasi.md` → 7. kural.
 - **Yasal metinde yerine yazılan cümle de bir iddiadır — ve devralınan bir ÖZET de öyle.** TASK-2.16'da iki yeni beyan ilk hâlinde fazlasını söylemişti; TASK-2.17'de bu sınıf bir kez daha ateşledi ama farklı yerden: TASK-2.01'in *"`session` yalnız ülke/bölge/şehir tutuyor"* özeti **eksikti** (tablo ayrıca `browser/os/device/screen/language` tutuyor) ve olduğu gibi metne geçseydi yeni bir eksik beyan doğardı. Kapsam cümlenin öznesinde saklı; ölçümün özetine değil **ölçümün kendisine** dön.
 - **Bir sağlayıcı için iki ayrı ülke sorusu var:** *nerede işliyor* (Vercel → ABD, ölçüldü) ile *şirket nerede* (Google → ABD merkezli, ama Workspace veri bölgesi **ölçülmedi**, o yüzden metin yalnız "merkezli" diyor). v1 bu tuzağa bir kez düştü (Resend "İrlanda bölgesi" → "veri AB'de kalıyor" yanlış çıktı); metin gönderim bölgesiyle saklama yerini bilerek ayrı cümlelerde tutuyor.
@@ -86,7 +87,7 @@
 | 2.18 | TASK-2.18 — Yasal beyan testi — depo içi sekiz olgu (B-060) | ✅ Tamamlandı |
 | 2.19 | TASK-2.19 — Yasal beyan testi — çapraz depo "12 ay" dalı (B-060 kapandı) | ✅ Tamamlandı |
 | 2.20 | TASK-2.20 — KVKK başvuru adresi: MX kayıtları ve test postası (B-011) | ❌ İptal — konusu kapsam kararıyla alan adı geçişi fazına taşındı (2026-09-23) |
-| 2.21 | TASK-2.21 — Onay e-postası yalnızca doğrulanabilir bir alıcıya gider (UAT senaryo 26) | ⬜ Bekliyor |
+| 2.21 | TASK-2.21 — Onay e-postası yalnızca doğrulanabilir bir alıcıya gider (UAT senaryo 26) | ✅ Tamamlandı |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -97,6 +98,21 @@
 ## Son Task Özetleri
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
+
+### TASK-2.21 — Onay e-postasının alıcısı doğrulanmıyordu: tavan kondu, metinden serbest yazı çıkarıldı
+
+**Durum:** ✅ Tamamlandı — 2026-09-23
+
+**Detay:** `tasks/archive/TASK-2.21.md`
+
+**Özet:**
+- **Üç seçenekten ikisi birlikte alındı, en sağlamı bilinçle reddedildi.** Tek başına hiçbiri bulguyu kapatmıyordu: yalnız **tavan** saldırganın kendi yazdığı metni üçüncü bir adrese tavan kadar göndermesine izin verirdi, yalnız **metin temizliği** gönderici itibarını yiyen hacmi hiç kırpmazdı. İkisi birden alındı çünkü bedeli üç dosya ve **sıfır akış değişikliği**. Çift-katılım (doğrulama bağlantısı) reddedildi: ILKELER'in 1. ekseniyle (Dönüşüm) çatışıyor, saklanan jeton yeni bir kişisel veri alanı ve aynı turda yasal metin revizyonu demek, pilot hacmiyle orantısız. Kapanmayan artık açıkça yazıldı — **adresin sahipliği hâlâ doğrulanmıyor**, kalan yüzey tavanlı ve içeriksiz (`docs/DECISIONS.md`).
+- **Sayaç, kardeşinin ölçülmüş kusurlarını tekrarlamıyor.** `confirmCapped` adres başına 24 saatte 3 sayar ve `HITS`'in B-037'de ölçülen iki arızasını bilinçle almaz: reddedilen deneme sayaca yazılmaz, harita dolduğunda `clear()` ile herkesin sayacı silinmez (`pruneConfirmHits` yalnız süresi geçmişi budar). Sayaç **yalnız kanal açıkken** işler — aksi hâlde hiç gönderilmeyen e-postalar kotayı yakardı (3100 provası tam bu hâlde). `toLeadEmail` artık boolean değil `NotifyLead` döndürüyor: "gönderilmedi"nin iki anlamı (`skipped` = denenmedi / `failed` = sağlayıcı reddetti) boolean'a sığmıyordu ve çağrı yerinde yeniden türetilseydi tavan dalı sessizce `failed` okunurdu. `notify_lead` kümesi **büyütülmedi**.
+- **Yeni sayaç bataryayı kırdı ve teşhis düzeltmeden değerliydi.** `validPayload()` varsayılan adresi sabitti ve mail kanalını açan yedi senaryo aynı adresi kullanıyordu — tavan dosyanın ortasında doluyor, sonraki senaryo sahte kırmızı okuyordu. Çözüm senaryoları tek tek düzenlemek değil, varsayılanı **her çağrıda tekilleştirmek** oldu; bu, memory'deki "her senaryo kendi IP'sini taşır" disiplininin ikinci sayaç için eşidir ve dosya başlığına yazıldı. **Yasal metin gözden geçirildi ve DEĞİŞMEDİ**: M3 F3.2'nin tetiği ateşlemiyor (yeni hedef/alan/sağlayıcı yok) ve metnin hiçbir yaşayan cümlesi yanlışlaşmıyor — gerekçe task dokümanında yazılı.
+
+**Test:** `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **216 geçti + 1 atlandı** (taban 211+1); anahtarsız **209 geçti + 2 atlandı** (taban 204+2) — *geçen* sayısı iki modda da tam **+5**. `tsc --noEmit` çıkış 0 · `docker compose build web-prod` çıkış 0. **Kötüye kullanım sondası:** aynı üçüncü adrese altı istek (her biri ayrı `X-Forwarded-For`) → **3 gitti / 3 tavana takıldı**, takılanlar `notify_lead: skipped`, altısında da ziyaretçi `200` + aynı gövde alanlarını gördü ve ekip bildirimi altı kez gitti. **Dört ters çevirme, dördü kırmızı:** tavan söküldü (2 kırmızı) · onay hiç gönderilmiyor — boş kapsam bekçisi (9 kırmızı) · serbest metin geri kondu (2 kırmızı) · anahtar küçük harfe indirgenmiyor (1 kırmızı); hepsi scratchpad kopyasından `cp` ile geri alındı, **md5 her seferinde tur başıyla birebir** (`git checkout`/`git restore` kullanılmadı). **Beş ölçüm betiği koşturulmadı, kapsamı bu turda boş:** değişen üç dosyanın hiçbiri render edilen yüzeye girmiyor — `content/mail.ts`'i yalnız `api/demo/route.ts` import ediyor (ölçüldü) ve `route.ts` bir API ucu; geçerli taban TASK-2.19'un koşumudur. **ÖLÇÜLEMEYEN:** canlı gönderim sondası yapılamadı (tavan yalnız `RESEND_*` tanımlıyken işler, yerelde anahtar yok ve gerçek sonda üçüncü bir adrese gerçek e-posta göndermek demekti); sayacın istekler arası yaşadığı olgusu aynı modüldeki kardeşi `HITS` için canlı ölçülmüştü (TASK-1.06 / B-037).
+
+---
 
 ### TASK-2.20 — KVKK başvuru adresi: konusu fazdan çıktı, ölçülen zemin bulguya mezun edildi
 
@@ -110,21 +126,6 @@
 - **Çürük çapalar bulgunun evinde düzeltildi.** Atomun devraldığı satır numaraları TASK-2.16/2.17'den sonra kaymıştı: `site.ts:22` → **`:24`**, `legal.ts:133/198/273` → **`:230/316/391`**; ayrıca otuz gün taahhüdünün **iki** yerde durduğu (başvuru + silme) yazıldı. Düzeltilmeseydi sonraki faz yanlış satırlara bakarak başlayacaktı.
 
 **Test:** **Koşturulmadı ve koşturulması gerekmedi** — bu tur doküman turudur, `src/` ve `research/` altında tek satır değişmedi (ölçüldü). Geçerli taban tur 19'un anahtarlı koşumudur: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **211 geçti + 1 atlandı**. **Kapsam uyarısı değişmedi:** batarya adresin posta aldığını ölçmez ve ölçemez — `legal-consistency` dal 7 yalnız adresin `CONTACT.support`'tan geldiğini çiviliyor; MX olgusunun kalıcı kapısı bilerek yok, evi M6 F6.3/F6.4 (B-011 atomunda Koruma Önerisi olarak kayıtlı).
-
----
-
-### TASK-2.19 — Yasal beyan kapısının çapraz depo dalı: "12 ay" mekanizmanın evinden okunuyor
-
-**Durum:** ✅ Tamamlandı — 2026-09-23
-
-**Detay:** `tasks/archive/TASK-2.19.md`
-
-**Özet:**
-- **Sabit kopyalanmadı, bağlandı.** `web` servisi komşu deponun `pb_hooks` klasörünü `/opt/v1-pb-hooks`'a **salt okunur** bağlıyor; dal 9 `RETENTION_MONTHS`'ı metin olarak okuyor ve **beyan parçasını ölçülen sayıdan türetiyor** (`oluşturulmasından ${ay} ay sonra…`) — yön olgu → metin, ters yön kapıyı dairesel yapardı. *"Günlük çalışan"* ifadesi cron'un kendisine (`'30 3 * * *'` → her gün), sabitin ölü olmadığı kesim hesabına (`getUTCMonth() - RETENTION_MONTHS`) ve temizliğin **iki koleksiyonu da** kapsadığına ayrı ayrı bağlandı. Hedefin `/app` **dışında** olması bir tercih değil ölçüm sonucu: `/app` deponun kendi bind-mount'u ve içine açılan mount noktası repoda root sahipli boş dizin bırakıyor.
-- **Kapı env'le açılıyor, sessizce geçmiyor.** `LEGAL_CONTRACT_HOOKS_DIR` tanımsızken dal atlanıyor ve bataryanın **geçen sayısı birebir korunuyor** (204 → 204; atlanan 1 → 2), tanımlıyken **211 geçti + 1 atlandı**, dosya 24 → **31 test**. CI'da komşu depo bulunmayacağı için atlama şart (sözleşme paketinin deseni). Tanımlıyken dosya yoksa/boşsa ya da bağlama **yazılabilirse** dal kırılıyor; salt okunurluk `access(W_OK)` ile ölçülüyor (`:ro` → `EROFS`) — yazma **denenmiyor**, çünkü başarılı bir deneme dokunulmazlık kuralını çiğnerdi.
-- **On dört negatif kontrolün on dördü kırmızı — ve biri kapıyı büyüttü.** Kaynak dokunulmaz olduğu için mutasyonlar `pb_hooks`'un scratchpad **kopyasına** uygulandı, test kopyaya `:ro` bağlanarak ayrı bir konteynerde koşturuldu; tur sonunda kaynağın md5'i tur başıyla birebir. Düzeneğin kendi pozitif çapası önce koşturuldu (bozulmamış kopya → çıkış 0 / 31 geçti) ve her mutasyon `cmp` ile doğrulandı. Üç paragraftan **yalnız biri** güncellendiğinde fragman kontrolü yeşil kaldı → **bölüm geneli ay kontrolü** eklendi ve tek o yakaladı. **B-060 kapandı ve arşive gitti** (43 → 42 açık bulgu).
-
-**Test:** Anahtarsız `npm test` **204 geçti + 2 atlandı** (taban 204 geçti + 1 atlandı — *geçen* birebir), anahtarlı **211 geçti + 1 atlandı**. `docker compose exec web npx tsc --noEmit` çıkış 0. Üretim derlemesi `docker compose build web-prod` çıkış 0. **Kaynak dosyalarda kalıcı değişiklik yok** — `src/`/`research/` altında tek satır değişmedi; iki negatif kontrol `legal.ts`'i geçici bozdu, ikisi de scratchpad yedeğinden `cp` ile geri alındı ve **md5 ile doğrulandı** (`git checkout`/`git restore` kullanılmadı). **Komşu depo dokunulmadı:** `lead_lib.js`/`retention.pb.js` md5'leri tur başıyla birebir. **Beş ölçüm** (render edilen yüzey bu turda hiç değişmedi, rakamlar tabanı bağımsız doğruluyor): `a11y` 8 rota **TOPLAM SORUN 0** · `mobile-audit` **9/9 yatay kaydırma yok**, dokunma hedefi **157** (taban birebir) · `font-guard` 16 sayfa / **85.015** karakter (taban birebir), eksik karakter yok · `scan` 390×844 `/kvkk` **9 kare / 7.373 px, konsol temiz** (taban birebir) · `perf` (3100) CLS ≤ 0,001, LCP 28-60 ms. **3100 bayatlık sondası:** üretim konteyneri saklama bölümünün üç cümlesini de döndürüyor (2/2/2 vuruş), yani ölçülen yüzey güncel.
 
 ---
 
@@ -151,7 +152,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.21.md` ⬜ — kabul testinin tek bulgusu (onay e-postasının alıcısı doğrulanmıyor)
+**Aktif Task:** — yok · fazın task listesi bitti; son kapanan `tasks/archive/TASK-2.21.md` ✅
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md` · UAT detayı: `phases/PHASE-2-UAT.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

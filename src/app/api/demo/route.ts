@@ -65,6 +65,66 @@ function limited(ip: string): boolean {
   return list.length > LIMIT;
 }
 
+/**
+ * Onay e-postasının ADRES BAŞINA tavanı (TASK-2.21, UAT senaryo 26).
+ *
+ * `toLeadEmail` alıcıyı isteğin GÖVDESİNDEN alır ve `isValidEmail` yalnız
+ * `yerel@alan.uzanti` BİÇİMİNE bakar — adresin talebi gönderene ait olduğunu
+ * gösteren hiçbir kapı yoktu. Ölçülen kötüye kullanım biçimi: tek IP'den on
+ * dakikada beş kez, ÜÇÜNCÜ bir adrese, doğrulanmış `alpfitplus.com`
+ * göndericisinden onay e-postası tetiklenebiliyordu.
+ *
+ * Tavan ziyaretçinin akışına DOKUNMAZ (ILKELER → 1. eksen Dönüşüm): uç yine
+ * `200` döner, kayıt yine yazılır, ekip bildirimi yine gider. Kırpılan yalnız
+ * ikincil kanaldır ve tavana takılan gönderim kayda `skipped` yazar —
+ * gönderim DENENMEDİ, `failed` ise sağlayıcı reddi demektir.
+ *
+ * Sayaç `HITS`'in ölçülmüş iki kusurunu TEKRARLAMAZ (B-037 k.2): reddedilen
+ * deneme sayaca yazılmaz (`list.push` koşulsuz değildir) ve harita dolduğunda
+ * `clear()` ile HERKESİN sayacı silinmez — yalnız süresi geçmiş anahtarlar
+ * budanır.
+ *
+ * Bilinen artıklar, bilinçle: (1) sayaç bellek içi ve örnek başınadır — `HITS`
+ * ile aynı tercih (BULGULAR → Bilinçli Tercihler); (2) anahtar yalnız küçük
+ * harfe indirgenir, sağlayıcıya özgü alt-adresleme (`ad+etiket@…`, nokta
+ * varyantları) normalleştirilmez, çünkü o normalleştirme farklı iki GERÇEK
+ * adresi aynı sayaca koyup meşru bir onayı düşürebilirdi. Kalan yüzey
+ * içeriksizdir: metin artık ziyaretçinin yazdığı hiçbir şeyi taşımıyor
+ * (`content/mail.ts`).
+ */
+const CONFIRM_WINDOW_MS = 24 * 60 * 60 * 1000;
+const CONFIRM_LIMIT = 3;
+const CONFIRM_HITS = new Map<string, number[]>();
+
+/** Süresi geçmiş damgaları ve boşalan anahtarları siler — `clear()` değil. */
+function pruneConfirmHits(now: number): void {
+  for (const [key, stamps] of CONFIRM_HITS) {
+    const live = stamps.filter((t) => now - t < CONFIRM_WINDOW_MS);
+    if (live.length === 0) CONFIRM_HITS.delete(key);
+    else CONFIRM_HITS.set(key, live);
+  }
+}
+
+/**
+ * Tavan dolduysa `true` döner ve damga EKLEMEZ; dolmadıysa damgayı yazıp
+ * `false` döner. Yani sayaç yalnız gerçekten denenen gönderimleri sayar.
+ */
+function confirmCapped(email: string): boolean {
+  const now = Date.now();
+  const key = email.trim().toLowerCase();
+  const list = (CONFIRM_HITS.get(key) ?? []).filter((t) => now - t < CONFIRM_WINDOW_MS);
+
+  if (list.length >= CONFIRM_LIMIT) {
+    CONFIRM_HITS.set(key, list);
+    return true;
+  }
+
+  list.push(now);
+  CONFIRM_HITS.set(key, list);
+  if (CONFIRM_HITS.size > 5000) pruneConfirmHits(now);
+  return false;
+}
+
 function clean(v: unknown, max: number): string {
   return typeof v === "string" ? v.trim().slice(0, max) : "";
 }
@@ -182,9 +242,12 @@ async function toStore(lead: Lead, ip: string): Promise<StoreResult> {
 
 /**
  * Talep sahibinin onay e-postasının sonucu (depo şeması: `notify_lead`).
- * `skipped` = gönderilecek geçerli bir adres yoktu; `failed` = gönderim
- * denendi ve olmadı. Ayrım ekip içindir: `failed` panelde "sağlayıcı reddetti"
- * diye okunur, olmayan bir sorunu kovalatmamalı (v1'in kendi gerekçe notu).
+ * `skipped` = gönderim DENENMEDİ — ya gönderilecek geçerli bir adres yoktu ya
+ * da o adresin tavanı doluydu (TASK-2.21); `failed` = gönderim denendi ve
+ * olmadı. Ayrım ekip içindir: `failed` panelde "sağlayıcı reddetti" diye
+ * okunur, olmayan bir sorunu kovalatmamalı (v1'in kendi gerekçe notu) — tavana
+ * takılan gönderim de bu yüzden `failed` değil `skipped` yazar. Küme
+ * BÜYÜTÜLMEDİ: alan adı geçişinde v1 ile aynı koleksiyon okunacak.
  */
 type NotifyLead = "sent" | "failed" | "skipped";
 
@@ -286,18 +349,28 @@ async function toEmail(lead: Lead): Promise<boolean> {
  *  - **Metin `src/content/mail.ts`'te**, burada değil: ziyaretçiye görünen her
  *    cümle bir iddia yüzeyidir (`_dev/docs/CLAIMS.md`) ve dönüş süresi vaadi
  *    formun onay kutusundakiyle aynı kalmalıdır.
- *  - **Çağrılmadan önce adres doğrulanır** (aşağıda, `isValidEmail`): geçersiz
- *    adrese gönderim denemek garanti bir sağlayıcı reddidir ve kayda
- *    eyleme geçirilemez bir `failed` yazdırırdı.
+ *  - **Çağrılmadan önce adres doğrulanır** (çağrı yerinde, `isValidEmail`):
+ *    geçersiz adrese gönderim denemek garanti bir sağlayıcı reddidir ve kayda
+ *    eyleme geçirilemez bir `failed` yazdırırdı. TASK-2.21'den beri biçim
+ *    kapısının yanında bir de **adres başına tavan** var (`confirmCapped`):
+ *    biçim sorusu sahiplik sorusunu cevaplamıyordu.
+ *
+ * Sonucu doğrudan `NotifyLead` olarak döndürür — "gönderilmedi"nin iki ayrı
+ * anlamı (`skipped` / `failed`) boolean'a sığmıyor ve çağrı yerinde yeniden
+ * türetilseydi tavan dalı sessizce `failed` okunurdu.
  *
  * Başarısızlık ziyaretçinin yanıtını DEĞİŞTİRMEZ; sonucu yalnız `notify_lead`
  * taşır. Zaman aşımı `toEmail` ile aynı sınırda (8 sn) — ikisi paralel gider.
  */
-async function toLeadEmail(lead: Lead): Promise<boolean> {
+async function toLeadEmail(lead: Lead): Promise<NotifyLead> {
   const key = process.env.RESEND_API_KEY;
   const team = process.env.DEMO_TO;
   const from = process.env.DEMO_FROM;
-  if (!key || !team || !from) return false;
+  // Kanal hiç yapılandırılmamış: mevcut sözleşme korunur (`failed`).
+  if (!key || !team || !from) return "failed";
+  // Tavan sayacı YALNIZ kanal açıkken işler — yapılandırılmamış bir ortamda
+  // hiç gönderilmeyen e-postalar için adresin kotasını yakmak yanlış olurdu.
+  if (confirmCapped(lead.email)) return "skipped";
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -307,13 +380,13 @@ async function toLeadEmail(lead: Lead): Promise<boolean> {
         to: [lead.email],
         reply_to: team,
         subject: LEAD_CONFIRMATION.subject,
-        text: LEAD_CONFIRMATION.text(lead.name),
+        text: LEAD_CONFIRMATION.text,
       }),
       signal: AbortSignal.timeout(8000),
     });
-    return res.ok;
+    return res.ok ? "sent" : "failed";
   } catch {
-    return false;
+    return "failed";
   }
 }
 
@@ -399,11 +472,10 @@ export async function POST(req: Request) {
   // boyunca (8 + 8 sn) bekletirdi ve biri düştüğünde öteki denenmemiş olurdu.
   // İkisi de kendi içinde hata yutup boolean döner, yani `Promise.all` reddetmez.
   const leadAddressable = isValidEmail(lead.email);
-  const [mailed, leadMailed] = await Promise.all([
+  const [mailed, notifyLead] = await Promise.all([
     toEmail(lead),
-    leadAddressable ? toLeadEmail(lead) : Promise.resolve(false),
+    leadAddressable ? toLeadEmail(lead) : Promise.resolve<NotifyLead>("skipped"),
   ]);
-  const notifyLead: NotifyLead = !leadAddressable ? "skipped" : leadMailed ? "sent" : "failed";
 
   // Bildirim durumu kayda geri yazılır (Karar Noktası: notify_* — (a)).
   // Yalnız depo gerçekten yazdıysa (id var) denenir; e-posta denemesinden SONRA.

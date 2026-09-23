@@ -1,4 +1,4 @@
-# Hız sınırlı uca test bataryası — her senaryo kendi IP'sini taşır
+# Sayaçlı uca test bataryası — her senaryo kendi IP'sini VE kendi adresini taşır
 
 `/api/demo` (ve ileride aynı kalıbı alacak `/api/chat`) **IP başına 10 dakikada
 5 istek** sayar (`src/app/api/demo/route.ts` → `limited()`, `LIMIT`/`WINDOW_MS`).
@@ -23,6 +23,31 @@ Kural (TASK-1.05'te ölçüldü):
 
 Sınır bilinçli olarak örnek başınadır (Fluid Compute'ta paylaşımlı sayaca
 taşınmadı — `BULGULAR.md` → Bilinçli Tercihler), yani bu disiplin kalıcıdır.
+
+## İkinci sayaç: onay e-postasının adres başına tavanı (TASK-2.21)
+
+Aynı uçta **ikinci** bir modül-kapsamlı sayaç var: `CONFIRM_HITS` — onay
+e-postası **adres başına 24 saatte 3** (`confirmCapped`). O da süreç boyunca
+yaşar, yani kural genelleşti: **çok senaryolu bir batarya her senaryoda kendi
+IP'sinin yanında kendi e-posta adresini de taşır.**
+
+Bu ölçüldü, tahmin değil: tavan eklendiğinde `validPayload()`'ın sabit
+varsayılan adresi (`ayse@example.com`) mail kanalını açan yedi senaryo boyunca
+tükendi ve **dosyanın ortasındaki** bir senaryo iki e-posta yerine bir tane
+gördü — kırmızı, ölçmek istediği davranışla ilgisiz bir yerde çıktı.
+
+Çözüm senaryoları tek tek düzenlemek değil, **fabrikanın varsayılanını her
+çağrıda tekilleştirmektir** (`email: \`talep-${++payloadSeq}@example.com\``):
+adresin değeri çoğu senaryoda ölçümün konusu değildir, konu olduğu yerde
+senaryo kendi adresini zaten açıkça yazar.
+
+İki fark, ikisi de tuzak:
+
+- **Sayaç yalnız `RESEND_*` tanımlıyken işler** (kanal kapalıyken `toLeadEmail`
+  env kapısında çıkar). Yani adres kotasını yalnız mail kanalını **açan**
+  senaryolar yakar; bataryanın geri kalanı etkilenmez.
+- **Anahtar küçük harfe indirgenir.** Aynı adresin farklı yazımı ayrı kova
+  değildir — testte `Ayse@Example.COM` ile `ayse@example.com` aynı sayaca girer.
 
 ## Arayüz ölçen tarayıcı turunda ucu taklit et
 

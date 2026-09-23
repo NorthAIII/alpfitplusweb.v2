@@ -22,22 +22,29 @@ export const LEAD_CONFIRMATION = {
 
   /**
    * DUZ METIN, HTML degil (v1 HTML gonderiyordu). Iki gerekce: uc zaten ekip
-   * bildirimini duz metin gonderiyor (tek bicim), ve ziyaretcinin yazdigi ad
-   * dogrudan govdeye giriyor — duz metinde kacis/enjeksiyon yuzeyi hic acilmaz.
-   * Kontrol karakterleri ayrica uctaki `cleanLine` ile ayiklanmis durumda.
+   * bildirimini duz metin gonderiyor (tek bicim), ve duz metinde kacis /
+   * enjeksiyon yuzeyi hic acilmaz.
+   *
+   * ⚠️ METIN PARAMETRE ALMAZ — TASK-2.21 (UAT senaryo 26). Selamlama eskiden
+   * `Merhaba ${name},` idi ve ziyaretcinin yazdigi 120 karaktere kadar metni
+   * ALICIYA tasiyordu. Alicinin talep sahibine ait oldugu dogrulanmadigi icin
+   * bu, ucuncu bir kisiye bizim dogrulanmis alan adimizdan saldirganin yazdigi
+   * metni gonderme yuzeyiydi. Sabit metin bu yuzeyi BICIMSEL olarak kapatir:
+   * parametre yoksa enjekte edilecek bir yer de yoktur. Kisisellestirmeyi geri
+   * isteyen her degisiklik ayni soruyu yeniden acar — `route.ts` ->
+   * `confirmCapped` yalnizca HACMI kirpar, ICERIGI degil.
    *
    * "Bu e-postayi yanitlayin" vaadi ancak yanit EKIBIN kutusuna duserse
    * gercekten calisir — gonderim `reply_to`'yu DEMO_TO yapar (v1 dersi).
    */
-  text: (name: string) =>
-    [
-      `Merhaba ${name},`,
-      ``,
-      `Demo talebinizi aldık. En kısa sürede size dönüp demo için uygun bir saat belirleyeceğiz.`,
-      ``,
-      `Acele ediyorsanız bu e-postayı yanıtlamanız yeterli — doğrudan ekibimize ulaşır.`,
-      `WhatsApp: ${CONTACT.whatsapp.display}`,
-      ``,
-      `Alpfit Plus — Kiwi AI Lab`,
-    ].join("\n"),
+  text: [
+    `Merhaba,`,
+    ``,
+    `Demo talebinizi aldık. En kısa sürede size dönüp demo için uygun bir saat belirleyeceğiz.`,
+    ``,
+    `Acele ediyorsanız bu e-postayı yanıtlamanız yeterli — doğrudan ekibimize ulaşır.`,
+    `WhatsApp: ${CONTACT.whatsapp.display}`,
+    ``,
+    `Alpfit Plus — Kiwi AI Lab`,
+  ].join("\n"),
 } as const;
