@@ -7,9 +7,14 @@ export type Shot = { src: string; width: number; height: number; alt: string };
 
 export const SHOTS = {
   cockpit: {
+    // TASK-2.15: yukseklik 655 → 629. Hattin iddia dali acilinca cockpit'in
+    // buyume/ustunluk kalemleri dusuruldu (`.grw` satirlari, `.rank` rozetleri,
+    // "Patron ozeti" karti — DROP_NODES.cockpit) ve sube kartlari bir satir
+    // kisaldi; klip capasi `.branchgrid`in altina bagli oldugu icin cerceve de
+    // kisaldi. Olcum kaynagi hattin kendi ciktisi (product-out/manifest.json).
     src: "/product/cockpit.webp",
     width: 1440,
-    height: 655,
+    height: 629,
     alt: "Alpfit Plus çok şube cockpit ekranı: şube bazlı ciro, aktif üye ve doluluk yan yana",
   },
   takvim: {

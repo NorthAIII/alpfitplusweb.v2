@@ -12,9 +12,22 @@ import {
   FORBIDDEN,
   MIN_FORBIDDEN_PARTS,
   MIN_FORBIDDEN_INITIALS,
+  REPLACEMENTS,
+  CLAIM_REPLACEMENTS,
+  TEXT_FIXES,
   auditTexts,
   deriveForbidden,
 } from "../research/lib/screen-cleanup-v2.mjs";
+// TASK-2.15 — yasakli iddia sozlugu. `research/lib/` altinda cunku arastirma
+// konteyneri yalniz orayi goruyor; `web` konteyneri ikisini de gorur, yani bu
+// import (ve asagidaki CAPABILITIES capasi) YALNIZ bu katmanda mumkun.
+import {
+  CLAIM_LEAK,
+  MIN_CLAIM_PATTERNS,
+  claimLeaks,
+  trLower,
+} from "../research/lib/claim-leak.mjs";
+import { CAPABILITIES } from "@/content/product";
 
 // TASK-2.09 — B-029'un bes karsiliksiz cumlesinin ZIYARETCIYE GORUNEN
 // yuzeylerdeki kapisi.
@@ -240,8 +253,11 @@ describe("TASK-2.13 — ürün görseli alt metni, hattın düşürdüğü kart�
     // Tablo bos ya da okunamaz dondugunde asagidaki dongu HICBIR SEYE bakmaz
     // ve bedava yesil kosar. Sayilar olculdu (2026-09-23).
     expect(SHELL_DROP_NODES.length).toBeGreaterThan(0);
-    expect(dusurulenCapalar("antrenor").length).toBe(6);
+    // TASK-2.15 antrenor'e iki kural ekledi (".d ~ geçen aya göre" donem
+    // kiyasi, ".pill ~ Şubede 1." ustunluk rozeti): 6 → 8.
+    expect(dusurulenCapalar("antrenor").length).toBe(8);
     expect(dusurulenCapalar("raporlar").length).toBe(2);
+    expect(dusurulenCapalar("cockpit").length).toBe(10);
   });
 
   it("pozitif çapa: tablo bugün düşürdüğü üç kalemi adıyla taşıyor", () => {
@@ -372,5 +388,162 @@ describe("TASK-2.14 — görsel denetimin ad dalı temizlik tablosundan türüyo
     expect(auditTexts(["Aylık Performans"], "antrenor").names).toEqual([]);
     // Marka dali ayri kosuyor ve degismedi.
     expect(auditTexts(["muhasebe@weekendplus.com"], "raporlar").brands.length).toBe(1);
+  });
+});
+
+// ── TASK-2.15 — gorsel denetimin IDDIA DALI ──────────────────────────────
+//
+// Neden bu blok var: B-018'in kok nedeninin ikinci yarisi. TASK-2.14 AD dalini
+// tablodan besledi; iddia sizintisi icin ise denetimde HIC DAL YOKTU — yuzde,
+// ciro, ustunluk ve yol-haritasi kalemleri "kalip kacirdi" degil, hic
+// kontrol edilmiyordu (B-044 kalem 3). Sozluk `research/lib/claim-leak.mjs`'te
+// TEK KAYNAK olarak durur; ikinci tuketicisi M6 F6.4'un metin denetimi olacak.
+//
+// Hat seviyesindeki sondalar (cockpit dusurme kurallarinin sokulmesi, kontrol
+// gruplu eski denetim, sozlugun budanmasi) task dokumaninda rakamiyla duruyor;
+// bu blok saf karar fonksiyonunu sentetik girdiyle sinar.
+describe("TASK-2.15 — görsel denetimin iddia dalı", () => {
+  it("sözlük dolu ve tabandan büyük (boş kapsam bekçisi)", () => {
+    // Sozluk cokerse asagidaki senaryolarin HEPSI bedava yesil kosardi.
+    expect(CLAIM_LEAK.length).toBeGreaterThanOrEqual(MIN_CLAIM_PATTERNS);
+    // Her satir kendi gerekcesini tasimali — sozluk "neden yasak" bilgisini
+    // kaybederse bir sonraki bakimci mesru veriyi siler (ayrac kurali).
+    for (const k of CLAIM_LEAK) {
+      expect(k.id, "kalıp id'siz").toBeTruthy();
+      expect(k.neden, `${k.id} gerekçesiz`).toBeTruthy();
+      expect(k.sinif, `${k.id} sınıfsız`).toBeTruthy();
+    }
+  });
+
+  it("Türkçe kıvrım: BÜYÜK harfli iddia yakalanıyor — ve `/i` bunu yapamıyor", () => {
+    // Olculdu 2026-09-23: rozet metni buyuk harfle gecebilir ve Turkce'de
+    // I/ı kivrimi `/i` bayragiyla CALISMAZ. Kontrol grubu olmadan asagidaki
+    // yesil, dogru mekanizmanin eseri mi bilinemez.
+    const rozet = "EN HIZLI BÜYÜYEN ŞUBE";
+    expect(claimLeaks(rozet).length).toBeGreaterThan(0);
+    expect(/en hızlı/i.test(rozet)).toBe(false); // kontrol grubu
+    expect(rozet.toLowerCase().includes("en hızlı")).toBe(false); // kontrol grubu
+    expect(trLower(rozet)).toContain("en hızlı");
+  });
+
+  it("ayraç kuralı: nötr gösterge serbest, kıyas/üstünlük/projeksiyon yasak", () => {
+    // Serbest taraf — urunun ISLEVI. Bunlar kirmiziya donerse hat hic yesile
+    // donmez ve bir sonraki bakimci mesru demo verisini siler.
+    for (const notr of [
+      "₺2.140.000",
+      "%82",
+      "842",
+      "Aktif Üye",
+      "Toplam Ciro",
+      "%59 pay",
+      "+71 bu ay yeni",
+      "Doluluk",
+      "Aylık Performans",
+    ]) {
+      expect(claimLeaks(notr), `nötr değer yanlış alarm verdi: ${notr}`).toEqual([]);
+    }
+    // Yasak taraf — B-018'in ve B-044'un adiyla saydigi dizgeler.
+    for (const yasak of [
+      "+%34 geçen aya göre",
+      "Akşam slotları doldurulursa ciro tek başına ~₺110B/ay artabilir",
+      "★ en hızlı büyüyen şube",
+      "Merkez ciroda lider, ama yeni şube",
+      "Vadi aylık %34 büyümeyle",
+      "4 ayda 227 üyeye ulaştı",
+      "★ Şubede 1.",
+      "1. ciro",
+      "Büyüme (MoM)",
+      "Şubede en yüksek öğrenci tutma oranı",
+      "%91 3 aylık tutma",
+    ]) {
+      expect(claimLeaks(yasak).length, `yasak dizge kaçtı: ${yasak}`).toBeGreaterThan(0);
+    }
+  });
+
+  it("temizliğin KENDİ yazdığı hiçbir hedef iddia sayılmıyor", () => {
+    // Ad dalinin "hedef tarafi cikarilir" kuralinin iddia karsiligi: denetim
+    // kendi ciktisini sizinti sayamaz. Iki tablonun da hedef tarafi taranir.
+    for (const [, hedef] of TEXT_FIXES) {
+      expect(claimLeaks(hedef), `temizliğin hedefi sızıntı sayıldı: ${hedef}`).toEqual([]);
+    }
+  });
+
+  it("izin listesi TAM DEĞERE bakar — terim başka cümlede hâlâ yakalanır", () => {
+    const mesru =
+      "Antrenör seç → gün seç → müsait saat seç → onayla. Admin'in elle telefonla randevu yazması biter — salonun en büyük günlük yükü ortadan kalkar.";
+    // Izinli cumle: bulgu DEGIL (musterinin derdini tarif ediyor).
+    expect(auditTexts([mesru], "takvim").claims).toEqual([]);
+    // uye-telefon ayni belgeden uretiliyor, listeye BAGLI (kopya degil).
+    expect(auditTexts([mesru], "uye-telefon").claims).toEqual([]);
+    // AYNI terim baska bir cumlede hala yasak — parcaya izin verilseydi bu
+    // ekranda "en buyuk" tamamen korelirdi.
+    expect(auditTexts(["Türkiye'nin en büyük kulüp yazılımı"], "takvim").claims.length)
+      .toBeGreaterThan(0);
+    // Izin listesi olmayan bir ekranda mesru cumle de bulgudur (fail-closed).
+    expect(auditTexts([mesru], "cockpit").claims.length).toBeGreaterThan(0);
+  });
+
+  it("düşürülen çapalar sözlük tarafından BAĞIMSIZ olarak görülüyor", () => {
+    // TASK-2.13 bunu rakamla olcmustu: uc dusurme birden kaldirildiginda eski
+    // denetim yalniz 1/3'unu goruyordu ("Kampanyalar" tek sozcuk, "Yenileme &
+    // Churn" `&` yuzunden kor). Sozluk dusurme tablosundan TURETILMEDIGI icin
+    // (dairesellik — claim-leak.mjs basligi) ucunu de gorur: bir dusurme
+    // kurali sessizce kalkarsa uretim durur.
+    for (const capa of ["Kampanyalar", "Yenileme & Churn", "Öğrenci Tutma"]) {
+      expect(claimLeaks(capa).length, `düşürülen çapa korumasız: ${capa}`).toBeGreaterThan(0);
+    }
+  });
+
+  it("yol haritası terimleri bayatlamıyor: hiçbiri CAPABILITIES.simdi'de değil", () => {
+    // Bu, elle tutulan listenin TEK bekcisidir ve yalniz bu katmanda
+    // kurulabilir (arastirma konteyneri `src/`i gormuyor — PHASE-2 arastirmasi).
+    // Bir kalem "yolda"dan "simdi"ye tasinirsa sozluk onu hala yasaklar ve hat
+    // MESRU bir ekrani reddetmeye baslar; bu test o gun kirmizi doner.
+    const simdiMetni = CAPABILITIES.simdi.map((c) => trLower(c.label)).join(" | ");
+    const yolHaritasi = CLAIM_LEAK.filter((k) => k.sinif === "yol haritası kalemi");
+    expect(yolHaritasi.length).toBeGreaterThan(0);
+    for (const k of yolHaritasi) {
+      expect(k.re.test(simdiMetni), `"${k.id}" artık CAPABILITIES.simdi'de — sözlükten çıkarılmalı`)
+        .toBe(false);
+    }
+    // Pozitif capa: kiyas gercekten CAPABILITIES'i okuyor.
+    const yoldaMetni = [...CAPABILITIES.yolda, ...CAPABILITIES.sonra]
+      .map((c) => trLower(c.label))
+      .join(" | ");
+    expect(yoldaMetni).toContain("kampanya");
+    expect(yoldaMetni).toContain("churn");
+  });
+
+  it("iddia eşlemesi AD tablosuna sızmıyor — kontrol grubuyla", () => {
+    // OLCULDU 2026-09-23: bu satir once dogrudan REPLACEMENTS'e konuldu ve hat
+    // kirmizi dondu — `[cockpit] ad sizintisi: ["«ciro» ⊂ \"Aylık ciro\""]`.
+    // Sebep: deriveForbidden yasakli AD kumesini REPLACEMENTS'in kaynak
+    // tarafindan turetir ve iddia cumlesinin her sozcugunu ad sayar.
+    expect(CLAIM_REPLACEMENTS.length).toBeGreaterThan(0);
+    // Bugunku ayrim: siradan sozcukler yasakli AD kumesinde YOK.
+    for (const sozcuk of ["ciro", "doluluk", "sayısı", "eğitmen", "bazlı"]) {
+      expect(FORBIDDEN.parts, `"${sozcuk}" yasaklı ad kümesine sızmış`).not.toContain(sozcuk);
+    }
+    // KONTROL GRUBU: ayni satir ad tablosuna konsaydi kume gercekten bozulurdu.
+    const bozuk = deriveForbidden(
+      [...REPLACEMENTS, ...CLAIM_REPLACEMENTS] as [string, string][],
+      [
+        ["GÖ", "YU"] as [string, string],
+        ["SA", "CV"] as [string, string],
+        ...Array.from({ length: 12 }, (_, i) => [`A${i}`, `B${i}`] as [string, string]),
+      ],
+    );
+    expect(bozuk.parts).toContain("ciro");
+    expect(bozuk.parts).toContain("doluluk");
+  });
+
+  it("denetim dört dallı: ad · marka · iddia birlikte raporlanıyor", () => {
+    const r = auditTexts(
+      ["Box · Gizem Ö. · 17:00 · 60 dk", "muhasebe@weekendplus.com", "+%34 geçen aya göre"],
+      "grup",
+    );
+    expect(r.names.join(" ")).toContain("«Gizem»");
+    expect(r.brands.length).toBe(1);
+    expect(r.claims.join(" ")).toContain("büyüme kıyası");
   });
 });

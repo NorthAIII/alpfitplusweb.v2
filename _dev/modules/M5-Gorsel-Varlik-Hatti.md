@@ -17,7 +17,12 @@
 - Bir sızıntı tespit edilince betik sıfır-olmayan kodla çıkar, dosya yazmaz
 - Betik `../Alpfit.v1` dizinine yazmaz (salt okunur mount)
 - **Denetimin ad dalı temizlik tablosundan türer, kalıptan değil** (TASK-2.14): yasaklı küme `REPLACEMENTS`/`INITIALS`'ın **kaynak** tarafından üretilir, **hedef** tarafı çıkarılır; elle yazılmış ad listesi yoktur ve tabloya satır girdiğinde küme kendiliğinden büyür. İki-tam-sözcük kalıbı **ikincil** dal olarak kalır (tabloya hiç girmemiş ad için) ve `AUDIT_ALLOW` yalnız onu kapatır
-- **Kapsam çökerse denetim yeşil koşmaz:** yasaklı küme (`MIN_FORBIDDEN_PARTS`/`MIN_FORBIDDEN_INITIALS`) ya da toplanan metin kütlesi (`MIN_AUDIT_VALUES`) alt sınırın altına düşerse üretim durur
+- **Denetimin iddia dalı var ve sözlüğü tek evde** (TASK-2.15): yasaklı iddia kalıpları `research/lib/claim-leak.mjs`'te — `docs/CLAIMS.md`'nin "Söylenemez" sütununun makine okunur hâli; M6 F6.4'ün metin denetimi **aynı dosyayı** devralır, ikinci liste açılmaz. Ayraç: projeksiyon/üstünlük/büyüme kıyası yasak, nötr gösterge değeri serbest
+- **İddia izin listesi TAM DEĞERE bakar** (`CLAIM_ALLOW`), eşleşen parçaya değil — bir iddianın meşruluğu cümlesinden gelir; parçaya izin vermek terimi o ekranda tamamen körleştirirdi
+- **Yol haritası terimleri elle tutulur ama bayatlamaz:** araştırma konteyneri `src/`i görmediği için liste `research/lib/` altındadır; `tests/iddia-metinleri.test.ts` her terimi `CAPABILITIES.simdi`'ye karşı doğrular — kalem yayınlanırsa test kırmızı döner
+- **Ad tablosu ile iddia tablosu ayrıdır** (`REPLACEMENTS` ↔ `CLAIM_REPLACEMENTS`, ikisi `TEXT_FIXES`'te birleşir): yasaklı ad kümesi yalnız ad tablosundan türer. Ölçüldü — iddia cümlesi ad tablosuna konduğunda "ciro"/"doluluk" birer yasaklı ad oldu ve yedi ekran kırmızıya düştü
+- **Kapsam çökerse denetim yeşil koşmaz:** yasaklı küme (`MIN_FORBIDDEN_PARTS`/`MIN_FORBIDDEN_INITIALS`), iddia sözlüğü (`MIN_CLAIM_PATTERNS`) ya da toplanan metin kütlesi (`MIN_AUDIT_VALUES`) alt sınırın altına düşerse üretim durur
+- **Düğüm düşürme sözleşmesi "tam N eşleşme"dir** (varsayılan 1; üçüncü alanla sayı yazılabilir) — bir sınıfı birden düşüren kural çapayı rakama bağlamadan yazılır, fail-fast korunur
 - Denetim **son DOM'u** görür — metin değerleri tüm mutasyonlardan (düşürme, eşleme, avatar senkronu, görsel temizliği) sonra toplanır
 
 **Bağımlılık:** Yok

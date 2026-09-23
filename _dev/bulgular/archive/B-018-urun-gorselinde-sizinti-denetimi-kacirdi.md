@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / iddia sızıntısı | **Alan:** M5 — Görsel varlık hattı / M1 — İddia sınırı
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** → Faz 2
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -122,3 +122,21 @@ Bu atomun "Koruma Önerisi"nin birinci maddesi uygulandı: *"denetim … eşleme
 | **"Gizem Ö." (`grup.webp`)** | **AÇIK, gözle doğrulandı** — "Box · **Gizem Ö.** · 17:00 · 60 dk"; görsel `ProductStory.tsx:52` ile **ana sayfada** render ediliyor. Yasal metnin *"gerçek bir kişinin verisi gösterilmemektedir"* beyanı (`legal.ts:302`) çürümeye devam ediyor |
 | "Kampanyalar" nav (yol haritası özelliği) | **AÇIK — 6/7 görselde** (`cockpit/takvim/grup/finans/antrenor/raporlar/uye.html` kaynaklarının her birinde 1 geçiş) |
 | "Yenileme & Churn" | **AÇIK** — `../Alpfit.v1/demo/raporlar.html:242` `<h4>Yenileme &amp; Churn</h4>`; `raporlar.webp` bu kaynaktan üretiliyor |
+
+**TASK-2.15 (2026-09-23) — kök nedenin İDDİA yarısı kapandı; ATOM KAPANIR.**
+
+Bu atomun "Koruma Önerisi"nin ikinci maddesi uygulandı: *"Yasaklı iddia sözlüğü görsellere de uygulanır … Bu, M6 F6.4'ün (iddia sızıntı denetimi) metin tarafıyla **aynı sözlüğü** paylaşabilir."*
+
+- **Sözlük tek evde:** `research/lib/claim-leak.mjs` — 20 kalıp, beş sınıf (büyüme kıyası · üstünlük · ROI/projeksiyon · müşteri sayısı · yol haritası kalemi), her satır kendi gerekçesiyle. `auditTexts` artık **dört dallı** (ad · avatar baş harfi · marka · iddia) ve iddia bulgusu üretimi durduruyor. F6.4 aynı dosyayı devralır.
+- **Ayraç ölçülerek kondu:** yasak olan projeksiyon/üstünlük/büyüme kıyası, serbest olan nötr gösterge değeri. Ölçüldü — yedi ekranın 859 metin değerinde "ciro" 22, "doluluk" 15 değerde geçiyor ve neredeyse hepsi meşru; `₺` ya da `%` görmek tek başına sızıntı değildir.
+- **İzin listesi yöntemle dolduruldu.** Kapı önce **boş** izin listesiyle koşuldu: **27 vuruş**. 25'i CLAIMS'in yasak sınıfı → izin listesine **girmedi**, `DROP_NODES`/`CLAIM_REPLACEMENTS` ile kapatıldı. 2'si (tek cümle, iki ekranda) meşru → `CLAIM_ALLOW`'a gerekçesiyle girdi. İzin listesi **tam değere** bakar, eşleşen parçaya değil — bir iddianın meşruluğu cümlesinden gelir.
+- **En ağır bulgu bu turda çıktı: `cockpit.webp` ana sayfanın HERO görselidir** (`Hero.tsx:84`, ayrıca ProductStory adım 4 ve Roller → yönetim) ve 27 vuruşun **20'si** oradaydı. Kare, bu atomun `sube.webp`'i hattan düşürten "Şube özeti" kartıyla **aynı sınıftan** bir "Patron özeti" kartı taşıyordu: *"…lider, ama yeni şube Vadi aylık %34 büyümeyle en hızlısı — 4 ayda 227 üyeye ulaştı … optimize edilirse hedef %82'ye en yakın aday."* Yanında üç şube kartının "+%N geçen aya göre" satırı, "1. ciro"/"2. ciro"/"en hızlı" rozetleri, "+%12,4" ve "-%3" KPI deltaları, karşılaştırma tablosunun "Büyüme (MoM)" satırı ve "en iyi = ●" açıklaması. `sube` 2026-09-12'de yayından çekilmişti; cockpit'e hiç bakılmamıştı çünkü denetimin iddia dalı yoktu.
+- **Körlük kontrol gruplu ölçümle kapatıldı.** Cockpit düşürme kuralları sökülüp hat koşturuldu: **yeni** denetim 20 iddia bulgusuyla çıkış **1**, 0 dosya yazıldı; **eski** denetim (iddia dalı kapalı, `abfa2b7`) aynı girdide çıkış **0** verip sekiz dosya yazdı ve sızıntılı `cockpit.webp`'i üretti (`4c876b3d…` ≠ temiz `a598e3c4…`) — bu atomun anlattığı arıza birebir yeniden üretildi.
+- **Dizge ölçümü:** bu atomun ve B-044'ün **adıyla saydığı 20 sızıntı dizgesi** iki denetime karşı koşuldu — eski **3/20** görüyor, yeni **10/20**. (⚠️ B-044'ün metni "21 dizge" diyor ama kod bloğu 19 kör + 1 görülen = **20** yazıyor; 21'inci dizge hiçbir yerde yazılı değil. Ölçüm yazılı olanlar üzerinden yapıldı.)
+- **Çıktı değişti ve gerekçesi yazılı:** dört görsel yeniden üretildi (cockpit · finans · antrenor · raporlar), üçü bayt bayt aynı kaldı. Toplam 264.962 → **258.782 B**. Tek boyut değişimi cockpit 1440×655 → **1440×629** (şube kartları bir satır kısaldı, klip çapası `.branchgrid`e bağlı) — `src/content/shots.ts` buna göre güncellendi. Dört çıktı **gözle okundu**: KPI şeridi dört kartta da üç satırlı kaldı, şube kartları simetrik.
+
+**Kapanış kapsamı — kapsanmayan yüzey [B-044](B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md)'te AÇIK kalır:**
+- **Avatar baş harfleri** (`BŞ` · `TU` · `KA` · `DK` · `EÖ` · `BT` · `AK`) — semt baş harfi (kalem 1) ve `.av` sınıfının 25 düğümü (kalem 2); bu fazın kapsam dışı listesinde, `AVATAR_SELECTOR`/`INITIALS` konusu.
+- **Tarih/makullük sınıfı** (`Açılış: Şubat 2026 · 4 aylık`, `Ekipte: Mar 2023`, `son 6 ay`) — sözlüğe **bilinçle alınmadı**: CLAIMS'in "Söylenemez" sütununda karşılığı yok ve ölçüldü ki kalıp alınsaydı finans ekranının "Ciro Trendi · son 6 ay" ekseni ile üç ekrandaki "Haziran 2026" başlığı kırmızıya düşerdi. Gelen Kutusu'nda bu sınıfın `[audit-product SORU]` satırı cevap bekliyor.
+- **Hero'daki elle yazılmış "%78" kartı** — hattın çıktısı olmadığı için `auditTexts` onu yapısal olarak göremez (B-044, M6 F6.4'ün işi).
+- **Rakip adı dalı** — bu hatta girdisi yok (18 addan 0'ı demo kaynağında); mekanizma F6.4'e bırakıldı (`docs/DECISIONS.md` 2026-09-23).

@@ -19,6 +19,29 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-23 — Yasaklı iddia sözlüğünde rakip adı tutulmaz: ne düz metin ne hash; slot beyan edilir, mekanizma F6.4'e bırakılır
+
+**Bağlam:** TASK-2.15 görsel denetime iddia dalı ekledi ve sözlüğü `research/lib/claim-leak.mjs`'te tek kaynak olarak kurdu. Sözlüğün dayanağı `CLAIMS.md`'nin "Söylenemez" sütunu; o sütunun bir satırı **rakip adı**. Ama aynı sınır depoya da uzanıyor: M6 F6.4'ün edge case'i *"rakip adı repoda geçerse kendisi sızıntıdır"* diyor. Task dokümanı bu yüzden bir karar noktası bırakmıştı: düz metin mi, kalıp/hash mı.
+
+**Ölçüm (2026-09-23):** satış dosyasının (`../alpfit-plus-satis/rekabet/`, salt okunur) başlıklarından çıkan **18 gerçek rakip ürün adının 0 tanesi** demo kaynağında (`../Alpfit.v1/demo/*.html`) geçiyor — bu hattın girdisi kendi ürünümüzün demosu, yani sınıfın bu hatta **hiç girdisi yok**. Aynı tarama v2 `src/` içinde bir "rakip adı" bildirdi; bakıldı ve sıradan bir Türkçe sözcük çıktı (kaba ad listesinin yanlış alarmı).
+
+**Seçenekler:**
+1. Adları düz metin olarak sözlüğe yaz — F6.4'ün edge case'inin adıyla yasakladığı şey; deponun kendisi sızıntı olur.
+2. Adların SHA-256 özetlerini tut, jetonları hash'leyerek karşılaştır — düz metin sızdırmaz ama bugün **girdisi olmayan** bir sınıf için mekanizma kurar; ayrıca jeton sınırı (ad kaç sözcük?) ölçülmeden seçilemez.
+3. Slotu sözlükte **adıyla ve gerekçesiyle** beyan et, kalıp/hash mekanizmasını girdinin gerçekten olduğu yere (F6.4 → `src/` metin denetimi) bırak.
+
+**Karar:** 3. `claim-leak.mjs` başlığı slotu ve ölçümü yazılı tutar; dosyada ne ad ne hash durur.
+
+**Gerekçe:**
+- **Bugün koruduğu bir şey yok.** Görsel hattın girdisi kendi demomuz; ölçülen vuruş 0. Girdisi olmayan bir dal, kapının kapsamını büyütmeden bakım borcu üretir.
+- **Yanlış alarm ölçüldü.** Kaba ad eşlemesi bir Türkçe sözcüğü rakip adı sandı. Doğru jeton sınırını seçmek, sınıfın gerçek girdisine (site metni) bakmayı gerektirir — o da F6.4'ün işi.
+- **Tek kaynak korunur.** Sözlük zaten F6.4'ün devralacağı dosya; mekanizma oraya eklendiğinde aynı dosyaya girer, ikinci bir ev açılmaz.
+- **Bedel, bilerek kabul:** görsel hat bugün bir rakip adını göremez. Kaynak salt okunur bir demo olduğu için bu ancak ürün demosuna rakip adı girerse anlam kazanır; o gün F6.4 mekanizması zaten kurulmuş olur.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.15 (`tasks/archive/TASK-2.15.md`), M6 F6.4'ün girdisi
+
+---
+
 ### 2026-09-23 — Yayınlanan yetenek kalemi, onu "henüz yok" diye anan cümleyi derleme hatasına çevirir
 
 **Bağlam:** TASK-2.11 yol haritasının son dört evini `CAPABILITIES`'e bağlarken şu sınıf ortaya çıktı: yedi düzyazı cümle kalemi **adıyla** anıyor ve o adın **henüz olmadığını** söylüyor ("QR ve turnike ile giriş **yol haritamızda**", "kartla online ödeme **bugünkü sürümde yok**"). Adı sabitten almak **adı** hizalar; kalem yayınlandığı gün ad doğru kalır, **cümle sessizce yanlış olur** — B-040'ın ölçtüğü ayrışmanın ters yönü.

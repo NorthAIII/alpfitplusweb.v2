@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.13: ürün görseli temizliği koştu, **B-018'in dört kalemi de kapandı** (Gizem Ö. · Kampanyalar 7/7 · Yenileme & Churn · Öğrenci Tutma) ama **atom açık kalır** — kök neden denetimde, TASK-2.15'te kapanır. Gelen Kutusu'nun "Öğrenci Tutma görüntüsü" satırı mezun oldu; yerine iki ölçülmüş satır girdi (raporlar şablon metni · denetimin 1/3 körlüğü). `B-044`'ün envanter tablosunun üç satırı tazelendi. Açık bulgu sayısı **45** (değişmedi — atom arşive gitmedi).
+**Son Güncelleme:** 2026-09-23 — TASK-2.15: görsel denetime **iddia dalı** eklendi ve sözlük `research/lib/claim-leak.mjs`'te tek eve kondu → **B-018 kapandı ve arşive gitti** (kök nedenin iki yarısı da bitti: ad dalı 2.14, iddia dalı 2.15). Boş izin listesiyle ölçülen 27 vuruşun 25'i kapatıldı, 2'si gerekçesiyle izinli; en ağırı ana sayfanın **hero** görselindeydi (cockpit, 20 vuruş). Gelen Kutusu'nun iki TASK-2.13 satırı mezun oldu. `B-044` kancası tazelendi (kalem 3'ün iddia yarısı kapandı). Açık bulgu sayısı 45 → **44**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -35,8 +35,6 @@
      Not task'a dönüştüğünde veya atomlaştığında satır
      SİLİNİR — bilgi yeni evine taşınmıştır (mezuniyet). Olgun hal: boş kutu. -->
 
-- [TASK-2.13] `raporlar.webp`'in **"Antrenör Performansı"** rapor şablonu kartı *"Ders sayısı, ciro, doluluk ve **öğrenci tutma** — eğitmen ve şube bazlı"* diyor; üçü de ürünün kendi kodunda karşılıksız ("öğrenci tutma" 0 kez geçiyor; "ciro"/"doluluk" antrenör bağlamında `trainer-performance.service.ts:7` ve `attendance-count.ts:11` ile reddedilmiş — aynı hat o iki kartı antrenör ekranından bu gerekçeyle düşürüyor). Düşürme yanlış çare: şablon meşru, sorun açıklama metni → `REPLACEMENTS` sınıfı iş, evi TASK-2.15 sözlüğü / B-044
-- [TASK-2.13] **Ölçüldü — bugün kapatılan iki kalemin arkasında kapı yok:** boş-kapsam sondası (üç düşürme birden kaldırıldı) denetimin **1/3** yakaladığını gösterdi. "Öğrenci Tutma" ad kalıbına uyduğu için kırmızı veriyor; "Kampanyalar" tek sözcük olduğu için, "Yenileme & Churn" ise `&` kalıbı bozduğu için **görünmez** — "Simge & Gizem"i kör eden mekanizmanın aynısı. TASK-2.15'in iddia sözlüğünün ölçülmüş gerekçesi
 - [TASK-2.12] **Belirsiz kalem:** `site.ts:15` meta açıklaması *"Spor kulübünüzün tamamı tek panelde **ve mobilde**"* diyor. Üye ve antrenör mobil uygulaması var, ama yönetim paneli masaüstü-öncelikli (mobil tam responsive → v1.5) ve "Patron Mobil Özet" → v1.5. Cümle bütün olarak savunulabilir, sıkı okuması değil — karşılıksız sayılmadı, kanıtsız da silinmedi
 - [TASK-2.12] M6 F6.4 (iddia sızıntı denetimi) için ölçülmüş iki girdi: ürünün **kanonik** erteleme listesi `../Alpfit.v1/_dev/PRD/VERSIONS.md` → v1.5/v2 Feature Adayları (dağıtık kod yorumlarından daha eksiksiz — "öğrenci tutma" yalnız orada görünüyor) ve `web/src/shell/navConfig.ts`'in `status:'soon'` alanı (makine-okunur "ekran henüz yok" listesi). B-029 arşive giderken Koruma Önerisi'nin bu ayağı yaşayan eve taşındı
 - [TASK-2.11] Rakip tarama rakamı dört evde iki biçimde: `chat.ts` ve `WhyUs.tsx` "9 yerli ve 9 global", `product.ts` ve `karsilastirma.ts` "18" — çelişmiyor (9+9=18) ama dördü de `karsilastirma.ts` → `ARASTIRMA` sabitinden türemiyor. B-014'ün Koruma Önerisi'nde duruyordu, atom kapanırken buraya taşındı
@@ -93,7 +91,6 @@
 
 - 🔴 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — `content-type` kontrolsüz çapraz-site POST **artık depoya satır yazıyor**; `null` gövde 500; 5 MB gövde kabul
 - 🔴 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — dört kalem açık; "IP saklamaz" beyanı ölçülen nginx logu gerçeğiyle çelişiyor, `ip_hash` 12 ay saklanıyor → Faz 2
-- 🔴 [B-018 — Ürün görselinde gerçek kişi adı ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — dört kalemin dördü de kapandı (TASK-2.13); kök neden duruyor: denetim hâlâ iki dallı, 1/3 görüyor → TASK-2.15
 - 🔴 [B-054 — İletişim kuralı ters eksende gevşek](bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md) — meşru yazımlar 422; `0532111223`/`0000000000` **200 `stored:true`** — ulaşılamaz numara artık kayda geçiyor
 - 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok → Faz 2
 - 🔴 [B-032 — Ana sayfada ve segment sayfalarında ölçülmüş AA kontrast ihlalleri](bulgular/B-032-olculmus-aa-ihlalleri.md) — ürün turu soluk kartları 2,54:1, kapanış paragrafı 3,48:1; ILKELER pazarlıksız diyor
@@ -110,7 +107,7 @@
 - 🟡 [B-061 — Lead deposunun tek yedeği aynı sunucuda ve aynı hacimde](bulgular/B-061-lead-deposu-yedegi-ayni-sunucuda.md) — S3 kapalı, yedekler `pb_data/` içinde; geçişten sonra tek dayanıklı hedef orası
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — 15/15 rotada yok; Umami artık gerçekten yüklendiği için yazma penceresi tam şimdi açık
 - 🟡 [B-025 — Çalışma zamanı için hiçbir alarm yok](bulgular/B-025-calisma-zamani-alarm-yok.md) — v1'in `⚠ KAYIT EDİLEMEDİ` e-posta öneki v2'de yok; depo düşerse ekip ayırt edilemeyen bir posta alır
-- 🟡 [B-044 — Ürün görselinde avatar-ad uyumsuzluğu ve denetim körlüğü](bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) — semt kalemi kapandı; körlük hattın dışına uzanıyor (Hero'daki elle yazılmış "%78")
+- 🟡 [B-044 — Ürün görselinde avatar-ad uyumsuzluğu ve denetim körlüğü](bulgular/B-044-urun-gorselinde-semt-bas-harfi-ve-avatar-uyumsuzlugu.md) — kalem 3'ün iddia yarısı kapandı (TASK-2.15, 3/20 → 10/20); açık: avatar baş harfleri, tarih/makullük sınıfı, Hero'daki "%78"
 - 🟡 [B-042 — Paylaşım kartı sayfa başına türemiyor, `/foto` önbelleksiz](bulgular/B-042-paylasim-karti-ve-yayin-yuzeyi.md) — `canonical`/`<title>` kapandı, `FAQPage` eklendi; `og:url` hâlâ 15/15 ana sayfa
 - 🟡 [B-043 — F7.5 geçiş yüzeyi tabloda yazandan geniş](bulgular/B-043-f75-gecis-yuzeyi-tablodan-genis.md) — altı varlık adresi 404'e düşecek, `www` haritada yok, 20 adreslik harita bugünkü canlıya karşı doğrulanmadı
 - 🟡 [B-039 — Metin bileşende: `SectionHead`/`PageHero`'nun 103 değerinden yalnız 3'ü içerikten](bulgular/B-039-metin-bilesende.md) — "Metin tonu" fazının ön koşulu; eski kanıt komutu geçersizdi, yeni yöntem atomda

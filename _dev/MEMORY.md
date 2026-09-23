@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.14: tarayıcı ölçümü atomu genişletildi, yeni dosya açılmadı. `-v` ile bağlanan sonda betiğinin hedefi `/work`'ün **içine** düşerse Docker mount noktasını yaratıyor ve konteyner çıkınca ana makinenin `research/` klasöründe **0 baytlık root sahipli** bir dosya kalıyor (ölçüldü: iki sonda betiği ağaçta yer-tutucu bıraktı, `git status`'a izlenmeyen dosya olarak düştü). Kural dosya/dizin ayrımı değil **hedefin var olup olmadığıdır**: betik `/work` dışına bağlanır, var olan bir dizinin (`product-out`, `lib`) üzerine bağlamak güvenlidir.
+**Son Güncelleme:** 2026-09-23 — TASK-2.15: süpürme atomu genişletildi, yeni dosya açılmadı. Türkçe metinde kalıp eşlemesinin çaresi "harfe duyarsız yap" değil — ölçüldü ki `/i` bayrağı da `.toLowerCase()` de `"EN HIZLI"`yi `"en hızlı"` kalıbıyla eşleştiremiyor (`I`/`ı` kıvrımı), yalnız `.toLocaleLowerCase("tr")` eşleştiriyor. Ölçüt aranan şeyin ne olduğudur: bizim yazdığımız düzyazı kavram → Türkçe yerelle duyarsız; kaynağın kendi özel adı → duyarlı.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 

@@ -5,14 +5,16 @@
  * Hat v1 sitesinden devralindi (scripts/build-assets.mjs + lib/screen-cleanup.mjs):
  *  1. Eski marka, gercek sporcu adlari ve gercek semt adlari degistirilir.
  *  2. Urunun bugun karsilamadigi iddialari tasiyan dugumler DOM'dan dusurulur.
- *  3. Denetim: gercek ad veya eski marka sizarsa URETIM DURUR (sessiz "temiz" yok).
+ *  3. Denetim: gercek ad, eski marka ya da YASAKLI IDDIA sizarsa URETIM DURUR
+ *     (sessiz "temiz" yok). Iddia sozlugu `lib/claim-leak.mjs` — tek kaynak,
+ *     ikinci tuketicisi M6 F6.4'un metin denetimi olacak.
  *  4. Yapisal capaya gore kirpilir, DSF 2 render edilir, webp'ye indirilir.
  */
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { mkdir, writeFile } from 'node:fs/promises';
 import {
-  REPLACEMENTS,
+  TEXT_FIXES,
   INITIALS,
   AVATAR_SELECTOR,
   DROP_NODES,
@@ -65,14 +67,23 @@ async function renderScreen(browser, screen) {
       //    REPLACEMENTS'tan once okunur. Dusurme once oldugu icin denetimin
       //    gordugu kutle de dusen dugumleri ICERMEZ — dusen iddia allow-list'e
       //    yazilmak zorunda kalmaz.
+      //    SOZLESME: her girdi TAM BEKLENEN SAYIDA dugum esler. Ucuncu alan
+      //    verilmezse beklenen 1'dir (kurallarin ezici cogunlugu) — TASK-2.15
+      //    bir SINIFI birden dusuren kural icin sayiyi acik yazilabilir yapti
+      //    (cockpit'te uc sube kartinin "gecen aya gore" satiri ayni kuraldir;
+      //    uc ayri kural yazmak capayi rakama baglardi). Fail-fast AYNEN korunur
+      //    ve genisler: 3 beklenip 2 ya da 4 bulunursa URETIM DURUR.
       const drops = [];
-      for (const [sel, anchor] of dropList) {
+      for (const [sel, anchor, beklenen = 1] of dropList) {
         const hits = [...document.querySelectorAll(sel)].filter((e) =>
           (e.textContent || '').includes(anchor),
         );
-        if (hits.length !== 1) { drops.push({ sel, anchor, count: hits.length, ok: false }); continue; }
-        hits[0].remove();
-        drops.push({ sel, anchor, count: 1, ok: true });
+        if (hits.length !== beklenen) {
+          drops.push({ sel, anchor, count: hits.length, beklenen, ok: false });
+          continue;
+        }
+        for (const hit of hits) hit.remove();
+        drops.push({ sel, anchor, count: hits.length, beklenen, ok: true });
       }
 
       // 2) Metin duzeltmeleri — uzun eslesmeler once
@@ -130,7 +141,9 @@ async function renderScreen(browser, screen) {
       return { values, drops, imgs, imgLeaks };
     },
     {
-      replacements: REPLACEMENTS,
+      // AD tablosu + IDDIA tablosu birlikte uygulanir; ad TURETMESI yalniz ad
+      // tablosunu okur (gerekce ve olcum: screen-cleanup-v2.mjs → CLAIM_REPLACEMENTS).
+      replacements: TEXT_FIXES,
       initials: INITIALS,
       avatarSel: AVATAR_SELECTOR,
       // ORTAK KABUK kurallari HER ekrana uygulanir, ekran-ozel liste ustune biner.
@@ -144,7 +157,9 @@ async function renderScreen(browser, screen) {
   if (bad.length) {
     throw new Error(
       `[${screen.id}] düğüm düşürme çapası tam eşleşmedi: ` +
-        bad.map((b) => `${b.sel} ~ "${b.anchor}" → ${b.count} eşleşme`).join(' · '),
+        bad
+          .map((b) => `${b.sel} ~ "${b.anchor}" → ${b.count} eşleşme (beklenen ${b.beklenen})`)
+          .join(' · '),
     );
   }
 
@@ -169,10 +184,11 @@ async function renderScreen(browser, screen) {
   }
 
   const audit = auditTexts(values, screen.id);
-  if (audit.names.length || audit.brands.length) {
+  if (audit.names.length || audit.brands.length || audit.claims.length) {
     const msg =
       `[${screen.id}] DENETİM BAŞARISIZ — ad sızıntısı: ${JSON.stringify(audit.names)} · ` +
-      `marka sızıntısı: ${JSON.stringify(audit.brands)}`;
+      `marka sızıntısı: ${JSON.stringify(audit.brands)} · ` +
+      `iddia sızıntısı: ${JSON.stringify(audit.claims)}`;
     // DRY modu yalnizca sizinti envanteri cikarmak icindir; uretim yapmaz.
     if (process.env.AUDIT_DRY === '1') { console.log('✗ ' + msg); await ctx.close(); return null; }
     throw new Error(msg);
@@ -224,10 +240,12 @@ for (const screen of SCREENS) {
   manifest.push({ out: screen.out, width: meta.width, height: meta.height, kb: Math.round(buf.length / 1024) });
   console.log(
     `✓ ${screen.out.padEnd(18)} ${meta.width}×${meta.height}  ${String(Math.round(buf.length / 1024)).padStart(4)} KB` +
-      (drops.length ? `  · ${drops.length} düğüm` : '') +
+      (drops.length ? `  · ${drops.reduce((n, d) => n + d.count, 0)} düğüm` : '') +
       (imgs.length ? `  · ${imgs.length} görsel temizlendi` : ''),
   );
 }
 await writeFile(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2));
 await browser.close();
-console.log('\nDenetim: her ekran ad, marka ve GÖRSEL sızıntısı için tarandı, sızıntı yok.');
+console.log(
+  '\nDenetim: her ekran ad, marka, İDDİA ve GÖRSEL sızıntısı için tarandı, sızıntı yok.',
+);

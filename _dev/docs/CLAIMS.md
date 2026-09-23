@@ -40,8 +40,12 @@
 
 ## Sızıntı Denetimi
 
-Bugün elle: `render-product.mjs` görsel sızıntıyı keser; metin sızıntısı (rakip adı, "canlı", "sahada", yüzde, "müşterilerimiz") için otomatik denetim **yok**. "Kalite kapıları otomatik" faz konusu bunu M6'ya ekler (`modules/M6-Kalite-Kapilari.md` → F6.4).
+**Görsel taraf — kapı var ve dört dallı** (TASK-2.13 · 2.14 · 2.15). `render-product.mjs` her ürün ekranını üretmeden önce tarar: **ad** (temizlik tablosunun kaynak tarafından türeyen yasaklı ad parçaları), **avatar baş harfi**, **eski marka**, ve **iddia**. Sızıntı bulunursa sıfır-olmayan çıkışla durur, dosya yazmaz.
+
+**Yasaklı iddia sözlüğü tek evdedir:** `research/lib/claim-leak.mjs` — bu tablonun "Söylenemez" sütununun makine okunur hâli (ROI/projeksiyon, yüzde iyileşme ve büyüme kıyası, müşteri sayısı övgüsü, üstünlük, ürünün bugün taşımadığı yol haritası kalemleri). **Ayraç:** projeksiyon / üstünlük / büyüme kıyası yasak, nötr gösterge değeri (ciro tutarı, doluluk yüzdesi) serbest — ürün ekranı bunları göstermek için vardır. Rakip adı sözlükte düz metin ya da hash olarak **durmaz** (gerekçe ve ölçüm: `DECISIONS.md` 2026-09-23).
+
+**Metin tarafı hâlâ açık.** `src/content/`, bileşenler ve render edilmiş sayfalar için otomatik denetim **yok**; "Kalite kapıları otomatik" faz konusu bunu M6'ya ekler (`modules/M6-Kalite-Kapilari.md` → F6.4) ve **aynı sözlük dosyasını devralır** — ikinci bir liste açılmaz.
 
 ---
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.08: Tek Kaynaklar'a yetenek/yol haritası satırı eklendi (`product.ts` → `CAPABILITIES`); `PRODUCT_STATUS.modules` artık o listeden türüyor.
+**Son Güncelleme:** 2026-09-23 — TASK-2.15: Sızıntı Denetimi bölümü gerçekle hizalandı — görsel hattın denetimi artık dört dallı ve yasaklı iddia sözlüğü `research/lib/claim-leak.mjs`'te tek evde (F6.4 aynı dosyayı devralır); metin tarafı hâlâ açık. Söylenebilir/Söylenemez tablosuna dokunulmadı.

@@ -14,6 +14,9 @@ import {
   AUDIT_ALLOW as V1_AUDIT_ALLOW,
   BRAND_LEAK,
 } from './screen-cleanup.mjs';
+import { claimLeaks, trLower, CLAIM_LEAK } from './claim-leak.mjs';
+
+export { CLAIM_LEAK };
 
 /** grup.html ve sube.html'de gecen, v1 tablosunda olmayan gercek sporcu adlari. */
 const V2_REPLACEMENTS = [
@@ -54,7 +57,71 @@ const V2_REPLACEMENTS = [
   ['Simge', 'Cüneyt'],
 ];
 
+/**
+ * IDDIA SINIFI METIN ESLEMELERI — `REPLACEMENTS`TAN AYRI TABLO (TASK-2.15).
+ *
+ * ## Neden ayri: OLCULDU, tek tabloda denendi ve KAPI YAKALADI
+ *
+ * Ilk deneme bu satiri dogrudan `V2_REPLACEMENTS`e koydu. Hat aninda kirmizi
+ * dondu (2026-09-23):
+ *
+ *   [cockpit] DENETIM BASARISIZ — ad sizintisi: ["«ciro» ⊂ \"Aylık ciro\""]
+ *
+ * Sebep yapisal: `deriveForbidden()` yasakli AD kumesini `REPLACEMENTS`in
+ * KAYNAK tarafindan turetir ve `nameParts()` her satiri bosluk/virgul ile
+ * bolup >= 3 harfli her parcayi ad sayar. Iddia cumlesi tabloya girdigi anda
+ * "ciro", "doluluk", "öğrenci", "sayısı", "şube" birer YASAKLI AD oldu ve yedi
+ * ekran birden kirmiziya dustu.
+ *
+ * Bu, v1 tablosunun kendi yazili kuralinin ta kendisidir (`screen-cleanup.mjs`
+ * → DROP_NODES basligi): *"`REPLACEMENTS`'in sozlesmesi gercek ad/semt/eski
+ * marka temizligidir … Iki sozlesmeyi tek tabloda toplamak ikisini de
+ * bulanikkastirirdi."* Ayni gerekce dusurme icin ayri tablo actirmisti; ayni
+ * gerekce iddia eslemesi icin de bir tablo actiriyor.
+ *
+ * Hat ikisini BIRLIKTE uygular (`TEXT_FIXES`), ad turetmesi YALNIZ
+ * `REPLACEMENTS`i okur — ayrim tam olarak burada yasar.
+ */
+export const CLAIM_REPLACEMENTS = [
+  /**
+   * B-018 / TASK-2.15 — IDDIA sinifi bir esleme (ad degil). `raporlar.html:170`
+   * "Antrenor Performansi" RAPOR SABLONUNUN aciklama metni uc sey sayiyor ve
+   * ucu de bu baglamda urunun karsilamadigi iddia:
+   *   · "ogrenci tutma" → tum urun kod tabaninda 0 kez geciyor, kalem v1.5'te
+   *     (TASK-2.12 olctu; ayni kart antrenor ekranindan DUSURULUYOR).
+   *   · "ciro" → `../Alpfit.v1/backend/src/services/trainer-performance.service.ts:7`
+   *     bu metrigi adiyla reddediyor: "**FINANSAL CIRO DEGIL**; bu servis
+   *     Payment/Refund'a HIC dokunmaz. Operasyonel/prim metrigidir."
+   *   · "doluluk" → ayni servis: "doluluk prime karismaz, kendi kolonunda
+   *     gosterilir"; `attendance-count.ts:11` doluluk %'sini kapsam disi birakir.
+   *
+   * DUSURME degil ESLEME, cunku sablonun KENDISI mesru bir rapordur (antrenor
+   * performansi CAPABILITIES.simdi'de) — bozuk olan yalniz aciklama metni.
+   * Ayrimi B-044 adiyla yaziyor: "Dusurme burada yanlis care: sorun aciklama
+   * metni — yani REPLACEMENTS sinifi bir is."
+   *
+   * YERINE yazilan metin de bir IDDIADIR ve ayrica olculdu (memory →
+   * `urun-iddiasi-capa-dogrulamasi.md`): ayni servis performans tutarini
+   * "birim ders ucreti × verilen ders sayisi" diye tanimliyor ve kendini
+   * "prim metrigi" olarak adlandiriyor; sube atfi da gercek ("hizmet subesi").
+   * Yani "ders sayisi", "prim verisi" ve "sube bazli" ucu de karsiligi olculmus
+   * ifadelerdir.
+   */
+  [
+    'Ders sayısı, ciro, doluluk ve öğrenci tutma — eğitmen ve şube bazlı.',
+    'Ders sayısı ve prim verisi — eğitmen ve şube bazlı.',
+  ],
+];
+
+/** AD/SEMT/MARKA tablosu — yasakli ad kumesi YALNIZ bunun kaynak tarafindan turer. */
 export const REPLACEMENTS = [...V1_REPLACEMENTS, ...V2_REPLACEMENTS];
+
+/**
+ * Hattin metin dugumlerine UYGULADIGI tam liste: ad tablosu + iddia tablosu.
+ * Ayrim bilincli — gerekcesi `CLAIM_REPLACEMENTS` basliginda, olcumuyle.
+ * `deriveForbidden` bunu DEGIL `REPLACEMENTS`i okur.
+ */
+export const TEXT_FIXES = [...REPLACEMENTS, ...CLAIM_REPLACEMENTS];
 export const INITIALS = [
   ...V1_INITIALS,
   ['FK', 'DA'], ['ŞH', 'TB'],
@@ -104,7 +171,59 @@ export const DROP_NODES = {
    * Ayni kartin ustundeki "★ Subede 1." rozeti ve "Ekipte: Mar 2023" B-044'te
    * kalir — bu fazin kapsami disinda (PHASE-2 → Kapsam Disi).
    */
-  antrenor: [...V1_DROP_NODES.antrenor, ['.detgrid .card', 'Öğrenci Tutma']],
+  antrenor: [
+    ...V1_DROP_NODES.antrenor,
+    ['.detgrid .card', 'Öğrenci Tutma'],
+    // B-018 / TASK-2.15 — iddia dali acilinca gorunur olan iki kalem.
+    // "+12 gecen aya gore": donem kiyasi (CLAIMS → "yuzde iyilesme" sinifi;
+    // burada mutlak sayi ama ayni vaat). "★ Subede 1.": ustunluk rozeti —
+    // B-044'un Koruma Onerisi bu dizgeyi sozluk hedefi olarak ADIYLA sayiyor.
+    ['.d', 'geçen aya göre'],
+    ['.pill', 'Şubede 1.'],
+  ],
+  /**
+   * B-018 / TASK-2.15 — cockpit ANA SAYFANIN HERO gorselidir (`Hero.tsx:84`,
+   * ayrica ProductStory adim 4 ve Roller → yonetim), yani sitenin en gorunur
+   * urun karesi. Iddia dali acilinca yedi ekranin **yirmi** vurusunun yirmisi
+   * de buradan geldi (olculdu 2026-09-23, bos izin listesiyle).
+   *
+   * Dusurulenler UC sinifta ve hepsi CLAIMS'in "Soylenemez" sutunundan:
+   *  · BUYUME KIYASI — `.chip` "+%12,4" ve "-%3" (KPI delta rozetleri; alt
+   *    satirin kendisi "3 sube toplam" / "hedef %82" olarak KALIR, boylece dort
+   *    KPI kartinin satir sayisi bozulmaz), `.grw` uc sube kartindaki
+   *    "+%N gecen aya gore" satiri, ve karsilastirma tablosunun "Buyume (MoM)"
+   *    satiri.
+   *  · USTUNLUK — `.rank` rozetleri ("1. ciro", "2. ciro", "en hizli") ve
+   *    tablonun "en iyi = ●" aciklamasi.
+   *  · PROJEKSIYON + MUSTERI SAYISI — "Patron ozeti" kartinin tamami:
+   *    "…lider, ama yeni sube Vadi aylik %34 buyumeyle en hizlisi — 4 ayda 227
+   *    uyeye ulasti … optimize edilirse hedef %82'ye en yakin aday." Bu kart,
+   *    `sube.webp`'i hattan dusuren "Sube ozeti" kartiyla AYNI SINIFTIR
+   *    (B-018 Gozlem); sube o yuzden yayindan cekilmisti, cockpit ise hic
+   *    bakilmamisti cunku denetimin iddia dali yoktu.
+   *
+   * `+71 bu ay yeni` ve `842 Aktif Uye` DUSURULMEDI: notr gosterge degeri,
+   * ayrac kuralinin serbest tarafi (`claim-leak.mjs` → AYRAC KURALI).
+   */
+  cockpit: [
+    ['.chip', '+%12,4'],
+    ['.chip', '-%3'],
+    ['.grw', 'geçen aya göre', 3],
+    ['.rank', '1. ciro'],
+    ['.rank', '2. ciro'],
+    ['.rank', 'en hızlı'],
+    ['.sm', 'en iyi'],
+    ['tr', 'Büyüme (MoM)'],
+    ['.card', 'Patron özeti'],
+  ],
+  /**
+   * B-018 / TASK-2.15 — tek kalem: "Toplam Ciro" KPI'sinin delta satiri
+   * `+%12,4 gecen aya gore`. Burada `.chip` DEGIL tum `.d` dusuruluyor, cunku
+   * satirin IKI parcasi da yasak (rakam ve kiyas ifadesi); yalniz rozeti almak
+   * geriye "gecen aya gore" birakirdi. Diger uc KPI'nin delta satiri PAY
+   * gosterir ("%59 pay · 624 ders") — notr kirilim, dokunulmadi.
+   */
+  finans: [['.d', 'geçen aya göre']],
   /**
    * raporlar.html:242 `<h4>Yenileme &amp; Churn</h4>` — rapor sablonu karti.
    * "churn.html" demo sayfasi zaten bilincle hattan disarida (v1.5 kalemi);
@@ -175,6 +294,41 @@ export const AUDIT_ALLOW = {
     'Hedefe İlerleme',  // kart basligi
   ],
 };
+
+/**
+ * IDDIA DALININ IZIN LISTESI — ekran bazinda, TAM DEGERE gore (B-018 / TASK-2.15).
+ *
+ * ## Neden tam deger, neden eslesen parca DEGIL
+ *
+ * Ad dalinin izin listesi eslesen TAMLAMAYI tutar ("Aylık Performans"), cunku
+ * orada mesru olan sey tamlamanin kendisidir. Iddiada oyle degil: bir iddianin
+ * mesrulugu icinde gectigi CUMLEDEN gelir. "en buyuk" sozcugu "salonun en buyuk
+ * gunluk yuku" icinde musterinin DERDINI tarif eder (mesru), "en buyuk ciro
+ * artisi" icinde bir ustunluk vaadidir (yasak). Parcaya izin verilseydi o terim
+ * o ekranda tamamen korelirdi ve izin listesi kendi kor noktasini yazardi.
+ *
+ * ## Nasil dolduruldu
+ *
+ * Bu projenin kurdugu yontem: kapi ONCE BOS izin listesiyle kosuldu, raporladigi
+ * her kalem kaynakta arandi ve ucer ucer siniflandirildi (olculdu 2026-09-23,
+ * yedi ekran / 859 deger / **27 vurus**):
+ *   · 25 vurus → CLAIMS'in yasak sinifi. Izin listesine GIRMEDI; `DROP_NODES`
+ *     ve `REPLACEMENTS` ile kapatildi (yukarida, her biri gerekcesiyle).
+ *   · 2 vurus → asagidaki tek cumle, iki ekranda. Mesru: "salonun en buyuk
+ *     gunluk yuku ortadan kalkar" urun hakkinda bir ustunluk iddiasi degil,
+ *     cozulen SORUNUN buyuklugu hakkinda bir cumledir. CLAIMS'in yasakladigi
+ *     sey urunun rakip karsisindaki ustunlugu ve kanitsiz iyilesme rakamidir.
+ *
+ * `uye-telefon` kendi listesini TASIMAZ, `takvim`inkine baglanir — ayni belgeden
+ * (`takvim.html`) uretiliyorlar ve denetimin gordugu kutle TUM DOM'dur; v1'in
+ * `AUDIT_ALLOW['uye-telefon']` emsalinin birebir aynisi.
+ */
+export const CLAIM_ALLOW = {
+  takvim: [
+    'antrenör seç → gün seç → müsait saat seç → onayla. admin\'in elle telefonla randevu yazması biter — salonun en büyük günlük yükü ortadan kalkar.',
+  ],
+};
+CLAIM_ALLOW['uye-telefon'] = CLAIM_ALLOW.takvim;
 
 /**
  * YASAKLI AD KUMESI — TABLODAN TURER, KALIPTAN DEGIL (B-018 / TASK-2.14).
@@ -311,10 +465,21 @@ export const FORBIDDEN = deriveForbidden(REPLACEMENTS, INITIALS);
 export function auditTexts(values, screenId) {
   const full = /[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}\s+[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}/g;
   const allowed = new Set(AUDIT_ALLOW[screenId] ?? []);
+  const claimAllowed = new Set(CLAIM_ALLOW[screenId] ?? []);
   const forbiddenTokens = new Set(FORBIDDEN.tokens);
   const names = new Set();
   const brands = new Set();
+  const claims = new Set();
   for (const value of values) {
+    // 4) IDDIA — yasakli iddia sozlugu (B-018 / TASK-2.15). Izin listesi TAM
+    //    DEGERE bakar, eslesen parcaya degil: bir iddianin mesrulugu icinde
+    //    gectigi CUMLEYE baglidir ("salonun en buyuk gunluk yuku" mesru,
+    //    "en buyuk ciro artisi" degil). Parcaya izin verilseydi o terim o
+    //    ekranda tamamen korelirdi.
+    for (const leak of claimLeaks(value)) {
+      if (claimAllowed.has(trLower(value))) continue;
+      claims.add(`«${leak.hit}» [${leak.sinif}] ⊂ "${trLower(value).slice(0, 70)}"`);
+    }
     // 1) Tablo — ad parcasi
     for (const part of FORBIDDEN.parts) {
       if (value.includes(part)) {
@@ -331,5 +496,5 @@ export function auditTexts(values, screenId) {
     }
     if (BRAND_LEAK.test(value)) brands.add(value.trim().slice(0, 80));
   }
-  return { names: [...names], brands: [...brands] };
+  return { names: [...names], brands: [...brands], claims: [...claims] };
 }

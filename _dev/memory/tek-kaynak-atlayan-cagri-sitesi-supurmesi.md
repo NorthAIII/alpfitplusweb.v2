@@ -48,6 +48,23 @@ okunur. Bu projede iki kör etme biçimi ölçüldü:
 - **Harf ve aksan duyarlılığı** (TASK-2.11). B-040'ın kanıt komutu harfe
   duyarlıydı ve `karsilastirma.ts`'in küçük harfli *"online ödeme"*'sini hiç
   görmedi — altıncı bir cümle kapanış ölçümünden sonra ortaya çıktı.
+  ⚠️ **Çaresi "duyarsız yap" DEĞİL — Türkçe'de naif duyarsızlık da kaçırır**
+  (TASK-2.15'te ölçüldü). `I`/`ı` ve `İ`/`i` çiftleri Unicode'un varsayılan
+  kıvrımında eşleşmez; ölçüm, `"EN HIZLI BÜYÜYEN ŞUBE"` üzerinde:
+
+  | yöntem | sonuç |
+  |---|---|
+  | `/en hızlı/i` | **KAÇIRDI** |
+  | `.toLowerCase().includes("en hızlı")` | **KAÇIRDI** (`"en hizli"` üretir) |
+  | `.toLocaleLowerCase("tr").includes("en hızlı")` | **EŞLEŞTİ** |
+
+  **Kural:** Türkçe metinde kalıp eşlemesi önce `toLocaleLowerCase("tr")` ile
+  normalize edilir ve kalıplar küçük harfle yazılır; `/i` bayrağına güvenmek
+  sessiz bir fail-open'dır. Tersi de doğru: aranan şey **kaynağın özel adı**
+  ise harfe duyarlı kalınır (küçültme kümeye sıradan sözcük sokar — TASK-2.14,
+  `research/lib/screen-cleanup-v2.mjs` → "Neden harfe DUYARLI"). Ölçüt aranan
+  şeyin **ne olduğudur**: bizim yazdığımız düzyazı kavram → duyarsız (Türkçe
+  yerelle); kaynağın kendi özel adı → duyarlı.
 - **Kalıp granülerliği** (TASK-2.12). Konu kalıpları iki kavramın **aynı
   satırda** bulunmasını istiyordu (`diyetisyen` ∧ `ölçüm`); dizi elemanları
   ayrı satırlarda durduğu için tarama, B-029'un adıyla saydığı iki çapayı
