@@ -38,3 +38,24 @@ süpürmesinde. Biçim: kaynağın **adını** değil, onu **atlayan yazımı** 
 örn. `grep -rn "robots:" src/ | grep -v "app/layout.tsx"`,
 `grep -rn "window.umami" src/ | grep -v "lib/analytics.ts"`,
 `grep -rn "wa.me\|tel:+" src/ | grep -v "content/site.ts"`.
+
+## Süpürmenin kendisi sessizce kör olabilir — çapa sondası şart
+
+Grep/tarama bir **kapıdır** ve yeşili tek başına kanıt değildir: kapsamı
+kaçıran bir kalıp hata vermez, yalnız **az sayı** basar ve "temiz" diye
+okunur. Bu projede iki kör etme biçimi ölçüldü:
+
+- **Harf ve aksan duyarlılığı** (TASK-2.11). B-040'ın kanıt komutu harfe
+  duyarlıydı ve `karsilastirma.ts`'in küçük harfli *"online ödeme"*'sini hiç
+  görmedi — altıncı bir cümle kapanış ölçümünden sonra ortaya çıktı.
+- **Kalıp granülerliği** (TASK-2.12). Konu kalıpları iki kavramın **aynı
+  satırda** bulunmasını istiyordu (`diyetisyen` ∧ `ölçüm`); dizi elemanları
+  ayrı satırlarda durduğu için tarama, B-029'un adıyla saydığı iki çapayı
+  (`product.ts` üye rolü maddeleri, `chat.ts`'in "ölçüm grafiğini görür"
+  cümlesi) **hiç görmedi**: 21 vuruş basıp tamam gibi göründü. Kalıplar tek
+  kavrama indirilince aynı yüzeyde **121** vuruş çıktı.
+
+**Kural:** bir tarama/süpürme yazdığında kalıbı **bilinen pozitif çapalara**
+karşı sına ve sondayı taramanın içine koy ("şu üç satırı görüyor mu?"). Çapa
+bulunamıyorsa sayı değil **yöntem** yanlıştır. Sondasız bir süpürmenin sayısı
+kapanış notuna yazılmaz.

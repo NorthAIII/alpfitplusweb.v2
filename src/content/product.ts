@@ -207,12 +207,23 @@ export const MODULES: Module[] = [
     key: "raporlar",
     title: "Raporlar ve Excel",
     blurb: "Hazır şablonlar, tek tık XLSX, CSV ve PDF. Muhasebeye giden dosya elle hazırlanmaz.",
+    // TASK-2.12 (olculdu 2026-09-23, cagri grafigiyle): rapor filtresi SUBE +
+    // TEK AY'dir, tarih ARALIGI degil. Uc kanit: shared/src/reports-catalog.ts
+    // filterType 'monthRange' yorumu "v1'de tek ay (cari ay varsayilan,
+    // secilebilir) — gercek baslangic-bitis araligi v1.5"; backend
+    // reports-export.ts:71 tek bir `month` parametresi dogruluyor (:166-167
+    // case 'monthRange' -> filters.month); web ReportsPage.tsx:185
+    // <input type="month"> render ediyor — aralik girdisi hicbir katmanda yok.
+    // Sube ayagi DOGRU (branchId + global sube secici) ve korundu.
+    // Yeni kalem ACILMADI: aralik zaten CAPABILITIES.yolda -> gelismis-raporlama
+    // kapsaminda (urunun surum haritasi da "gelismis/zamanlanmis raporlar"
+    // diyor); ayri kalem ayni isi iki yerde tutardi.
     points: [
       "Aylık ciro ve tahsilat raporu",
       "Doluluk raporu, gelmedi kolonu ayrı",
       "Üye ve üyelik listeleri",
       "XLSX, CSV, PDF dışa aktarma",
-      "Şube ve tarih aralığı filtresi",
+      "Şube ve ay filtresi",
     ],
     icon: "report",
   },

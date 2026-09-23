@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.06: B-055'in son iki ayağı (a + (b)'nin alana eşlenen yarısı) kapandı ve **atom arşive taşındı** — geçersiz alan artık 2 px `neg` halka + `neg-wash` zemin alıyor (ölçüldü: 4 genişlikte fark 0/16 → 8/8) ve hata metni alanın altında duruyor (düğüm görünür 0/36 → 28/28). Açık bulgu sayısı **49 → 48**.
+**Son Güncelleme:** 2026-09-23 — TASK-2.12: riskli alt küme taraması koştu, **B-029 kapandı ve atom arşive taşındı** — 27 konu kümesi, 66 dosya, 129 vuruş satırı triyaj edildi; **iki karşılıksız iddia düzeltildi** (rapor filtresinin "tarih aralığı" vaadi, antrenör görselinin alt metnindeki "öğrenci tutma"), bir belirsiz kalem ve bir görsel sızıntısı Gelen Kutusu'na düştü. Kapanış kaydı **taranmayan yüzeyi** de yazıyor. Açık bulgu sayısı **46 → 45** (sayı bu turda sayıldı; başlık satırı TASK-2.11'in kapattığı B-040 ve B-014'ten sonra tazelenmemişti).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -35,6 +35,9 @@
      Not task'a dönüştüğünde veya atomlaştığında satır
      SİLİNİR — bilgi yeni evine taşınmıştır (mezuniyet). Olgun hal: boş kutu. -->
 
+- [TASK-2.12] Ürün görseli `antrenor.webp` bir **"Öğrenci Tutma"** kartı render ediyor (kaynağı `../Alpfit.v1/demo/antrenor.html`); kelime tüm ürün kod tabanında **0** kez geçiyor ve kalem ürünün sürüm haritasında v1.5'e taşınmış. Metin tarafı kapandı (`shots.ts` alt metni daraltıldı), **görüntü tarafı açık** — B-018'in adıyla sayılan üç kalemine dördüncü aday (TASK-2.13 temizlik / TASK-2.15 denetimin iddia dalı)
+- [TASK-2.12] **Belirsiz kalem:** `site.ts:15` meta açıklaması *"Spor kulübünüzün tamamı tek panelde **ve mobilde**"* diyor. Üye ve antrenör mobil uygulaması var, ama yönetim paneli masaüstü-öncelikli (mobil tam responsive → v1.5) ve "Patron Mobil Özet" → v1.5. Cümle bütün olarak savunulabilir, sıkı okuması değil — karşılıksız sayılmadı, kanıtsız da silinmedi
+- [TASK-2.12] M6 F6.4 (iddia sızıntı denetimi) için ölçülmüş iki girdi: ürünün **kanonik** erteleme listesi `../Alpfit.v1/_dev/PRD/VERSIONS.md` → v1.5/v2 Feature Adayları (dağıtık kod yorumlarından daha eksiksiz — "öğrenci tutma" yalnız orada görünüyor) ve `web/src/shell/navConfig.ts`'in `status:'soon'` alanı (makine-okunur "ekran henüz yok" listesi). B-029 arşive giderken Koruma Önerisi'nin bu ayağı yaşayan eve taşındı
 - [TASK-2.11] Rakip tarama rakamı dört evde iki biçimde: `chat.ts` ve `WhyUs.tsx` "9 yerli ve 9 global", `product.ts` ve `karsilastirma.ts` "18" — çelişmiyor (9+9=18) ama dördü de `karsilastirma.ts` → `ARASTIRMA` sabitinden türemiyor. B-014'ün Koruma Önerisi'nde duruyordu, atom kapanırken buraya taşındı
 - [TASK-2.01] `bunker-nginx` erişim kaydı ham IP tutuyor ve rotasyonsuz büyüyor (155 MB / 31 gün); `daemon.json`'daki `50m × 3` kuralı konteyner ondan önce oluşturulduğu için inmiyor — yeniden oluşturma ≈ 30 günlük pencere açar. Evi `altyapi/vps` projesi (bu repo değil); ölçüm `tasks/archive/TASK-2.01.md`, metne etkisi `docs/DECISIONS.md` 2026-09-22
 - [kickoff SORU] Ana sayfa mobilde ~26.000 px, referans rakip de benzer — kısaltılsın mı? Karar kullanıcıda (`modules/M2-Sayfalar-ve-Bolumler.md` F2.1)
@@ -89,7 +92,6 @@
 
 - 🔴 [B-037 — `/api/demo` sertleştirme boşlukları](bulgular/B-037-api-demo-sertlestirme-bosluklari.md) — `content-type` kontrolsüz çapraz-site POST **artık depoya satır yazıyor**; `null` gövde 500; 5 MB gövde kabul
 - 🔴 [B-024 — Yasal metinler gerçek veri akışını eksik anlatıyor](bulgular/B-024-yasal-metin-gercek-veri-akisini-eksik-anlatiyor.md) — dört kalem açık; "IP saklamaz" beyanı ölçülen nginx logu gerçeğiyle çelişiyor, `ip_hash` 12 ay saklanıyor → Faz 2
-- 🔴 [B-029 — Site, ürünün karşılamadığı beş yeteneği "var" diye sunuyor](bulgular/B-029-site-urunun-karsilamadigi-yetenekleri-var-diyor.md) — TASK-2.09: dördü düzeltildi, beşincisi ölçümle çürütüldü. Atom açık: sınıfın tamamı taranmadı, ayrıca B-040'ın segment-işareti ayağı buraya devredildi → TASK-2.12
 - 🔴 [B-018 — Ürün görselinde gerçek kişi adı ve yol haritası özellikleri](bulgular/B-018-urun-gorselinde-sizinti-denetimi-kacirdi.md) — `sube` kalemi kapandı; "Gizem Ö." ana sayfada duruyor, yasal metnin beyanı çürüyor → Faz 2
 - 🔴 [B-054 — İletişim kuralı ters eksende gevşek](bulgular/B-054-iletisim-kurali-ters-eksende-gevsek.md) — meşru yazımlar 422; `0532111223`/`0000000000` **200 `stored:true`** — ulaşılamaz numara artık kayda geçiyor
 - 🔴 [B-011 — Apex'te MX kaydı yok, KVKK başvuru adresi posta alamıyor](bulgular/B-011-apex-mx-kaydi-yok.md) — yasal metin otuz gün taahhüt ediyor; 2026-09-21'de yeniden ölçüldü, MX hâlâ yok → Faz 2

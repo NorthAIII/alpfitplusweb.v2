@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { MODULES } from "@/content/product";
 import { SEGMENTS } from "@/content/segments";
+import { SHOTS } from "@/content/shots";
 
 // TASK-2.09 — B-029'un bes karsiliksiz cumlesinin ZIYARETCIYE GORUNEN
 // yuzeylerdeki kapisi.
@@ -142,5 +143,57 @@ describe("B-029 #4 — yetki geri alma: ölçümle çürütüldü, cümle yerind
     expect(zincir).toBeDefined();
     const metin = (zincir?.answers ?? []).map((a) => a.body).join(" | ");
     expect(metin).toContain("geri alınır");
+  });
+});
+
+// ── TASK-2.12 — riskli alt kume taramasinin bulduklari ───────────────────
+// Yukaridaki bloklar B-029'un BES bilinen kalemini civiliyor. Asagidakiler
+// taramanin (konu sozcukleri urunun kendi erteleme notlarindan + surum
+// haritasindan turedi) bulup duzelttigi IKI yeni karsiliksiz iddiadir.
+// Kalici capraz kontrol hala M6 F6.4'un isi; burasi yalniz duzeltilen
+// cumlelerin geri yazilmasini engelliyor (B-060 gerekcesi).
+
+describe("TASK-2.12 — rapor filtresi tarih aralığı iddia etmiyor", () => {
+  // Urun gercegi (olculdu 2026-09-23, uc katman): reports-catalog.ts
+  // filterType 'monthRange' = "v1'de tek ay … gercek baslangic-bitis araligi
+  // v1.5"; reports-export.ts:71 tek `month` parametresi; ReportsPage.tsx:185
+  // <input type="month">. Aralik girdisi hicbir katmanda yok.
+  it("raporlar modülü 'tarih aralığı' demiyor", () => {
+    expect(modulMetni("raporlar")).not.toContain("tarih aralığı");
+  });
+
+  it("şube filtresi korundu (doğru olan silinmedi)", () => {
+    expect(modulMetni("raporlar")).toContain("şube");
+  });
+
+  it("hiçbir modül 'tarih aralığı' filtresi iddia etmiyor", () => {
+    expect(tumModulMetni()).not.toContain("tarih aralığı");
+  });
+});
+
+describe("TASK-2.12 — ürün görseli alt metni 'öğrenci tutma' iddia etmiyor", () => {
+  // Urun gercegi (olculdu 2026-09-23): "ogrenci tutma" TUM urun kod tabaninda
+  // 0 kez geciyor; surum haritasi kalemi adiyla v1.5'e tasimis
+  // (../Alpfit.v1/_dev/PRD/VERSIONS.md -> v1.5 Feature Adaylari).
+  // ⚠️ Goruntunun kendisi karti hala render ediyor → B-018 / TASK-2.13-2.15.
+  const tumAlt = Object.values(SHOTS)
+    .map((s) => s.alt)
+    .join(" || ")
+    .toLocaleLowerCase("tr");
+
+  it("alt metinleri hasat ediliyor (boş kapsam)", () => {
+    expect(Object.keys(SHOTS).length).toBeGreaterThan(5);
+    expect(tumAlt.length).toBeGreaterThan(300);
+  });
+
+  it("hiçbir ürün görseli alt metni 'öğrenci tutma' demiyor", () => {
+    expect(tumAlt).not.toContain("öğrenci tutma");
+  });
+
+  it("antrenör görselinin alt metni ölçülen kartları anlatıyor", () => {
+    const alt = SHOTS.antrenor.alt.toLocaleLowerCase("tr");
+    expect(alt).toContain("aylık performans");
+    expect(alt).toContain("haftalık doluluk");
+    expect(alt).toContain("ciro kırılımı");
   });
 });

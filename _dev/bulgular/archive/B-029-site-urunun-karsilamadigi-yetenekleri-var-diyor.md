@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / iddia uyumu | **Alan:** M1 — İçerik ve iddia kaynağı (M2 render yüzeyleri)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** → Faz 2
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -71,4 +71,32 @@ Sitedeki yetenek iddialarını ürün deposuna karşı doğrulayan **hiçbir kap
 
 **Yeni kapı:** `tests/iddia-metinleri.test.ts` (20 test) — beş kalemi **ziyaretçiye görünen yüzeylerde** (MODULES + SEGMENTS) çiviliyor. Boşluk gerçekti: sondada metne üç iddia geri yazıldığında `capabilities.test.ts` 23/23 yeşil kalırken yeni kapı 3 kırmızı verdi.
 
-**Atom AÇIK kalıyor:** bu task beş **belirli** cümleyi kapattı; sınıfın tamamı (~124 present-tense yetenek cümlesi) taranmadı — risk alt kümesi taraması **TASK-2.12**, atom orada kapanır.
+**TASK-2.12 (2026-09-23)** — **riskli alt küme taraması koştu; atom bu task'ta kapandı.**
+
+*Yöntem.* Konu sözcükleri iki kaynaktan türetildi: (1) ürünün dağıtık erteleme notları ("Yakında" · "v1.5" · "W8" · "ertelendi" · "kapsam dışı") → 14 küme; (2) ürünün **kanonik sürüm haritası** `../Alpfit.v1/_dev/PRD/VERSIONS.md` → v1.5/v2 Feature Adayları → 13 küme. İkinci kaynak şarttı: dağıtık yorumların hiç göstermediği "öğrenci tutma göstergesi" ancak orada görünür. Yapısal ek kaynak: `web/src/shell/navConfig.ts`'in `status:'soon'` alanı ürünün **makine-okunur** "henüz yok" listesidir (bugün tek öğe `/ayarlar/yetki`) ve `yolda` → `yetki-geri-alma` yerleşimini bağımsız doğruladı.
+
+*Taranan yüzey.* **66 kaynak dosya** (`src/**/*.ts` + `*.tsx`; `src/content/mail.ts` dâhil), **27 konu kümesi**, **129 benzersiz vuruş satırı** — 29'u kod yorumu, **98'i ziyaretçiye görünen metin**. Her vuruş üçe ayrıldı. Ek odak koşum: `segments.ts`'in **36 iddia parçası** × 12 yol-haritası kalem anahtarı.
+
+*Sonuç — 2 karşılıksız, 1 belirsiz, kalanı karşılığı var.*
+
+| Kalem | Sonuç | Ne yapıldı |
+|---|---|---|
+| `product.ts` raporlar → "Şube ve **tarih aralığı** filtresi" | **karşılıksız** | Ürün **tek ay** seçtiriyor; üç katmanda ölçüldü — `shared/src/reports-catalog.ts` (`monthRange` = "v1'de tek ay … gerçek başlangıç–bitiş aralığı v1.5"), `backend/src/routes/reports-export.ts:71` tek `month` parametresi (`:166-167`), `web/src/pages/ReportsPage.tsx:185` `<input type="month">`. → "Şube ve **ay** filtresi". **Şube ayağı doğru**, korundu. Yeni kalem açılmadı (aralık zaten `yolda` → `gelismis-raporlama`) |
+| `shots.ts` antrenör görseli alt metni → "**öğrenci tutma**" | **karşılıksız** | Kelime **tüm ürün kod tabanında 0** kez geçiyor (backend/src + web/src + mobile/src + shared); sürüm haritası kalemi adıyla v1.5'e taşımış ("v1'de … hiç yapılmadı … Faz 45 … v1.5'e taşıdı"). Alt metni görüntüde **gerçekten duran** ve üründe **karşılığı olan** üç karta daraltıldı (aylık performans · haftalık doluluk · ciro kırılımı) |
+| `site.ts:15` meta açıklaması → "tamamı tek panelde **ve mobilde**" | **belirsiz** | Üye ve antrenör mobil uygulaması **var**; ama yönetim paneli masaüstü-öncelikli (mobil tam responsive → v1.5) ve "Patron Mobil Özet" → v1.5. Cümle bütün olarak savunulabilir, sıkı okuması değil. **Uydurulmadı, silinmedi** → `BULGULAR.md` → Gelen Kutusu |
+| `product.ts:23-24` (üye rolü), `chat.ts` "ölçüm grafiğini görür" | karşılığı var | B-029 k.1'in listede olmayan kardeşleri; ikisi de üyenin **kendi mobilini** anlatıyor (`MeasurementChart` + diyetisyen programı) — karşılıksız olan yalnız "tek ekranda toplanmaları"ydı ve o TASK-2.09'da düştü |
+| `product.ts:38` antrenör "**ölçüm girişi** ve antrenman programı yazma" | karşılığı var | `POST /trainers/me/members/:memberId/measurements` (measurements.ts) + `POST /programs` · `/programs/:id/publish` (programs.ts, trainer). Diyetisyenin ölçüm **yazması** v1.5 — site zaten "okuma" diyor |
+| `product.ts:168` "Şubeler arası ciro karşılaştırması" | karşılığı var | `branch-comparison` şablonu katalogda (`scope: 'club'`) |
+| `segments.ts:291-292` "Üye bir **ana şubeye bağlıdır**" | karşılığı var | Çapraz-şube rezervasyon v1.5'te ertelenmiş; cümle bunu **doğru** söylüyor |
+| `product.ts:460` "Otomatik hatırlatma ve bekleme listesi" | karşılığı var | v1 çekirdeği: tek hatırlatma + bekleme listesi + sıradakine bildirim. v1.5 olan *derinleşme* (çok-kanal, tekrarlı) iddia edilmiyor |
+| WhatsApp (76 vuruş) | karşılığı var | Hepsi **bizim iletişim kanalımız**; ürünün WhatsApp bildirim kanalı (v1.5) hiçbir yerde iddia edilmiyor |
+
+*B-040'tan devralınan 2. ayak — ölçümle çürütüldü.* *"`segments.ts`'te 'yolda'/'yol haritası' ifadesi 0"* bir boşluk sanılıyordu. 36 iddia parçası 12 kalem anahtarına karşı tarandı: **0 gerçek vuruş** (tek vuruş yanlış pozitif — *"Karar için tek ekran yok"* kulübün bugünkü **derdini** anlatıyor). İşaretin yokluğu **doğru sonuçtur**: TASK-2.09 iki segment cümlesini işaret ekleyerek değil **ifadeyi daraltarak** düzeltmişti, geriye işaret gerektiren cümle kalmadı.
+
+*Yöntemin kendi kusuru ve düzeltilmesi (kayda değer).* Taramanın ilk sürümü konu kalıplarını **iki kavramın aynı satırda** bulunması olarak kurmuştu; dizi elemanları ayrı satırlarda olduğu için bu atomun adıyla saydığı iki çapayı (`product.ts:23-24` ve `chat.ts`'in "ölçüm grafiğini görür" cümlesi) **hiç görmedi** ve 21 vuruşla "temiz" gibi okunuyordu. Kalıplar tek kavrama indirildi ve taramanın içine bir **çapa sondası** (bilinen pozitifleri görüyor mu) kondu → **121 vuruş, 3/3 BULUNDU**. Ders tur 9'un harf-duyarlılığı dersinin kardeşidir: bir tarama kapısını **granülerliği** de sessizce kör edebilir.
+
+**⚠️ TARANMAYAN YÜZEY — "hepsi doğrulandı" DENMİYOR.** Yöntem **konu sözcüğü** temellidir: ürünün kendi notlarında ya da sürüm haritasında **kaydı olmayan** bir eksik bu yolla **bulunamaz**. Sınıfın tamamı (~124 present-tense yetenek cümlesi) tek tek ürün koduna karşı doğrulanmadı; `product.ts` BENEFITS başlıkları, 16 `pains` maddesi ve `karsilastirma.ts`'in 18 satırlık yöntem tablosu yalnız bir konu sözcüğüne değdikleri ölçüde tarandı. Kalan yüzey **yaşayan eve** taşındı: kalıcı ürün-deposu çapraz kontrolü **M6 F6.4**'ün kapsamındadır (`modules/M6-Kalite-Kapilari.md`) ve bu taramanın konu-sözcüğü yöntemi ile `navConfig.ts`'in `status:'soon'` alanı oraya girdi olarak kaydedildi.
+
+**Yeni kapı:** `tests/iddia-metinleri.test.ts` +6 senaryo (yeni dosya açılmadı) — iki düzeltilen cümleyi çiviliyor, biri boş-kapsam bekçisi. İki sondayla kırmızı görüldü; batarya 154 → **160**. Tarama betiği **kalıcılaşmadı** (scratchpad'de kaldı — task'ın kendi kuralı).
+
+**Kapanmayan ve başka eve taşınan:** görüntünün kendisi hâlâ "Öğrenci Tutma" kartını render ediyor (`antrenor.webp`, kaynağı `demo/antrenor.html`) — bu bir **görsel sızıntısıdır**, evi **B-018** (TASK-2.13 temizlik, TASK-2.15 denetimin iddia dalı); Gelen Kutusu'na `[TASK-2.12]` işaretiyle düştü.

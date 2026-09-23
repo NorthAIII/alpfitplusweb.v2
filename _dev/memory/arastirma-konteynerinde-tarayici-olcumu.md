@@ -88,3 +88,18 @@ diye bakmak boş döner ve yanlışlıkla "değişmemiş" diye okunur.
   döner (hata yok, sadece yanlış rakam). Gerçek tel-üzeri bayt için CDP `Network` alanına geçilir:
   `ctx.newCDPSession(page)` + `Network.enable`, `Network.loadingFinished` olayının
   `encodedDataLength`'i (TASK-1.09, Umami betiği + olay isteği ağırlığı ölçümü).
+
+## Locator tuzağı — açık `role` niteliği rolü ezer (TASK-2.12, 2026-09-23)
+
+`Roles` bölümünün sekmeleri `<button role="tab">`. Playwright'ın rol
+çözümlemesi **açık `role` niteliğini** esas alır, etiket adını değil: bu
+yüzden `getByRole('button', { name: /Diyetisyen/i })` **0 eşleşme** döner ve
+betik hata vermeden "sayfada 2 buton var" basar — ölçüm sessizce hiçbir şey
+ölçmez. Doğrusu `getByRole('tab', …)`. Kardeş tuzak yukarıdaki asistan/SSS
+maddesidir; ortak ders: **locator boş dönünce betik yeşil kalır**, o yüzden
+önce "kaç eşleşme buldum" yazdırılır.
+
+Ayrıca **sekmeli bölümlerde yalnız aktif sekmenin içeriği render edilir**
+(`Roles` bir istemci bileşeni, `useState(0)`). `SHOTS.antrenor`'un `alt`
+metni ilk HTML'de **hiç yok** — `curl | grep` ile bakan bir ölçüm onu
+"değişmemiş" sanır. Sekme tıklanıp DOM'dan okunur.

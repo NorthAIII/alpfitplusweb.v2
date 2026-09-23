@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.11: mevcut atom genişletildi (Ortam & Araç Notları → araştırma konteynerinde tarayıcı ölçümü), yeni dosya açılmadı. Asistan paneli ile SSS akordiyonu **aynı soru metnini** taşıyor; locator `[role="dialog"]`'a daraltılmazsa tıklama arkadaki SSS'ye gidiyor ve betik hatasız "temiz" basıyor — ayrıca asistan cevapları sabitten türediği için HTML/paket grep'i render edilmiş cümleyi bulamaz.
+**Son Güncelleme:** 2026-09-23 — TASK-2.12: iki mevcut atom genişletildi, yeni dosya açılmadı. (1) Süpürme atomu — tarama/grep bir **kapıdır** ve sessizce kör olabilir: harf-aksan duyarlılığının yanına **kalıp granülerliği** eklendi (iki kavramı aynı satırda arayan kalıp, dizi elemanları ayrı satırda olduğu için bilinen iki çapayı hiç görmedi — 21 vuruş; tek kavrama inince 121). Kural: süpürmeyi bilinen pozitif çapalara karşı sına, sondayı taramanın içine koy. (2) Tarayıcı ölçümü atomu — açık `role` niteliği rolü ezer (`role="tab"` düğmeler `getByRole('button')` ile bulunmaz, betik hatasız boş döner) ve sekmeli bölümlerde yalnız aktif sekme render edilir, yani `alt` metni ilk HTML'de hiç yok.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
