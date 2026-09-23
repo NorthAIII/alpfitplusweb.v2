@@ -103,3 +103,34 @@ Ayrıca **sekmeli bölümlerde yalnız aktif sekmenin içeriği render edilir**
 (`Roles` bir istemci bileşeni, `useState(0)`). `SHOTS.antrenor`'un `alt`
 metni ilk HTML'de **hiç yok** — `curl | grep` ile bakan bir ölçüm onu
 "değişmemiş" sanır. Sekme tıklanıp DOM'dan okunur.
+
+## `next/image` src'i yeniden yazar — dosya adına bakan seçici boş döner (TASK-2.13, 2026-09-23)
+
+Ürün görsellerini DOM'dan ararken **`img[src*="/product/"]` hiçbir şey bulmaz.**
+`next/image` `src`'i optimize ediciye çevirir ve yolu URL-kodlar:
+
+```
+/_next/image?url=%2Fproduct%2Fantrenor.webp&w=3840&q=75
+```
+
+Yani dosya adı `src` içinde **var ama kodlanmış** — `%2F` yüzünden `/product/`
+alt dizgesi hiç geçmez. Seçici sessizce 0 eşleşme döndürür, betik hatasız
+"görsel bulunamadı" basar ve bu kolayca *"görsel sayfada yok"* diye okunur.
+Doğrusu tüm `img`'leri alıp `src`'i çözmektir:
+
+```js
+const imgs = await p.$$eval('img', (els) => els.map((e) => ({
+  src: decodeURIComponent(e.getAttribute('src') || ''),
+  alt: e.getAttribute('alt'),
+})));
+const hedef = imgs.find((i) => i.src.includes('/product/antrenor.webp'));
+```
+
+Yukarıdaki iki locator tuzağıyla **aynı aile**: ortak ders yine *bulamayan
+ölçüm yeşil kalır*. Bulunan sayıyı (`imgs.filter(...).length` ya da eşleşen
+dosya adları) her koşumda yazdır; "0 buldum" ile "yok" aynı şey değildir.
+
+**Hangi sekme hangi görseli gösteriyor, varsayılmaz — `Roles.tsx` okunur.**
+Eşleme birebir değil: `diyetisyen: SHOTS.antrenor`, `antrenor: SHOTS.takvim`
+(`Roles.tsx:12-15`). "Antrenör sekmesine tıklayıp antrenör görselini ölçmek"
+boş döner.

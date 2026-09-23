@@ -122,3 +122,15 @@ Git ölçümü: `git log --oneline --since=2026-09-13 -- public/product research
 **Körlüğün kapsamı hattan geniş — yeni ölçüm.** `src/components/sections/Hero.tsx:93-105` ürün ekran görüntüsünün üzerine **elle yazılmış React** bir kart bindiriyor: `%78` (2xl, extrabold, `tabnum`) + "Haftalık doluluk" + %78 dolu ilerleme çubuğu; yanında 11 px `text-faint` ile *"Örnek görünüm, demo verisi"*. Yayında teyit edildi. Feragat etiketi olduğu için metin dürüst, **ihlal değil** — ama bu kart `render-product.mjs` hattının çıktısı olmadığı için `auditTexts()` onu **yapısal olarak göremiyor**. Yani aynı sınıftan bir iddia (`%NN` + ürün metriği) bileşene yazıldığı anda hiçbir kapıdan geçmiyor; hattı düzeltmek bile bu yüzeyi kapatmaz.
 
 **Koruma önerisine eklenen:** M6 F6.4'ün sözlüğü yalnız `src/content/`'i değil `src/components/` + `src/app/`'ı da taramalı; `%NN` + ürün metriği kalıbı yakınında feragat metni aranmalı.
+
+**TASK-2.13 (2026-09-23) — envanter tablosunun üç satırı bayatladı; kalem 2 ve 3 AYNEN AÇIK.**
+
+Bu atomun envanteri "kapanış kapsamının ölçütü" olduğu için hat değişince tazelenmesi gerekiyor. Ölçüldü (yedi çıktı yeniden üretildi ve gözle okundu):
+
+- **"Kampanyalar" nav artık hiçbir görselde yok** — ortak kabuk kuralı (`SHELL_DROP_NODES`) yedi ekranın her birinden tam 1 düğüm düşürüyor. Tablodaki altı satırın "Kampanyalar nav" kalemi **tarihsel** okunur.
+- **`antrenor.webp`'in "%91 3 aylık tutma" + "Şubede en yüksek öğrenci tutma oranı" kalemleri yok** — kartın tamamı düşürüldü (B-018 Çözüm Kaydı). Aynı satırdaki **"Ekipte: Mar 2023"** ve **"★ Şubede 1."** aynen duruyor.
+- **`raporlar.webp`'in "Yenileme & Churn" kartı yok**; aynı satırın `shots.ts` notu da düştü (alt metin zaten o kartı anmıyordu, artık kart da yok).
+
+**Bu atomun kendi kalemleri değişmedi:** kalem 2 (avatar–ad uyumsuzluğu) `grup.webp`'te gözle yeniden doğrulandı — "Burak Ş."+**DK** · "Deniz A."+**EÖ** · "Tolga B."+**BT** aynen yerinde, `AVATAR_SELECTOR` hâlâ `.av` sınıfını görmüyor. Kalem 3 (denetim körlüğü) de duruyor ve **rakamla ölçüldü**: bugün temizlenen üç kalem düşürme tablosundan çıkarıldığında denetim yalnız birini yakalıyor (ayrıntı → B-018).
+
+**Yeni gözlem (aynı sınıf, bu turda kapsam dışı):** `raporlar.webp`'in **"Antrenör Performansı"** rapor şablonu kartı *"Ders sayısı, ciro, doluluk ve öğrenci tutma — eğitmen ve şube bazlı"* diyor. Üçü de bu atomun sözlük önerisinin hedefi: "öğrenci tutma" üründe 0 kez geçiyor, "ciro" ve "doluluk" ise **antrenör bağlamında** ürünün kendi kodunda reddedilmiş (`trainer-performance.service.ts:7` "FİNANSAL CİRO DEĞİL", `attendance-count.ts:11` doluluk % kapsam dışı) — aynı hat o iki kartı antrenör ekranından tam bu gerekçeyle düşürüyor. Düşürme burada **yanlış çare**: şablonun kendisi meşru bir rapor, sorun açıklama metni — yani `REPLACEMENTS` sınıfı bir iş. Kayıt `BULGULAR.md` → Gelen Kutusu.

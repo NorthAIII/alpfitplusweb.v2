@@ -31,21 +31,25 @@ export const SHOTS = {
     alt: "Alpfit Plus finans ekranı: ciro trendi, gelir kırılımı ve ödeme tipi dağılımı",
   },
   antrenor: {
-    // TASK-2.12 (olculdu 2026-09-23): alt metni "ogrenci tutma" diyordu —
-    // urunde YOK. Kelime tum urun kod tabaninda 0 kez geciyor (backend/src +
-    // web/src + mobile/src + shared tarandi) ve urunun surum haritasi kalemi
-    // adiyla erteliyor: "Antrenor performansi — ogrenci tutma gostergesi …
-    // v1'de … hic yapilmadi … Faz 45 … kalemi v1.5'e tasidi"
-    // (../Alpfit.v1/_dev/PRD/VERSIONS.md). Alt metni goruntude GERCEKTEN duran
-    // ve urunde KARSILIGI OLAN uc karta daraltildi (Aylik Performans ·
-    // Haftalik Doluluk · Ciro Kirilimi — VERSIONS v1 satiri "Antrenor
-    // Performansi"). ⚠️ Goruntunun KENDISI hala "Ogrenci Tutma" kartini
-    // render ediyor (demo/antrenor.html) — o bir gorsel sizintisidir ve
-    // metin tarafinin isi degil: B-018 / TASK-2.13-2.15, kayit BULGULAR.
+    // TASK-2.12 (olculdu 2026-09-23): alt metni "ogrenci tutma" diyordu — urunde
+    // YOK. Kelime tum urun kod tabaninda 0 kez geciyor ve urunun surum haritasi
+    // kalemi adiyla erteliyor (../Alpfit.v1/_dev/PRD/VERSIONS.md → v1.5).
+    // Goruntunun kendisi o kalemi hala render ediyordu; TASK-2.13 karti hattan
+    // dusurdu (DROP_NODES.antrenor) ve gorseli yeniden uretti.
+    //
+    // TASK-2.13 ayrica 2.12'nin YERINE YAZDIGI alt metni de duzeltti — olculdu:
+    // "haftalik doluluk" ve "ciro kirilimi" kartlari bu goruntude ZATEN YOK,
+    // TASK-14.06'dan beri ayni hat onlari dusuruyor (DROP_NODES.antrenor) ve
+    // gerekcesi urunun kendi kodu: trainer-performance.service.ts:7 "FINANSAL
+    // CIRO DEGIL", attendance-count.ts:11 doluluk % kapsam disi. Yani alt metin
+    // bir karsiliksiz iddiayi ikisiyle degistirmisti. Bugunku metin goruntude
+    // GERCEKTEN duran iki yuzeyi anlatiyor: "Aylik Performans · PT ders · son 6
+    // ay" grafigi ve "Ogrenciler" tablosu; ikisinin de karsiligi CAPABILITIES
+    // → simdi'de (`antrenor-performansi`).
     src: "/product/antrenor.webp",
     width: 1200,
     height: 866,
-    alt: "Alpfit Plus antrenör detay ekranı: aylık performans, haftalık doluluk ve ciro kırılımı",
+    alt: "Alpfit Plus antrenör detay ekranı: aylık PT ders performansı ve öğrenci listesi",
   },
   raporlar: {
     src: "/product/raporlar.webp",

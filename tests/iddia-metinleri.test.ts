@@ -3,6 +3,9 @@ import { describe, expect, it } from "vitest";
 import { MODULES } from "@/content/product";
 import { SEGMENTS } from "@/content/segments";
 import { SHOTS } from "@/content/shots";
+// Gorsel uretim hattinin KENDI dusurme tablosu — alt metnin gercekle
+// karsilastirilacagi tek kaynak (TASK-2.13).
+import { DROP_NODES, SHELL_DROP_NODES } from "../research/lib/screen-cleanup-v2.mjs";
 
 // TASK-2.09 — B-029'un bes karsiliksiz cumlesinin ZIYARETCIYE GORUNEN
 // yuzeylerdeki kapisi.
@@ -175,7 +178,7 @@ describe("TASK-2.12 — ürün görseli alt metni 'öğrenci tutma' iddia etmiyo
   // Urun gercegi (olculdu 2026-09-23): "ogrenci tutma" TUM urun kod tabaninda
   // 0 kez geciyor; surum haritasi kalemi adiyla v1.5'e tasimis
   // (../Alpfit.v1/_dev/PRD/VERSIONS.md -> v1.5 Feature Adaylari).
-  // ⚠️ Goruntunun kendisi karti hala render ediyor → B-018 / TASK-2.13-2.15.
+  // TASK-2.13 goruntunun kendisini de temizledi (DROP_NODES.antrenor).
   const tumAlt = Object.values(SHOTS)
     .map((s) => s.alt)
     .join(" || ")
@@ -189,11 +192,74 @@ describe("TASK-2.12 — ürün görseli alt metni 'öğrenci tutma' iddia etmiyo
   it("hiçbir ürün görseli alt metni 'öğrenci tutma' demiyor", () => {
     expect(tumAlt).not.toContain("öğrenci tutma");
   });
+});
 
-  it("antrenör görselinin alt metni ölçülen kartları anlatıyor", () => {
+// ── TASK-2.13 — alt metin, hattin DUSURDUGU karti anamaz ─────────────────
+//
+// Neden bu blok var: TASK-2.12 "ogrenci tutma"yi alt metinden cikardi ve
+// yerine "haftalik doluluk" + "ciro kirilimi" yazdi, uzerine de o iki ifadeyi
+// `toContain` ile CIVILEDI. Olculdu (TASK-2.13): o iki kart bu goruntude ZATEN
+// YOK — ayni hat onlari TASK-14.06'dan beri dusuruyor ve gerekcesi urunun kendi
+// kodu (trainer-performance.service.ts:7 "FINANSAL CIRO DEGIL",
+// attendance-count.ts:11 doluluk % kapsam disi). Yani kapi bir karsiliksiz
+// iddiayi ikisiyle degistirip sabitlemisti.
+//
+// Ders: alt metnin dogrulugu elle yazilan bir listeyle guvence altina
+// alinamaz — olculecek sey HATTIN KENDI TABLOSUDUR. Bu, fazin gorsel denetim
+// icin sectigi ilkenin aynisi (PHASE-2 -> "tablo kaynagin gercegidir, regex
+// bir tahmindir"), yalniz metin tarafina uygulanmis hali.
+//
+// Kapsam: yedi gorselin hepsi, kendi ekraninin dusurme capalarina karsi.
+// Capalar `research/lib/`ten okunur; `web` konteyneri deponun tamamini gorur
+// (arastirma konteyneri yalniz `research/`u gorur — PHASE-2 arastirmasinda
+// olculdu), yani bu import yalniz bu yonde mumkundur.
+describe("TASK-2.13 — ürün görseli alt metni, hattın düşürdüğü kartı anmıyor", () => {
+  /** SHOTS anahtari -> render-product.mjs ekran id'si (uyeTelefon -> uye-telefon). */
+  const ekranId = (key: string) => key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+
+  // DROP_NODES yalniz ekran-OZEL anahtarlari tasir (bugun: antrenor, raporlar,
+  // takvim, uye-telefon); kabuk kurali her ekrana ayrica biner. Bilinmeyen
+  // anahtar `undefined` doner ve `?? []` ile bos gecer — render-product.mjs'in
+  // kendi `DROP_NODES[screen.id] ?? []` davranisiyla birebir ayni.
+  const ekranOzelDroplar = DROP_NODES as Record<string, string[][] | undefined>;
+
+  /** Bir ekrandan dusurulen TUM capalar: ortak kabuk + ekran-ozel. */
+  const dusurulenCapalar = (screenId: string): string[] =>
+    [...SHELL_DROP_NODES, ...(ekranOzelDroplar[screenId] ?? [])].map((girdi) => girdi[1]);
+
+  it("düşürme tablosu okunuyor (boş kapsam bekçisi)", () => {
+    // Tablo bos ya da okunamaz dondugunde asagidaki dongu HICBIR SEYE bakmaz
+    // ve bedava yesil kosar. Sayilar olculdu (2026-09-23).
+    expect(SHELL_DROP_NODES.length).toBeGreaterThan(0);
+    expect(dusurulenCapalar("antrenor").length).toBe(6);
+    expect(dusurulenCapalar("raporlar").length).toBe(2);
+  });
+
+  it("pozitif çapa: tablo bugün düşürdüğü üç kalemi adıyla taşıyor", () => {
+    // Sonda: kapi gercekten bu kalemleri mi oluyor? Biri tablodan duserse
+    // asagidaki dongu onu aramayi sessizce birakirdi.
+    expect(dusurulenCapalar("antrenor")).toContain("Öğrenci Tutma");
+    expect(dusurulenCapalar("raporlar")).toContain("Yenileme & Churn");
+    expect(dusurulenCapalar("grup")).toContain("Kampanyalar");
+  });
+
+  it("yedi görselin alt metni, kendi ekranından düşen kartı anmıyor", () => {
+    for (const [key, shot] of Object.entries(SHOTS)) {
+      const alt = shot.alt.toLocaleLowerCase("tr");
+      for (const capa of dusurulenCapalar(ekranId(key))) {
+        expect(alt, `${key} alt metni düşürülen "${capa}" kartını anıyor`).not.toContain(
+          capa.toLocaleLowerCase("tr"),
+        );
+      }
+    }
+  });
+
+  it("antrenör alt metni görüntüde gerçekten duran iki yüzeyi anlatıyor", () => {
+    // Gozle dogrulandi (2026-09-23, 1200x866 cikti): "Aylik Performans ·
+    // PT ders · son 6 ay" grafigi + "Ogrenciler · 28 aktif" tablosu.
+    // Ikisinin de karsiligi CAPABILITIES -> simdi (`antrenor-performansi`).
     const alt = SHOTS.antrenor.alt.toLocaleLowerCase("tr");
-    expect(alt).toContain("aylık performans");
-    expect(alt).toContain("haftalık doluluk");
-    expect(alt).toContain("ciro kırılımı");
+    expect(alt).toContain("aylık pt ders performansı");
+    expect(alt).toContain("öğrenci listesi");
   });
 });

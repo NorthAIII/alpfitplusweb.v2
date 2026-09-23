@@ -11,7 +11,14 @@
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { REPLACEMENTS, INITIALS, AVATAR_SELECTOR, DROP_NODES, auditTexts } from '../lib/screen-cleanup-v2.mjs';
+import {
+  REPLACEMENTS,
+  INITIALS,
+  AVATAR_SELECTOR,
+  DROP_NODES,
+  SHELL_DROP_NODES,
+  auditTexts,
+} from '../lib/screen-cleanup-v2.mjs';
 
 const DEMO = 'file:///demo';
 const OUT = '/work/product-out';
@@ -110,7 +117,10 @@ async function renderScreen(browser, screen) {
       replacements: REPLACEMENTS,
       initials: INITIALS,
       avatarSel: AVATAR_SELECTOR,
-      dropList: DROP_NODES[screen.id] ?? [],
+      // ORTAK KABUK kurallari HER ekrana uygulanir, ekran-ozel liste ustune biner.
+      // Ikisi tek dizide birlesir, cunku "her girdi TAM BIR dugum esler"
+      // sozlesmesi ve fail-fast davranisi ikisi icin de aynen gecerli olmali.
+      dropList: [...SHELL_DROP_NODES, ...(DROP_NODES[screen.id] ?? [])],
     },
   );
 

@@ -29,6 +29,29 @@ const V2_REPLACEMENTS = [
   ['İlkin Aydın', 'Berk S.'],
   ['Gizem Örge', 'Yasemin U.'],
   ['Simge Aköz', 'Cüneyt V.'],
+
+  /**
+   * B-018 / TASK-2.13 — TAM AD kaliginin DISINDA kalan iki gecis sinifi.
+   * Yukaridaki eslemeler tam adi biliyordu; kaynak metinde ad CIPLAK ILK AD ya
+   * da KISALTILMIS halde geciyor ve o yuzden hicbiri tutmuyordu:
+   *   grup.html:209,564  "Gizem Ö. · 17:00 · 60 dk"   → ana sayfada render ediliyor
+   *   sube.html:481      "… Simge & Gizem hocalarin …" → & araya girdigi icin tam ad degil
+   * Hedef adlar yukaridaki tam-ad eslemeleriyle AYNI secildi (Gizem→Yasemin,
+   * Simge→Cüneyt), yoksa ayni kisi iki karede iki ayri nötr ad alirdi.
+   *
+   * SIRA TUZAGI — bu satirlar YALNIZ uzundan kisaya uygulama sayesinde guvenli:
+   * 'Gizem' kurali 'Gizem Örge'den ONCE kosarsa sonuc "Yasemin Örge" olur.
+   * Sirayi uretim ani garanti ediyor (render-product.mjs → reps.sort uzunluga
+   * gore azalan), tablo sirasi degil — bu yuzden buraya sona yazilmalari bir
+   * tercih degil, sadece okunurluk.
+   *
+   * INITIALS'e satir GEREKMEDI (olculdu): 'GÖ' → 'YU' ve 'SA' → 'CV' zaten
+   * asagidaki tabloda. sube.html:348,363 bu avatarlari .av-sm ile tasiyor,
+   * grup.html:209'daki kartta ise ada bitisik avatar yok.
+   */
+  ['Gizem Ö.', 'Yasemin U.'],
+  ['Gizem', 'Yasemin'],
+  ['Simge', 'Cüneyt'],
 ];
 
 export const REPLACEMENTS = [...V1_REPLACEMENTS, ...V2_REPLACEMENTS];
@@ -38,8 +61,58 @@ export const INITIALS = [
   ['MV', 'EK'], ['HB', 'NT'], ['CÖ', 'TA'], ['İA', 'BS'], ['GÖ', 'YU'], ['SA', 'CV'],
 ];
 export { AVATAR_SELECTOR, BRAND_LEAK };
+
+/**
+ * ORTAK KABUK DUSURME — ekran basina degil, BIR KEZ yazilir ve her ekrana
+ * uygulanir (cagiran `DROP_NODES[screen.id]`in onune ekler).
+ *
+ * "Kampanyalar" sol menu girdisi urunun BUGUN tasimadigi bir kalemdir:
+ * karsiligi v1.5'te ve site onu /ozellikler'in "Yolda" kolonunda gosteriyor
+ * (`src/content/product.ts` → CAPABILITIES.yolda). Kaynak demoda `kampanya.html`
+ * zaten bilincle hattan disarida (README → "Urun gorselleri neden bir hattan
+ * geciyor"), ama ona GIDEN menu girdisi her karede duruyordu.
+ *
+ * Neden ekran basina DEGIL: girdi kaynak HTML'lerin ORTAK kabugunda, her birinde
+ * bir kez (olculdu 2026-09-23: cockpit · takvim · grup · finans · antrenor ·
+ * raporlar → `grep -c` her birinde 1, hepsi `<a class="nav" href="kampanya.html">`).
+ * Ekran basina tekrarlamak ayni kurali alti kez yazmak ve birini unutunca sessizce
+ * kacirmak demekti.
+ *
+ * 'uye-telefon' ayni `takvim.html` belgesinden uretilir; menu `.phone` kokunun
+ * disinda kaldigi icin cikti goruntude zaten yok — ama dusurmek denetimin gordugu
+ * kutleyi de temizler. Bu, ayni belge cifti icin asagida kurulan SMS karti
+ * emsalinin birebir aynisi, yeni bir desen degil.
+ *
+ * Cagiranin "her girdi TAM BIR dugum esler" sozlesmesi burada da gecerli: bir
+ * ekranda girdi 0 ya da 2 cikarsa URETIM DURUR. Capa REPLACEMENTS'tan once okunur
+ * ve "Kampanyalar" hicbir esleme tarafindan degistirilmiyor.
+ */
+export const SHELL_DROP_NODES = [['a.nav', 'Kampanyalar']];
+
 export const DROP_NODES = {
   ...V1_DROP_NODES,
+  /**
+   * v1'in antrenor listesine DORDUNCU kart: "Ogrenci Tutma" (B-018, TASK-2.13).
+   * Kart `%91` + "3 aylik tutma" + "Subede en yuksek ogrenci tutma orani"
+   * gosteriyor; TASK-2.12 olctu ki "ogrenci tutma" TUM urun kod tabaninda
+   * **0** kez geciyor ve urunun kanonik surum haritasi kalemi adiyla erteliyor
+   * (`../Alpfit.v1/_dev/PRD/VERSIONS.md` → "Antrenor performansi — ogrenci tutma
+   * gostergesi … kalemi v1.5'e tasidi"). Yani kart, yanindaki iki kardesiyle
+   * (Haftalik Doluluk · Ciro Kirilimi) tam ayni sinifta: urunun karsilamadigi
+   * iddia. O ikisi TASK-14.06'da dusuruldu, bu ucuncusu kalibin disinda kalmisti
+   * cunku denetimin iddia dali HIC yok (B-044 kalem 3).
+   * Ayni kartin ustundeki "★ Subede 1." rozeti ve "Ekipte: Mar 2023" B-044'te
+   * kalir — bu fazin kapsami disinda (PHASE-2 → Kapsam Disi).
+   */
+  antrenor: [...V1_DROP_NODES.antrenor, ['.detgrid .card', 'Öğrenci Tutma']],
+  /**
+   * raporlar.html:242 `<h4>Yenileme &amp; Churn</h4>` — rapor sablonu karti.
+   * "churn.html" demo sayfasi zaten bilincle hattan disarida (v1.5 kalemi);
+   * ona giden SABLON KARTI duruyordu. Tek yerde, tek kart (olculdu).
+   * Secici `.repgrid .rep` YAPISALDIR: `nth-child` degil, cunku kaynaga bir
+   * sablon eklendigi gun sira kayar (v1 tablosunun kendi kurali).
+   */
+  raporlar: [['.repgrid .rep', 'Yenileme & Churn']],
   /**
    * takvim.html sag rayindaki bilgi karti "18:00'de SMS + push gider" diyor.
    * Urunun SMS ucu YOK ve v1 sitesi bu iddiayi zaten fiyat sayfasindan
@@ -60,6 +133,21 @@ const SHELL = ['Alpfit Plus', 'Genel Bakış', 'Grup Dersleri', 'Sahil Müdürü
 
 export const AUDIT_ALLOW = {
   ...V1_AUDIT_ALLOW,
+  /**
+   * 'Öğrenci Tutma' satiri OLDU: kart artik `DROP_NODES.antrenor` ile DOM'dan
+   * kalkiyor, yani denetimin gordugu kutlede hic yok. v1 tablosunun kendi kurali
+   * bunu emrediyor ("Haftalik Doluluk ve Ciro Kirilimi satirlari TASK-14.06'da
+   * OLDU ve silindi … Olu satiri birakmak listeyi korelten siniftir").
+   *
+   * Satir KOPYALANMADI, v1'den TURETILDI — v1'in govdesi duzenlenmez ve elle
+   * yazilmis bir kopya ilk v1 degisiminde sessizce ayrisirdi.
+   *
+   * Yan etki BILINCLIDIR ve istenen sey: 'Öğrenci Tutma' ad kalibina uyuyor
+   * (iki buyuk-harfle baslayan sozcuk). Izin satiri gidince dusurme sessizce
+   * basarisiz olursa denetim o tamlamayi ad sizintisi olarak raporlar ve
+   * URETIM DURUR. Yani dusurme kendi kendini dogrulayan bir kapiya donusur.
+   */
+  antrenor: V1_AUDIT_ALLOW.antrenor.filter((t) => t !== 'Öğrenci Tutma'),
   /**
    * grup.html — kapi ONCE bos listeyle kosuldu, raporladigi 12 tamlamanin her biri
    * kaynakta arandi. Iki tanesi gercek sporcu adiydi ve REPLACEMENTS'a tasindi;

@@ -80,7 +80,23 @@ Kapanış kapsamının ölçütü hâlâ [B-044](B-044-urun-gorselinde-semt-bas-
 
 ## Çözüm Kaydı
 
-—
+**TASK-2.13 (2026-09-23) — adıyla sayılan ÜÇ kalemin üçü de kapandı, dördüncüsü de; atom AÇIK kalır (kök neden).**
+
+Hat yeniden koşturuldu (7 `.webp`, çıkış kodu 0, denetim sızıntı bildirmedi) ve çıktıların **yedisi de gözle okundu**.
+
+| Kalem | Hüküm |
+|---|---|
+| "Gizem Ö." (`grup.webp`) | ✅ **kapandı** — kare artık "Box · **Yasemin U.** · 17:00 · 60 dk". Kaçıran şey tablo değil kalıptı: eşleme **tam ada** yazılmıştı, metinde kısaltılmış hâl geçiyor. `['Gizem Ö.','Yasemin U.']` + çıplak ilk ad eşlemeleri eklendi; hedef ad tam-ad eşlemesiyle **aynı** seçildi ki aynı kişi iki karede iki ad almasın |
+| "Kampanyalar" nav | ✅ **kapandı — 7/7 görselde.** Ekran başına değil **ortak kabuk kuralı** olarak yazıldı (`SHELL_DROP_NODES`), çağıran her ekrana uyguluyor. Mekanik sayım: kabuk kuralı yedi ekranın her birinde tam 1 düğüm düşürdü (cockpit 1 · takvim 2 · finans 1 · antrenör 6 · raporlar 2 · grup 1 · üye-telefon 2 = 15 düşürme, 7'si kabuk) |
+| "Yenileme & Churn" (`raporlar.webp`) | ✅ **kapandı** — `.repgrid .rep` çapasıyla düşürüldü; şablon ızgarası 6 → 5 kart |
+| **"Öğrenci Tutma" (`antrenor.webp`)** | ✅ **kapandı** — bu atomda adıyla sayılmayan **dördüncü** kalem. TASK-2.12 metin tarafını kapatmış, görüntü tarafını buraya devretmişti. Kart `%91` + "3 aylık tutma" + "Şubede en yüksek öğrenci tutma oranı" gösteriyordu; kelime tüm ürün kod tabanında **0** ve kalem `VERSIONS.md`'de v1.5'te. Yanındaki iki kardeşiyle (Haftalık Doluluk · Ciro Kırılımı, TASK-14.06'da düşmüştü) tam aynı sınıf |
+
+**Düşürme kendi kendini doğrulayan bir kapıya dönüştü.** `AUDIT_ALLOW.antrenor`'daki artık ölü `'Öğrenci Tutma'` izin satırı v1'den **türetilerek** çıkarıldı (kopyalanmadı). Yan etki bilinçli: tamlama ad kalıbına uyuyor, yani düşürme sessizce başarısız olursa denetim onu ad sızıntısı sayar ve **üretim durur**. Sondayla ölçüldü: düşürme kuralı kaldırılınca hat `[antrenor] DENETİM BAŞARISIZ — ad sızıntısı: ["Öğrenci Tutma"]` verip **çıkış kodu 1** döndü.
+
+**Kapanmayan — bu yüzden atom AÇIK:**
+- **Kök neden duruyor.** `auditTexts()` hâlâ iki dallı; iddia sızıntısı için hiç dal yok. Bugün kapatılan kalemler denetimi görür hâle **getirmez** — bunu boş-kapsam sondası rakamla gösterdi: üç düşürme birden kaldırıldığında denetim **yalnız 1/3'ünü** yakalıyor ("Öğrenci Tutma" kırmızı), "Kampanyalar" tek sözcük olduğu için ve "Yenileme & Churn" `&` kalıbı bozduğu için **görünmez** — "Simge & Gizem"i kör eden mekanizmanın aynısı. Yani bugün düzeltilen iki kalemin arkasında kapı **yok**.
+- Denetimin ad dalının tablodan beslenmesi → **TASK-2.14**; yasaklı iddia sözlüğü ve iddia dalı → **TASK-2.15** (atom orada kapanır).
+- `DROP_NODES` artık yedi ekranın **dördünü** kapsıyor (önce üç): antrenör · raporlar · takvim · üye-telefon; kabuk kuralı ayrıca yedisine birden biniyor.
 
 **Yeniden ölçüm (audit-product 2026-09-22) — bir kalem KAPANDI, ikisi aynen açık.**
 
