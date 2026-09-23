@@ -20,6 +20,34 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-23 — Kontrast ve mobil kapılarının ölçüm sözleşmesi yeniden kuruluyor: piksel ölçümü, yayın kopyası, hareket azaltma, kademeli dokunma hedefi
+
+**Bağlam:** Faz 3'ün araştırması (`phases/PHASE-3.md` → Araştırma Bulguları) iki kapıyı gerçek kapı hâline getirmeden önce ölçüm yönteminin kendisini sınadı. Bugünkü model kontrastı **hesaplanmış stilden** türetiyor (renk + en yakın opak zemin) ve üç şeyi yapısal olarak göremiyor: gradyan/fotoğraf zemini, ata opaklığı, gradyanla boyanmış metin. Devralınan "çalışan uygulama scratchpad'de, devralınabilir" kaydı **ölçülerek çürütüldü** — adı geçen betiklerin hiçbiri yok; yöntem sıfırdan prototiplendi.
+
+**Seçenekler:**
+1. **Hesaplanmış stili yamamak** — her kör nokta için ayrı düzeltme. Ucuz; ama gradyan zemin ve `transparent` metin tek renkle temsil edilemediği için "ölçülemeyen" kümesi büyümeye devam eder.
+2. **Piksel ölçümü** — iki kare (normal / metni görünmez) farkından glif maskesi; zemin maskenin altındaki gerçek pikselden. Üç kör noktayı tek değişiklikle kapatır.
+
+**Karar:** **2 — ve yanında üç sözleşme değişikliği daha.**
+- **Metin rengi CSS'ten okunur, boyanan pikselden değil.** Piksel yalnız **zemini** verir.
+- **Kapılar yayın kopyasını ölçer** (üretim konteyneri), bugünkü geliştirme sunucusunu değil.
+- **Kontrast ölçümü `prefers-reduced-motion: reduce` altında koşar.**
+- **Dokunma hedefi kuralı kademelidir ve mekanik ölçütü yazılıdır:** buton · form alanı · sekme · menü (`header`/`nav`) · `/demo`, `wa.me` ve `tel:` hedefli bağlantılar kırmızıya düşürür; alt bilgi **ve içerik yolu** bağlantıları ölçülür, raporlanır, düşürmez.
+- Rota listesi ayakta olan siteden `/sitemap.xml` ile türetilir (+ `/olmayan-sayfa` elle) — araştırma konteyneri depoyu görmediği için `sitemap.ts` import edilemez.
+
+**Gerekçe:**
+- **Metin rengini pikselden okumak ölçümü çöpe çeviriyor — ölçüldü.** İlk prototip fg'yi boyanan pikselden aldı ve 100 ölçümün **95'ini** eşik altı gösterdi; okunan şey metin değil antialias kenarıydı. Glif gövdesini erozyonla ayıklamak ince yazıda çalışmıyor (11-15 px gövde metninin inmesi çoğu yerde tek piksel). fg CSS'ten alınınca aynı sayfalarda eşik altı 95 → 1'e düştü ve yöntem kayıtlı rakamları **birebir** yeniden üretti.
+- **Hareket azaltma bir eksen tercihi değil, doğruluk koşulu.** Ata opaklık çarpımı uygulanır uygulanmaz `Reveal`'in geçiş ortası opaklıkları (0,459 · 0,618 · 0,666 · 0,711 · 0,818 — hepsi ölçüldü) ihlal gibi okunuyor. Eski modelin "Reveal kapıyı kör etmiyor" gözlemi kendi modeli için doğruydu; kör noktayı kapatmak bu sınıfı açıyor. Aynı koşum `modules/M2-Sayfalar-ve-Bolumler.md` → F2.3'ün bugüne dek hiç ölçülmemiş kriterini de doğruladı.
+- **Yayın kopyasını ölçmek ILKELER'in kalıcılık maddesinden geliyor:** geliştirme sunucusunu ölçen bir kapının yeşili, yayınlanan sürüm için kanıt değildir. Bilinçle kabul edilen bedel: her koşumdan önce imaj tazeliği — `build` imajı tazeler ama konteyneri yeniden yaratmaz (`memory/alternatif-env-ile-uretim-derlemesi.md`).
+- **Dokunma hedefi ölçütü ILKELER'in 1. ekseninden (Dönüşüm) türedi ve ölçüldü:** alt bilgi ile içerik yolu dışarıda tutulduğunda kritik küme **19 benzersiz hedefe** iniyor (gövde metni içi bağlantı 324). Hepsini 44 px'e çıkarmak satır aralıklarını açıp tipografiyi bozardı; kritik kümenin tamamı ise somut ve küçük (şube seçici butonları, WhatsApp ve telefon bağlantısı, form alanı ve onay kutusu).
+- **Kapsamın tamamı düzelir, muafiyet yazılmaz.** Ölçüm kayıtlı beş kalemden fazlasını buldu (soluk kart başlıkları **1,13:1**, iki yeni yüzey, gradyan metin 5 değil 11 yerde). Düzeltilmeyen kalem için kapıya adıyla muafiyet yazmak gerekirdi; muafiyet listesi zamanla unutulur ve kapı sessizce darlaşır.
+
+**Geçersiz kıldığı:** `modules/M6-Kalite-Kapilari.md` → Teknik Notlar'daki başlangıç ölçümünün *"Kontrast ihlali: 0"* satırı bu yöntemle **geçersizdir** — o sıfır dar bir kapsamda ve yanlış modelle alınmıştı. Yeni regresyon çizgisi bu fazın sonunda, yeni yöntemle yeniden yazılır.
+
+**İlgili Task/Faz:** Faz 3 — araştırma oturumu (`phases/PHASE-3.md`). Bulgular: B-031, B-030 (a11y/mobil ayağı), B-012 (a11y/mobil ayağı), B-032, B-033, B-022.
+
+---
+
 ### 2026-09-23 — Onay e-postasının alıcısı doğrulanmıyor: adres başına tavan + selamlamadaki serbest metnin kaldırılması
 
 **Bağlam:** TASK-2.07 (B-059) talep sahibine onay e-postasını açtı. Faz 2'nin kabul testi (senaryo 26, 2026-09-23) uçta şunu ölçtü: e-posta, **istek gövdesinde yazan her biçimsel geçerli adrese** gidiyor, doğrulanmış `alpfitplus.com` göndericisinden çıkıyor ve selamlamada istek sahibinin 120 karakterine kadar metnini taşıyor. Sınırlayan kapılar ölçüldü — IP başına 10 dk / 5 istek (6. istek `429`), bal küpü, onay kutusu — ama **adresin sahipliğini gösteren kapı yok**. Zarar içerik değil, gönderici itibarı ve istenmeyen posta. `isValidEmail`'i sıkılaştırmak çözüm değil: gevşekliği bilinçli (B-021/TASK-1.12) ve sorun biçim değil sahiplik.

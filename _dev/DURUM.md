@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — **Faz 3 "Görsel ve mobil iyileştirme" açıldı** (discuss-phase): kapsam devralınan üç bulgudan **dokuza** çıktı — kullanıcı B-022 · B-046 · B-051 · B-057'yi ekledi, B-031'in "aynı turda" uyarısı gereği B-030 ve B-012'nin a11y/mobil ayakları da alındı. Üç bekleyen soru karara bağlandı (ana sayfa kısaltılmıyor · dokunma hedefi kuralı kademeli · 404'teki dev rakam dekoratif ilan ediliyor); keşif turu fazın içinde ve dört yeni eksen kazandı (%200/%400 büyütme, hareket azaltma, JS kapalı, yatay tutuş).
+**Son Güncelleme:** 2026-09-23 — **Faz 3'ün teknik araştırması tamamlandı** (research-phase): kontrast ölçümü **piksele taşınıyor** ve yöntem sıfırdan prototiplendi — devralınacağı söylenen uygulama ölçülerek çürütüldü (hiçbiri yok). Devralınan dokuz iddianın hepsi yeniden ölçüldü: B-032/B-033/B-022/B-051 doğrulandı, **kontrast ihlali kümesi kayıtlı beşten geniş çıktı** (soluk kart başlıkları 1,13:1, iki yeni yüzey, gradyan metin 11 yerde), antrenör sekmesinin "tek satırlık hata" iddiası eksik çıktı, çift preload iddiası düştü. Dört karar kullanıcıyla bağlandı: tüm ihlaller düzelir · kapılar yayın kopyasını ölçer · hareket azaltma ölçümün ön koşulu · dokunma hedefi kümesi 19.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 3 — Görsel ve mobil iyileştirme
 **Milestone:** Site dar telefondan büyütülmüş yazıya kadar bölüm bölüm gezildi (gerçek cihaz dâhil) ve çıkanlar triyaj edildi; ölçülmüş beş kontrast ihlali ve 320 px'te kesilen içerik kalmadı; telefonda her sayfanın ilk ekranında demoya çıkan bir yol var ve dönüşüme dokunan her hedef ≥ 44 px; kontrast ve mobil kapıları 16 sayfanın hepsini geziyor, boyanan gerçek rengi ölçüyor ve eşik altında kırmızıya dönüyor; ana sayfanın iki kart ızgarası reddedilen kalıptan çıktı; beş ölçüm yeşil. Tam metin ve kapsam kararları: `phases/PHASE-3.md`.
-**Adım:** research
-**İlerleme:** Kapsam tartışması ✅ tamamlandı — dokuz bulgu + keşif turu kapsama alındı. Task listesi henüz yazılmadı (`plan-phase`).
+**Adım:** plan
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ tamamlandı — yöntem, araçlar, ölçülmüş tuzaklar ve altı teknik karar faz dokümanında. Task listesi henüz yazılmadı (`plan-phase`).
 **Faz Dokümanı:** `phases/PHASE-3.md` 🔄 · son kapanan: `phases/PHASE-2.md` ✅ (çocukları: `PHASE-2-KAPSAM.md` · `PHASE-2-ARASTIRMA.md` · `PHASE-2-UAT.md` · `PHASE-2-RETROSPEKTIF.md`)
 
 ---
@@ -36,10 +36,10 @@
 ## Aktif Task
 
 **Task:** — yok · Faz 3'ün task listesi `plan-phase` oturumunda yazılacak
-**Durum:** ✅ Bekleyen, devam eden ya da duraklatılmış task yok — sıradaki adım fazın teknik araştırması (`research-phase`)
+**Durum:** ✅ Bekleyen, devam eden ya da duraklatılmış task yok — sıradaki adım task yazımı (`plan-phase`)
 **İlerleme:** —
 **Not:**
-- ⚠️ **Kullanıcıya bağlı iki iş bu fazın içinde ve ikisi de fazı kilitlemeyecek biçimde yerleştirilecek:** (1) **gerçek telefonla uçtan uca tur** — fazın sonunda, doğrulama olarak koşar (Faz 2'den devredilen form denemesi de bunun içinde); (2) **ürün deposunun demo destesine bir diyetisyen ekranı eklenmesi** — eklendiği gün görsel hattı onu olağan biçimde üretir; gelmezse Roller sekmesi ödünç görselle kalır ve B-046 kanvasta açık durur.
+- ⚠️ **Kullanıcıya bağlı iki iş bu fazın içinde ve ikisi de fazı kilitlemeyecek biçimde yerleştirilecek:** (1) **gerçek telefonla uçtan uca tur** — fazın sonunda, doğrulama olarak koşar (Faz 2'den devredilen form denemesi de bunun içinde); (2) **ürün deposunun demo destesine İKİ ekran eklenmesi — diyetisyen ve antrenör telefonu** (araştırmada büyüdü, 2026-09-23): deste tarandı, telefon yüzeyi yalnız üye ve patron tarafında var, yani antrenör sekmesi tek satırlık düzeltmeden sonra da telefon çerçevesinde masaüstü panosu gösterecek. Eklendikleri gün görsel hattı ikisini de olağan biçimde üretir; gelmezse iki sekme de bugünkü hâlinde kalır ve B-046 kanvasta açık durur.
 - ⚠️ **Kullanıcı gözü bekleyen dört doğrulama kalemi duruyor** (hiçbiri faz kapanışını engellemedi, hepsi *doğrulama kanalı* — ürün tarafı ölçüldü): Faz 2'den (1) onay e-postasının gelen kutusunda mı spam'de mi düştüğü, (2) ekran okuyucuda onay kutusunun iki kez duyurulup duyurulmadığı (kaydı `BULGULAR.md` → Gelen Kutusu, `[TASK-2.05]`; gerçek ekran okuyucu denemesi Faz 3'ün de kapsamı dışında); Faz 1'den (3) `DEMO_TO`'ya giden e-postanın yerleşimi, (4) Umami panelinin **arayüzünde** v2 kaydının gözle görülmesi (kaydı `phases/PHASE-1.md` → Milestone kapanış notu).
 - ⚠️ **Bu faz ölçüm betiklerini yoğun koşacak ve 3100 bayat olabilir** (B-019, mekanizması Faz 2'de taze kanıtlandı): `docker compose build web-prod` imajı tazeler ama **konteyneri yeniden yaratmaz** — `docker compose --profile prod up -d web-prod` gerekir. `perf.mjs` ve `font-guard.mjs` 3100'e çivili ve env ile yönlendirilemiyor; ölçmeden güvenme (`memory/alternatif-env-ile-uretim-derlemesi.md`).
 
