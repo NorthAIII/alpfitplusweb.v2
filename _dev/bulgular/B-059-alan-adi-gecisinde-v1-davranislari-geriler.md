@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** tutarsızlık / gerileme | **Alan:** M7 — F7.5 Alan adı geçişi / M3 — Lead hattı / M1 — Yasal metin
 **Kaynak:** audit-product (Gelen Kutusu mezuniyeti: `[PHASE-1 plan revizyonu]` + `[TASK-1.15]`) | **Tarih:** 2026-09-22
-**Durum:** → Faz 2 (yalnız onay e-postası ayağı; kalanı alan adı geçişi fazında)
+**Durum:** Kısmen çözüldü — (1) ve (2) Faz 2'de kapandı (TASK-2.07, 2026-09-23); **(3) açık**, alan adı geçişi fazının parite listesinde
 
 ## Gözlem
 
@@ -37,4 +37,9 @@ Faz 1 v2'yi **kendi başına** doğru kurdu; v1 ile kıyas yalnız kayıt şemas
 
 ## Çözüm Kaydı
 
-—
+**(1) ve (2) kapandı — TASK-2.07, 2026-09-23** (`tasks/archive/TASK-2.07.md`).
+
+- **(1) Onay e-postası açıldı.** `src/app/api/demo/route.ts` → `toLeadEmail()`; alıcı talep sahibi, `reply_to` ekibin kutusu (`DEMO_TO`), metin `src/content/mail.ts` → `LEAD_CONFIRMATION` (düz metin). Ekip bildirimiyle **paralel** gider, biri diğerini bloke etmez. Ölçüldü: yerel depoya karşı gerçek turda iki e-posta da Resend'de **`delivered`** (onay `01a0cbda-b7b1-…`, ekip `01a0cbda-b734-…`), damgalar 214 ms arayla. v1'in *"genelde 1 iş günü içinde"* parantezi **taşınmadı** — dönüş süresi vaadi sitenin formundaki cümleyle aynı tutuldu, yeni bir süre icat edilmedi ([B-026](B-026-donus-suresi-vaadi-uc-farkli-ve-kanitsiz.md) büyümedi).
+- **(2) `notify_lead` gerçek sonucu taşıyor.** PATCH gövdesi artık `{notify_team, notify_lead}`. Üç değerin üçü de gerçek depo hook'una yazılarak ölçüldü: `sent` · `skipped` (geçerli adres yok) · `failed`. Koruma önerisindeki "ucuz çözüm" (hep `skipped` yaz) **uygulanmadı** — dayanağı düştü: v2 artık gerçekten gönderdiği için alanın anlamı v1'inkiyle aynı (karar: `docs/DECISIONS.md` 2026-09-22 «Onay e-postası açılınca `notify_lead` gerçek sonucu taşır»).
+
+**(3) açık kalıyor** — yasal metnin v1'e göre gerilemesi F7.5'in parite listesinde; koruma önerisinin F7.5 kabul kriteri satırı da orada karara bağlanır.

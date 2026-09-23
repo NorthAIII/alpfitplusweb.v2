@@ -5,6 +5,7 @@ import { createHmac } from "node:crypto";
 
 import { checkContact, isValidEmail } from "@/lib/contact";
 import { DEPLOY_STAGE } from "@/lib/stage";
+import { LEAD_CONFIRMATION } from "@/content/mail";
 
 /**
  * Demo talebi ucu.
@@ -180,14 +181,32 @@ async function toStore(lead: Lead, ip: string): Promise<StoreResult> {
 }
 
 /**
+ * Talep sahibinin onay e-postasının sonucu (depo şeması: `notify_lead`).
+ * `skipped` = gönderilecek geçerli bir adres yoktu; `failed` = gönderim
+ * denendi ve olmadı. Ayrım ekip içindir: `failed` panelde "sağlayıcı reddetti"
+ * diye okunur, olmayan bir sorunu kovalatmamalı (v1'in kendi gerekçe notu).
+ */
+type NotifyLead = "sent" | "failed" | "skipped";
+
+/**
  * Bildirim durumunu kayda geri yazar (Karar Noktası: `notify_*` — (a) seçildi).
  * En fazla 3 sn; sonucu ziyaretçinin yanıtını DEĞİŞTİRMEZ, başarısızlık yalnız
- * loglanır. `notify_lead` bilerek dokunulmaz — site talep sahibine ayrı bir
- * onay e-postası göndermiyor, depo varsayılanı `pending` kalır (v1'deki gibi
- * `skipped` yazılmaz: v1'de o değerin anlamı "ziyaretçi e-posta vermedi",
- * alan adı geçişinde aynı koleksiyonda iki farklı anlam karışırdı).
+ * loglanır.
+ *
+ * `notify_lead` 2026-09-14'te bilerek YAZILMIYORDU: site talep sahibine ayrı
+ * bir onay e-postası göndermediği için alanı erken `skipped` yazmak, alan adı
+ * geçişinde v1'in "ziyaretçi e-posta vermedi" anlamıyla karışırdı. Onay
+ * e-postası TASK-2.07'de açıldı (B-059) ve o dayanak düştü — alan artık v1'le
+ * AYNI anlamı taşıyor, yani karışma riski tersine döndü: `pending` bırakmak,
+ * geçişten sonra aynı koleksiyonda v2 kayıtlarını kalıcı "bildirim beklemede"
+ * gösterip alanı okunamaz kılardı. Yeni karar: `docs/DECISIONS.md` 2026-09-22
+ * «Onay e-postası açılınca `notify_lead` gerçek sonucu taşır».
  */
-async function notifyStore(leadId: string, notifyTeam: "sent" | "failed"): Promise<void> {
+async function notifyStore(
+  leadId: string,
+  notifyTeam: "sent" | "failed",
+  notifyLead: NotifyLead,
+): Promise<void> {
   const url = process.env.LEAD_STORE_URL;
   const token = process.env.LEAD_STORE_TOKEN;
   if (!leadId || !url || !token) return;
@@ -196,7 +215,7 @@ async function notifyStore(leadId: string, notifyTeam: "sent" | "failed"): Promi
     const res = await fetch(`${url.replace(/\/+$/, "")}/lead/${encodeURIComponent(leadId)}`, {
       method: "PATCH",
       headers: { "content-type": "application/json", "X-Lead-Token": token },
-      body: JSON.stringify({ notify_team: notifyTeam }),
+      body: JSON.stringify({ notify_team: notifyTeam, notify_lead: notifyLead }),
       signal: AbortSignal.timeout(3000),
     });
     if (!res.ok) {
@@ -248,6 +267,47 @@ async function toEmail(lead: Lead): Promise<boolean> {
           // Önizleme testi gelen kutusunda ilk bakışta ayrılsın.
           `Ortam: ${lead.env}`,
         ].join("\n"),
+      }),
+      signal: AbortSignal.timeout(8000),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Talep sahibine onay e-postası (TASK-2.07, B-059 kalem 1 — v1'de vardı, v2'de
+ * yoktu). Ekip bildiriminin (`toEmail`) eşidir ve ondan üç yerde ayrılır:
+ *
+ *  - **Alıcı ziyaretçidir**, `reply_to` ise EKİBİN kutusudur (`DEMO_TO`).
+ *    Metnin "bu e-postayı yanıtlamanız yeterli" vaadi ancak böyle gerçekten
+ *    çalışır — `DEMO_FROM`'a düşen yanıt kimseye ulaşmaz (v1 dersi).
+ *  - **Metin `src/content/mail.ts`'te**, burada değil: ziyaretçiye görünen her
+ *    cümle bir iddia yüzeyidir (`_dev/docs/CLAIMS.md`) ve dönüş süresi vaadi
+ *    formun onay kutusundakiyle aynı kalmalıdır.
+ *  - **Çağrılmadan önce adres doğrulanır** (aşağıda, `isValidEmail`): geçersiz
+ *    adrese gönderim denemek garanti bir sağlayıcı reddidir ve kayda
+ *    eyleme geçirilemez bir `failed` yazdırırdı.
+ *
+ * Başarısızlık ziyaretçinin yanıtını DEĞİŞTİRMEZ; sonucu yalnız `notify_lead`
+ * taşır. Zaman aşımı `toEmail` ile aynı sınırda (8 sn) — ikisi paralel gider.
+ */
+async function toLeadEmail(lead: Lead): Promise<boolean> {
+  const key = process.env.RESEND_API_KEY;
+  const team = process.env.DEMO_TO;
+  const from = process.env.DEMO_FROM;
+  if (!key || !team || !from) return false;
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        from,
+        to: [lead.email],
+        reply_to: team,
+        subject: LEAD_CONFIRMATION.subject,
+        text: LEAD_CONFIRMATION.text(lead.name),
       }),
       signal: AbortSignal.timeout(8000),
     });
@@ -333,12 +393,22 @@ export async function POST(req: Request) {
   }
 
   const stored = store.stored || (await toFile(lead));
-  const mailed = await toEmail(lead);
+
+  // Sıra değişmez: dayanıklı kayıt → bildirimler. İki e-posta ise PARALEL gider
+  // (v1'in deseni) — sıralı gönderim ziyaretçinin yanıtını iki zaman aşımı
+  // boyunca (8 + 8 sn) bekletirdi ve biri düştüğünde öteki denenmemiş olurdu.
+  // İkisi de kendi içinde hata yutup boolean döner, yani `Promise.all` reddetmez.
+  const leadAddressable = isValidEmail(lead.email);
+  const [mailed, leadMailed] = await Promise.all([
+    toEmail(lead),
+    leadAddressable ? toLeadEmail(lead) : Promise.resolve(false),
+  ]);
+  const notifyLead: NotifyLead = !leadAddressable ? "skipped" : leadMailed ? "sent" : "failed";
 
   // Bildirim durumu kayda geri yazılır (Karar Noktası: notify_* — (a)).
   // Yalnız depo gerçekten yazdıysa (id var) denenir; e-posta denemesinden SONRA.
   if (store.stored && store.leadId) {
-    await notifyStore(store.leadId, mailed ? "sent" : "failed");
+    await notifyStore(store.leadId, mailed ? "sent" : "failed", notifyLead);
   }
 
   if (!stored && !mailed) {

@@ -52,6 +52,9 @@
 **Kabul Kriterleri:**
 - Gerçek talep `DEMO_TO` adresine e-posta olarak gelir; gövde tüm alanları taşır — **karşılandı:** canlı turda Resend `delivered`, dokuz alan + `KVKK onayı` + `Ortam:` satırı ölçüldü (`phases/PHASE-1-UAT.md` #9); **gelen kutusu/spam yerleşimi** API'den ölçülemez, kullanıcı gözüne kaldı (#10)
 - E-posta başarısız olsa bile dayanıklı kayıt yazıldıysa uç 200 döner
+- **Ziyaretçi geçerli bir e-posta verdiyse talep sahibine de onay e-postası gider** (TASK-2.07, B-059): alıcı ziyaretçi, `reply_to` ekibin kutusu, metin `src/content/mail.ts` → `LEAD_CONFIRMATION`, gövde düz metin. İki gönderim **paralel**dir ve biri diğerini bloke etmez — **karşılandı:** yerel depoya karşı turda ikisi de `delivered`, sağlayıcı damgaları 214 ms arayla, uç 575 ms
+- **Bildirim sonucu kayda geri yazılır:** `notify_team` ∈ `sent`/`failed`, `notify_lead` ∈ `sent`/`failed`/`skipped` (`skipped` = gönderilecek **geçerli** adres yoktu). Hiçbir v2 kaydı `pending` kalmaz — **karşılandı:** üç değerin üçü de gerçek depo hook'una yazılarak ölçüldü (TASK-2.07)
+- Onay e-postası ziyaretçinin yanıtını **değiştirmez**: üç dalda da aynı `200` ve aynı gövde alanları; başarısızlık yalnız `notify_lead`'e düşer
 
 **Bağımlılık:** F3.2
 

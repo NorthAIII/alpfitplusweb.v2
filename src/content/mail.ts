@@ -1,0 +1,43 @@
+/**
+ * Ziyaretciye giden e-posta metinleri — TEK kaynak.
+ *
+ * Demo talebinin onay e-postasi (TASK-2.07, B-059) bir IDDIA YUZEYIDIR:
+ * _dev/docs/CLAIMS.md burada da gecerlidir. Ozellikle DONUS SURESI VAADI
+ * YENIDEN YAZILMAZ — formun onay kutusundaki cumlenin aynisi kullanilir
+ * (`components/sections/DemoForm.tsx` -> "En kisa surede size donup demo icin
+ * uygun bir saat belirleyecegiz"). Sitede bugun ucu birden ayrisan donus suresi
+ * ifadeleri var (BULGULAR B-026: "birkac dakika" / "ayni gun" / "en kisa
+ * surede"); dorduncu bir sure eklemek o ayrismayi buyutur. v1'in metnindeki
+ * "(genelde 1 is gunu icinde)" parantezi bu yuzden TASINMADI.
+ *
+ * EKIBE giden bildirim e-postasi burada DEGIL — o ziyaretciye gorunmeyen bir ic
+ * bildirimdir ve alan dokumu gonderim koduyla birlikte yasar
+ * (`app/api/demo/route.ts` -> toEmail).
+ */
+
+import { CONTACT } from "./site";
+
+export const LEAD_CONFIRMATION = {
+  subject: "Talebiniz bize ulaştı — Alpfit Plus",
+
+  /**
+   * DUZ METIN, HTML degil (v1 HTML gonderiyordu). Iki gerekce: uc zaten ekip
+   * bildirimini duz metin gonderiyor (tek bicim), ve ziyaretcinin yazdigi ad
+   * dogrudan govdeye giriyor — duz metinde kacis/enjeksiyon yuzeyi hic acilmaz.
+   * Kontrol karakterleri ayrica uctaki `cleanLine` ile ayiklanmis durumda.
+   *
+   * "Bu e-postayi yanitlayin" vaadi ancak yanit EKIBIN kutusuna duserse
+   * gercekten calisir — gonderim `reply_to`'yu DEMO_TO yapar (v1 dersi).
+   */
+  text: (name: string) =>
+    [
+      `Merhaba ${name},`,
+      ``,
+      `Demo talebinizi aldık. En kısa sürede size dönüp demo için uygun bir saat belirleyeceğiz.`,
+      ``,
+      `Acele ediyorsanız bu e-postayı yanıtlamanız yeterli — doğrudan ekibimize ulaşır.`,
+      `WhatsApp: ${CONTACT.whatsapp.display}`,
+      ``,
+      `Alpfit Plus — Kiwi AI Lab`,
+    ].join("\n"),
+} as const;

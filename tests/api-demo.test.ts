@@ -3,6 +3,7 @@ import { createHmac } from "node:crypto";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { POST } from "@/app/api/demo/route";
+import { LEAD_CONFIRMATION } from "@/content/mail";
 
 // TASK-1.14: kayit hedefi toWebhook degil toStore -- v1'in lead deposu
 // (PocketBase, POST /lead). Sahte alici artik sahte WEBHOOK degil sahte DEPO.
@@ -70,8 +71,23 @@ function storeResponseFor(mode: StoreMode): Response {
 
 let storeMode: StoreMode = "ok";
 
+// TASK-2.07: uc artik IKI e-posta gonderebilir (ekip bildirimi + talep sahibine
+// onay). Sahte saglayici ALICIYA GORE cevap verir ki "biri dusse oteki gider"
+// dali gercekten olculebilsin; bu kume bos oldugunda ikisi de 200 alir.
+const resendRejectFor = new Set<string>();
+
 type FetchCall = { url: string; method: string; headers: Record<string, string>; body: string | undefined };
 const fetchCalls: FetchCall[] = [];
+
+/** Resend govdesindeki tek alici (`to: [adres]`). */
+function recipientOf(body: string | undefined): string {
+  try {
+    const parsed = JSON.parse(body ?? "{}") as { to?: unknown };
+    return Array.isArray(parsed.to) && typeof parsed.to[0] === "string" ? parsed.to[0] : "";
+  } catch {
+    return "";
+  }
+}
 
 const fetchMock = vi.fn(async (input: unknown, init?: RequestInit): Promise<Response> => {
   const url = String(input);
@@ -93,6 +109,10 @@ const fetchMock = vi.fn(async (input: unknown, init?: RequestInit): Promise<Resp
     // diger her testte RESEND_* tanimsiz oldugu icin toEmail fetch'e hic
     // gitmeden false doner.
     fetchCalls.push({ url, method, headers, body });
+    const to = recipientOf(body);
+    if (to && resendRejectFor.has(to)) {
+      return new Response(JSON.stringify({ message: "rejected" }), { status: 422 });
+    }
     return new Response(JSON.stringify({ id: "mock" }), { status: 200 });
   }
   throw new Error(`beklenmeyen fetch cagrisi: ${method} ${url}`);
@@ -143,6 +163,7 @@ beforeEach(() => {
   fetchCalls.length = 0;
   consoleErrorSpy.mockClear();
   storeMode = "ok";
+  resendRejectFor.clear();
   process.env.LEAD_STORE_URL = STORE_URL;
   process.env.LEAD_STORE_TOKEN = STORE_TOKEN;
   process.env.IP_HASH_SALT = IP_SALT;
@@ -263,7 +284,15 @@ describe("POST /api/demo — sozlesme bataryasi (lead-store)", () => {
     expect(json.code).toBe("no-sink");
   });
 
-  it("bal kupu dolu -> 200, depoya cagri yok", async () => {
+  // TASK-2.07: e-posta kanali BILEREK ACIK kuruluyor. Onceden RESEND_* tanimsizdi,
+  // yani "e-posta gonderilmedi" iddiasini bu test aslinda hic olcmuyordu (kanal
+  // zaten kapaliydi). Acikken de hicbir cagri olmamasi, bal kupu dalinin onay
+  // e-postasini da tetiklemedigini kanitlar.
+  it("bal kupu dolu -> 200; depoya da, e-postaya da hicbir cagri yok", async () => {
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = "sales@example.com";
+    process.env.DEMO_FROM = "noreply@example.com";
+
     const payload = validPayload({ website: "http://spam.example" });
     const res = await POST(request(JSON.stringify(payload), "10.0.3.1"));
     const json = await res.json();
@@ -404,7 +433,11 @@ describe("POST /api/demo — sozlesme bataryasi (lead-store)", () => {
     expect(body.reply_to).toBeUndefined();
   });
 
-  it("depo 201 + basarili mail -> PATCH notify_team:sent, notify_lead'e dokunulmaz", async () => {
+  // TASK-2.07: PATCH govdesi artik IKI alan tasir. Onceki hali yalniz
+  // `{notify_team}` idi ve `notify_lead` bilerek yazilmiyordu (2026-09-14
+  // karari); onay e-postasi acildigi icin o kararin dayanagi dustu ve alan
+  // gercek sonucu tasiyor (docs/DECISIONS.md, 2026-09-22).
+  it("depo 201 + basarili mail -> PATCH notify_team:sent, notify_lead:sent", async () => {
     storeMode = "ok";
     process.env.RESEND_API_KEY = "test-key";
     process.env.DEMO_TO = "sales@example.com";
@@ -418,10 +451,10 @@ describe("POST /api/demo — sozlesme bataryasi (lead-store)", () => {
     expect(patchCall).toBeDefined();
     expect(patchCall?.headers["X-Lead-Token"]).toBe(STORE_TOKEN);
     const patchBody = JSON.parse(patchCall?.body ?? "{}") as Record<string, unknown>;
-    expect(patchBody).toEqual({ notify_team: "sent" });
+    expect(patchBody).toEqual({ notify_team: "sent", notify_lead: "sent" });
   });
 
-  it("depo 201 + mail yok (RESEND_* tanimsiz) -> PATCH notify_team:failed", async () => {
+  it("depo 201 + mail yok (RESEND_* tanimsiz) -> PATCH notify_team:failed, notify_lead:failed", async () => {
     storeMode = "ok";
     const payload = validPayload();
     const res = await POST(request(JSON.stringify(payload), "10.0.7.7"));
@@ -430,7 +463,9 @@ describe("POST /api/demo — sozlesme bataryasi (lead-store)", () => {
     const patchCall = fetchCalls.find((c) => c.method === "PATCH");
     expect(patchCall).toBeDefined();
     const patchBody = JSON.parse(patchCall?.body ?? "{}") as Record<string, unknown>;
-    expect(patchBody).toEqual({ notify_team: "failed" });
+    // Ziyaretci e-posta VERDI ama kanal hic yapilandirilmamis -> `skipped` degil
+    // `failed` (v1 ile ayni: `skipped`in anlami "ziyaretci e-posta vermedi").
+    expect(patchBody).toEqual({ notify_team: "failed", notify_lead: "failed" });
   });
 });
 
@@ -540,5 +575,152 @@ describe("POST /api/demo — TASK-1.19: satir sonu ayiklama (UAT #26)", () => {
     const storeCall = fetchCalls.find((c) => c.url === `${STORE_URL}/lead`);
     const storeBody = JSON.parse(storeCall?.body ?? "{}") as { message: string };
     expect(storeBody.message).toBe(`Segment: orta\n---\n${payload.message}`);
+  });
+});
+
+// TASK-2.07 (B-059'un e-posta ayagi): uc artik ziyaretciye de onay e-postasi
+// gonderiyor ve `notify_lead` kalici `pending` yerine gercek sonucu tasiyor.
+// Her senaryo kendi IP'sini tasir (memory -> hiz-sinirli-uca-test-bataryasi.md).
+describe("POST /api/demo — TASK-2.07: talep sahibine onay e-postasi + notify_lead", () => {
+  const TEAM = "sales@example.com";
+  const FROM = "noreply@example.com";
+
+  function openMailChannel() {
+    process.env.RESEND_API_KEY = "test-key";
+    process.env.DEMO_TO = TEAM;
+    process.env.DEMO_FROM = FROM;
+  }
+
+  function mailsByRecipient() {
+    const calls = fetchCalls.filter((c) => c.url === RESEND_URL);
+    return new Map(calls.map((c) => [recipientOf(c.body), JSON.parse(c.body ?? "{}") as Record<string, unknown>]));
+  }
+
+  it("e-postali talep -> IKI gonderim; onay ziyaretciye gider, reply_to ekip kutusudur, metin tek kaynaktan", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    const payload = validPayload({ email: "ayse@example.com" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.9.1"));
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, stored: true, mailed: true });
+
+    const mails = mailsByRecipient();
+    expect(mails.size).toBe(2);
+    expect(mails.has(TEAM)).toBe(true);
+
+    const confirmation = mails.get("ayse@example.com");
+    expect(confirmation).toBeDefined();
+    // "Bu e-postayi yanitlayin" vaadi ancak yanit EKIBIN kutusuna duserse
+    // gercekten calisir (v1 dersi) -- DEMO_FROM'a degil.
+    expect(confirmation?.reply_to).toBe(TEAM);
+    expect(confirmation?.from).toBe(FROM);
+    expect(confirmation?.subject).toBe(LEAD_CONFIRMATION.subject);
+    expect(confirmation?.text).toBe(LEAD_CONFIRMATION.text(payload.name));
+    // Metin ziyaretcinin adini tasir ve HTML degil duz metindir.
+    expect(String(confirmation?.text)).toContain(payload.name);
+    expect(confirmation?.html).toBeUndefined();
+
+    const patchBody = JSON.parse(fetchCalls.find((c) => c.method === "PATCH")?.body ?? "{}");
+    expect(patchBody).toEqual({ notify_team: "sent", notify_lead: "sent" });
+  });
+
+  it("e-postasiz talep (yalniz telefon) -> tek gonderim (ekip), notify_lead:skipped", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    const payload = validPayload({ email: "", phone: "05321112233" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.9.2"));
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.ok).toBe(true);
+
+    const mails = mailsByRecipient();
+    expect(mails.size).toBe(1);
+    expect(mails.has(TEAM)).toBe(true);
+
+    const patchBody = JSON.parse(fetchCalls.find((c) => c.method === "PATCH")?.body ?? "{}");
+    expect(patchBody).toEqual({ notify_team: "sent", notify_lead: "skipped" });
+  });
+
+  it("bozuk e-posta (telefon gecerli) -> onay hic denenmez, notify_lead:skipped", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    const payload = validPayload({ email: "bu-eposta-degil", phone: "05321112233" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.9.3"));
+    await res.json();
+
+    const mails = mailsByRecipient();
+    expect(mails.size).toBe(1);
+    expect(mails.has(TEAM)).toBe(true);
+    expect(mails.has("bu-eposta-degil")).toBe(false);
+
+    // `failed` DEGIL: gonderim denenmedi, gonderilecek gecerli bir adres yoktu.
+    // `failed` panelde "saglayici reddetti" anlamina gelir ve ekibi olmayan bir
+    // sorunu kovalamaya iter (v1'in kendi gerekce notu).
+    const patchBody = JSON.parse(fetchCalls.find((c) => c.method === "PATCH")?.body ?? "{}");
+    expect(patchBody).toEqual({ notify_team: "sent", notify_lead: "skipped" });
+  });
+
+  it("saglayici YALNIZ onayi reddeder -> notify_lead:failed, notify_team:sent, uc yine 200 stored:true", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    resendRejectFor.add("ayse@example.com");
+
+    const payload = validPayload({ email: "ayse@example.com" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.9.4"));
+    const json = await res.json();
+
+    // Fail-open yalniz BILDIRIM katmaninda: kayit yazildi, ziyaretcinin yaniti
+    // degismedi.
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, stored: true, mailed: true });
+
+    const patchBody = JSON.parse(fetchCalls.find((c) => c.method === "PATCH")?.body ?? "{}");
+    expect(patchBody).toEqual({ notify_team: "sent", notify_lead: "failed" });
+  });
+
+  it("saglayici YALNIZ ekip bildirimini reddeder -> onay yine gider (biri otekini bloke etmiyor)", async () => {
+    openMailChannel();
+    storeMode = "ok";
+    resendRejectFor.add(TEAM);
+
+    const payload = validPayload({ email: "ayse@example.com" });
+    const res = await POST(request(JSON.stringify(payload), "10.0.9.5"));
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, stored: true, mailed: false });
+
+    const mails = mailsByRecipient();
+    expect(mails.size).toBe(2);
+    expect(mails.has("ayse@example.com")).toBe(true);
+
+    const patchBody = JSON.parse(fetchCalls.find((c) => c.method === "PATCH")?.body ?? "{}");
+    expect(patchBody).toEqual({ notify_team: "failed", notify_lead: "sent" });
+  });
+
+  it("uc dalda da ziyaretcinin gordugu yanit AYNI: 200 ve ayni govde alanlari", async () => {
+    openMailChannel();
+    storeMode = "ok";
+
+    const cases: Array<[string, Record<string, unknown>, string]> = [
+      ["sent", { email: "sent@example.com" }, "10.0.9.6"],
+      ["skipped", { email: "", phone: "05321112233" }, "10.0.9.7"],
+      ["failed", { email: "failed@example.com" }, "10.0.9.8"],
+    ];
+    resendRejectFor.add("failed@example.com");
+
+    const seen: Array<{ status: number; keys: string[] }> = [];
+    for (const [, overrides, ip] of cases) {
+      fetchCalls.length = 0;
+      const res = await POST(request(JSON.stringify(validPayload(overrides)), ip));
+      const json = (await res.json()) as Record<string, unknown>;
+      seen.push({ status: res.status, keys: Object.keys(json).sort() });
+    }
+
+    expect(seen.map((s) => s.status)).toEqual([200, 200, 200]);
+    for (const s of seen) expect(s.keys).toEqual(["mailed", "ok", "stored"]);
   });
 });

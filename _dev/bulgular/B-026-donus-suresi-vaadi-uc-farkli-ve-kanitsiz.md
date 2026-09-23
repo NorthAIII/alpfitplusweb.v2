@@ -15,7 +15,8 @@
 | `src/components/layout/Assistant.tsx:151` | *"Genelde **birkaç dakika** içinde dönüyoruz"* — yeşil "çevrimiçi" noktasıyla, **bileşene gömülü** |
 | `src/content/chat.ts:153` | *"WhatsApp'tan yazarsanız **aynı gün** dönüş yapıyoruz"* |
 | `src/content/gecis.ts:94` | *"**aynı gün** dönüyoruz"* |
-| `src/components/sections/DemoForm.tsx:59` | *"**En kısa sürede** size dönüp…"* |
+| `src/components/sections/DemoForm.tsx` (onay kutusu) | *"**En kısa sürede** size dönüp…"* |
+| `src/content/mail.ts` → `LEAD_CONFIRMATION` | *"**En kısa sürede** size dönüp…"* — TASK-2.07'de (2026-09-23) eklenen onay e-postası; **bilinçli olarak formun cümlesinin aynısı**, yeni bir süre değil. Tek sabite bağlama işi yapıldığında bu tüketici de listeye girer |
 
 Asistan panelindeki cümle üç açıdan sorunlu: sitenin geri kalanıyla çelişiyor (dakikalar vs aynı gün), günün saatinden bağımsız **koşulsuz** gösteriliyor, ve yanındaki yeşil nokta canlı bir destek hattı ima ediyor — oysa asistan bugün sabit bir karar ağacından cevap veriyor, arkasında bekleyen kimse yok.
 

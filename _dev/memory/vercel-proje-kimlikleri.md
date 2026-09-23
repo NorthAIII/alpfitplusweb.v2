@@ -1,8 +1,18 @@
 # Vercel proje kimlikleri ve CLI erişimi
 
-**Vercel CLI kurulu ve oturum açık** — `/home/kivanc/.local/bin/vercel` (sürüm 59.15.1), hesap `northaiii`. Kimlik dosyası `$XDG_DATA_HOME/com.vercel.cli/auth.json` (bu makinede `XDG_DATA_HOME=/home/kivanc/snap/code/263/.local/share`, yani `~/.local/share` **değil** — snap sandbox'ı yüzünden). `vercel login` tarayıcı doğrulaması istediği için ajan tarafından yapılamaz; oturum düşerse kullanıcı kendi terminalinde yeniler.
+**Vercel CLI kurulu ve oturum açık** — `/home/kivanc/.local/bin/vercel` (sürüm 59.15.1), hesap `northaiii`. `vercel login` tarayıcı doğrulaması istediği için ajan tarafından yapılamaz; oturum düşerse kullanıcı kendi terminalinde yeniler.
+
+⚠️ **Kimlik dosyası snap sürümüne çivilidir, `$XDG_DATA_HOME` ise sürümle birlikte kayar** (ölçüldü 2026-09-23, TASK-2.07). `auth.json` bugün `/home/kivanc/snap/code/263/.local/share/com.vercel.cli/` altında duruyor ama kabuğun `XDG_DATA_HOME`'u `…/snap/code/264/…`'ü gösteriyor (VS Code snap'i güncellendi). Sonucu sessiz değil ama **asıcıdır**: düzeltmesiz her `vercel` çağrısı *"No existing credentials found. Starting login flow…"* deyip cihaz-giriş kodu basar ve **süresiz bekler** (bir koşumda yaşandı, komut durduruldu). Her `vercel` çağrısına açıkça ver:
+
+```bash
+XDG_DATA_HOME=/home/kivanc/snap/code/263/.local/share vercel <komut>
+```
+
+Sayı snap revizyonudur ve yeni güncellemede yine değişebilir; şüphede `find /home/kivanc -maxdepth 7 -name auth.json -path '*vercel*'` ile bulunur.
 
 CLI'ın kapsamadığı proje ayarları için REST API kullanılır; token yukarıdaki `auth.json` içindedir ve **ekrana yazılmaz**.
+
+**`vercel env pull` `--sensitive` anahtarları maskeli döndürür** (ölçüldü 2026-09-23): `RESEND_API_KEY`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT` çekilen dosyada gerçek değerle değil bir yer tutucuyla gelir (`re_` öneki yok); `DEMO_TO`/`DEMO_FROM`/`LEAD_STORE_URL` gibi hassas işaretlenmemişler okunabilir. Yerelde **gerçek gönderim** gereken bir ölçüm bu yüzden Vercel'den anahtar çekemez — yol, kasadan dar yetkili geçici anahtar üretip iş bitince silmektir ([Anahtar kasası](anahtar-kasasi-config-alpfit.md)).
 
 ## v2 projesi (bu repo)
 
