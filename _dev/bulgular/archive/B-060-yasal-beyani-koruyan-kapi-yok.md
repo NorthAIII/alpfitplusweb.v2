@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** test-kapsamı / gerileme | **Alan:** M1 — İçerik (`src/content/legal.ts`) / M6 — Kalite kapıları
 **Kaynak:** audit-product (Gelen Kutusu mezuniyeti: `[TASK-1.15]`) | **Tarih:** 2026-09-22
-**Durum:** → Faz 2
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -51,7 +51,9 @@ Yasal metin bir **içerik** dosyası olarak ele alınıyor, oysa davranışa ba�
 
 ## Çözüm Kaydı
 
-**TASK-2.18 (2026-09-23) — depo içi dal kapandı; atom TASK-2.19'da kapanır.**
+**TASK-2.18 + TASK-2.19 (2026-09-23) — atom kapandı: tablodaki üç taahhüdün üçü de çivili.**
+
+### TASK-2.18 — depo içi sekiz olgu
 
 `tests/legal-consistency.test.ts` açıldı: **8 dal / 24 test**, batarya 180 → **204** (dosya 8 → 9). v1'in yöntemi devralındı — metin **kopyalanmaz, ilişki doğrulanır**: her dal cümleden kısa ve ayırt edici bir parça alır, o parçanın ilgili dokümanda **tam bir kez** geçtiğini ölçer (0 da >1 de kırar), sonra dayanağı ayrıca ölçer.
 
@@ -68,5 +70,22 @@ Beş dal daha eklendi (araştırmanın "en az sekiz olgu" ölçümü ve DURUM'un
 **Sessiz geçme üç katmanda engellendi** (bu atomun kök nedeni buydu): iki yönlü `claimOnce` · her taramanın **boş kapsam bekçisi** (dosya sayısı tabanı + korpusta bilinen bir nişan dizesi) · karar fonksiyonlarının **pozitif çapa sondası**. **On iki negatif kontrolün on ikisi kırmızı verdi**; ikisi kapının **kendi** fail-open'ını buldu (dal 4 göreli URL'li depo okumasını, dal 2 cast'li doğrudan izleyici çağrısını kaçırıyordu) ve düzeltildi. Ayrıntı: `tasks/archive/TASK-2.18.md` → Test Sonuçları.
 
 ⚠️ **Kapsanmayan iki yüzey, kapının kendi `ÖLÇÜLEMEYEN` yorum bloklarında yazılı:** (1) depo **anahtarının yetki yüzeyi** ve koleksiyon kuralları komşu depoda yaşar — dal 4 yalnız *"sitenin kodu okuma yapmıyor"* yarısını çiviler; (2) başvuru adresinin gerçekten **posta alması** DNS olgusudur ve `npm test` ağ çağrısı yapmaz → TASK-2.20 / B-011.
+
+
+
+### TASK-2.19 — çapraz depo dalı: "12 ay" saklama
+
+Tablonun **üçüncü ve son** taahhüdü kapandı. Yöntem atomun kendi Koruma Önerisi'nin dediğiydi — *"v1'in testi doğrudan taşınabilir"* — ama bir adım ileride: v1 sabiti kendi deposunda okuyabiliyordu, v2 okuyamaz. Çözüm **salt-okunur bağlama + env kapısı** (araştırma kararı, `PHASE-2.md` → Seçilen Yaklaşımlar 4):
+
+- `docker-compose.yml` → `web` servisine `../Alpfitplus-website.v1/pocketbase/pb_hooks:/opt/v1-pb-hooks:ro`. Hedef **`/app` dışında** — `/app` deponun kendi bind-mount'u ve içine açılan bir mount noktası repoda root sahipli boş dizin bırakıyor (ölçüldü 2026-09-23).
+- **Dal 9**, `LEGAL_CONTRACT_HOOKS_DIR` tanımsızken `describe.skip` ile atlanıyor; bataryanın **geçen** sayısı birebir korunuyor (204 → 204, atlanan 1 → 2). Tanımlıyken yedi test koşuyor: batarya **211**, dosya 24 → **31 test**. CI'da (M6 F6.3) komşu depo bulunmayacağı için atlama şart.
+- **Beyan parçası ölçülen sayıdan TÜRETİLİYOR** (`oluşturulmasından ${ay} ay sonra…`), elle yazılmıyor — yön olgu → metin. Ayrıca *"günlük çalışan"* ifadesi cron'un kendisine (`cronAdd('lead-retention', '30 3 * * *')` → her gün), sabit ölü olmadığı kesim hesabına (`getUTCMonth() - RETENTION_MONTHS`) ve temizliğin **iki koleksiyonu da** kapsadığına bağlandı.
+- **Sessiz geçme kapatıldı:** anahtar tanımlıyken dosya yoksa/boşsa ya da bağlama **yazılabilirse** dal kırılıyor. Salt okunurluk `fs.accessSync(dir, W_OK)` ile ölçülüyor (`:ro` → `EROFS`) — yazma **denenmiyor**; komşu depo canlı sitedir ve başarılı bir deneme yasağı çiğnerdi.
+
+**On dört negatif kontrolün on dördü kırmızı verdi.** Kaynak dokunulmaz olduğu için mutasyonlar `pb_hooks`'un scratchpad **kopyasına** uygulandı ve test kopyaya `:ro` bağlanarak koşturuldu; tur sonunda kaynağın md5'i tur başıyla birebir aynı. Düzeneğin kendi pozitif çapası önce koşturuldu (bozulmamış kopya → çıkış 0 / 31 geçti). Kontrollerden biri kazanç getirdi: üç paragraftan **yalnız biri** güncellendiğinde fragman kontrolü yeşil kaldı, yalnız **bölüm geneli** kontrolü kırmızı verdi — kapının kapsamı beyanın kapsamı kadar geniş olmalı.
+
+⚠️ **Bu dalın ölçemedikleri** (kapının kendi `ÖLÇÜLEMEYEN` bloğunda yazılı): cron'un canlı depoda gerçekten koştuğu ve sildiği (ölçülen kaynak metnidir; `npm test` ağ çağrısı yapmaz) · bağlamanın bayat bir **kopya** değil gerçek mount olduğu · silme penceresinin aritmetiği (bağ ölçülüyor, hesap v1'in kendi testinin işi).
+
+**Kapanış kapsamı:** atomun tablosundaki üç taahhüt kapandı. TASK-2.18'in iki `ÖLÇÜLEMEYEN` kalemi bu turda **değişmedi** ve yaşayan evlerinde duruyor: depo anahtarının **yetki yüzeyi** (komşu depo sözleşmesi — dal 9 hook'ların *metnini* okur, koleksiyon kurallarını değil; yan bulgu Gelen Kutusu'nda) ve başvuru adresinin gerçekten **posta alması** (DNS olgusu → TASK-2.20 / B-011).
 
 ⚠️ **Yan bulgu (bu atomun kapsamı değil, Gelen Kutusu'nda):** yayındaki *"anahtar **yalnızca yeni kayıt oluşturabilir**"* yarısı, ucun aynı anahtarla var olan kayda `PATCH` attığı gerçeğinden dar.

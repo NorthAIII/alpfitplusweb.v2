@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { accessSync, constants, existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -43,9 +43,10 @@ import {
  *       POZITIF CAPA ile sinanir — yesil, kapinin kostugunun kaniti degildir.
  * Asagidaki "bos kapsam bekcisi" bloklari (a)-(c)'yi dogrudan kosar.
  *
- * KAPSAM DEPO ICIDIR. Yasal metnin koda/konfige bagli olgu iddialari SEKIZDEN
- * fazladir ve hepsi bu depodan GORULMEZ:
- *   · "12 ay" saklama  -> komsu depo (v1 pocketbase), TASK-2.19'un dali.
+ * KAPSAM: SEKIZ DAL DEPO ICI, DOKUZUNCUSU CAPRAZ DEPO (TASK-2.19).
+ *   · "12 ay" saklama  -> mekanizma komsu depoda (v1 pocketbase). DAL 9 onu
+ *     salt-okunur baglama + env kapisiyla okur; anahtar tanimsizken ATLANIR
+ *     (dosyanin geri kalani etkilenmez). Ayrinti dal 9'un kendi yorumunda.
  *   · Sunucu/tedarikci ulkeleri (Hetzner/DE, Resend ABD + eu-west-1, Google MX,
  *     Umami semasinda IP sutunu yoklugu, erisim kaydinda rotasyon yoklugu)
  *     -> DEPO DISI olgular; kaynaklari canli sistemlerdir ve TASK-2.17'de
@@ -672,3 +673,236 @@ describe("dal 8 — form ucu için bölge sabitlenmemiş (platform varsayılanı
     ).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// DAL 9 — "12 ay" saklama: mekanizma KOMSU DEPODA (capraz depo, env kapisi)
+// ---------------------------------------------------------------------------
+
+/**
+ * TASK-2.19 (B-060'in son dali) — bu dosyanin TEK capraz depo dali.
+ *
+ * Yayindaki cumle (`legal.ts`, KVKK -> Saklama suresi) demo talebinin kaydinin
+ * 12 ay sonra GUNLUK KOSAN bir temizlik isiyle silindigini soyluyor. Mekanizma
+ * bu repoda yok: v1'in PocketBase hook'larinda yasiyor
+ * (`pb_hooks/lead_lib.js` -> RETENTION_MONTHS, `pb_hooks/retention.pb.js` ->
+ * cronAdd). Sabiti v2'ye KOPYALAMAK reddedildi (PHASE-2 -> Secilen Yaklasimlar
+ * 4): kopya, B-060'in sikayet ettigi "iki ev sessizce ayrisir" sorununun ta
+ * kendisidir. v1 ayni sorunu METIN OKUYARAK cozmustu
+ * (tests/server/legal-consistency.spec.ts) — sablon oradan devralindi.
+ *
+ * ENV KAPISI — `tests/lead-store.contract.test.ts`'in (TASK-1.13) kurdugu
+ * desen, ikinci bir sozluk acilmasin diye ayni adlandirmayla:
+ *   LEGAL_CONTRACT_HOOKS_DIR — komsu deponun `pb_hooks` klasorunun KONTEYNER
+ *     ICINDEKI salt-okunur baglama noktasi (docker-compose.yml -> web ->
+ *     /opt/v1-pb-hooks).
+ * TANIMSIZSA dal `describe.skip` ile atlanir; diger dallar ve cikis kodu (0)
+ * etkilenmez. CI'da (M6 F6.3) komsu depo bulunmayacagi icin bu SARTTIR.
+ * TANIMLIYKEN sessiz gecme YOKTUR: dosya yoksa/bossa, sabit okunamiyorsa ya da
+ * baglama YAZILABILIRSE dal kirilir.
+ *
+ * ⚠️ EKSIK/BOS BAGLAMA DOSYANIN TAMAMINI dusurur (toplama hatasi), yalniz bu
+ * dali degil — yani o turda diger sekiz dal da rapor vermez. Olculdu ve
+ * BILINCLE boyle birakildi: anahtari tanimlamak bilincli bir eylemdir, yanlis
+ * yapilandirilmis bir kapinin sessiz kalmasindansa yuksek sesle dusmesi
+ * yeglenir. Ayni davranis sozlesme paketinde de var (assertLocalHost).
+ *
+ * Kosum (tam komut):
+ *   docker compose up -d web        # baglama `restart` ile GELMEZ, `up -d` ile gelir
+ *   docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test
+ */
+
+const HOOKS_DIR = process.env.LEGAL_CONTRACT_HOOKS_DIR;
+
+/** Saklama suresinin evi. Sayi DESENDEN cikarilir, sabit yazilmaz. */
+const RETENTION_RE = /^const RETENTION_MONTHS = (\d+);/m;
+/** `cronAdd('lead-retention', '<ifade>', ...)` — temizligin ZAMANLAMASI. */
+const CRON_RE = /cronAdd\(\s*'lead-retention'\s*,\s*'([^']+)'/;
+/** Temizligin dokundugu koleksiyonlar. */
+const COLLECTIONS_RE = /const COLLECTIONS = \[([^\]]+)\]/;
+
+/** Bes alanli bir cron ifadesi HER GUN mu kosuyor? */
+function gunlukKosuyorMu(ifade: string): boolean {
+  const alanlar = ifade.trim().split(/\s+/);
+  if (alanlar.length !== 5) return false;
+  // [dakika, saat, ayin-gunu, ay, haftanin-gunu] — son uctan biri bile
+  // daraltilmissa is her gun kosmuyordur.
+  return alanlar.slice(2).every((alan) => alan === "*");
+}
+
+if (!HOOKS_DIR) {
+  describe.skip("dal 9 — çapraz depo: 12 ay saklama (LEGAL_CONTRACT_HOOKS_DIR tanımsız — atlandı)", () => {
+    it("atlandı", () => {});
+  });
+} else {
+  const KOK = HOOKS_DIR.replace(/\/+$/, "");
+
+  /** Komsu depodaki bir hook dosyasini METIN olarak okur — sessiz gecme yok. */
+  function hookOku(ad: string): string {
+    const yol = `${KOK}/${ad}`;
+    if (!existsSync(yol)) {
+      throw new Error(
+        `yasal beyan çapraz depo dalı: ${yol} yok — bağlama eksik ya da boş. ` +
+          "LEGAL_CONTRACT_HOOKS_DIR tanımlıyken dosya ZORUNLUDUR (atlamak için anahtarı hiç tanımlama).",
+      );
+    }
+    const kaynak = readFileSync(yol, "utf8");
+    if (kaynak.length === 0) throw new Error(`yasal beyan çapraz depo dalı: ${yol} boş`);
+    return kaynak;
+  }
+
+  describe("dal 9 — çapraz depo: 12 ay saklama mekanizmanın evinden okunuyor", () => {
+    const leadLib = hookOku("lead_lib.js");
+    const retention = hookOku("retention.pb.js");
+
+    const eslesme = leadLib.match(RETENTION_RE);
+    const ay = Number(eslesme?.[1]);
+
+    it("kapı: komşu depo SALT OKUNUR bağlanmış (yazma erişimi reddediliyor)", () => {
+      // Komsu depo CANLI SITEDIR ve dokunulmazdir (CLAUDE.md -> Dokunulmazlar).
+      // Yazma DENENMEZ — denemek, basarili oldugu takdirde tam da yasak olan
+      // seyi yapardi. access(W_OK) dosya sistemine dokunmadan sorar ve :ro
+      // baglamada EROFS verir (olculdu 2026-09-23).
+      expect(
+        () => accessSync(KOK, constants.W_OK),
+        `${KOK} YAZILABILIR — komşu depo salt okunur bağlanmamış. ` +
+          "docker-compose.yml → web → pb_hooks bağlamasında `:ro` eki şart.",
+      ).toThrow();
+
+      // Kontrol grubu: sonda ayirt ediyor mu? Yazilabilir bir yolda AYNI cagri
+      // gecmeli — gecmezse yukaridaki kirmizi baglamayi degil sondayi olcuyor
+      // olurdu (ornegin konteyner disinda, yetkisiz bir kullaniciyla).
+      expect(
+        () => accessSync(fileURLToPath(REPO_ROOT), constants.W_OK),
+        "kontrol grubu düştü: depo kökü de yazılamıyor — sonda bağlamayı değil ortamı ölçüyor",
+      ).not.toThrow();
+    });
+
+    it("dayanak: RETENTION_MONTHS komşu depodan okunuyor (desen sayıyı gerçekten çıkarıyor)", () => {
+      expect(
+        eslesme,
+        `lead_lib.js içinde ${RETENTION_RE} eşleşmedi — saklama süresi okunamıyor. ` +
+          "Sabit taşındıysa/yeniden adlandırıldıysa yayındaki '12 ay' cümlesinin dayanağı kalmamıştır.",
+      ).not.toBeNull();
+      expect(Number.isInteger(ay), "RETENTION_MONTHS bir tam sayı değil").toBe(true);
+      expect(ay, "RETENTION_MONTHS pozitif olmalı").toBeGreaterThan(0);
+
+      // Kapinin KENDISI sinaniyor: desen SABIT bir sayi dondurmuyor, kaynaktan
+      // OKUYOR. Bu sonda olmazsa `12` bekleyen bir kapi, sabit 6'ya duserken de
+      // yesil kalabilirdi — fail-open.
+      expect("const RETENTION_MONTHS = 7;".match(RETENTION_RE)?.[1]).toBe("7");
+      expect(RETENTION_RE.test("const RETENTION_MONTHS = ;")).toBe(false);
+      expect(RETENTION_RE.test("// const RETENTION_MONTHS = 12;")).toBe(false);
+    });
+
+    it("dayanak: sabit ölü değil — kesim tarihi ondan hesaplanıyor ve modül dışa veriyor", () => {
+      // Sabitin DURMASI, kullanildiginin kaniti degildir. Silme penceresi
+      // gercekten bu sayidan turemezse yayindaki cumle dayanaksiz kalir.
+      expect(
+        leadLib,
+        "RETENTION_MONTHS kesim tarihi hesabında kullanılmıyor — sabit ölü, silme penceresi başka yerden geliyor",
+      ).toMatch(/getUTCMonth\(\)\s*-\s*RETENTION_MONTHS/);
+      expect(
+        leadLib,
+        "RETENTION_MONTHS dışa verilmiyor — cron handler'ı ona ulaşamaz",
+      ).toMatch(/module\.exports\s*=\s*\{[^}]*RETENTION_MONTHS/);
+    });
+
+    it("beyan: KVKK'daki saklama cümlesi ÖLÇÜLEN ay sayısıyla tam bir kez geçiyor", () => {
+      // Parca olculen sayidan TURETILIYOR, elle yazilmiyor: sabit 6'ya duserse
+      // bu parca metinde bulunmaz ve kapi kirilir (dogru yon: olgu -> metin).
+      claimOnce(
+        KVKK,
+        "KVKK",
+        `oluşturulmasından ${ay} ay sonra, günlük çalışan bir temizlik işiyle otomatik olarak silinir`,
+      );
+    });
+
+    it("beyan: Saklama süresi bölümündeki HER ay sayısı ölçülenle aynı", () => {
+      // Bolumde uc paragraf var ve ucu de sayiyi aniyor (biri sureyi verir,
+      // ikisi kapsam disini anlatir). Biri guncellenip otekiler unutulursa
+      // metin kendi icinde celisir — tek cumleye bakan bir kapi bunu goremez.
+      const bolum = KVKK.sections.find((s) => s.title === "Saklama süresi");
+      expect(bolum, "KVKK'da 'Saklama süresi' bölümü yok — beyan taşındı, dal yeniden kurulmalı").toBeDefined();
+
+      const metinler = (bolum?.blocks ?? []).flatMap((block) =>
+        block.type === "p" || block.type === "h" ? [block.text] : block.items,
+      );
+      expect(metinler.length, "Saklama süresi bölümü boş — kapsam yok, ölçüm anlamsız").toBeGreaterThanOrEqual(3);
+
+      const sayilar = metinler.flatMap((metin) => [...metin.matchAll(/(\d+)\s*ay/g)].map((m) => Number(m[1])));
+      // Pozitif capa: bolum gercekten sayi aniyor. Anmiyorsa asagidaki esitlik
+      // bos kume uzerinde bedava yesil kosardi.
+      expect(sayilar.length, "Saklama süresi bölümünde hiç ay sayısı geçmiyor — kapsam boş").toBeGreaterThanOrEqual(3);
+      expect(
+        [...new Set(sayilar)],
+        `Saklama süresi bölümünde ölçülenden (${ay}) farklı bir ay sayısı var — ` +
+          "cümlelerden biri güncellenmiş, ötekiler bayat kalmış",
+      ).toEqual([ay]);
+    });
+
+    it("dayanak: temizlik işi GÜNLÜK koşuyor ve süreyi mekanizmanın evinden alıyor", () => {
+      const cron = retention.match(CRON_RE);
+      expect(
+        cron,
+        "retention.pb.js'te `cronAdd('lead-retention', ...)` yok — günlük temizlik işi kaldırılmış ya da adı değişmiş; " +
+          "yayındaki 'günlük çalışan bir temizlik işi' ifadesi dayanaksız",
+      ).not.toBeNull();
+
+      const ifade = cron?.[1] as string;
+      expect(
+        gunlukKosuyorMu(ifade),
+        `temizlik işinin zamanlaması ("${ifade}") her gün koşmuyor — 'günlük çalışan' ifadesi yeniden ölçülmeli`,
+      ).toBe(true);
+
+      // Kontrol grubu: yargic ayirt ediyor mu? Hepsine "gunluk" diyen bir
+      // fonksiyon da yukaridaki satiri yesil gecerdi.
+      expect(gunlukKosuyorMu("30 3 * * *")).toBe(true);
+      expect(gunlukKosuyorMu("30 3 * * 1"), "haftalık ifade 'günlük' sayıldı").toBe(false);
+      expect(gunlukKosuyorMu("30 3 1 * *"), "aylık ifade 'günlük' sayıldı").toBe(false);
+      expect(gunlukKosuyorMu("30 3 * *"), "eksik alanlı ifade 'günlük' sayıldı").toBe(false);
+
+      // Cron ile sabitin BAGI: handler kesim tarihini kendi hesaplamiyor,
+      // lead_lib'in retentionCutoff'undan aliyor. Bag koparsa iki ev ayrisir.
+      expect(retention, "cron handler'ı lead_lib.js'i require etmiyor").toMatch(/require\(`\$\{__hooks\}\/lead_lib\.js`\)/);
+      expect(
+        retention,
+        "cron handler'ı retentionCutoff() kullanmıyor — kesim tarihi başka bir yerden geliyor olabilir",
+      ).toMatch(/retentionCutoff\(\)/);
+    });
+
+    it("dayanak: temizlik her iki koleksiyonu da kapsıyor", () => {
+      // Talebin HANGI koleksiyona dustugunu token secer ve o karar komsu
+      // depodadir (resolveTarget) — bu depodan olculemez. Olculebilen ve
+      // yeterli olan sudur: temizlik IKISINI DE kapsiyor, yani kayit hangisine
+      // duserse dussun 12 ay kurali isliyor.
+      const koleksiyonlar = retention.match(COLLECTIONS_RE);
+      expect(koleksiyonlar, "retention.pb.js'te COLLECTIONS listesi bulunamadı").not.toBeNull();
+
+      const liste = (koleksiyonlar?.[1] as string)
+        .split(",")
+        .map((parca) => parca.trim().replace(/^['"]|['"]$/g, ""))
+        .filter(Boolean)
+        .sort();
+      expect(
+        liste,
+        "temizlik listesi değişti — site önizleme koleksiyonuna yazıyor (alan adı geçişine kadar); " +
+          "kapsam dışında kalan bir koleksiyon varsa '12 ay' cümlesi o kayıtlar için yalan olur",
+      ).toEqual(["leads", "leads_preview"]);
+    });
+
+    /**
+     * ÖLÇÜLEMEYEN — bu dal neyi civilemez:
+     *
+     * (1) CRON'UN GERCEKTEN KOSTUGU. Olculen sey KAYNAK METINDIR: zamanlama
+     *     tanimli, sabit canli ve ikisi bagli. Isin canli depoda her gece
+     *     kostugunu ve kayitlari SILDIGINI bu dal gormez — o, calisan bir
+     *     PocketBase ornegi ister (`npm test` ag cagrisi yapmaz). Kanit kanali
+     *     v1'in kendi log'udur (retention.pb.js iki kanala birden yazar).
+     * (2) BAGLAMANIN KOPYA DEGIL MOUNT OLDUGU. Salt-okunurluk olculuyor ama
+     *     birisi komsu deponun eski bir KOPYASINI :ro baglarsa dal yine yesil
+     *     koşar ve bayat bir sabiti "guncel" sayar.
+     * (3) SILME PENCERESININ DOGRU HESAPLANDIGI. `getUTCMonth() - N` bagi
+     *     olculuyor, aritmetigin dogrulugu degil — o v1'in kendi testinin isi.
+     */
+  });
+}

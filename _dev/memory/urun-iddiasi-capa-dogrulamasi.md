@@ -80,6 +80,8 @@ Dördüncüsü sondanın kendisiydi: dal 3 tek bir yasaklı parçayla (`FORBIDDE
 
 ⚠️ **Beşincisi ve en sinsisi: sınama düzeneğinin kendisi fail-open koştu.** Negatif kontrolleri koşturan kabuk fonksiyonu vitest çıktısını ANSI kodları **temizlenmeden** grep'liyordu; hiçbir satır eşleşmedi ve ekrana **hiçbir şey** basılmadı. "Kırmızı satır yok" = "kontrol geçti" diye okunabilirdi. Düzeneğe pozitif çapa eklendi: vitest özet satırı her koşumda basılmalı, basılmıyorsa düzenek *arıza* verir. Kapıyı sınıyorsan, sınayanı da sına.
 
+⚠️ **Altıncısı — kapının nesnesi DOKUNULMAZ bir komşu depodaysa, negatif kontrol KOPYA üzerinde koşar.** Kapı doğru kurulmuş sayılmak için dayanağın bozulduğunda kırmızı vermesi gerekir; ama `../Alpfitplus-website.v1`, `../Alpfit.v1` ve `../alpfit-plus-satis` salt okunurdur ve **kaynağı bozmak yasaktır**. Yol: klasörü scratchpad'e kopyala, kopyayı boz, testi kopyaya `:ro` bağlayarak koştur (`docker run` ile ayrı bir konteynerde — `compose exec` mount ekleyemez), sonra kaynağın md5'ini tur başıyla karşılaştır. Aynı turda **kapının kendisi de** komşu deponun salt okunur bağlandığını ölçmeli: `fs.accessSync(yol, W_OK)` `:ro` bağlamada `EROFS` verir ve **yazma denemeden** sorar — gerçek bir yazma denemesi başarılı olduğu anda zaten yasağı çiğnemiş olurdu. TASK-2.19'da on dört negatif kontrolün on dördü bu düzenekle kırmızı verdi; ikisi yalnız **metin tarafındaki** yarıyı bozarak alındı (yasal cümlenin sayısı) ve biri, üç paragraftan **yalnız birinin** güncellendiği hâli yakalayan bölüm-geneli kontrolün hakkını verdi — tek cümleye bakan kapı o hâlde yeşil kalıyordu.
+
 ## Pratik ölçüm deseni
 
 ```bash

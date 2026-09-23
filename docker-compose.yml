@@ -13,6 +13,29 @@ services:
       - .:/app
       - node_modules:/app/node_modules
       - next_cache:/app/.next
+      # Yasal beyan kapisinin CAPRAZ DEPO dali (TASK-2.19, B-060). Yayindaki
+      # "12 ay" saklama cumlesinin mekanizmasi bu repoda DEGIL, v1'in
+      # PocketBase hook'larinda yasar (lead_lib.js -> RETENTION_MONTHS).
+      # Sabiti v2'ye kopyalamak reddedildi (PHASE-2 -> Secilen Yaklasimlar 4):
+      # kopya, bulgunun sikayet ettigi tekrarin ta kendisi olurdu.
+      #
+      # :ro ZORUNLUDUR — komsu depo CANLI SITEDIR ve dokunulmazdir (CLAUDE.md
+      # -> Dokunulmazlar). Testin kendisi de bunu olcer: baglama yazilabilir
+      # gelirse dal kirilir (access(W_OK) -> EROFS beklenir; olculdu 2026-09-23,
+      # rw baglamada ayni sonda geciyor, yani ayirt ediyor).
+      #
+      # HEDEF /app'IN DISINDA — bilincli. /app deponun kendi bind-mount'u;
+      # icine acilan bir baglama noktasi HOST'ta, yani repoda, root sahipli
+      # bos bir dizin BIRAKIR (olculdu 2026-09-23: /app/ic-baglama repoda kaldi,
+      # /opt/... hicbir iz birakmadi — memory/arastirma-konteynerinde-tarayici-
+      # olcumu.md'nin `/work` tuzaginin ayni sinifi).
+      #
+      # Kaynak dizin bu makinede VAR. Baska bir makinede yoksa compose onu
+      # root sahipli BOS dizin olarak yaratir ve konteyner yine kalkar
+      # (olculdu 2026-09-23) — bos baglamada test dali sessizce gecmez,
+      # "dayanak dosyasi yok" diyerek KIRILIR (fail-closed). Ayni kaynagi
+      # ayni bicimde `lead-store` servisi de bagliyor (TASK-1.17).
+      - ../Alpfitplus-website.v1/pocketbase/pb_hooks:/opt/v1-pb-hooks:ro
     environment:
       # NODE_ENV bilerek TANIMLANMADI — next dev ve next build kendi degerini koyar.
       - WATCHPACK_POLLING=true

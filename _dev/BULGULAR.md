@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.18: yasal beyanları koruyan **ilk kapı** kuruldu (`tests/legal-consistency.test.ts`, 8 dal / 24 test; batarya 180 → 204) → **B-060'ın depo içi dalı kapandı, atom TASK-2.19'da kapanır** ("12 ay" saklama, çapraz depo). On iki negatif kontrolün on ikisi kırmızı verdi; ikisi kapının **kendi** fail-open'ını buldu (göreli URL'li depo okuması · cast'li doğrudan izleyici çağrısı). Gelen Kutusu'na bir yan bulgu düştü: yayındaki *"anahtar yalnızca yeni kayıt oluşturabilir"* yarısı ucun `PATCH` gerçeğinden dar. Açık bulgu sayısı **43** (değişmedi).
+**Son Güncelleme:** 2026-09-23 — TASK-2.19: yasal beyan kapısının **çapraz depo dalı** kuruldu — `web` servisi komşu deponun `pb_hooks`'unu **salt okunur** bağlıyor, dal 9 "12 ay" saklamayı mekanizmanın evinden (`RETENTION_MONTHS`) okuyor ve beyan parçasını **ölçülen sayıdan türetiyor**. Anahtar tanımsızken atlanıyor (geçen sayısı birebir korundu), tanımlıyken batarya **211** / dosya 31 test. **On dört negatif kontrolün on dördü kırmızı** — kaynak dokunulmaz olduğu için mutasyonlar **kopya** üzerinde koşturuldu. **B-060 kapandı ve arşive gitti**; açık bulgu sayısı 43 → **42**.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -102,7 +102,6 @@
 - 🔴 [B-015 — Kalite kapıları açılan katmanları ölçmüyor](bulgular/B-015-kalite-kapilari-etkilesim-durumunu-olcmuyor.md) — `a11y`/`mobile-audit` 0 tıklama; desen `font-guard:28-33`'te zaten çalışıyor, kardeşlere taşınmamış
 - 🟡 [B-036 — Dört ayrı yol talebi "başarılı" gösterip sessizce kaybediyor](bulgular/B-036-lead-kaybi-yollari.md) — üçü açık; kırpılan e-posta hâlâ 200 `stored:true` alıyor, bal küpü tek log satırı taşımıyor
 - 🟡 [B-056 — Umami açıldığı gün hidrasyonsuz gönderimde form verisi analitiğe gidiyor](bulgular/B-056-umami-hidrasyonsuz-gonderimde-kisisel-veri.md) — izleyici tarafı kapandı ve canlıda doğrulandı; zincir artık **aktif**, kaynak tarafı (B-036) ve (b) bot sahte yeşili açık
-- 🟡 [B-060 — Yayındaki yasal beyanları koruyan test yok](bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) — **depo içi sekiz olgu çivilendi (TASK-2.18)**; kalan tek borç "12 ay" saklama, mekanizması komşu depoda → TASK-2.19
 - 🟡 [B-059 — Alan adı geçişinde v1'in lead hattı ve yasal metin davranışları geriler](bulgular/B-059-alan-adi-gecisinde-v1-davranislari-geriler.md) — onay e-postası kaybolur, `notify_lead` kalıcı `pending`, metin bugünkünden az bilgi verir → Faz 2 (yalnız onay e-postası ayağı; kalanı alan adı geçişi fazında)
 - 🟡 [B-061 — Lead deposunun tek yedeği aynı sunucuda ve aynı hacimde](bulgular/B-061-lead-deposu-yedegi-ayni-sunucuda.md) — S3 kapalı, yedekler `pb_data/` içinde; geçişten sonra tek dayanıklı hedef orası
 - 🟡 [B-016 — CSP yok, v1'de var: yayın güvenliğinde gerileme](bulgular/B-016-csp-yok-v1den-gerileme.md) — 15/15 rotada yok; Umami artık gerçekten yüklendiği için yazma penceresi tam şimdi açık

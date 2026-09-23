@@ -167,3 +167,29 @@ ayrımı değil, **hedefin var olup olmadığıdır** — yoksa yaratılır.
 Aynı yöntem sonda için de doğrudur: `research/lib`'in **kopyasını** bozup
 `-v "$SP/libP1:/work/lib:ro"` ile bağlamak repoya dokunmaz (dizin var), ve
 kaynak yerine **girdiyi** bozma disiplinini korur.
+
+### Aynı kural `web` konteynerinde de geçerli — ve KAYNAK tarafında bir ikizi var (TASK-2.19, 2026-09-23)
+
+Yukarıdaki tuzak araştırma konteynerine özgü değil: **`web` servisi de deponun
+kendisini bind-mount ediyor** (`.:/app`), yani `/app`'in içine açılan her mount
+noktası aynı şekilde **repoda root sahipli boş bir dizin bırakır**. Ölçüldü
+(2026-09-23): `-v <kaynak>:/app/ic-baglama:ro` koşumdan sonra host tarafında
+`ic-baglama/` (root, boş) kaldı; aynı kaynak `/opt/dis-baglama` olarak
+bağlandığında **hiçbir iz kalmadı**. Komşu depo bağlaması bu yüzden
+`/opt/v1-pb-hooks`'ta durur, `/app/...` altında değil.
+
+**Kaynak tarafı — compose eksik bind kaynağını sessizce YARATIR.** Hedefin
+yokluğu gibi, kaynağın yokluğu da hata değildir: `docker compose up` host'ta o
+yolu **root sahipli boş dizin** olarak açar ve konteyner **yine kalkar**
+(ölçüldü 2026-09-23, tek fark dizinin boş olmasıdır). Sonuç iki yönlü:
+
+- Komşu deposu olmayan bir makinede `up -d web` repo dışında iskelet bir dizin
+  ağacı doğurabilir — bağlamayı **var olan** bir kaynağa yaz.
+- Bağlamadan **okuyan** her kapı bu yüzden fail-closed kurulur: boş dizin
+  "dosya yok" demektir, "sorun yok" değil. `tests/legal-consistency.test.ts`
+  dal 9 tam bunu yapar (anahtar tanımlıyken dosya yoksa kırılır, atlamaz).
+
+**Salt okunurluk yazma DENENMEDEN ölçülür:** `fs.accessSync(yol, W_OK)` `:ro`
+bağlamada `EROFS` fırlatır, `rw` bağlamada geçer (ölçüldü, uid 0). Dokunulmaz
+bir depoya karşı "yazabiliyor muyum?" sorusunun tek güvenli sorulma biçimi
+budur — gerçek bir yazma denemesi, başarılı olduğu anda yasağı çiğnemiş olurdu.

@@ -84,6 +84,37 @@ Fiyat tek kaynaktan gelir: `src/content/pricing.ts`.
 uç **başarılı dönmez**; form kullanıcıyı WhatsApp'a yönlendirir. Bal küpü alanı ve
 IP başına 10 dakikada 5 istek sınırı vardır. Ayarlar için `.env.example`.
 
+## Testler
+
+```bash
+docker compose exec web npm test        # Vitest — konteyner içinde koşar
+```
+
+Batarya varsayılan olarak yalnız bu repoyu ölçer. **İki paket ayrı bir env
+kapısının arkasındadır** ve anahtarları tanımsızken *atlanır* — `npm test`'in
+geri kalanı ve çıkış kodu etkilenmez. Sebep aynı: ikisi de bu reponun dışındaki
+bir şeye bakar ve CI'da o şey bulunmayacaktır.
+
+| Paket | Anahtar | Neye bakar |
+|---|---|---|
+| `tests/lead-store.contract.test.ts` | `LEAD_CONTRACT_URL` | Yerelde ayağa kalkmış lead deposu kopyası (`--profile lead`) |
+| `tests/legal-consistency.test.ts` → dal 9 | `LEGAL_CONTRACT_HOOKS_DIR` | Komşu depodaki saklama mekanizması (`RETENTION_MONTHS`) |
+
+Tam koşum komutları paketlerin baş yorumlarındadır. Yasal beyan kapısının
+çapraz depo dalı için:
+
+```bash
+docker compose up -d web   # bağlama `restart` ile GELMEZ, `up -d` ile gelir
+docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test
+```
+
+Yayındaki "12 ay saklıyoruz" cümlesinin dayanağı bu repoda değil, v1'in
+PocketBase hook'larında yaşar (`pb_hooks/lead_lib.js` → `RETENTION_MONTHS`).
+Sabit v2'ye **kopyalanmaz** — iki ev sessizce ayrışır. Bunun yerine `web`
+servisi o klasörü **salt okunur** (`:ro`) bağlar ve dal metni oradan okur;
+komşu depo canlı sitedir, yazılamaz. Anahtar tanımlıyken bağlama eksikse ya da
+yazılabilir gelirse dal sessizce geçmez, kırılır.
+
 ## Klasörler
 
 ```
