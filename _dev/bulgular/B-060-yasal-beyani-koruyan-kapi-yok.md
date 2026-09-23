@@ -51,4 +51,22 @@ Yasal metin bir **içerik** dosyası olarak ele alınıyor, oysa davranışa ba�
 
 ## Çözüm Kaydı
 
-—
+**TASK-2.18 (2026-09-23) — depo içi dal kapandı; atom TASK-2.19'da kapanır.**
+
+`tests/legal-consistency.test.ts` açıldı: **8 dal / 24 test**, batarya 180 → **204** (dosya 8 → 9). v1'in yöntemi devralındı — metin **kopyalanmaz, ilişki doğrulanır**: her dal cümleden kısa ve ayırt edici bir parça alır, o parçanın ilgili dokümanda **tam bir kez** geçtiğini ölçer (0 da >1 de kırar), sonra dayanağı ayrıca ölçer.
+
+Bu atomun tablosundaki üç taahhüdün **ikisi** kapandı:
+
+| Yayındaki taahhüt | Bu turda kurulan kapı |
+|---|---|
+| "soru işaretinden sonrası ölçüme gitmez" | **dal 1** — `<Script>` etiketinin içinde `data-exclude-search="true"` + etiketin gerçekten ölçüm script'i olduğu (`src={UMAMI_SCRIPT_SRC}`) + `layout.tsx`'te tek `<Script>` |
+| "gerçek bir kişinin verisi gösterilmemektedir" | **dal 3** — temizlik tabloları dolu + `deriveForbidden` tabanları + denetimin **52 ad parçasının ve 13 avatar baş harfinin tamamıyla** sondalanması + masum metnin bulguya düşmediği kontrol grubu |
+| "12 ay" saklama | **açık** → TASK-2.19 (çapraz depo, salt-okunur bağlama + env kapısı) |
+
+Beş dal daha eklendi (araştırmanın "en az sekiz olgu" ölçümü ve DURUM'un Not bloğu): form alanlarının ölçüme gitmemesi (davranışla — `track()` yükünün anahtar kümesi + izleyiciyi çağıran tek dosya) · sitenin depodan okumaması · ölçümün üçüncü tarafa gitmemesi (dondurulmuş dış host allowlist'i) · çerez/tarayıcı deposu yokluğu · başvuru adresinin `CONTACT.support`'tan gelmesi ve `legal.ts`'e elle yazılmamış olması · form ucu için bölge sabitlenmemiş olması.
+
+**Sessiz geçme üç katmanda engellendi** (bu atomun kök nedeni buydu): iki yönlü `claimOnce` · her taramanın **boş kapsam bekçisi** (dosya sayısı tabanı + korpusta bilinen bir nişan dizesi) · karar fonksiyonlarının **pozitif çapa sondası**. **On iki negatif kontrolün on ikisi kırmızı verdi**; ikisi kapının **kendi** fail-open'ını buldu (dal 4 göreli URL'li depo okumasını, dal 2 cast'li doğrudan izleyici çağrısını kaçırıyordu) ve düzeltildi. Ayrıntı: `tasks/archive/TASK-2.18.md` → Test Sonuçları.
+
+⚠️ **Kapsanmayan iki yüzey, kapının kendi `ÖLÇÜLEMEYEN` yorum bloklarında yazılı:** (1) depo **anahtarının yetki yüzeyi** ve koleksiyon kuralları komşu depoda yaşar — dal 4 yalnız *"sitenin kodu okuma yapmıyor"* yarısını çiviler; (2) başvuru adresinin gerçekten **posta alması** DNS olgusudur ve `npm test` ağ çağrısı yapmaz → TASK-2.20 / B-011.
+
+⚠️ **Yan bulgu (bu atomun kapsamı değil, Gelen Kutusu'nda):** yayındaki *"anahtar **yalnızca yeni kayıt oluşturabilir**"* yarısı, ucun aynı anahtarla var olan kayda `PATCH` attığı gerçeğinden dar.

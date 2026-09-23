@@ -4,7 +4,7 @@
 
 ## Kural
 
-**Altı ayrı kural, altısı da zorunlu:**
+**Yedi ayrı kural, yedisi de zorunlu:**
 
 1. **Devralınan bulgu tablosu uygulanmadan önce yeniden ölçülür.** Ürün deposu bu sitenin fazlarından bağımsız ilerliyor; bir bulgu yazıldıktan sonra ürün o boşluğu kapatmış olabilir. Ölçüm ucuz, yanlış düzeltme pahalı — çünkü "düzeltme" bu projede *doğru bir cümleyi bozmak* anlamına gelebilir.
 2. **Ürünün kendi erteleme notu (`v1.5` · `Yakında` · `ertelendi` · `W8`) tek başına kanıt değildir.** Not, kodu değişince güncellenmiyor. Karşılığı **çağrı grafiğiyle** doğrula: fonksiyonun üretim çağıranı var mı, çağıran bir HTTP ucuna bağlı mı, uç `server.ts`'te kayıtlı mı, paneli çağırıyor mu.
@@ -16,6 +16,8 @@
 5. **Yazdığın cümlenin KAPSAMI ölçtüğün alanı aşmamalı — ve kapsam ÖZNEDE saklıdır.** Aynı olgu iki cümleyle anlatılabilir ve biri doğru, öteki yanlış olur: *"tarayıcı bilgisini kaydetmiyoruz"* **bütün** yolları (platform logları, önündeki nginx, sağlayıcılar) kapsar, *"talebinizin kaydına yazılmaz"* yalnız ölçtüğün yolu. Ölçtüğün şey ikincisiyse birincisini yazma. Ölçüt mekanik: cümleyi yazdıktan sonra **öznesini sor** — "kim/ne?" sorusunun cevabı ölçümünün kapsamından geniş mi? Geniş olduğu her yerde ya kapsamı daralt ya o alanı da ölç. Aynı sınır olumsuz beyanlar için ekstra sıkıdır ("…yapmıyoruz", "…tutulmaz", "…gitmez"): olumsuz cümleyi doğrulamak için **her** yolu ölçmen gerekir, oysa olumlu cümle için bir yol yeter.
 
 6. **İddianın KAYNAĞI da doğrulanır — devralınan bir ÖZET, devralınan bir iddia kadar risklidir.** Cümleyi kendi projenin bir gün önceki task'ından çıkan bir özete dayandırma; **ölçümün kendisine** dön. Özet tipik olarak yanlış değil **eksik** olur ve eksiklik ancak kaynakta görünür. Ayrıca aynı sağlayıcı için **iki ayrı ülke sorusu** vardır ve karıştırılırsa cümle yanlış olur: *nerede işliyor* (ölçülebilir: fonksiyon bölgesi, ağ kaydı, sağlayıcının kendi sözleşmesi) ile *şirket nerede* (yalnız "merkezli" demeye yeter). Bölge **ayarı** verinin evini söylemez.
+
+7. **Yazdığın KAPI da ölçülür — ve onu ölçen kontrolün kendisi de.** Yeşil bir kapı, kapının koştuğunun kanıtı değildir: dayanağı **bozup kırmızıyı görmeden** hiçbir dal "çivilendi" sayılmaz. Üç mekanik körlük sahada ölçüldü ve üçü de yalnız negatif kontrolle göründü: (a) bir deseni **dosya genelinde** aramak **yorum satırlarını** da sayar — kapsamı sözdizimsel olarak daralt (etiketin/bloğun içine bak); (b) **iki jetonlu** desen, araya giren bir cast ya da destructure yüzünden kör kalır — deseni jetonların arasındaki **değişmez bağa** kur (`window.umami` değil `umami…​.track(`); (c) bir **önek/biçim süzgeci** aynı çağrının başka yazımını kaçırır — süzmek yerine **tam kümeyi** dondurulmuş bir listeyle karşılaştır (allowlist, denylist değil: denylist tanımı gereği fail-open'dır). Ayrıca **sondanın kendisi tek örnekli olmamalı** (tek örnek hangi sınıfı ölçtüğünü seçemez; kümenin tamamını koştur) ve **bir ayağın körlüğünü başka bir ayak örtebilir** — sondayı, öteki ayakları tetiklemeyecek biçimde kur. ⚠️ Son halka: **negatif kontrol düzeneğinin kendi pozitif çapası olmalı** — çıktı süzgeci bozulduğunda düzenek *hiçbir şey basmaz* ve bu "hata yok" diye okunur.
 
 ## Neden — ölçülmüş iki hâl (TASK-2.09, 2026-09-23)
 
@@ -64,6 +66,19 @@ Yasal metnin ölçüm cümlesi Umami'nin veritabanını anlatacaktı. Elde **ayn
 **İkinci yarısı, aynı turun tedarikçi ülkeleri.** Dördü de kaynağından ölçüldü ve üç ayrı ölçüm türü gerekti: **canlı yanıt başlığı** (Vercel fonksiyonu `x-vercel-id` → `iad1`, üç koşumda da; repoda `vercel.json`/`preferredRegion` yokluğu ayrıca doğrulandı), **ağ kaydı** (RDAP → Hetzner / `CLOUD-NBG1` / DE), **sağlayıcının kendi sözleşmesi** (Resend DPA → ABD). Dördüncüsü (Google Workspace) yalnız MX'ten görüldüğü için metne sadece *"ABD merkezli"* girdi — veri bölgesi ölçülmediği için yazılmadı.
 
 ⚠️ **Bölge ayarı tuzağı sahada iki kez doğrulandı.** v1 bir kez *"Resend bölgesi İrlanda → veri AB'de"* diye yanlış sonuca varmıştı (`bunker-ortami.md`). Bu turda iki kalem **ayrı ayrı** ölçüldü: gönderim bölgesi gerçekten `eu-west-1` (İrlanda), ama sağlayıcının saklaması ABD. Metin ikisini ayrı cümlelerde yazar — birleştirmek yanlış olurdu, gönderim bölgesini hiç yazmamak ise v1'e göre gerileme.
+
+## Neden — 7. kural (TASK-2.18, 2026-09-23)
+
+Yasal beyanları çivileyen ilk kapı yazıldı (`tests/legal-consistency.test.ts`, 8 dal / 24 test). **On iki negatif kontrol koşuldu ve ikisi kapının kendi fail-open'ını buldu — ikisi de yazarken "doğru" görünüyordu:**
+
+- **Dal 4** (site depodan okumuyor) depo çağrılarını `url.startsWith(STORE_URL)` ile süzüyordu. Uca **mutlak** URL'li bir okuma eklendiğinde kırmızı verdi; **göreli** URL'li aynı okuma (`fetch("/lead?limit=1")`) süzgecin dışına düştü ve kapı **yeşil** kaldı. Çare: süzmeyi bırakıp istek boyunca yapılan **tüm** `fetch` çağrılarının `(yöntem, URL)` kümesini dondurulmuş listeyle karşılaştırmak.
+- **Dal 2**'nin yüzey ayağı (`/window\s*\.\s*umami/`) izleyiciyi doğrudan çağıran ikinci bir dosyayı arıyordu. Bir bileşen **TypeScript cast'iyle** çağırdığında (`(window as unknown as {…}).umami?.track(…)`) iki jeton ayrıştı ve desen kör kaldı — yani kişisel veri taşıyan doğrudan bir izleyici çağrısı kapıdan geçerdi. Çare: deseni jetonların arasındaki değişmez bağa kurmak (`/umami\s*\??\s*\.\s*track\s*\(/`), ki cast **ve** destructure biçimlerini birlikte yakalasın.
+
+Üçüncü körlük ters yönde çıktı: **dal 1 yanlış kırmızı verdi.** `data-exclude-search="true"` dosya genelinde arandı ve 2 bulundu — biri gerçek öznitelik, biri dosyanın kendi JSDoc'undaki **yorum**. Bir yorum dayanak diye sayılacaktı. Çare kapsamı sözdizimsel daraltmak oldu (`<Script …/>` etiketinin içine bakmak), ki bu aynı zamanda özniteliğin **doğru** script'te durduğunu da ölçer.
+
+Dördüncüsü sondanın kendisiydi: dal 3 tek bir yasaklı parçayla (`FORBIDDEN.parts[0]`) sondalanıyordu ve o değer **"Weekend"** çıktı — eski **marka** parçası, oysa dalın çivilediği cümle gerçek **kişi** verisi hakkında. Tek örnekli sonda hangi sınıfı ölçtüğünü seçemez; sonda 52 parçanın ve 13 avatar baş harfinin tamamına genişletildi. Sarmalayıcı bilerek küçük harfli seçildi ki denetimin "iki büyük harfli sözcük" kalıp ayağı devreye girip **tablo ayağının körlüğünü örtmesin**.
+
+⚠️ **Beşincisi ve en sinsisi: sınama düzeneğinin kendisi fail-open koştu.** Negatif kontrolleri koşturan kabuk fonksiyonu vitest çıktısını ANSI kodları **temizlenmeden** grep'liyordu; hiçbir satır eşleşmedi ve ekrana **hiçbir şey** basılmadı. "Kırmızı satır yok" = "kontrol geçti" diye okunabilirdi. Düzeneğe pozitif çapa eklendi: vitest özet satırı her koşumda basılmalı, basılmıyorsa düzenek *arıza* verir. Kapıyı sınıyorsan, sınayanı da sına.
 
 ## Pratik ölçüm deseni
 
