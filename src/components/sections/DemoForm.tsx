@@ -198,6 +198,17 @@ export function DemoForm() {
 
   // Rıza kutusu Field bilesenini kullanmiyor (kendi <label> sarmali var);
   // isareti ve hata dugumu burada elle kurulur.
+  //
+  // ONAY METNININ KAPSAMI (TASK-2.16, B-024 k.4): metin eskiden yalniz
+  // "iletisim bilgilerimin" diyordu, oysa uc ayrica kulup/sube/tip, mesaj,
+  // talebin tarih-saati ve IP ozetini (`ip_hash`) isliyor -- onay islenen
+  // veriden DARDI. Uc kategori de adiyla sayilir; ayrinti ayni cumledeki
+  // KVKK baglantisinda (`content/legal.ts` -> "Islenen kisisel veriler").
+  // Uzunluk olculdu (390x844, satir yuksekligi 22.75px): 138 -> 171 karakter,
+  // 320px'te 5 -> 6 satir, 390px'te 4 -> 5. "Islem guvenligi verisi" terimi
+  // BILEREK kullanilmadi: 46 karakter ve 320px'te bir satir daha goturuyordu
+  // (olculdu: 217 karakter / 7 satir), karsiliginda ziyaretcinin
+  // anlayabilecegi bir sey eklemiyordu -- kategori adi KVKK metninde durur.
   const consentInvalid = invalidFields.includes("consent");
 
   return (
@@ -303,8 +314,8 @@ export function DemoForm() {
           <Link href="/kvkk" className="font-medium text-sage-ink underline underline-offset-4">
             Aydınlatma metnini
           </Link>{" "}
-          okudum. İletişim bilgilerimin demo talebimle ilgili olarak işlenmesine ve benimle
-          iletişime geçilmesine izin veriyorum.
+          okudum. Formda verdiğim bilgilerin, talebin tarih ve saatiyle IP özetinin demo talebim
+          için işlenmesine ve benimle iletişime geçilmesine izin veriyorum.
         </span>
       </label>
 

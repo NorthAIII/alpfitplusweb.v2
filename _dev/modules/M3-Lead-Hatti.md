@@ -35,6 +35,7 @@
 - Önizleme ortamından gönderilen gerçek bir demo talebi hedefte (depo koleksiyonu veya dosya) görünür
 - Depo düşerse (5xx, zaman aşımı, `413`/`429` ya da sözleşme dışı yanıt — yalnız `201` kayıt sayılır) uç e-postaya geçmeden önce hatayı loglar; kayıt **ve** e-posta birlikte düşerse 503 döner ve form kullanıcıya WhatsApp yolunu gösterir
 - Sır değerleri repoda yok; `.env.example` yalnız anahtar adlarını taşır
+- **Hatta yeni bir hedef, yeni bir alan ya da yeni bir sağlayıcı girdiğinde `src/content/legal.ts` aynı işte gözden geçirilir** ve neyin değiştiği (ya da neden değişmediği) yazılır — B-024'ün kalıcı koruma kalemi, TASK-2.16'da buraya kondu. Gerekçe ölçülmüş: metin gerçeğin **arkasında** kalmadı, gerçek metnin **önünden** geçti (lead hedefi değişti, hız sınırı sonradan eklendi, `ip_hash` gövdeye girdi, onay e-postası açıldı — dördü de metne yansımadan yayında durdu). Kapının mekanik yarısı ayrı evdedir ([B-060](../bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) → TASK-2.18/2.19); bu kriter insan tarafını tutar
 
 **Bağımlılık:** M7 F7.3 (Vercel projesi ve env)
 

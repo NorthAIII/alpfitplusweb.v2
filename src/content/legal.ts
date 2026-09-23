@@ -33,7 +33,7 @@ export const KVKK: LegalDoc = {
   title: "KVKK Aydınlatma Metni",
   description:
     "6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında alpfitplus.com ziyaretçileri ve demo talep edenler için aydınlatma metni.",
-  updated: "22 Eylül 2026",
+  updated: "23 Eylül 2026",
   intro: `Bu aydınlatma metni, ${SITE.domain} adresini ziyaret ettiğinizde ve demo talep formunu doldurduğunuzda kişisel verilerinizin nasıl işlendiğini açıklar. Alpfit Plus uygulamasının kendisinde (kulüp üyesi, antrenör, diyetisyen ve yönetim hesapları) işlenen veriler için ayrı bir aydınlatma metni uygulanır ve bu metin onu kapsamaz.`,
   sections: [
     {
@@ -49,10 +49,28 @@ export const KVKK: LegalDoc = {
         },
       ],
     },
+    // IP / ip_hash / tarayici bilgisi cumlelerinin dayanagi (TASK-2.16, B-024
+    // k.1 ve k.3) -- her biri koda karsi olculdu, "olmasi gerekene" degil
+    // OLANA gore yazildi:
+    //  - Ham IP yalniz bellekteki sayacta: `api/demo/route.ts` -> HITS /
+    //    WINDOW_MS = 10 dk / LIMIT = 5. Hicbir kayda, e-postaya ya da log
+    //    satirina girmiyor (toStore govdesi, toEmail ve toLeadEmail metinleri
+    //    ham IP tasimiyor; console.error cagrilarinin hicbiri `ip` almiyor).
+    //  - Kayda giren ozet: `hashIp` = HMAC-SHA256(ip, IP_HASH_SALT). Depodaki
+    //    amaci hiz siniri sayacidir (IP basina saatte 5 -- v1
+    //    `pocketbase/README.md` -> Hiz siniri, `ip_hash` indeksi) ve kaydin bir
+    //    sutunu oldugu icin 12 ay saklama cron'uyla kayitla BIRLIKTE siliniyor.
+    //  - Tarayici bilgisi (`ua`) okunuyor ama HICBIR kalici kayda girmiyor:
+    //    depo govdesi beyaz listesi disinda, iki e-posta metninde de yok. Tek
+    //    kalicilasma yolu `LEAD_FILE_PATH` ve o yayinda TANIMLI DEGIL (olculdu
+    //    2026-09-23, `vercel env ls`: Production/Preview/Development'ta yok).
+    //    Bu yuzden liste kalemi cikarildi -- eskiden fazlasini soyluyordu.
+    // Olcum ve yurt disi aktarim beyanlari BU TASK'IN DISINDA (TASK-2.17);
+    // aktarimin hukuki dayanagi hukukcunundur (B-008).
     {
       title: "İşlenen kişisel veriler",
       blocks: [
-        { type: "p", text: "Demo talep formunu doldurduğunuzda aşağıdaki verileri iletmiş olursunuz:" },
+        { type: "p", text: "Demo talep formunu doldurduğunuzda aşağıdaki veriler işlenir:" },
         {
           type: "ul",
           items: [
@@ -60,8 +78,16 @@ export const KVKK: LegalDoc = {
             "İletişim verisi: telefon numarası ve elektronik posta adresi",
             "İşletme verisi: kulüp veya stüdyo adı, şube sayısı, kulüp tipi",
             "Serbest metin: formun mesaj alanına yazdıklarınız",
-            "İşlem güvenliği verisi: talebin gönderildiği tarih ve saat ile tarayıcı bilgisi",
+            "İşlem güvenliği verisi: talebin gönderildiği tarih ve saat ile IP adresinizden üretilen özet",
           ],
+        },
+        {
+          type: "p",
+          text: "Demo talebinizi gönderdiğinizde IP adresiniz iki yerde kullanılır. Aynı adresten kısa aralıklarla çok sayıda talep gönderilmesini engellemek için, on dakikalık bir pencerede kaç talep geldiğini sayan bir sayaçta kullanılır; bu sayaç yalnızca sunucunun geçici belleğinde durur ve hiçbir kayda yazılmaz. Talebinizin kaydına ise IP adresinizin kendisi değil, gizli bir anahtarla ondan üretilen bir özet yazılır; bu özet de aynı adresten gelen talepleri saymaya yarar ve kaydınız silindiğinde onunla birlikte silinir.",
+        },
+        {
+          type: "p",
+          text: "Demo talebinizi işlerken tarayıcınızın kendini tanıttığı bilgi de okunur; bu bilgi talebinizin kaydına yazılmaz ve bize gelen bildirimde yer almaz.",
         },
         {
           type: "p",
@@ -76,9 +102,11 @@ export const KVKK: LegalDoc = {
           type: "ul",
           items: [
             "Demo talebinizi karşılamak ve sizinle iletişime geçmek",
+            "Talebinizin bize ulaştığını elektronik posta ile size bildirmek",
             "Kulübünüze uygun bir demo görüşmesi planlamak",
             "Talebiniz üzerine fiyat ve teklif bilgisi iletmek",
             "Talep kayıtlarını tutmak ve hizmet kalitemizi ölçmek",
+            "Formun kötüye kullanılmasını önlemek: aynı adresten gelen talep sayısını sınırlamak",
           ],
         },
       ],
@@ -130,7 +158,7 @@ export const KVKK: LegalDoc = {
         },
         {
           type: "p",
-          text: "Talebiniz ayrıca elektronik posta ile bize bildirilir. Bu bildirimin bir kopyası ekip posta kutumuzda, bir kopyası da e-postayı ileten sağlayıcıda kalır. Bu kopyalar yukarıdaki 12 aylık süreye bağlı değildir; bugün için otomatik bir silme süresi işletmiyoruz.",
+          text: "Talebiniz ayrıca elektronik posta ile bize bildirilir; geçerli bir elektronik posta adresi verdiyseniz size de bir onay e-postası gönderilir. Bize gelen bildirimin bir kopyası ekip posta kutumuzda kalır; her iki e-postanın birer kopyası da e-postayı ileten sağlayıcıda kalır. Bu kopyalar yukarıdaki 12 aylık süreye bağlı değildir; bugün için otomatik bir silme süresi işletmiyoruz.",
         },
       ],
     },
@@ -166,7 +194,7 @@ export const PRIVACY: LegalDoc = {
   title: "Gizlilik Politikası",
   description:
     "alpfitplus.com tanıtım sitesinin gizlilik politikası: hangi verileri topluyoruz, neden topluyoruz ve nasıl koruyoruz.",
-  updated: "22 Eylül 2026",
+  updated: "23 Eylül 2026",
   intro: `Bu gizlilik politikası ${SITE.domain} tanıtım sitesi için geçerlidir. Alpfit Plus uygulamasında saklanan kulüp ve üye verileri için kulübünüzle imzalanan sözleşme ve uygulamanın kendi gizlilik metni geçerlidir.`,
   sections: [
     {
@@ -183,7 +211,12 @@ export const PRIVACY: LegalDoc = {
             "Telefon ve elektronik posta adresi",
             "Kulüp adı, şube sayısı ve kulüp tipi",
             "Formun mesaj alanına yazdıklarınız",
+            "Talebin gönderildiği tarih ve saat ile IP adresinizden üretilen özet",
           ],
+        },
+        {
+          type: "p",
+          text: "Tarayıcınızın kendini tanıttığı bilgi talebinizin kaydına yazılmaz. IP adresinizin neden kullanıldığı ve kayda IP'nin kendisi yerine neden bir özetin yazıldığı, KVKK Aydınlatma Metni'nin İşlenen kişisel veriler başlığında yazılıdır.",
         },
       ],
     },
@@ -213,7 +246,7 @@ export const PRIVACY: LegalDoc = {
         },
         {
           type: "p",
-          text: "Talebiniz bize elektronik posta ile bildirilir ve kendi sunucumuzdaki kayıt veritabanında saklanır. Kaydın nerede durduğu, kimin eriştiği ve ne kadar saklandığı KVKK Aydınlatma Metni'nin Aktarım ve Saklama süresi başlıklarında yazılıdır.",
+          text: "Talebiniz bize elektronik posta ile bildirilir ve kendi sunucumuzdaki kayıt veritabanında saklanır; geçerli bir elektronik posta adresi verdiyseniz talebinizi aldığımıza dair size bir onay e-postası göndeririz. Kaydın nerede durduğu, kimin eriştiği ve ne kadar saklandığı KVKK Aydınlatma Metni'nin Aktarım ve Saklama süresi başlıklarında yazılıdır.",
         },
       ],
     },

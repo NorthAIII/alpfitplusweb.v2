@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.15 ✅: Görsel denetimin **iddia dalı** açıldı; yasaklı iddia sözlüğü `research/lib/claim-leak.mjs`'te tek evde (20 kalıp; M6 F6.4 aynı dosyayı devralır). Ayraç ölçülerek kondu: projeksiyon/üstünlük/büyüme kıyası yasak, nötr gösterge serbest. Boş izin listesiyle **27 vuruş** → 25'i kapatıldı, 2'si gerekçeli; **20'si ana sayfanın hero görselindeydi** ve kare, `sube.webp`'i yayından düşürten kartla aynı sınıftan bir "Patron özeti" taşıyordu. İddia eşlemesi ad tablosunu zehirledi, kapı kendi yakaladı → ayrı tablo. Dizge ölçümü 3/20 → **10/20**. Dört görsel değişti (264.962 → **258.782 B**). **B-018 kapandı ve arşive gitti.** Batarya 171 → 180. PHASE-2 kırmızı çizgiyi aştı (20.399) → Task Listesi temizlendi, **16.073**.
+**Son Güncelleme:** 2026-09-23 — TASK-2.16 ✅: Yasal metnin **işlenen veri** anlatımı ölçülmüş gerçeğe hizalandı. IP'nin iki kullanımı ayrıldı ve yazıldı (on dakikalık pencerede sayan, yalnız geçici bellekte duran sayaç ↔ kayda giren, gizli anahtarla üretilen özet ve kaydın 12 ayıyla birlikte silinmesi); karşılıksız kalan "tarayıcı bilgisi" kalemi **düşürüldü** — kalıcılaşacağı tek yol `LEAD_FILE_PATH` ve ölçüldü ki Vercel'de hiçbir ortamda tanımlı değil. KVKK ↔ Gizlilik listeleri aynı kategorileri sayıyor; amaç listesi onay e-postasını ve hız sınırını kapsadı. Form onayı 138 → **171 karakter** (320 px'te 5 → 6 satır; 217 karakterlik jargonlu aday ölçülüp elendi). **Yazdığım iki yeni beyan ilk hâlinde fazlasını söylüyordu ve koda dönülünce yakalandı.** B-024'ün 1·3·4 kalemi kapandı (atom açık, 2.17'de biter). Batarya 180 sabit — kapı TASK-2.18'in işi.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 2 — Yayın öncesi düzeltmeler
 **Milestone:** Site ürünün yapamadığı hiçbir şeyi "var" demiyor (dayanak tek yetenek listesi); ürün görselinde gerçek kişi adı ve olmayan özellik yok, denetim bir sonrakini yakalıyor; yasal metin ölçülmüş veri akışını anlatıyor ve dört beyanı test çiviliyor; `destek@alpfitplus.com` test postası alıyor; üretim imajında `.env` yok, prova hedefi açık ve imaja giren değerlerin hiçbirinin canlı olmadığı ölçüldü (döndürme gerekmedi); 320-412 px'te formun onayı ve hatası görünüyor, talep sahibine onay e-postası gidiyor, fiyat sayfasının mobil ana çağrısı 52 px.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 14/19 (TASK-2.01 → 2.15 tamamlandı; TASK-2.03 ❌ iptal). Sıra TASK-2.16'da — kalan beş task yasal metin (2.16-2.19) ve MX kaydı (2.20).
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ (20 task, dokuz bulgu) · plan doğrulama ✅ · plan revizyonu ✅ (2026-09-23: bir task iptal, üç hedefli düzeltme) · task çalıştırma 15/19 (TASK-2.01 → 2.16 tamamlandı; TASK-2.03 ❌ iptal). Sıra TASK-2.17'de — kalan dört task yasal metin (2.17-2.19) ve MX kaydı (2.20).
 **Faz Dokümanı:** `phases/PHASE-2.md` 🔄 (bölme çocuğu: `phases/PHASE-2-ARASTIRMA.md`) · önceki faz: `phases/PHASE-1.md` ✅
 
 ---
@@ -35,11 +35,12 @@
 
 ## Aktif Task
 
-**Task:** TASK-2.16 — Yasal metinde işlenen veri gerçeği + onay kapsamı (B-024)
+**Task:** TASK-2.17 — Ölçüm ve aktarım beyanları (B-024 kapanır)
 **Durum:** ⬜ Bekliyor
-**İlerleme:** TASK-2.15 kapandı ve arşive gitti; **B-018 kapandı** — görsel hattın denetimi artık dört dallı (ad · avatar baş harfi · marka · iddia) ve iddia sözlüğü tek evde. Faz şimdi **yasal metin kümesine** geçiyor (2.16 → 2.19), sonra MX kaydı (2.20). Sıradaki adım `/devflow:run-task`.
+**İlerleme:** TASK-2.16 kapandı ve arşive gitti; yasal metnin **talep yolu** artık ölçülmüş gerçeği anlatıyor (IP'nin iki kullanımı, IP özetinin 12 aylık ömrü, tarayıcı bilgisinin kayda girmediği, onayın kapsamı). Geriye **ölçüm hattının** beyanları kaldı — 2.17 onları yazacak, sonra kapı (2.18-2.19) ve MX kaydı (2.20). Sıradaki adım `/devflow:run-task`.
 **Not:**
-- ⚠️ **Yasal metnin bağlayıcı ölçümü hazır (TASK-2.01, 2026-09-22):** ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **bugün hiçbir saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. Yani metin *"IP tutulmaz"* diyemez ve **hiçbir süre yazamaz** — cümlenin son hâli TASK-2.17'nin işi.
+- ⚠️ **TASK-2.17'nin bağlayıcı ölçümü hazır (TASK-2.01, 2026-09-22):** ölçüm sunucusunun erişim kaydı **ham IP tutuyor** (592.183/592.375 satır, 5.580 benzersiz IP) ve **bugün hiçbir saklama sınırı yok** (155 MB / 603.025 satır / 31 gün, rotasyon dosyası 0); üçüncü tarafa gitmiyor. Yani metin *"IP tutulmaz"* diyemez ve **hiçbir süre yazamaz**. Bugün düzeltilmesi gereken iki cümle adıyla duruyor: `legal.ts` → Gizlilik "Çerezler ve ölçüm" (*"kayıtlarında IP adresinizi tutmaz"*) ve KVKK Aktarım (*"bu ölçüme kişisel verileriniz aktarılmaz"*); ayrıca yalnız gezen ziyaretçiyi anlatan cümle (*"sizden kimlik veya iletişim verisi toplanmaz"*) aynı ölçüme bakar. TASK-2.16 bunlara **bilinçle dokunmadı**, kendi cümlelerini talep yoluna daralttı — çelişki yok.
+- **TASK-2.16'nın kalıcı dersi:** yasal metinde yerine yazılan cümle de bir iddiadır. Bu turda yazılan iki yeni beyan ilk hâlinde fazlasını söylüyordu (onay e-postasının kopyasının ekip kutusunda olduğu · tarayıcı bilgisinin hiç kaydedilmediği) ve ikisi de ancak koda geri dönülünce yakalandı. Kapsam cümlenin öznesinde saklı: "kaydetmiyoruz" ölçülmemiş alanı da kapsar, "talebinizin kaydına yazılmaz" kapsamaz.
 - **Rotasyon tanımlı ama konteynere inmiyor:** `daemon.json` `50m × 3` diyor, `bunker-nginx` ondan önce oluşturulduğu için kural uygulanmıyor. Düzeltme **bu reponun işi değil** (evi `altyapi/vps`) — `BULGULAR.md` → Gelen Kutusu'nda. Yapılırsa ≈ 30 günlük bir pencere doğar ve metin o gün bir süre yazabilir hâle gelir.
 - **Yasal beyan sayısı taban, tavan değil:** `legal.ts` satır satır okundu, koda/konfige bağlı **en az sekiz** olgu iddiası var; faz sekizinin tamamını bağlar (kullanıcı kararı). Milestone'un "dört beyan" ifadesi **alt sınırdır** (`phases/PHASE-2-ARASTIRMA.md`).
 - ⚠️ **Yeni yayın kapısı var (TASK-2.11):** bir kalemi `yolda`/`sonra`'dan `simdi`'ye taşımak, o kalemi anan cümleler `upcomingCapability`/`stageNote` çağırdığı için **derlemeyi durdurur** — bilinçli fail-closed. Ters yön (yeni kalem `yolda`'ya eklemek) serbesttir.
@@ -77,7 +78,7 @@
 | 2.13 | TASK-2.13 — Ürün görseli temizliği: ad, Kampanyalar, Churn kartı (B-018) | ✅ Tamamlandı |
 | 2.14 | TASK-2.14 — Denetimin ad dalı tablodan beslenir (B-018) | ✅ Tamamlandı |
 | 2.15 | TASK-2.15 — Yasaklı iddia sözlüğü + denetimin iddia dalı (B-018 kapandı) | ✅ Tamamlandı |
-| 2.16 | TASK-2.16 — Yasal metinde işlenen veri gerçeği + onay kapsamı (B-024) | ⬜ Bekliyor |
+| 2.16 | TASK-2.16 — Yasal metinde işlenen veri gerçeği + onay kapsamı (B-024) | ✅ Tamamlandı |
 | 2.17 | TASK-2.17 — Ölçüm ve aktarım beyanları (B-024 kapanır) | ⬜ Bekliyor |
 | 2.18 | TASK-2.18 — Yasal beyan testi — depo içi yedi olgu (B-060) | ⬜ Bekliyor |
 | 2.19 | TASK-2.19 — Yasal beyan testi — çapraz depo "12 ay" dalı (B-060 kapanır) | ⬜ Bekliyor |
@@ -93,6 +94,21 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-2.16 — Yasal metnin işlenen-veri anlatımı ölçülene hizalandı, onay kapsamı genişledi
+
+**Durum:** ✅ Tamamlandı — 2026-09-23
+
+**Detay:** `tasks/archive/TASK-2.16.md`
+
+**Özet:**
+- **IP artık metinde ve iki kullanımı ayrı.** KVKK'nın işlenen-veri listesi "tarih ve saat ile **IP adresinizden üretilen özet**" diyor; altındaki paragraf (a) on dakikalık pencerede talep sayan, **yalnız geçici bellekte duran** ve hiçbir kayda yazılmayan sayacı, (b) kayda giren, **gizli anahtarla** üretilen özeti ve onun kayıtla birlikte 12 ay sonra silinmesini anlatıyor. Özetin depodaki amacı da yazılı (aynı adresten gelen talepleri saymak — deponun `ip_hash` indeksi hız sınırı sorgusu için).
+- **Karşılıksız kalan "tarayıcı bilgisi" kalemi düşürüldü.** `ua` depo gövdesinin beyaz listesinde yok, iki e-posta metninde de yok; tek kalıcılaşma yolu `LEAD_FILE_PATH` ve **ölçüldü** ki Vercel'de Production/Preview/Development'ın hiçbirinde tanımlı değil (`vercel env ls`, yedi anahtar adı). Yerine kapsamı dar bir cümle kondu. Gizlilik'in topladığı-veri listesi KVKK'nınkiyle aynı kategorileri sayar hâle geldi; amaç listesi onay e-postasını ve hız sınırını kapsadı.
+- **Onay artık işlenen veriden dar değil — bedeli ölçüldü.** Yeni metin formda verilen bilgileri, talebin tarih-saatini ve IP özetini sayıyor: 138 → **171 karakter**, 320 px'te 5 → **6 satır**, 412 px'te satır sayısı hiç değişmedi. "İşlem güvenliği verileri (tarih, saat, IP özeti)" kalıbı 217 karakter / **7 satır** ölçülüp elendi — terim 46 karakter götürüyor, kategori adı zaten bağlantının ucundaki KVKK metninde.
+
+**Test:** `npm test` **180 geçti + 1 atlandı** (taban birebir; bu task test eklemedi — metin son hâlini almadan kapı yazılmaz, sıra bilinçli, B-060 → TASK-2.18). `npx tsc --noEmit` çıkış 0. Üretim derlemesi `docker compose build web-prod` başarılı ve imaj **tazeliği ölçülerek** yeniden kaldırıldı (3100 üç sayfada da yeni metni döndürüyor). **Beş ölçüm:** `a11y` 8 rota **TOPLAM SORUN 0** · `mobile-audit` **9/9 yatay kaydırma yok**, dokunma hedefi **157** (taban birebir) · `font-guard` 16 sayfa / **82.502** karakter (taban 81.118), eksik karakter yok · `scan` 390×844 `/kvkk` 8 kare, `/gizlilik` 6, `/demo` 6 — üçünde de konsol temiz. ⚠️ **`/kvkk` ve `/gizlilik` `mobile-audit`'in rota listesinde yok** (B-012): değişen üç sayfa ayrı sondayla **320/360/390/412** px'te ölçüldü, dördünde de yatay kaydırma yok. Onay bloğunun büyümesi **hatırlanmadı, ölçüldü** — eski metin DOM'da geri konup yeniden ölçüldü (kaynağa dokunulmadı, geri yükleme doğrulandı). **Yazdığım iki yeni beyan ilk hâlinde fazlasını söylüyordu ve koda dönülünce yakalandı:** onay e-postasının kopyası ekip kutusunda **değil** (`toLeadEmail` yalnız ziyaretçiye gider, `reply_to` ekip) ve "tarayıcı bilgisini kaydetmiyoruz" kapsamsızdı (platform logları bu turda ölçülmedi) → cümle talebin kaydına daraltıldı. **Uydurma denetimi:** metne giren tek yeni süre "on dakika" (`WINDOW_MS`), sağlayıcı adı eklenmedi, Hukuki sebep bölümüne dokunulmadı (B-008).
+
+---
+
 ### TASK-2.15 — Denetimin iddia dalı açıldı, sözlük tek eve kondu, B-018 kapandı
 
 **Durum:** ✅ Tamamlandı — 2026-09-23
@@ -105,21 +121,6 @@
 - **İki devralınan varsayım ölçümle düzeltildi.** (1) İddia eşlemesi `REPLACEMENTS`e konunca yasaklı **ad** kümesi "ciro"/"doluluk"la doldu ve yedi ekran kırmızıya düştü — kapı kendi yakaladı, çare ayrı tablo (`CLAIM_REPLACEMENTS` + `TEXT_FIXES`); v1 tablosunun başlığı bu kuralı zaten yazıyordu. (2) Türkçe'de "harfe duyarsız yap" yetmiyor: `"EN HIZLI"`yi `/i` de `.toLowerCase()` de kaçırıyor, yalnız `toLocaleLowerCase("tr")` yakalıyor. Ayrıca kriterin devraldığı "21'de 1" tabanı yerinde tutmadı — B-044'ün bloğunda **20** dizge yazılı ve "tek görülen Alpfit Plus" TASK-2.14'ten sonra tarihsel.
 
 **Test:** `npm test` **180 geçti + 1 atlandı** (taban 171+1; net **+9 senaryo**, yeni dosya açılmadı). `npx tsc --noEmit` çıkış 0. Hat yeşil (7 `.webp`, çıkış 0) ve koşum iki kez tekrarlanınca çıktı 7/7 birebir aynı; **taban hatırlanmadı** — değişiklikten önce ayrı dizine koşulan hat `public/product/` ile 7/7 birebir çıktı. **Boş izin listesi ölçümü:** 7 ekran / 859 değer / **27 vuruş** (cockpit 20 · finans 2 · antrenor 2 · takvim 1 · uye-telefon 1 · raporlar 1 · grup 0); her vuruş kaynakta arandı, 25'i kapatıldı, 2'si `CLAIM_ALLOW`'a gerekçeyle girdi; kapatma sonrası **0 vuruş**. **Dizge ölçümü:** B-018+B-044'ün adıyla saydığı 20 dizge iki denetime karşı — eski **3/20**, yeni **10/20**; görülmeyen 10'un her biri gerekçeli (7 avatar baş harfi B-044 k.1/k.2 kapsam dışı, 2 tarih dizgesi bilinçle alınmadı, "Alpfit Plus" temizliğin kendi hedefi). **Kapı dört sondayla sınandı, dördünde de kaynak değil GİRDİ bozuldu** (`../Alpfit.v1` hiç değiştirilmedi; `research/lib` kopyası `-v` ile bağlandı, çıktı ayrı dizine yazıldı; test sondasında dosya `md5sum -c` + `diff -q` ile birebir geri yüklendi): *(1) bozuk girdi* — cockpit düşürme kuralları sökülünce 20 iddia bulgusu, çıkış **1**, **0 dosya**; *(2) kontrol grubu* — aynı girdi, iddia dalı kapalı (`abfa2b7`'deki denetim): çıkış **0**, 8 dosya, sızıntılı `cockpit.webp` (`4c876b3d…` ≠ temiz `a598e3c4…`) — B-018'in arızası birebir yeniden üretildi; *(3) boş kapsam* — sözlük 20 → 4'e budanınca `sözlük çöktü — 4/16` **import anında**, çıkış 1, 0 dosya; *(4) test bloğu* — `claimLeaks()` boşaltılınca batarya **5 kırmızı**, ⚠️ ayraç testinin "nötr serbest" yarısı yeşil kaldı (doğru) ve kontrol grubu olarak **silinmedi**. **Çıktı değişti ve gözle okundu:** dört görsel yeniden üretildi (cockpit · finans · antrenor · raporlar), üçü bayt bayt aynı; toplam 264.962 → **258.782 B**, tek boyut değişimi cockpit 1440×655 → **1440×629** (`shots.ts` güncellendi). **Beş ölçüm koşuldu:** `a11y` 8 rota **TOPLAM SORUN 0**; `mobile-audit` **9/9 yatay kaydırma yok**, dokunma hedefi **157** (taban birebir); `font-guard` 16 sayfa / 81.118 karakter, eksik karakter yok; `scan` 390×844 konsol temiz (`/` 20 · `/ozellikler` 16 kare); `perf` masaüstü **141 KB** / LCP **80 ms** / CLS **0,005**, mobil **132 KB** / LCP **60 ms** / CLS **0** — M6 çizgisi 144/133 KB · LCP 96 ms, **regresyon yok**. Üretim imajı HEAD'ten yeniden derlendi (`build web-prod`) ve tazeliği ölçüldü (3100 HTML'i `height="629"`, görsel 200 / 40.088 B).
-
----
-
-### TASK-2.14 — Denetimin ad dalı tablodan besleniyor, körlük kontrol gruplu ölçümle kapandı
-
-**Durum:** ✅ Tamamlandı — 2026-09-23
-
-**Detay:** `tasks/archive/TASK-2.14.md`
-
-**Özet:**
-- **Denetim artık temizliğin varsayımını paylaşmıyor.** Yasaklı küme `REPLACEMENTS`/`INITIALS`'ın **kaynak** tarafından türüyor — 52 ad parçası + 13 avatar baş harfi, elle yazılmış liste yok; tabloya satır girdiği gün küme kendiliğinden büyür. Tablonun **hedef** tarafı çıkarılıyor, çünkü denetim kendi çıktısını sızıntı sayamaz: çıkarma olmasaydı `Plus` (⊂ "Alpfit Plus") yedi ekranı birden kırmızıya çekerdi; `Zehra` ve `Cansu` de bilinçle korunmuş ilk adlar. Ad parçası **alt dize**, baş harfi **tam jeton** aranıyor (`SA` ⊂ `SAHİL` kapıyı kullanılamaz kılardı).
-- **İki-tam-sözcük kalıbı kaldırılmadı — ikincil kaba ağa indirildi, gerekçesi yazılı.** Tabloya **hiç girmemiş** bir adı yalnız o dal görebilir, ve TASK-2.13'ün kendi kendini doğrulayan kapısı ona dayanıyor (`'Öğrenci Tutma'` izin satırı türetilerek çıkarılmıştı). Kaldırmak o kapıyı sessizce sökerdi. `AUDIT_ALLOW` **yalnız** bu dalı kapatıyor; tablo dallarında izin yok — yanlış alarmın çaresi izin satırı değil tablonun düzeltilmesi (bilinçli fail-closed).
-- **İki devralınan varsayım ölçümle düzeltildi.** (1) Task "INITIALS'ın kaynak tarafı da kapsanır" diyordu; olduğu gibi uygulansa `EK` yasaklanır ve iki ekran kırmızıya düşerdi — ölçüldü ki `takvim.html:166`'daki `EK` tam da "Melissa V." (→ **"Ege K."**) yanında, yani hedefin kendi baş harfi, sızıntı değil. Ad parçalarıyla **aynı** kural (hedef tarafı kazanır) çözdü. (2) Denetimin gördüğü kütle **bayattı**: `values` avatar senkronundan **önce** toplanıyordu — antrenör senkron öncesi 6 baş harfi raporluyor, sonrası 0. Toplama tüm mutasyonların sonuna alındı; `.av` sınıfına dokunulmadı (B-044 k.2, kapsam dışı — eklemek çıktıyı değiştirirdi).
-
-**Test:** `npm test` **171 geçti + 1 atlandı** (taban 163+1; net **+8 senaryo**, yeni dosya açılmadı). `npx tsc --noEmit` çıkış 0. Hat yeşil (7 `.webp`, çıkış 0) ve **çıktı 7/7 `md5sum` ile `public/product/` ile birebir aynı** — kıyas hatırlanmadı, değişiklikten önce aynı dizine taban koşumu alındı ve o da 7/7 aynıydı. **Kapı beş sondayla sınandı, beşinde de kaynak değil GİRDİ bozuldu** (`../Alpfit.v1` hiç değiştirilmedi; `research/lib`'in kopyası `-v` ile bağlandı, çıktı ayrı dizine yazıldı; test sondasında dosya `md5sum -c` + `diff -q` ile birebir geri yüklendi): *(1) bozuk girdi, kontrol gruplu* — B-018'in tarihsel tablosu geri konunca **eski** denetim çıkış **0** verip sızıntılı `grup.webp`'i üretiyor (`fe0ba19…` ≠ temiz `3a4caac…`), **yeni** denetim aynı girdide `«Gizem» ⊂ "Gizem Ö. · 17:00 · 60 dk"` deyip çıkış **1**, görsel ve `manifest.json` **yazılmadı**; *(2) avatar dalı* — `AVATAR_SELECTOR` körelince antrenör 5 baş harfiyle kırmızı, çıkış 1; *(3) boş kapsam, tablo* — `REPLACEMENTS` boşalınca **import anında** `parça 16/40`, **0 dosya**, çıkış 1; *(4) boş kapsam, girdi* — metin yürüyüşü kırılınca `DENETİM KAPSAMSIZ — 0 metin değeri`, **ilk ekranda**, **0 dosya**, çıkış 1; *(5) test bloğu* — iki tablo dalı sökülünce batarya **2 kırmızı**, ⚠️ türetme ve boş-kapsam ayakları yeşil kaldı (doğru: onlar bağlantıyı değil `deriveForbidden`'ı ölçüyor) ve kontrol grubu olarak **silinmedi**. Sonda sonrası batarya yeniden 171+1, hat yeşil, çıktı yine 7/7 birebir. Kaynağa karşı yanlış alarm: 7 ekran, **859** metin değeri, tablo dallarından **0 vuruş**. ⚠️ **Beş ölçüm betiği koşulmadı ve gerekçesi ölçüldü:** `src/` ve `public/` altında tek bayt değişmedi (`git status --short -- src public` boş), değişen üç dosya `research/` ve `tests/` altında.
 
 ---
 
@@ -152,7 +153,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-2.16.md` ⬜ — Yasal metinde işlenen veri gerçeği + onay kapsamı (B-024)
+**Aktif Task:** `tasks/TASK-2.17.md` ⬜ — Ölçüm ve aktarım beyanları (B-024 kapanır)
 **Aktif Faz:** `phases/PHASE-2.md` 🔄 — Yayın öncesi düzeltmeler (araştırma detayı: `phases/PHASE-2-ARASTIRMA.md`) · son kapanan: `phases/PHASE-1.md` ✅
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

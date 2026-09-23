@@ -1,10 +1,10 @@
 # Ürün iddiası düzeltilirken bulgu yeniden ölçülür — ürünün kendi notu çapa değildir
 
-**Ne zaman uygulanır:** Sitedeki bir yetenek iddiasını `../Alpfit.v1`'e (salt okunur ürün kodu) karşı doğrulayan ya da düzelten her iş — B-029 sınıfı, `CAPABILITIES` kademeleri, TASK-2.12/2.14/2.15 gibi iddia taramaları, ileride M6 F6.4'ün sızıntı denetimi.
+**Ne zaman uygulanır:** Ziyaretçiye görünen bir olgu iddiasını ölçüme karşı doğrulayan ya da düzelten her iş. İki kol: (a) **ürün yeteneği** — `../Alpfit.v1`'e (salt okunur ürün kodu) karşı, B-029 sınıfı, `CAPABILITIES` kademeleri, TASK-2.12/2.14/2.15 gibi iddia taramaları, ileride M6 F6.4'ün sızıntı denetimi; (b) **yasal metin** — `src/content/legal.ts` ve form onayı, bu sitenin kendi koduna (`api/demo/route.ts`), depo sözleşmesine ve yayın env'ine karşı; B-024/B-060 sınıfı. Kural ikisinde de aynı, çünkü ikisi de "olmasi gerekeni" değil **olanı** anlatmak zorunda; yasal kolda bedeli daha ağır, çünkü orada cümle bir taahhüttür.
 
 ## Kural
 
-**Dört ayrı kural, dördü de zorunlu:**
+**Beş ayrı kural, beşi de zorunlu:**
 
 1. **Devralınan bulgu tablosu uygulanmadan önce yeniden ölçülür.** Ürün deposu bu sitenin fazlarından bağımsız ilerliyor; bir bulgu yazıldıktan sonra ürün o boşluğu kapatmış olabilir. Ölçüm ucuz, yanlış düzeltme pahalı — çünkü "düzeltme" bu projede *doğru bir cümleyi bozmak* anlamına gelebilir.
 2. **Ürünün kendi erteleme notu (`v1.5` · `Yakında` · `ertelendi` · `W8`) tek başına kanıt değildir.** Not, kodu değişince güncellenmiyor. Karşılığı **çağrı grafiğiyle** doğrula: fonksiyonun üretim çağıranı var mı, çağıran bir HTTP ucuna bağlı mı, uç `server.ts`'te kayıtlı mı, paneli çağırıyor mu.
@@ -12,6 +12,8 @@
 3. **Sitede bir SÜRÜM NUMARASI iddiası varsa çapası `../Alpfit.v1/_dev/PRD/VERSIONS.md`'dir** — kod yorumu değil. O dosya kendini *"Bu dosya source of truth"* ilan ediyor ve v1 / v1.5 / v2 kapsamlarını tablo hâlinde tutuyor. Kod yorumundaki *"v1.5 adayı"* bir **kapsam taahhüdü değildir**; bir kalemin ertelenmiş olması onu sıradaki sürümün kapsamına sokmaz.
 
 4. **YERİNE yazdığın iddia da ölçülür — ve onu çivileyen kapı elle listeden değil gerçeğin kaynağından türetilir.** Bir karşılıksız cümleyi silmek işin yarısı; yerine gelen cümle de bir iddiadır ve aynı kapıdan geçmelidir. Elle yazılmış bir `toContain(...)` listesi burada **koruma değil kilittir**: yanlış cümleyi sabitler ve sonraki turlara "ölçülmüş" diye görünür.
+
+5. **Yazdığın cümlenin KAPSAMI ölçtüğün alanı aşmamalı — ve kapsam ÖZNEDE saklıdır.** Aynı olgu iki cümleyle anlatılabilir ve biri doğru, öteki yanlış olur: *"tarayıcı bilgisini kaydetmiyoruz"* **bütün** yolları (platform logları, önündeki nginx, sağlayıcılar) kapsar, *"talebinizin kaydına yazılmaz"* yalnız ölçtüğün yolu. Ölçtüğün şey ikincisiyse birincisini yazma. Ölçüt mekanik: cümleyi yazdıktan sonra **öznesini sor** — "kim/ne?" sorusunun cevabı ölçümünün kapsamından geniş mi? Geniş olduğu her yerde ya kapsamı daralt ya o alanı da ölç. Aynı sınır olumsuz beyanlar için ekstra sıkıdır ("…yapmıyoruz", "…tutulmaz", "…gitmez"): olumsuz cümleyi doğrulamak için **her** yolu ölçmen gerekir, oysa olumlu cümle için bir yol yeter.
 
 ## Neden — ölçülmüş iki hâl (TASK-2.09, 2026-09-23)
 
@@ -41,6 +43,17 @@ TASK-2.12, antrenör ürün görselinin `alt` metnindeki karşılıksız *"öğr
 Bir tur sonra ölçüldü: o iki kart bu görüntüde **zaten yok.** Aynı üretim hattı onları **TASK-14.06'dan beri** düşürüyor (`DROP_NODES.antrenor`) ve gerekçesi ürünün kendi kodu — `trainer-performance.service.ts:7` *"FİNANSAL CİRO DEĞİL"*, `attendance-count.ts:11` doluluk % kapsam dışı. Yani düzeltme **bir karşılıksız iddiayı ikisiyle değiştirdi** ve üstüne bir kapı koyarak sabitledi; kapı yeşil olduğu için de "ölçülmüş" görünüyordu.
 
 Kaçıran şey yöntemdi: yeni cümle **görüntüye karşı değil, beklentiye karşı** yazılmıştı. Çare kapının kaynağını değiştirmek oldu — kural artık *"alt metin, hattın o ekrandan **düşürdüğü** hiçbir kartı anamaz"* ve çapalar hattın kendi `DROP_NODES`/`SHELL_DROP_NODES` tablosundan okunuyor (`tests/iddia-metinleri.test.ts` → `research/lib/screen-cleanup-v2.mjs` import'u; `web` konteyneri deponun tamamını görür, araştırma konteyneri yalnız `research/`ü — bağ bu yüzden tek yönlü). Elle yazılan üç `toContain` bu kuralla değiştirildi; sonda, eski metni geri yazınca kırmızı verdiğini doğruladı.
+
+## Neden — 5. kural (TASK-2.16, 2026-09-23)
+
+Yasal metnin işlenen-veri anlatımı ölçülmüş gerçeğe hizalanırken **bu turda yazılan iki yeni beyan ilk hâlinde fazlasını söyledi** ve ikisi de ancak koda geri dönülünce yakalandı:
+
+- *"Bu e-postaların kopyaları **ekip posta kutumuzda** ve e-postayı ileten sağlayıcıda kalır."* Ekip bildirimi için doğru, onay e-postası için **yanlış**: `toLeadEmail` yalnız ziyaretçiye gönderir, `reply_to` ekiptir — ekip kutusuna kopya düşmez. Cümle alıcı bazında ikiye ayrıldı.
+- *"Tarayıcınızın kendini tanıttığı bilgiyi **kaydetmiyoruz**."* Ölçülen şey dardı: `ua` depo gövdesinin beyaz listesinde yok, iki e-posta metninde yok, tek kalıcılaşma yolu `LEAD_FILE_PATH` ve o yayında tanımsız. **Ölçülmeyen** şey genişti: platform/altyapı logları. Cümle *"talebinizin kaydına yazılmaz"* diye daraltıldı.
+
+İkincisi özellikle öğreticidir çünkü **B-024'ün kendi itirazının sınıfıdır**: bulgu, sitenin *"bu ölçüm … IP adresinizi tutmaz"* cümlesini tam bu gerekçeyle çürütmüştü (ölçüm sisteminin önündeki nginx ham IP tutuyor). Aynı turda aynı hatayı yapmamak, ancak cümleyi yazdıktan sonra öznesini sormakla mümkün oldu.
+
+**Yan kural — ölçülmemiş komşu cümleye dokunma, ama çelişki de üretme.** Aynı dosyada duran ve başka bir task'a ait iki cümle (`legal.ts` → Umami'nin IP'si · yalnız gezen ziyaretçi) bilinçle bırakıldı; yazılan yeni cümleler **talep yoluna** daraltıldığı için ikisiyle de kesişmedi. Kapsamı daraltmak yalnız doğruluk değil, **ayrıştırılabilirlik** de sağlıyor: 2.17 o cümleleri kendi ölçümüyle değiştirirken bu turun cümlelerine dokunmak zorunda kalmayacak.
 
 ## Pratik ölçüm deseni
 
