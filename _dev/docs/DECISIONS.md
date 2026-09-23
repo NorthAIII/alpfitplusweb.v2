@@ -19,6 +19,32 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-23 — Yetenek/yol haritası tek kaynağı `CAPABILITIES`; `PRODUCT_STATUS.short` silinir, `version` kalır
+
+**Bağlam:** "Bugün var / yolda / yol haritasında" ayrımı beş evde elle yazılıydı ve üçü birbirinden farklıydı (B-040); ayrıca beş yetenek cümlesinin ürün kodunda karşılığı yoktu (B-029). `PRODUCT_STATUS.short` ve `.version` alanlarının ise hiç tüketicisi yoktu (B-047).
+
+**Kararlar ve gerekçeleri:**
+
+1. **Sabitin adı `CAPABILITIES`, kademeler `simdi` / `yolda` / `sonra`.** B-040 `ROADMAP = { simdi, yolda, sonra }` önermişti; "roadmap" adı ilk kademeyi ("bugün var") yanlış çatı altına alıyor — bugün var olan şey yol haritası değil. Kademe anahtarları önerildiği gibi bırakıldı.
+
+2. **Kalem `{ id, label, modul? }` — düz dizi değil.** Beş düzyazı cümle yol haritasındaki tek bir kalemi adıyla anıyor ("QR ve turnike", "Online ödeme"); düz dizide çağrı yeri kalemi indeksle aramak zorunda kalırdı. `capability(id)` bilinmeyen id'de sessizce boş dönmek yerine hata veriyor.
+
+3. **Etiketler cümle-içi biçimde saklanır, başlık türetilir.** Ters yön (başlıktan küçültme) "QR" ve "Apple Health"i bozardı — yalnız büyütme kayıpsızdır. Büyütme Türkçe locale ile yapılır: `iptal` → `İptal` (locale verilmezse `Iptal` olurdu).
+
+4. **`capabilityProse` "simdi" kademesini tip düzeyinde kabul etmez.** Ölçüldü: o kademenin etiketleri kendi içlerinde virgül taşıyor ("takvim, rezervasyon ve bekleme listesi") ve virgülle bağlandıklarında cümle okunamaz hale geliyor. O kademenin düzyazı evi `moduleProse()`; kademeyi liste olarak gösteren `CAPABILITIES.simdi` + `capabilityTitle()` kullanır.
+
+5. **`PRODUCT_STATUS.modules` artık türetiliyor** — "simdi" kademesinin modül düzeyli kalemlerinden. Üretilen cümle bugünkünden **bir kalem farklı**: "antrenör performansı" eklendi (eskisi ürünün on modülünün sekizini sayıyordu). Karşılığı ölçüldü: `../Alpfit.v1` → `backend/src/routes/finance-trainer-performance.ts` (server.ts:427'de kayıtlı), `services/trainer-performance.service.ts`, `web/src/pages/TrainerPerformancePage.tsx`. **"Üye 360" bilinçle dışarıda:** ekran var ama ölçüm grafiği ve diyetisyen notu ürünün kendi "Yakında" kutusunda (B-029, W8) — o kalem "yolda" kademesinde.
+
+6. **`PRODUCT_STATUS.short` ("Pilot aşamada") silindi.** Sıfır tüketici, sıfır planlı tüketici; sitede hiçbir yer bu ifadeyi elle de yazmıyor (ölçüldü). Pilot iddiasını `sentence` taşıyor, yani CLAIMS'in tek-kaynak disiplini zayıflamıyor. **`version` ("v1") kaldı** — "v1 hazır" bugün üç yerde elle yazılı (`chat.ts:126`, `faq.ts:48`, `FounderProgram.tsx:83`) ve TASK-2.10/2.11 onları buraya bağlayacak. Ölçüt alanın büyüklüğü değil tüketicisinin var olup olmadığıydı.
+
+7. **`nextVersion` ("v1.5") AÇILMADI.** `FounderProgram.tsx:88` "v1.5 yolda" başlığını elle yazıyor ve kardeşi bağlanırken o da bağlanmalı — ama tüketicisi doğmadan alan açmak `short`'u ölü borç yapan hatanın ta kendisi. Alanı **tüketicisini bağlayan task açar** (TASK-2.10).
+
+**Kapsam dışı (bilinçle):** Tüketicilerin bağlanması TASK-2.10/2.11'de, karşılıksız cümlelerin düzeltilmesi TASK-2.09'da. Bu task'tan sonra beş ev hâlâ kendi metnini yazıyor — ölçüldü: sabiti atlayan **17 çağrı satırı / 6 dosya** (`ozellikler/page.tsx` 6 · `faq.ts` 3 · `karsilastirma.ts` 2 · `chat.ts` 2 · `FounderProgram.tsx` 2 · `fiyat/page.tsx` 2). Bu sayı TASK-2.10 + 2.11'in kapanış ölçütüdür.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.08 (`tasks/archive/TASK-2.08.md`)
+
+---
+
 ### 2026-09-22 — Parmak izi eşleşmedi: iki anahtarın döndürülmesi düşer, milestone ayağı yeniden yazılır
 
 **Bağlam:** Aynı gün alınan «`.env` sızıntısının kapsamı ölçüldü» kararı döndürmeyi tek bir koşula bağlamıştı: *"sunucudaki `/opt/alpfit-lead/.env` → `LEAD_TOKEN_PREVIEW` / `LEAD_TOKEN_PRODUCTION` değerlerinin parmak izi yerel değerlerle karşılaştırılır; sonuca göre döndürülür ya da iptal edilir."* Karşılaştırma TASK-2.01'de koşuldu (salt okuma, hiçbir değer basılmadan — SHA-256'nın ilk 12 karakteri):

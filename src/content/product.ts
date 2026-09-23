@@ -1,4 +1,4 @@
-/** Roller, moduller, faydalar — kaynak: _context/SATIS-SPEC.md + sunum/one-pager.md */
+/** Roller, moduller, yetenek/yol haritasi, faydalar — kaynak: _context/SATIS-SPEC.md + sunum/one-pager.md */
 
 export type Role = {
   key: string;
@@ -222,6 +222,149 @@ export const MODULES: Module[] = [
     icon: "bell",
   },
 ];
+
+/**
+ * YETENEK VE YOL HARITASI — TEK kaynak (B-029, B-040).
+ *
+ * "Bugun var / yolda / yol haritasinda" ayrimi sitede baska HICBIR yerde elle
+ * yazilmaz. Bu liste kurulmadan once ayni ayrim BES evde elle yaziliydi ve ucu
+ * birbirinden farkliydi (`/ozellikler`, FounderProgram, chat.ts, faq.ts,
+ * `/fiyat`); `legal.ts` ise ziyaretciye "yolda olan ve yol haritasinda bulunan
+ * ozellikler ayri ayri belirtilir" taahhudunu veriyordu. Iddia sinirinin tek
+ * evi: _dev/docs/CLAIMS.md
+ *
+ * "simdi" kademesine yalnizca urun koduna (../Alpfit.v1, salt okunur) karsi
+ * DOGRULANMIS kalem yazilir. Karsiligi olcumle bulunamayan iddia "yolda"
+ * kademesinde durur — bes ornegin olcumu ve dosya/satir kaniti
+ * _dev/bulgular/B-029-*.md icindedir.
+ *
+ * Etiketler CUMLE ICI bicimde yazilir: ilk harf kucuk, ozel ad ve kisaltma
+ * kendi buyuk harfini korur ("QR ve turnike ile giris", "Apple Health ve
+ * Google Fit"). Liste basligi capabilityTitle() ile turetilir — yalniz
+ * BUYUTME yonu kayipsizdir; otomatik kucultme "QR"yi ve "Apple"i bozardi.
+ */
+export type CapabilityStage = "simdi" | "yolda" | "sonra";
+
+export type Capability = {
+  /** Cagri yeri kalemi adiyla cagirsin diye; dizide indeksle aranmaz (B-040). */
+  id: string;
+  /** Cumle ici bicim: "grup dersleri, kontenjan ve yoklama" */
+  label: string;
+  /**
+   * Modul duzeyindeki kalemin PRODUCT_STATUS.modules cumlesinde gectigi kisa
+   * ad. Modul olmayan kalem (mobil uygulama, tekil davranis) bu alani
+   * tasimaz: listede gorunur, modul cumlesinde sayilmaz.
+   */
+  modul?: string;
+};
+
+export const STAGE_LABEL: Record<CapabilityStage, string> = {
+  simdi: "Bugün var",
+  yolda: "Yolda",
+  sonra: "Yol haritasında",
+};
+
+export const CAPABILITIES: Record<CapabilityStage, Capability[]> = {
+  simdi: [
+    { id: "takvim-rezervasyon", label: "takvim, rezervasyon ve bekleme listesi", modul: "randevu" },
+    { id: "grup-dersleri", label: "grup dersleri, kontenjan ve yoklama", modul: "grup dersleri" },
+    { id: "uyelik-paket", label: "üyelik, seans paketi ve kalan hak", modul: "üyelik ve paket" },
+    { id: "finans-ciro", label: "finans, ciro, kalan borç ve iade", modul: "finans ve ciro" },
+    {
+      id: "cok-sube-cockpit",
+      // Sablonlar urunde var ve panelde secilebiliyor; yetkinin GERI ALINMASI
+      // yok (revoke HTTP ucu v1.5'e ertelendi) — o kalem "yolda"da.
+      label: "çok şube cockpit ve üç yetki şablonu (patron, şube müdürü, muhasebe)",
+      modul: "çok şube cockpit",
+    },
+    { id: "antrenor-performansi", label: "antrenör performansı", modul: "antrenör performansı" },
+    { id: "diyetisyen-modulu", label: "diyetisyen modülü", modul: "diyetisyen modülü" },
+    { id: "raporlar", label: "raporlar, XLSX, CSV ve PDF", modul: "raporlar" },
+    {
+      id: "bildirim-duyuru",
+      // Bekleme listesi bildirimi ve toplu duyuru urunde var; UYELIK BITISI
+      // push'u ve KAMPANYA yok — ikisi de "yolda"da.
+      label: "push bildirim, bekleme listesinden yer açıldı bildirimi ve toplu duyuru",
+      modul: "bildirimler",
+    },
+    { id: "mobil-uygulama", label: "üye ve antrenör mobil uygulaması" },
+    {
+      id: "yoklama-duzeltme",
+      label: "yoklama düzeltme pencereleri: yönetim bu ay ve önceki ay, antrenör 48 saat",
+    },
+    { id: "aktiflik-serisi", label: "haftalık aktiflik serisi" },
+  ],
+  yolda: [
+    { id: "kampanya", label: "kampanya ve pazarlama derinleşmesi" },
+    { id: "gelismis-raporlama", label: "gelişmiş raporlama" },
+    { id: "churn-paneli", label: "churn ve risk paneli" },
+    // Asagidaki dordu B-029'un olctugu karsiliksiz iddialardir. Urunun KENDI
+    // kaydi bunlari erteliyor: Uye 360 tam fazi (W8), iptal esigi v1.5 adayi,
+    // uyelik bitisi bildirimi churn panelinin ardina birakilmis, revoke ucu
+    // v1.5'e ertelenmis. Site bunlari "bugun var" diye anlatamaz.
+    {
+      id: "uye360-tam",
+      label: "Üye 360'ta ölçüm grafiği ve diyetisyen notunun tek ekranda toplanması",
+    },
+    { id: "iptal-esigi-ayari", label: "iptal eşiğinin kulüp tarafından ayarlanabilmesi" },
+    { id: "uyelik-bitis-bildirimi", label: "üyelik bitişine yaklaşan üyeye bildirim" },
+    { id: "yetki-geri-alma", label: "şube yetkisinin panelden geri alınması" },
+  ],
+  sonra: [
+    { id: "online-odeme", label: "online ödeme" },
+    { id: "qr-turnike", label: "QR ve turnike ile giriş" },
+    { id: "saglik-entegrasyonu", label: "Apple Health ve Google Fit" },
+    { id: "yapay-zeka-analiz", label: "yapay zekâ destekli gelişim ve beslenme analizi" },
+    { id: "kurumsal-uyelik", label: "kurumsal üyelik" },
+  ],
+};
+
+/** Turkce buyutme: "iptal" → "İptal". Locale verilmezse "Iptal" olurdu. */
+function buyutTr(s: string): string {
+  return s.charAt(0).toLocaleUpperCase("tr") + s.slice(1);
+}
+
+/** "a, b ve c" — tuketicilerin dordu de kalemleri boyle bagliyordu. */
+function sirala(parcalar: string[]): string {
+  if (parcalar.length < 2) return parcalar[0] ?? "";
+  return `${parcalar.slice(0, -1).join(", ")} ve ${parcalar[parcalar.length - 1]}`;
+}
+
+/** Liste basligi: "grup dersleri, ..." → "Grup dersleri, ..." */
+export function capabilityTitle(c: Capability): string {
+  return buyutTr(c.label);
+}
+
+/**
+ * Kademeyi duzyazida sayar. NOKTA EKLEMEZ — cagri yeri kendi cumlesini kurar
+ * (kimi yerde nokta, kimi yerde "... yol haritasinda." eki geliyor).
+ *
+ * "simdi" BILINCLE disarida (olculdu, TASK-2.08): o kademenin etiketleri kendi
+ * iclerinde virgul tasiyor ("takvim, rezervasyon ve bekleme listesi") ve
+ * virgulle baglandiklarinda cumle okunamaz hale geliyor. O kademenin duzyazi
+ * evi moduleProse(); kademeyi liste olarak gostermek isteyen CAPABILITIES.simdi
+ * + capabilityTitle() kullanir. Yeni bir kademe duzyaziya acilacaksa once
+ * etiketlerinden virgul cikarilir — kapisi capabilities testindedir.
+ */
+export function capabilityProse(stage: Exclude<CapabilityStage, "simdi">): string {
+  return buyutTr(sirala(CAPABILITIES[stage].map((c) => c.label)));
+}
+
+/** "simdi" kademesinin modul duzeyli kalemleri — PRODUCT_STATUS.modules bunu okur. */
+export function moduleProse(): string {
+  return buyutTr(
+    sirala(CAPABILITIES.simdi.flatMap((c) => (c.modul ? [c.modul] : []))),
+  );
+}
+
+/** Kalemi id'siyle getirir; bilinmeyen id derleme degil calisma hatasi verir. */
+export function capability(id: string): Capability {
+  for (const stage of Object.keys(CAPABILITIES) as CapabilityStage[]) {
+    const hit = CAPABILITIES[stage].find((c) => c.id === id);
+    if (hit) return hit;
+  }
+  throw new Error(`Bilinmeyen yetenek kalemi: ${id}`);
+}
 
 export type Benefit = { title: string; body: string; icon: string };
 

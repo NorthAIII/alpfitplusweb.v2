@@ -17,11 +17,16 @@
 - Fiyat rakamı (1500, 1200, 3000, 15 gün) yalnız `pricing.ts` içinde yazılıdır; bileşenler ve `chat.ts` fonksiyondan hesaplar
 - Rakip adı `src/` altında hiçbir dosyada geçmez
 - Fiyat kıyası (`karsilastirma.ts`) yöntem + erişim tarihi taşır
+- **Yetenek/yol haritası ayrımı yalnız `product.ts` → `CAPABILITIES` içinde tanımlıdır** (TASK-2.08); "bugün var" kademesine yalnız ürün koduna (`../Alpfit.v1`) karşı doğrulanmış kalem girer, karşılığı ölçülemeyen iddia "yolda" kademesinde durur. Kapı: `tests/capabilities.test.ts`
+- **`PRODUCT_STATUS.modules` elle yazılmaz**, "bugün var" kademesinin modül düzeyli kalemlerinden türer (`moduleProse()`)
+- Yol haritası kalemleri sabit **dışında** listelenmez; `grep` ile teyit edilir — tüketicilerin bağlanması TASK-2.10/2.11'in işidir (bu task kapanırken sabiti atlayan 17 çağrı satırı / 6 dosya ölçüldü, kapanış ölçütü o sayıdır)
 
 **Bağımlılık:** Yok
 
 **Edge Case'ler:**
 - Fiyat değiştiğinde `chat.ts` cevapları da değişmeli — fonksiyon çağrısıyla otomatik, sabit metin yazılmaz
+- Kademe etiketleri **cümle-içi** biçimde saklanır; başlık `capabilityTitle()` ile türer (ters yön "QR" ve "Apple Health"i bozar). Türkçe büyütme şart: `iptal` → `İptal`
+- `capabilityProse` "simdi" kademesini **tip düzeyinde** kabul etmez — o kademenin etiketleri kendi içlerinde virgül taşıyor, virgülle bağlanınca cümle okunamaz hale geliyor (ölçüldü)
 - Sora'da ₺ yok; fiyat biçimlendirme (`tl()`) Inter yedeğine düşer — `STYLE-GUIDE.md`
 
 ---

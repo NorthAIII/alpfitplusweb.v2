@@ -29,7 +29,8 @@
 
 | İddia | Tek kaynak | Kural |
 |---|---|---|
-| Ürün durumu (pilot) | `src/content/site.ts` → `PRODUCT_STATUS` | Pilot cümlesi başka hiçbir yerde **yeniden yazılmaz**; bileşenler bu sabiti okur |
+| Ürün durumu (pilot) | `src/content/site.ts` → `PRODUCT_STATUS` | Pilot cümlesi başka hiçbir yerde **yeniden yazılmaz**; bileşenler bu sabiti okur. `modules` cümlesi elle yazılmaz, yetenek listesinden türer |
+| Yetenek ve yol haritası ("bugün var / yolda / yol haritasında") | `src/content/product.ts` → `CAPABILITIES` | Ayrım başka hiçbir yerde elle yazılmaz. **"Bugün var" kademesine yalnız ürün koduna (`../Alpfit.v1`) karşı doğrulanmış kalem girer**; karşılığı ölçülemeyen iddia "yolda"da durur. Kapı: `tests/capabilities.test.ts` |
 | Fiyat, kurulum, deneme süresi, dâhil olanlar | `src/content/pricing.ts` → `PRICING`, `INCLUDED`, `monthlyFor()` | Rakam sadece burada; bileşen ve chat ağacı fonksiyondan hesaplar |
 | Karşılaştırma yöntemi ve tarihi | `src/content/karsilastirma.ts` | Yöntem + erişim tarihi zorunlu, ad yok |
 | Chat cevapları | `src/content/chat.ts` | Aynı sınır; model bağlandığında bu ağaç sistem talimatının bilgi tabanı olur |
@@ -43,4 +44,4 @@ Bugün elle: `render-product.mjs` görsel sızıntıyı keser; metin sızıntıs
 
 ---
 
-**Son Güncelleme:** 2026-09-11 — Tablo CLAUDE.md, README.md ve site.ts başlığından tek eve taşındı.
+**Son Güncelleme:** 2026-09-23 — TASK-2.08: Tek Kaynaklar'a yetenek/yol haritası satırı eklendi (`product.ts` → `CAPABILITIES`); `PRODUCT_STATUS.modules` artık o listeden türüyor.

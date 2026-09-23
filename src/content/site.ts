@@ -4,6 +4,8 @@
  * Dayanak: alpfit-plus-satis/rekabet/ozet.md + fiyat/model.md
  */
 
+import { moduleProse } from "./product";
+
 export const SITE = {
   name: "Alpfit Plus",
   domain: "alpfitplus.com",
@@ -34,11 +36,22 @@ export const NAV = [
 /**
  * Urunun bugunku durumu — TEK kaynak. Sitede pilot iddiasi baska bir cumleyle
  * yazilmaz. Satis dosyasinin siniri: "canli / sahada kullaniliyor" DENMEZ.
+ *
+ * `modules` artik elle yazilmiyor: "bugun var" kademesinin MODUL duzeyli
+ * kalemlerinden turuyor (product.ts → CAPABILITIES). Eski elle yazilmis cumle
+ * urunun on modulunun sekizini sayiyordu; turetilmis hali dokuzu sayar —
+ * "antrenor performansi" eksikti ve urunde karsiligi olculdu
+ * (../Alpfit.v1: routes/finance-trainer-performance.ts, TrainerPerformancePage.tsx).
+ * "Uye 360" bilincle DISARIDA: ekran var ama olcum grafigi ve diyetisyen notu
+ * urunun kendi "Yakinda" kutusunda (B-029) — o kalem "yolda" kademesinde.
+ *
+ * `short` ("Pilot aşamada") 2026-09-23'te SILINDI: hic tuketicisi yoktu ve
+ * planlanmiyordu; pilot iddiasini `sentence` tasiyor (karar: docs/DECISIONS.md).
+ * `version` KALDI — "v1 hazir" bugun uc yerde elle yazili (chat.ts, faq.ts,
+ * FounderProgram.tsx) ve TASK-2.10/2.11 onlari buraya baglayacak.
  */
 export const PRODUCT_STATUS = {
   version: "v1",
-  short: "Pilot aşamada",
   sentence: "Şu anda bir stüdyoda pilot olarak test ediliyor.",
-  modules:
-    "Randevu, grup dersleri, üyelik ve paket, finans ve ciro, çok şube cockpit, raporlar, diyetisyen modülü ve bildirimler.",
+  modules: `${moduleProse()}.`,
 } as const;
