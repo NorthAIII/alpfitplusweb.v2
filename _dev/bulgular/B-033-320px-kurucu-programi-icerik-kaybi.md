@@ -61,4 +61,23 @@ STYLE-GUIDE bu tuzağı **zaten kayıtlı** tutuyor (Düzen Tuzakları #2) ve "m
 
 ## Çözüm Kaydı
 
-—
+**Birinci kalem (FounderProgram) kapandı — TASK-3.14, 2026-09-24.** İki düzeltme birlikte uygulandı: `Button.tsx` temel sınıfında `whitespace-nowrap` → **`sm:whitespace-nowrap`**, `FounderProgram.tsx` ızgara kabının iki çocuğuna **`min-w-0`**. Kapı (`mobile-audit.mjs`) `TOPLAM SORUN` **285 → 266**; @320 kırpılmış metin **19 → 0**, en ağır **70 px → 0**; @390 zaten 0 idi ve 0 kaldı. Kapsam tabanlarının hiçbiri oynamadı (16 rota · 2038 metin elemanı · 289 kritik hedef · 5 kaydırılabilir kap).
+
+⚠️ **Bu atomun iki farklı sayım tanımı var, ikisi de bu turda yeniden ölçüldü.** Yukarıdaki Gözlem *"18 metin düğümü"*, bisect ise *"8 gövde düğümü / 66 px"* diyor. Kapının seçtiği tanım (**doğrudan metin taşıyan elemanın kutusu**, TASK-3.07'de üç aday yan yana koşularak seçildi) bugün **19 / 70 px** veriyor; **metin menzili** tanımı **9 / 66 px**. Zoom ayağı da aynı çiftle ölçüldü (320×256, %400): kapı tanımı **19 → 0**, menzil tanımı **9 → 0**. Yani atomun *"8"* rakamı bugün **9**'dur (66 px değişmedi) — kayıttan bu yana bir düğüm daha kapsama girmiş.
+
+⚠️ **Kök neden zincirinin sıralaması düzeltildi.** Atom da task dokümanı da kırpmayı bitirenin `min-w-0` olduğunu söylüyordu. İzolasyon ölçümü (enjekte, `/` @320) tersini gösterdi:
+
+```
+taban          → 19 kırpma · track 370 · kart min-content 370 · buton 314 (nowrap)
+min-w-0 yalnız →  0 kırpma · track 280 · kart min-content 370 · buton kutusu 224 ama içerik 243  ← ETİKET TAŞIYOR
+nowrap  yalnız →  0 kırpma · track 280 · kart min-content 222 · buton 224/224, iki satır
+ikisi birden   →  nowrap ile BİREBİR aynı
+```
+
+Yani `min-w-0` tabanın *geçişini* kesiyor, `nowrap`'in kalkması *tabanın kendisini* düşürüyor (370 → 222). Atomun *"yalnız ilki uygulanırsa etiket buton kutusundan taşar"* uyarısı **doğrulandı** (taşma 19 px).
+
+**Sınıfın kalanı tarandı:** 16 rota × 8 genişlik (320 · 390 · 412 · 640 · 768 · 844 · 1024 · 1440). Düzeltmeden sonra dikey taşma **0**, yatay taşma **0**; sarma 320 px'te 13, 390 px'te 1, kalan altı genişlikte **0**. Atomun saydığı 240-247 px'lik beş butonun hiçbiri dolgulu bir kaba girmiş değil — tek kalem bu CTA idi.
+
+**Yan bulgu:** aynı butonun WhatsApp ikonu 320 px'te **1,00 px**'e eziliyordu (`shrink-0` yok); düzeltmeden sonra **16,31 px** (doğal boy 18). Kalan sıkışma `BULGULAR.md` → Gelen Kutusu, `[TASK-3.14]`.
+
+**İkinci kalem açık:** `Roles.tsx:47` sekme şeridi (320 **ve** 390 px'te ihlal) → **TASK-3.15**. Atom bu yüzden arşive taşınmadı.

@@ -35,8 +35,14 @@ export function FounderProgram() {
       <div className="pointer-events-none absolute inset-0 bg-linegrid opacity-[0.04]" aria-hidden />
 
       <Container size="wide" className="relative">
+        {/* min-w-0 SART: izgara ogesinin varsayilani min-width:auto'dur ve
+            icerigin min-content'inin altina inmeyi reddeder. `lg:` altinda tek
+            sutunlu bu izgarada durum karti (p-7 + nowrap CTA) track'i 370 px'e
+            kilitliyor, bolumun overflow-hidden'i da 320 px'te sagdan 70 px
+            kesiyordu (B-033). `lg:grid-cols` zaten minmax(0,...) ile korunuyor;
+            eksik olan dar genislikteki ortuk track'ti. (TASK-3.14) */}
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:gap-16">
-          <div>
+          <div className="min-w-0">
             <SectionHead
               tone="light"
               label="Kurucu Programı"
@@ -72,7 +78,7 @@ export function FounderProgram() {
           </div>
 
           {/* durum karti */}
-          <Reveal delay={110}>
+          <Reveal delay={110} className="min-w-0">
             <div className="rounded-lg bg-white/6 p-7 ring-1 ring-white/12 backdrop-blur-sm sm:p-8">
               <p className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-sage-br">
                 Ürün bugün nerede

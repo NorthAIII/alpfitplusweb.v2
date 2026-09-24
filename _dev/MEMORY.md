@@ -7,8 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.13: iki mevcut atom genişletildi, **yeni dosya açılmadı, index'e satır eklenmedi**. (1) Tarayıcı ölçümü atomuna: erişilebilirlik ağacı `page.accessibility` ile alınamıyor (API kaldırılmış), CDP `Accessibility.getFullAXTree` kullanılır — dönen dizi belge sırasında değildir ve `aria-hidden` alt ağacı `ignored` işaretlemez, **budar**. (2) İddia/çapa atomuna: "görsel bozulmadı" ölçümünün **geri alma** yöntemi — "önce" derlemesi elde yokken kare farkı, değişikliği tarayıcıda geri alarak alınır; derleme kimliği gürültüsü de böylece dışarıda kalır, ve kare BOYU da karşılaştırılır.
-
+**Son Güncelleme:** 2026-09-24 — TASK-3.14: tarayıcı ölçümü atomuna tek bölüm eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: "görünüş bozulmadı" ölçümünün hakemi kare değil **DOM geometrisidir** — bir bölüm **kesirli** (65,5 px) uzayınca altındaki her metin satırı yarım piksel kayar ve kaydırmalı kıyasta bile "farklı" görünür; `locator.screenshot()` ile alınan eleman karesi de aynı nedenle geometrisi birebir aynı bir butonu %21 farklı gösterir. Dokunulmamış genişlikte ölçüt yine de karedir ve **0** olmalıdır.
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---

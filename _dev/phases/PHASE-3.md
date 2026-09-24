@@ -167,7 +167,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.11 | TASK-3.11 | ✅ Tamamlandı | Gradyanla boyanmış metnin durakları koyulaştırılır |
 | 3.12 | TASK-3.12 | ✅ Tamamlandı | Desenli zemin ve kalan iki kontrast yüzeyi |
 | 3.13 | TASK-3.13 | ✅ Tamamlandı | 404 / çöküş — dev rakam dekoratif olur, başlık hiyerarşisi düzelir |
-| 3.14 | TASK-3.14 | ⬜ Bekliyor | 320 px'te kesilen içerik ve işlev — `Button` tabanı + `FounderProgram` ızgarası |
+| 3.14 | TASK-3.14 | ✅ Tamamlandı | 320 px'te kesilen içerik ve işlev — `Button` tabanı + `FounderProgram` ızgarası |
 | 3.15 | TASK-3.15 | ⬜ Bekliyor | Roller — sekme şeridi 320 px'te sığar, görsel eşlemesi düzelir |
 | 3.16 | TASK-3.16 | ⬜ Bekliyor | Mobilde ilk ekranda demoya çıkan bir yol — menüye "Demo", yüzen düğme erken |
 | 3.25 | TASK-3.25 | ⬜ Bekliyor | Form 503 verdiğinde WhatsApp bağlantısı yazılanları taşır |

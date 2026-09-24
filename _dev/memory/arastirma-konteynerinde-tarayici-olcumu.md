@@ -520,3 +520,37 @@ ağacıyla sınırlamaktır.
 edilen bir metin ağaçta `ignored: true` bir düğüm olarak da **durmaz**, hiç
 düğüm üretmez — "gizlendi mi" sorusu `nodes.filter(ad === "404").length === 0`
 ile ölçülür, `ignored` bayrağıyla değil.
+
+## Kare farkının hakemi DOM geometrisidir — kesirli öteleme her metin satırını "değişmiş" gösterir (TASK-3.14, 2026-09-24)
+
+"Görünüş bozulmadı" iddiası önce/sonra kare farkıyla ölçülür (T12, T13). Ama
+**değişen bir bölümün ALTINDAKİ içerik kare farkında da değişmiş görünür** ve
+bunun iki ayrı nedeni vardır; ikisi de ölçüldü:
+
+1. **Öteleme.** Bölüm uzayınca altındaki her şey aşağı kayar. Çare kaydırmalı
+   kıyastır: `once[y]` ile `sonra[y + Δ]` karşılaştırılır.
+2. **Ötelemenin KESİRLİ olması.** Bölüm 65,5 px uzadıysa alttaki metin yarım
+   piksel kayar ve **her glif satırı farklı rasterize olur**. Kaydırmalı kıyas
+   bile temizlenmez: 17-25 satırlık bantlar hâlinde ~1000-1700 farklı piksel
+   çıkar (satır yüksekliği kadar = imza budur). Arka planlar aynı kalır, yalnız
+   yazı satırları farklıdır.
+
+⚠️ **Tam sayı sanılan boy farkı kesirli olabilir** — `Math.round`'lu bir ölçüm
+"66" der, gerçek değer **65,5**'tir. Δ'yı `getBoundingClientRect().height` ile
+**ondalıklı** oku, yoksa yukarıdaki tuzağı hiç göremezsin.
+
+**Hakem karedir değil, DOM geometrisidir.** Her elemanın `left/width/height` ve
+satır kutusu sayısı iki hâlde toplanıp indeks indeks karşılaştırılırsa soru
+kesin cevaplanır: *"ne değişti"* ile *"ne kaydı"* ayrışır (ölçüldü: 1396
+elemanın 46'sı değişmiş, 45'i tek bir bölümün içinde, 46'ncısı `<main>`'in
+boyu). Kare farkı bu ayrımı yapamaz.
+
+⚠️ **`locator.screenshot()` ile alınan ELEMAN karesi de kirlenir.** Eleman
+görünüre kaydırılarak rasterize edilir; sayfa boyu iki hâlde farklıysa eleman
+farklı yarım-piksel konumuna düşer ve **geometrisi birebir aynı olan** bir
+buton %21 farklı piksel verir (ölçüldü). Eleman karesi ancak geometri eşitliği
+ayrıca gösterildikten sonra delil sayılır.
+
+**Değişmemesi gereken yüzeyde ölçüt yine de karedir ve kesindir:** dokunulmamış
+genişliklerde tam sayfa farkı **0** çıkmalıdır (bu turda 4 sayfa / 40 M piksel,
+sayfa boyları da birebir). Sıfır olmayan bir rakam orada mazeret kabul etmez.
