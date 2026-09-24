@@ -16,6 +16,15 @@
  * kondugunda olculen eleman 157 -> 0'a duserken kapi yine "TOPLAM SORUN: 0"
  * diyordu (B-031). Yontem `../lib/piksel-kontrast.mjs`'te.
  *
+ * GRADYANLA BOYANMIS METIN KENDI DALIDIR (TASK-3.05). `background-clip: text`
+ * ile boyanan metnin glif dolgusu seffaftir: ne CSS bir metin rengi verir ne de
+ * kare farki maske uretir. Bu sinif "olculemeyen"e ATILMAZ — ikinci kare onun
+ * arka planini kaldirir, renk gradyanin EN ACIK DURAGINDAN okunur ve zemine
+ * karsi ayni esikle sinanir. Sonuc ayri bir satirda raporlanir, ihlalleri
+ * `[gradyan]` isaretiyle basilir ve kapiyi olagan yoldan dusurur; kumenin
+ * kendisi ayrica esiklenir (BEKLENEN_GRADYAN) -- yoksa korlesen bir secici
+ * "0 buldum" deyip kapiyi yesil birakirdi.
+ *
  * Iki kosum kosulu, ikisi de TERCIH DEGIL DOGRULUK KOSULU:
  *   1. Sayfa EKRAN EKRAN gezilir (pencerenin %90'i adimlarla). Tek ekran olcumu
  *      B-032'nin kalemlerinin HICBIRINI gormuyor — 1440 px'te ilk ekranda ihlal
@@ -30,6 +39,7 @@ import { chromium } from "playwright";
 import { rotalar, BEKLENEN_ROTA } from "../lib/rotalar.mjs";
 import {
   ADIM_ORANI,
+  BEKLENEN_GRADYAN,
   KAYDIRMA_CSS,
   adaylariTopla,
   adimiIsle,
@@ -80,7 +90,8 @@ let totalIssues = 0;
 let visited = 0;
 let measuredTotal = 0;
 let adimToplam = 0;
-const kovaToplam = { yapiskan: 0, gradyan: 0, gorunmez: 0, ekranDisi: 0, kalan: 0 };
+const kovaToplam = { yapiskan: 0, gorunmez: 0, ekranDisi: 0, kalan: 0 };
+const gradyanToplam = { olculen: 0, esikAlti: 0 };
 const gezilemeyen = [];
 const olcumArizasi = [];
 const kalanOrnekleri = [];
@@ -149,11 +160,13 @@ for (const path of PAGES) {
     continue;
   }
 
-  const { ihlaller, olculen, kovalar, kalanlar } = rotaSonucu(kayit);
+  const { ihlaller, olculen, gradyan, kovalar, kalanlar } = rotaSonucu(kayit);
 
   visited++;
   adimToplam += adim;
   measuredTotal += olculen;
+  gradyanToplam.olculen += gradyan.olculen;
+  gradyanToplam.esikAlti += gradyan.esikAlti;
   for (const k of Object.keys(kovaToplam)) kovaToplam[k] += kovalar[k];
   if (kovalar.kalan) kalanOrnekleri.push(`${path}:${kovalar.kalan}`);
 
@@ -166,14 +179,17 @@ for (const path of PAGES) {
   );
   console.log(`   adım:${adim} · ölçülen:${olculen} eleman`);
   console.log(
-    `   ölçülemeyen → yapışkan borcu:${kovalar.yapiskan} · gradyan metin:${kovalar.gradyan} · görünmez:${kovalar.gorunmez} · ekran dışı:${kovalar.ekranDisi} · kalan:${kovalar.kalan}`,
+    `   gradyan metin: ${gradyan.olculen} ölçüldü · ${gradyan.esikAlti} eşik altı`,
+  );
+  console.log(
+    `   ölçülemeyen → yapışkan borcu:${kovalar.yapiskan} · görünmez:${kovalar.gorunmez} · ekran dışı:${kovalar.ekranDisi} · kalan:${kovalar.kalan}`,
   );
   for (const t of kalanlar) console.log(`   ? ölçülemedi (kalan) — ${t}`);
   // Teshis satiri p02 ile birlikte min ve med'i de basar: p02 yargi degeridir
   // ama desenli zeminde yargiyi yumusatmak icin otekiler gerekir (B-032).
-  for (const x of ihlaller.slice(0, 14)) {
+  for (const x of ihlaller.slice(0, 20)) {
     console.log(
-      `   ✗ p02 ${x.p02}:1 (gereken ${x.gereken}) · min ${x.min} · med ${x.med} · ${x.px}px/${x.ag} · glif ${x.n}px — "${x.t}"`,
+      `   ✗ ${x.gradyan ? "[gradyan] " : ""}p02 ${x.p02}:1 (gereken ${x.gereken}) · min ${x.min} · med ${x.med} · ${x.px}px/${x.ag} · glif ${x.n}px — "${x.t}"`,
     );
   }
   await ctx.close();
@@ -201,13 +217,24 @@ if (kovaToplam.kalan > 0) {
     `${kovaToplam.kalan} eleman ölçülemedi ve hiçbir muafiyete girmiyor (${kalanOrnekleri.join(", ")})`,
   );
 }
+// Gradyan dalinin kendi kapsam esigi: dal kumesini bir TARAMADAN turetiyor,
+// yani secici korlestiginde "0 buldum" deyip sessizce gecerdi. Taban ust sinir
+// degildir (gerekce: lib -> BEKLENEN_GRADYAN).
+if (gradyanToplam.olculen < BEKLENEN_GRADYAN) {
+  kapsamSorunlari.push(
+    `gradyanla boyanmış metin ${gradyanToplam.olculen} ölçüldü < beklenen taban ${BEKLENEN_GRADYAN} — seçici körleşmiş olabilir`,
+  );
+}
 
 const sure = Math.round((Date.now() - baslangic) / 1000);
 console.log(
   `\nKAPSAM: ${visited} rota gezildi · ${adimToplam} ekran adımı · ${measuredTotal} eleman ölçüldü · ${sure} sn`,
 );
 console.log(
-  `ÖLÇÜLEMEYEN: yapışkan katman borcu:${kovaToplam.yapiskan} (B-063 — bu fazın kapsamı dışı) · gradyan metin:${kovaToplam.gradyan} (TASK-3.05) · görünmez:${kovaToplam.gorunmez} · ekran dışı:${kovaToplam.ekranDisi} · kalan:${kovaToplam.kalan}`,
+  `GRADYAN METİN: ${gradyanToplam.olculen} ölçüldü (taban ${BEKLENEN_GRADYAN}) · ${gradyanToplam.esikAlti} eşik altı`,
+);
+console.log(
+  `ÖLÇÜLEMEYEN: yapışkan katman borcu:${kovaToplam.yapiskan} (B-063 — bu fazın kapsamı dışı) · görünmez:${kovaToplam.gorunmez} · ekran dışı:${kovaToplam.ekranDisi} · kalan:${kovaToplam.kalan}`,
 );
 console.log(`${visited} sayfada TOPLAM SORUN: ${totalIssues}`);
 

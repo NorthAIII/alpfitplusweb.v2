@@ -20,6 +20,26 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-24 — Gradyanla boyanmış metin muafiyet kovası değil, ölçülen bir daldır; yargı değeri gradyanın en açık durağıdır
+
+**Bağlam:** Bir gün önceki ölçüm sözleşmesi (aşağıdaki kayıt) `gradyan metin`i **"adı konmuş, sahibi belli bir muafiyet kovası"** olarak sabitlemişti: raporlanır, kapıyı düşürmez. İcra sırasında (TASK-3.05) bu fıkra düştü. Sebep teknik: `background-clip: text` ile boyanan metnin glif dolgusu **zaten** şeffaf olduğu için TASK-3.04'ün gizleme kuralı onu hiç değiştirmiyor — iki kare birebir aynı çıkıyor ve glif maskesi boş kalıyor. Ama boyayan şey metnin rengi değil, elemanın **gliflere kırpılmış arka planı**: o kaldırılınca maske doğuyor ve sınıf ölçülebilir hâle geliyor.
+
+**Karar:**
+- **Gradyan metin ölçülür ve eşik altındaysa kapıyı düşürür.** `ÖLÇÜLEMEYEN` satırı beş kovadan **dörde** iner (`yapışkan borcu` · `görünmez` · `ekran dışı` · `kalan`); gradyan metin ayrı bir satırda `N ölçüldü · M eşik altı` olarak raporlanır ve ihlalleri `[gradyan]` işaretiyle **aynı** `TOPLAM SORUN` sayısına girer. Ayrı bir çıkış yolu açılmaz: aynı WCAG kuralı, aynı eşik, yalnız rengin kaynağı farklı.
+- **Yargı değeri gradyanın kaynağındaki EN AÇIK DURAKTIR** — boyanan pikselin kendisi değil. Zemin yine glif maskesinin altındaki gerçek pikselden okunur, ata opaklık çarpımı durak alfasıyla birlikte uygulanır.
+- **Sınıfın ölçütü `background-clip: text`tir, şeffaf metin rengi değil.** Clip'siz şeffaf metin `görünmez` kovasına gider.
+- **Dalın kendi kapsam tabanı vardır** (`BEKLENEN_GRADYAN`, bugün 19; `BEKLENEN_ROTA` ile aynı sözleşme — taban, üst sınır değil). Durağı okunamayan bir gradyan `kalan` kovasına düşer, yani kapıyı düşürür ve eleman adıyla basılır.
+
+**Gerekçe:**
+- **"En açık durak" bilinçli olarak katı ölçüttür ve bu bir karardır, betik ayarı değil** (PHASE-3 → Teknik Kararlar bunu yöntem olarak seçmişti; burada sabitleniyor). Gradyan boyunca metnin bir kısmı daha koyu boyanır, ama okunabilirliği **en kötü nokta** belirler. Ölçüm devralınan rakamları birebir yeniden üretti: `sage-br` canvas üstünde **1,74:1**, canvas-soft üstünde **1,64:1** (B-032 kalem 3'ün kayıtlı değerleri).
+- **Muafiyet olarak bırakmak, düzeltmeyi görünmez kılardı.** TASK-3.11 durakları koyulaştırdığında kapı hiçbir şey söylemezdi — ne kırmızıydı ne yeşile dönerdi. Ölçülen bir dal, düzeltmenin kendi kanıtını üretir.
+- **Üçüncü bir ekran görüntüsü alınmadı; ikinci karenin kuralı genişletildi.** Alternatif (gradyan kalemler için ayrı bir kare çifti) reddedildi: adım başına %50 daha fazla kare demekti. Bedeli, gizleme kuralının artık iki iş yapması — ölçümle kapatıldı: dal açıldıktan sonra ölçülen eleman (**1835**), ekran adımı (**105**), süre (**66 sn**) ve kontrast ihlali (**39**) sayılarının hepsi TASK-3.04 tabanından **sapmadı**.
+- **Kapsam tabanı olmadan dal fail-open'dı.** Kümesini bir taramadan türeten her dedektör, seçici körleştiğinde "0 buldum" deyip yeşil kalır. Sonda ile ölçüldü: hiç gradyan metin içermeyen bir hedefte kapı **TOPLAM SORUN 0 olduğu hâlde** çıkış kodu 1 veriyor.
+
+**Etki:** `research/lib/piksel-kontrast.mjs` + `research/scripts/a11y.mjs`. Aşağıdaki 2026-09-24 kaydının **"gradyan metin adı konmuş bir muafiyettir — raporlanır, düşürmez"** fıkrası bu kararla geçersiz kılındı; o kaydın diğer hükümleri (yargı değeri `p02`, `kalan`ın kırmızıya döndürmesi, iki geçerlilik koşulu) aynen yürürlükte.
+
+---
+
 ### 2026-09-24 — Piksel kontrast ölçümünün okunma sözleşmesi: yargı değeri `p02`, ölçülemeyenin üç kovası, ve iki geçerlilik koşulu
 
 **Bağlam:** Bir gün önceki karar yöntemi seçmişti (piksel ölçümü, fg CSS'ten, yayın kopyası, hareket azaltma). İcra sırasında (TASK-3.04) yöntemin **okunmasına** dair üç şey daha sabitlenmek zorunda kaldı: her eleman artık tek bir sayı değil bir **dağılım** üretiyor (bir metnin binlerce glif pikseli var ve her birinin zemini farklı olabilir), "ölçülemedi" tek bir çöp kutusu olmaktan çıkıp sahibi belli kovalara ayrılıyor, ve ölçümün kendisi iki sessiz zamanlama yarışına açık çıktı. Üçü de **biriken verinin yorumunu** belirliyor: bundan sonra kayda geçen her kontrast rakamı bu sözleşmeye göre okunacak.

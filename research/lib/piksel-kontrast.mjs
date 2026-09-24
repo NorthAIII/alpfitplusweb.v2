@@ -41,8 +41,40 @@ export const ESIK_BUYUK = 3;
 export const esikFor = (px, agirlik) =>
   px >= 24 || (px >= 18.66 && agirlik >= 700) ? ESIK_BUYUK : ESIK_NORMAL;
 
-/** Glif dolgusunu seffaflastiran stil — yalnizca boyama, yerlesim degismez. */
-export const GIZLE_CSS = `*{-webkit-text-fill-color:transparent !important}`;
+/**
+ * Gradyanla boyanmis metnin KAPSAM TABANI (TASK-3.05).
+ *
+ * Bu dal kendi kumesini bir TARAMADAN turetir; tarama korlesirse (nitelik adi
+ * degisir, Tailwind baska bir yazim uretir, secici daralir) dal "0 buldum" der
+ * ve kapi YESIL kalir — "bakmadim" ile "sorun yok" ayni cikti olur. Taban bunu
+ * engeller: bugun olculen 19 eleman (16 rota; `/` 11) altina dusuldugunde kapi
+ * kirmizi doner.
+ *
+ * BEKLENEN_ROTA ile ayni sozlesme: bu bir UST SINIR DEGIL. Gradyan metin
+ * eklenmesi mesrudur ve sayiyi buyutur; metin bilerek SILINIRSE (orn. bir bolum
+ * yeniden tasarlanirken) taban da elle dusurulur — elle dusurulmeden kapi
+ * kirmizi kalir, ki amac odur.
+ */
+export const BEKLENEN_GRADYAN = 19;
+
+/**
+ * Glif dolgusunu seffaflastiran stil — yalnizca boyama, yerlesim degismez.
+ *
+ * Ikinci kural GRADYANLA BOYANMIS metin icindir (TASK-3.05). O metnin glif
+ * dolgusu ZATEN seffaftir: birinci kural onu hic degistirmez, iki kare
+ * arasindaki fark SIFIR cikar ve maske bos kalir. Boyayan sey elemanin
+ * `background-clip: text` ile gliflere kirpilmis ARKA PLANIDIR — maske ancak o
+ * kaldirilinca dogar. `background-color` da birlikte silinir: bg-clip:text
+ * altinda kutu rengi de gliflere kirpilir, yani tek basina birakilirsa maskeye
+ * sizardi.
+ *
+ * Kural yalnizca `adaylariTopla`nin gradyan diye ISARETLEDIGI elemanlara
+ * uygulanir (nitelik oradan gelir), digerlerinin karesine dokunmaz. Kalibrasyon
+ * bunu dogrular: olculen eleman ve ihlal sayilari TASK-3.04 tabanindan sapmaz.
+ */
+export const GIZLE_CSS =
+  `*{-webkit-text-fill-color:transparent !important}` +
+  `[data-pk-grad]{background-image:none !important;background-color:transparent !important}`;
 
 /**
  * Yumusak kaydirmayi kapatan olcum kosmasi.
@@ -132,11 +164,15 @@ export function adimSayisi(belgeBoyu, pencereBoyu) {
  *               adimda yeniden gorunur ve koordinati kayar. OLCUM DISI ve bu
  *               bir BORCTUR (B-063) — bu fazin kapsami degil (kullanici karari,
  *               verify-plan 2026-09-23).
- *   gradyan   — `background-clip:text` ile boyanmis metin; rengi CSS'te YOK,
- *               piksel yontemiyle de olculemez. Kendi dali TASK-3.05'te gelir;
- *               "olculemeyen"e ATILMAZ ki sonraki task onu devralabilsin.
+ *   gradyan   — `background-clip:text` ile boyanmis metin; glif dolgusu seffaf
+ *               oldugu icin CSS bir METIN RENGI vermez. OLCULUR (TASK-3.05):
+ *               renk gradyanin KAYNAGINDAKI EN ACIK DURAKTAN alinir, zemin yine
+ *               gercek pikselden. Kendi dali olarak raporlanir — kova DEGILDIR,
+ *               "olculemeyen"e dusmez.
  *   gorunmez  — ekran okuyucuya ozel (sr-only), etkin opakligi sifira yakin ya
- *               da alani olmayan metin. Gorsel kontrast kavrami uygulanmaz.
+ *               da alani olmayan metin. Glif dolgusu seffaf OLUP `bg-clip:text`
+ *               TASIMAYAN metin de buradadir: hicbir sey boyamaz, yani gorsel
+ *               kontrast kavrami uygulanmaz (olculdu: 16 rotada 0 ornek).
  */
 export function adaylariTopla(ayar) {
   const SECICI = ayar.secici;
@@ -171,6 +207,83 @@ export function adaylariTopla(ayar) {
     cx.fillRect(0, 0, 1, 1);
     const d = cx.getImageData(0, 0, 1, 1).data;
     return [d[0], d[1], d[2], d[3] / 255];
+  };
+
+  // --- gradyan duraklari (TASK-3.05) ---------------------------------------
+  // `background-clip: text` ile boyanan metnin rengi CSS'te YOKTUR (`color`
+  // seffaf) ve piksel farki da bir METIN RENGI vermez — boyayan sey arka
+  // plandir. Olcut arastirmada secildi (PHASE-3 -> Teknik Kararlar): gradyanin
+  // KAYNAGINDAKI EN ACIK DURAK okunur ve zemine karsi sinanir. Bilincli olarak
+  // KATI olcut: gradyan boyunca metnin bir kismi daha koyu boyanir, ama
+  // okunabilirligi en kotu nokta belirler. Yumusatma istegi bir KARARDIR,
+  // betik ayari degil (TASK-3.05 -> Dikkat Noktalari).
+
+  /** Parantez derinligi sifirken bolen ayirici — `rgb(1, 2, 3)` bolunmez. */
+  const bolTopSeviye = (metin, ayracMi) => {
+    const parcalar = [];
+    let derinlik = 0;
+    let bas = 0;
+    for (let i = 0; i < metin.length; i++) {
+      const c = metin[i];
+      if (c === "(") derinlik++;
+      else if (c === ")") derinlik--;
+      else if (derinlik === 0 && ayracMi(c)) {
+        parcalar.push(metin.slice(bas, i));
+        bas = i + 1;
+      }
+    }
+    parcalar.push(metin.slice(bas));
+    return parcalar.map((s) => s.trim()).filter(Boolean);
+  };
+
+  // Tuvale cizip piksel okumak GECERLILIGI olcmez: gecersiz bir deger
+  // `fillStyle`i degistirmeden birakir, yani onceki renk okunur ve
+  // "135deg" siyah bir durak gibi gorunur. Iki farkli sentinel ile ayrisir.
+  const renkGecerli = (metin) => {
+    cx.fillStyle = "#000000";
+    cx.fillStyle = metin;
+    const a = cx.fillStyle;
+    cx.fillStyle = "#ffffff";
+    cx.fillStyle = metin;
+    return a === cx.fillStyle;
+  };
+
+  // Bir durak `<renk> <konum>? <konum>?` seklindedir; konum jetonlari soldan
+  // saga kisaltilarak atilir. Yon/enterpolasyon argumani ("135deg",
+  // "to right in oklab") hicbir prefikste renk olarak cozulmez ve elenir.
+  const duraktanRenk = (arg) => {
+    const jeton = bolTopSeviye(arg, (c) => c === " " || c === "\t" || c === "\n");
+    for (let n = jeton.length; n >= 1; n--) {
+      const aday = jeton.slice(0, n).join(" ");
+      if (renkGecerli(aday)) return toRGBA(aday);
+    }
+    return null;
+  };
+
+  const kanalIsik = (v) => {
+    const x = v / 255;
+    return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+  };
+
+  /** Butun gradyan katmanlarinin duraklari icinde gorece parlakligi en yuksek olan. */
+  const enAcikDurak = (bgImg) => {
+    if (!bgImg || bgImg === "none") return null;
+    let enIyi = null;
+    let enIyiIsik = -1;
+    for (const katman of bolTopSeviye(bgImg, (c) => c === ",")) {
+      const m = /^[\w-]*gradient\(([\s\S]*)\)$/i.exec(katman);
+      if (!m) continue;
+      for (const arg of bolTopSeviye(m[1], (c) => c === ",")) {
+        const renk = duraktanRenk(arg);
+        if (!renk || renk[3] === 0) continue;
+        const l = 0.2126 * kanalIsik(renk[0]) + 0.7152 * kanalIsik(renk[1]) + 0.0722 * kanalIsik(renk[2]);
+        if (l > enIyiIsik) {
+          enIyiIsik = l;
+          enIyi = renk;
+        }
+      }
+    }
+    return enIyi;
   };
 
   // --- ata yuruyusleri memoize edilir (T1'de olculdu: ~2 saat -> 4 dakika) ---
@@ -278,15 +391,50 @@ export function adaylariTopla(ayar) {
     const renk = toRGBA(s.color);
     const dolgu = s.webkitTextFillColor ? toRGBA(s.webkitTextFillColor) : renk;
 
+    // Seffaf glif dolgusu TEK BASINA gradyan demek degildir; ayirt eden
+    // `background-clip: text`tir. Clip'siz seffaf metin hicbir sey boyamaz —
+    // olculur sayilirsa etkin alfa 0 olur, boyanan renk zeminin aynisi cikar ve
+    // kapi 1,0:1 diye SAHTE bir ihlal basar. Olculdu: bugun 16 rotada boyle bir
+    // eleman yok (19'un hepsi clip:text), yani olcut siki tutulabilir.
+    const clip = (s.webkitBackgroundClip || s.backgroundClip || "").trim();
+    const seffafDolgu = dolgu[3] === 0 || renk[3] === 0;
+
     let sinif = "olculur";
     if (alan < MIN_ALAN) sinif = "gorunmez";
     else if (opaklik < MIN_OPAKLIK) sinif = "gorunmez";
-    else if (dolgu[3] === 0 || renk[3] === 0) sinif = "gradyan";
+    else if (seffafDolgu) sinif = clip === "text" ? "gradyan" : "gorunmez";
     else if (yapiskan(el)) sinif = "yapiskan";
 
     const kalem = { k, sinif, t: etiket };
 
-    if (sinif === "olculur") {
+    if (sinif === "olculur" || sinif === "gradyan") {
+      kalem.px = Math.round(parseFloat(s.fontSize) || 16);
+      kalem.ag = parseInt(s.fontWeight, 10) || 400;
+
+      let fg = null;
+      let alfa = 0;
+      if (sinif === "gradyan") {
+        // Nitelik GIZLE_CSS'in kancasidir: ikinci kare bu elemanlarin arka
+        // planini kaldirir, maske ancak boyle dogar.
+        el.setAttribute("data-pk-grad", "");
+        const durak = enAcikDurak(s.backgroundImage);
+        if (durak) {
+          fg = [durak[0], durak[1], durak[2]];
+          alfa = durak[3] * opaklik;
+        } else {
+          // Durak okunamadi: bu bir KOR NOKTADIR, sessiz gecmez — rotaSonucu
+          // onu "kalan" kovasina yazar ve kapi kirmiziya doner.
+          kalem.durakYok = true;
+        }
+      } else {
+        fg = [dolgu[0], dolgu[1], dolgu[2]];
+        alfa = dolgu[3] * opaklik;
+      }
+      if (!fg) {
+        kalemler.push(kalem);
+        continue;
+      }
+
       const dik = [];
       let tam = true;
       for (const g0 of gorunur) {
@@ -307,17 +455,13 @@ export function adaylariTopla(ayar) {
         }
         if (x1 > x0 && y1 > y0) dik.push([x0, y0, x1, y1]);
       }
-      const px = parseFloat(s.fontSize) || 16;
-      const ag = parseInt(s.fontWeight, 10) || 400;
       // Karsilastirma kirpilmis kutu sayisina gore yapilir: ata kirpmasiyla
       // tumuyle yok olmus bir satir kutusu "eksik olcum" sayilmaz.
       const gorunurSayi = gorunur.filter((r) => r.r > r.l && r.b > r.t).length;
       kalem.dik = dik;
       kalem.tam = tam && dik.length === gorunurSayi;
-      kalem.fg = [dolgu[0], dolgu[1], dolgu[2]];
-      kalem.alfa = dolgu[3] * opaklik;
-      kalem.px = Math.round(px);
-      kalem.ag = ag;
+      kalem.fg = fg;
+      kalem.alfa = alfa;
     }
     kalemler.push(kalem);
   }
@@ -417,6 +561,7 @@ export function adimiIsle(kayit, toplam, kareA, kareB, esik = MASKE_ESIGI) {
         t: kalem.t,
         px: kalem.px,
         ag: kalem.ag,
+        durakYok: !!kalem.durakYok,
         gorundu: false,
         tamOranlar: [],   // pencereye tam sigan en iyi adimin olcumu
         kismiOranlar: [],  // hicbir adimda sigmayan metin icin birikim
@@ -424,7 +569,9 @@ export function adimiIsle(kayit, toplam, kareA, kareB, esik = MASKE_ESIGI) {
       };
       kayit.set(kalem.k, d);
     }
-    if (kalem.sinif !== "olculur") continue;
+    // Gradyan kalemleri de burada olculur; tek fark `fg`nin nereden geldigidir
+    // (CSS metin rengi vs. gradyanin en acik duragi — adaylariTopla secer).
+    if (kalem.sinif !== "olculur" && kalem.sinif !== "gradyan") continue;
     if (!kalem.dik || !kalem.dik.length) continue;
 
     d.gorundu = true;
@@ -470,13 +617,21 @@ export function adimiIsle(kayit, toplam, kareA, kareB, esik = MASKE_ESIGI) {
 
 /**
  * Rota kaydini sonuca cevir.
- * @returns {{ihlaller, olculen, kovalar}}
+ * @returns {{ihlaller, olculen, gradyan, kovalar, kalanlar}}
  *   kovalar.kalan — olculmesi gerekirken TEK PIKSEL bile uretmeyen eleman.
  *   Sifir olmayan her deger kapiyi kirmiziya cevirir: "hicbir sey olcmedim"
  *   ile "sorun bulmadim" ayni yesili basmasin (B-030/B-031).
+ *
+ *   gradyan — gradyanla boyanmis metnin KENDI DALI (TASK-3.05): {olculen,
+ *   esikAlti}. Kova DEGILDIR, "olculemeyen" satirina girmez. Ihlalleri
+ *   `ihlaller` icinde `gradyan: true` isaretiyle durur — ayni WCAG kurali,
+ *   ayni esik, yalnizca rengin kaynagi farkli — yani kapiyi normal yoldan
+ *   dusururler. Gradyan kalemi de olculemezse kovasi yine "kalan"dir: adi
+ *   konmus muafiyet degil, kor noktadir.
  */
 export function rotaSonucu(kayit) {
-  const kovalar = { yapiskan: 0, gradyan: 0, gorunmez: 0, ekranDisi: 0, kalan: 0 };
+  const kovalar = { yapiskan: 0, gorunmez: 0, ekranDisi: 0, kalan: 0 };
+  const gradyan = { olculen: 0, esikAlti: 0 };
   const ihlaller = [];
   // "kalan" bir kor noktadir ve kapiyi dusurur — o yuzden SAYI YETMEZ,
   // duzeltilebilmesi icin elemanin kendisi de basilir.
@@ -485,24 +640,33 @@ export function rotaSonucu(kayit) {
 
   for (const d of kayit.values()) {
     if (d.sinif === "yapiskan") { kovalar.yapiskan++; continue; }
-    if (d.sinif === "gradyan") { kovalar.gradyan++; continue; }
     if (d.sinif === "gorunmez") { kovalar.gorunmez++; continue; }
+    if (d.durakYok) {
+      kovalar.kalan++;
+      if (kalanlar.length < 8) kalanlar.push(`${d.px}px "${d.t}" — gradyan durağı okunamadı`);
+      continue;
+    }
     // Tam sigan bir olcum varsa o gecerlidir; yoksa parcali birikim kullanilir.
     const oranlar = d.tamOranlar.length ? d.tamOranlar : d.kismiOranlar;
     if (!oranlar.length) {
       if (d.gorundu) {
         kovalar.kalan++;
-        if (kalanlar.length < 8) kalanlar.push(`${d.px}px "${d.t}"`);
+        if (kalanlar.length < 8) {
+          kalanlar.push(`${d.px}px "${d.t}"${d.sinif === "gradyan" ? " — gradyan" : ""}`);
+        }
       } else kovalar.ekranDisi++;
       continue;
     }
-    olculen++;
     const o = ozet(oranlar);
     const gereken = esikFor(d.px, d.ag);
+    const gradyanMi = d.sinif === "gradyan";
+    if (gradyanMi) gradyan.olculen++;
+    else olculen++;
     if (o.p02 < gereken) {
-      ihlaller.push({ ...o, gereken, px: d.px, ag: d.ag, t: d.t });
+      if (gradyanMi) gradyan.esikAlti++;
+      ihlaller.push({ ...o, gereken, px: d.px, ag: d.ag, t: d.t, gradyan: gradyanMi });
     }
   }
   ihlaller.sort((a, b) => a.p02 - b.p02);
-  return { ihlaller, olculen, kovalar, kalanlar };
+  return { ihlaller, olculen, gradyan, kovalar, kalanlar };
 }

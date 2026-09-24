@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-24 — **TASK-3.04 ✅ kontrast ölçümü piksele taşındı:** kapı artık boyanan gerçek rengi ölçüyor (glif maskesi + zemin pikselden + ata opaklık çarpımı). B-031'in üç kör noktası birden kapandı — `<body>`'ye dekoratif gradyan konduğunda ölçülen eleman **156 → 156** (eski model 157 → **0** yapıyordu). B-032'nin dört kalemi birebir yeniden üretildi (kapanış paragrafı `p02` 3,97 · desenli zemin 4,06 · soluk kartlar 2,52-2,99 · 404 1,12). 16 rota · **105 ekran adımı** · **1835 eleman** · 66 sn · **39 kontrast ihlali**, çıkış **1**; ölçülemeyen artık beş kovada ve yalnız **`kalan` (0)** kapıyı düşürüyor. Kapı üç sondayla sınandı (bozuk girdi 48 sorun · temiz hedef **yeşil/çıkış 0** · metin hiç boyanmıyorsa **ihlal 0 olduğu hâlde kırmızı**) ve iki ardışık tam koşum **birebir aynı** çıktı verdi. Yol boyunca iki sahte-kırmızı arızası ölçülüp kapatıldı: sitenin `scroll-behavior: smooth`'u hareket azaltmada kapanmıyor, ve kare stil değişiminin boyamaya işlenmesini beklemiyordu.
+**Son Güncelleme:** 2026-09-24 — **TASK-3.05 ✅ gradyanla boyanmış metin kendi dalını aldı:** "ölçülemeyen"in beşinci kovası kapandı, sınıf artık **ölçülüyor ve kapıyı düşürüyor** — renk gradyanın **en açık durağından**, zemin yine gerçek pikselden. Maske sorunu üçüncü kare eklenerek değil ikinci karenin kuralı genişletilerek çözüldü (işaretli elemanın arka planı da siliniyor), bu yüzden süre **66 sn**'de kaldı. Ölçüm: **19 gradyan metin · 17 eşik altı**, `TOPLAM SORUN 39 → 56`, çıkış **1**; devralınan rakamlar birebir çıktı (`sage-br` canvas üstünde **1,74** · canvas-soft üstünde **1,64**). Pozitif kontrol: ölçülen eleman **1835**, adım **105**, kontrast ihlali **39** — TASK-3.04 tabanından sapma yok, iki ardışık koşum birebir aynı. Kapı dört sondayla sınandı (kırmızı 32/32 · **duraklar koyulaşınca yeşil, çıkış 0** · hiç gradyan yoksa **sorun 0 olduğu hâlde kırmızı** · durağı okunamayan kalem `kalan`a düşüyor). Ölçüm ayrıca kümenin araştırmada yazandan geniş olduğunu gösterdi: 11 değil **17 benzersiz metin**, ve 2 kalem ayrı bir yazımdan gelip koyu zeminde **geçiyor**.
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 3 — Görsel ve mobil iyileştirme
 **Milestone:** Site dar telefondan büyütülmüş yazıya kadar bölüm bölüm gezildi (gerçek cihaz dâhil) ve çıkanlar triyaj edildi; ölçülmüş beş kontrast ihlali ve 320 px'te kesilen içerik kalmadı; telefonda her sayfanın ilk ekranında demoya çıkan bir yol var ve dönüşüme dokunan her hedef ≥ 44 px; kontrast ve mobil kapıları 16 sayfanın hepsini geziyor, boyanan gerçek rengi ölçüyor ve eşik altında kırmızıya dönüyor; ana sayfanın iki kart ızgarası reddedilen kalıptan çıktı; beş ölçüm yeşil. Tam metin ve kapsam kararları: `phases/PHASE-3.md`.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ · plan doğrulama ✅ · **task çalıştırma 🔄 (4/25)** — keşif ayağı kapandı (TASK-3.01 · 3.02, ikisinde de plan revizyonu gerekmedi), **kapı kümesi ilerliyor**: zemin kuruldu (TASK-3.03), kontrast dedektörü piksele taşındı (TASK-3.04), sıradaki dört task kalan dedektörleri getiriyor.
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ · plan doğrulama ✅ · **task çalıştırma 🔄 (5/25)** — keşif ayağı kapandı (TASK-3.01 · 3.02, ikisinde de plan revizyonu gerekmedi), **kapı kümesi ilerliyor**: zemin kuruldu (TASK-3.03), kontrast dedektörü piksele taşındı (TASK-3.04), gradyan metin kendi dalını aldı (TASK-3.05); sıradaki üç task kalan dedektörleri getiriyor (başlık hiyerarşisi, kırpma, dokunma hedefi).
 **Faz Dokümanı:** `phases/PHASE-3.md` 🔄 (çocuğu: `PHASE-3-ARASTIRMA.md`) · son kapanan: `phases/PHASE-2.md` ✅ (çocukları: `PHASE-2-KAPSAM.md` · `PHASE-2-ARASTIRMA.md` · `PHASE-2-UAT.md` · `PHASE-2-RETROSPEKTIF.md`)
 
 ---
@@ -35,12 +35,13 @@
 
 ## Aktif Task
 
-**Task:** **TASK-3.05** — Gradyanla boyanmış metin kapıda kendi dalı olur · `tasks/TASK-3.05.md`
-**Durum:** ⬜ Bekliyor — kontrast dedektörü ✅ piksele taşındı, gradyan metin kovası devralmaya hazır
-**İlerleme:** 4 / 25
+**Task:** **TASK-3.06** — Başlık hiyerarşisi kontrolü kapıya girer · `tasks/TASK-3.06.md`
+**Durum:** ⬜ Bekliyor — kapı kümesinin dördüncüsü; ölçen kurulur, düzeltme TASK-3.13'ün işi
+**İlerleme:** 5 / 25
 **Not:**
-- ✅ **TASK-3.05'in devralacağı kova HAZIR ve ölçülü:** gradyanla boyanmış metin artık "ölçülemeyen"e atılmıyor, **`gradyan metin`** adlı ayrı kovada duruyor — 16 rotada **19**, `/` rotasında **11** (araştırmanın "11 benzersiz yer" sayımıyla birebir). Sınıflandırma ölçütü `research/lib/piksel-kontrast.mjs` → `adaylariTopla()`'da: `color` ya da `-webkit-text-fill-color` alfası 0 ise kalem `gradyan` sınıfına girer. Bugün kapıyı **düşürmüyor**; düşürmeye başlaması TASK-3.05'in işi.
-- 🔴 **Kapılar artık KIRMIZI koşuyor ve bu beklenen sonuçtur:** `a11y` 16 sayfada **39 sorun** (hepsi kontrast; alt/h1/adsız link-buton hepsi 0), `mobile-audit` 16 sayfada 278 — ikisi de çıkış kodu 1. Her düzeltme task'ı kendi kalemini yeşile çevirir; CI olmadığı için kırmızı hiçbir şeyi bloke etmez. **Yeşil ayağın çalıştığı ayrıca ölçüldü** (temiz hedefte `✓ KAPI YEŞİL`, çıkış kodu 0), yani kapı kilitlenmiş değil.
+- ✅ **Gradyan metin artık ÖLÇÜLÜYOR ve kapıyı düşürüyor** (TASK-3.05). "Ölçülemeyen" beş kovadan **dörde** indi; gradyan kendi satırında raporlanıyor (`gradyan metin: N ölçüldü · M eşik altı`) ve ihlalleri `[gradyan]` işaretiyle aynı `TOPLAM SORUN`'a giriyor. Renk gradyanın **en açık durağından**, zemin gerçek pikselden. Bugünkü ölçüm: **19 ölçüldü · 17 eşik altı** (`p02` 1,63-1,74). Dalın kendi kapsam tabanı var (`BEKLENEN_GRADYAN = 19`, `BEKLENEN_ROTA` ile aynı sözleşme: taban, üst sınır değil) — gradyan metin bilerek silinirse taban da elle düşürülür, yoksa kapı kırmızı kalır.
+- ⚠️ **TASK-3.11 için iki ölçülmüş düzeltme:** (a) küme araştırmada yazandan geniş — 11 değil **17 benzersiz metin** (16 rotada 19 eleman; "11" `/` rotasının sayısıymış), yani doğrulama 17 üzerinden yapılır; (b) kalemlerin **2'si `.text-gradient-sage` DEĞİL**, ayrı bir Tailwind yazımından geliyor (`bg-linear-to-r from-sage-br to-sage bg-clip-text`, `Solution.tsx` + `FounderProgram.tsx`) ve koyu zeminde durdukları için **bugün geçiyorlar** (`p02` 8,92 · 9,84). Düzeltme `.text-gradient-sage`'in duraklarına yapılırsa 17'si birden düzelir; **`--color-sage-br` token'ının kendisine** yapılırsa o iki geçen kalem aşağı çekilir. Kayıtlar `BULGULAR.md` → Gelen Kutusu.
+- 🔴 **Kapılar artık KIRMIZI koşuyor ve bu beklenen sonuçtur:** `a11y` 16 sayfada **56 sorun** (39 kontrast + 17 gradyan metin; alt/h1/adsız link-buton hepsi 0), `mobile-audit` 16 sayfada 278 — ikisi de çıkış kodu 1. Her düzeltme task'ı kendi kalemini yeşile çevirir; CI olmadığı için kırmızı hiçbir şeyi bloke etmez. **Yeşil ayağın çalıştığı ayrıca ölçüldü** (temiz hedefte `✓ KAPI YEŞİL`, çıkış kodu 0), yani kapı kilitlenmiş değil.
 - ⚠️ **Kontrast rakamı artık `p02`'dir (en kötü %2 piksel), tek bir sayı değil dağılımdır** — her ihlal satırı `p02`, `min` ve `med`'i birlikte basar ve **yargı `p02`'ye bağlıdır**. Ölçü desenli zeminde belirleyici: `Chaos` paragrafında üçü **3,95 / 4,06 / 4,63**, yani `med`'e bakan bir kapı bu ihlali hiç görmezdi. Düzeltme task'ları "yeşile döndü" derken `p02`'ye bakmalı. Ölçüm sözleşmesinin tam metni `docs/DECISIONS.md` (2026-09-24).
 - ⚠️ **Kapanış çağrısı ailesi kayıtta yazandan GENİŞ: 39 ihlalin 20'si orada.** `FinalCta` tek bileşen ama **10 sayfada** koşuyor ve iki ayrı satırı birden eşiğin altında: kapanış paragrafı (`text-ink-deep/75`, 17px) `p02` **3,92-4,17** × 10 sayfa, ve hemen altındaki **"15 gün ücretsiz deneme"** satırı (`text-ink-deep/70`, 14px) `p02` **4,45-4,49** × 10 sayfa. TASK-3.10 "5 sayfa" diyor ve yalnız paragrafı adlandırıyor — düzeltme aynı dosyada (`FinalCta.tsx:31` ve `:55`) ama **ikinci satır kriterlerinde yok**; kapı ikisini de sayar, biri düzeltilirse kırmızı sürer.
 - ⚠️ **`/gecis`'te kapsanmayan kalem üçe çıktı.** T3'ün düştüğü üç dev adım rakamının (01·02·03, `p02` 1,21) yanına bu turda üç tane daha eklendi: "Elle tutulan kayıtlar için birlikte bir öncelik…" **3,25** (15px) ve küçük adım rakamları "1" **3,49** · "2" **4,23** (14px/800). Altısını da kapsayan task yok — TASK-3.13 yalnız 404 ve çöküş sayfasını kapsıyor. Kayıtları `BULGULAR.md` → Gelen Kutusu'nda.
@@ -67,7 +68,7 @@
 | 3.02 | TASK-3.02 | ✅ Tamamlandı | Dört yeni eksen turu — büyütme, hareket azaltma, JS kapalı, yatay tutuş |
 | 3.03 | TASK-3.03 | ✅ Tamamlandı | Kapı zemini — 16 rota, yayın kopyası hedefi, çıkış kodu, kapsam eşiği |
 | 3.04 | TASK-3.04 | ✅ Tamamlandı | Kontrast ölçümü piksele taşınır |
-| 3.05 | TASK-3.05 | ⬜ Bekliyor | Gradyanla boyanmış metin kapıda kendi dalı olur |
+| 3.05 | TASK-3.05 | ✅ Tamamlandı | Gradyanla boyanmış metin kapıda kendi dalı olur |
 | 3.06 | TASK-3.06 | ⬜ Bekliyor | Başlık hiyerarşisi kontrolü kapıya girer |
 | 3.07 | TASK-3.07 | ⬜ Bekliyor | Kırpılmış taşma dedektörü, 320 px, kaydırılabilir şerit ölçütü |
 | 3.08 | TASK-3.08 | ⬜ Bekliyor | Dokunma hedefi — kritik küme kırmızı, gezinme yüzeyi raporlanır |
@@ -99,6 +100,19 @@
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
 
+### TASK-3.05 — Gradyanla boyanmış metin kapıda kendi dalı oldu (en açık durak · maske ikinci kareden · kapsam tabanı)
+
+**Durum:** ✅ Tamamlandı · 2026-09-24 · **Detay:** `tasks/archive/TASK-3.05.md`
+
+**Özet:**
+- **"Ölçülemeyen"in beşinci kovası kapandı.** Gradyan metin artık ölçülüyor ve eşik altındaysa kapıyı olağan yoldan düşürüyor: renk gradyanın **en açık durağından** (renk uzayından bağımsız ayrıştırıcı — `135deg` / `to right in oklab` kendiliğinden eleniyor), zemin yine glif maskesinin altındaki gerçek pikselden, ata opaklığı durak alfasıyla çarpılarak. Sınıfın ölçütü `background-clip: text`tir — clip'siz şeffaf metin `görünmez`e gidiyor, yoksa etkin alfa 0 olup **sahte 1,0:1** basardı.
+- **Maske üçüncü kareyle değil, ikinci karenin kuralı genişletilerek doğdu.** Gradyan metnin glif dolgusu zaten şeffaf olduğu için TASK-3.04'ün gizleme kuralı onu değiştirmiyordu; kural artık işaretli elemanların `background-image`/`background-color`'ını da siliyor. Koşum süresi **66 sn**'de kaldı (taban ile aynı).
+- **Dalın kendi kapsam tabanı kuruldu** (`BEKLENEN_GRADYAN = 19`). Gerekçe ölçüldü: hiç gradyan metin içermeyen bir hedefte kapı **TOPLAM SORUN 0 olduğu hâlde** kırmızıya dönüyor — körleşen seçici artık yeşil basamıyor.
+
+**Test:** 3100'de 16 rota · 105 ekran adımı · **1835 eleman** · 66 sn · **gradyan metin 19 ölçüldü / 17 eşik altı** · `TOPLAM SORUN 56`, çıkış **1** · **pozitif kontrol:** eleman/adım/süre/kontrast-ihlali (39) sayılarının hepsi TASK-3.04 tabanıyla **birebir aynı**, yani dal ötekini bozmadı · **belirlenimlilik:** iki ardışık tam koşum birebir aynı (`diff` boş) · **kalibrasyon:** `sage-br` canvas üstünde **1,74** · canvas-soft üstünde **1,64** (B-032 kalem 3 ile birebir), `/` rotasında 11 kalem · **dört sonda** (sahte hedef, port 3458, her biri kendi ağacında): kırmızı **32/32 eşik altı, çıkış 1** → duraklar koyulaşınca **0 eşik altı, `✓ KAPI YEŞİL`, çıkış 0** → hiç gradyan yok: **sorun 0 olduğu hâlde kapsam eşiği, çıkış 1** → durağı okunamayan kalem `kalan:1` olup **adıyla** basılıyor, çıkış 1 (sunucu kapanışı pozitif kontrolle, dört kez BOŞ→200→BOŞ) · `npm test` **210 geçti + 2 atlandı**. Kapsam: yalnız 1440×900 ve yayın kopyası (3100); 3100 bu turda tazelenmedi — site kodu değişmedi ve konteyner HEAD'in sürümünde (`lastmod` 2026-09-24T12:28Z).
+
+---
+
 ### TASK-3.04 — Kontrast ölçümü piksele taşındı (glif maskesi · ata opaklığı · ekran ekran · hareket azaltma)
 
 **Durum:** ✅ Tamamlandı · 2026-09-24 · **Detay:** `tasks/archive/TASK-3.04.md`
@@ -111,17 +125,6 @@
 **Test:** 3100'de **16 rota · 105 ekran adımı · 1835 eleman · 66 sn · 39 kontrast ihlali**, çıkış kodu **1** · kalibrasyon B-032'nin dört kalemini birebir üretti (kapanış paragrafı `p02` **3,97-3,98**/min 3,84-3,88/med 4,71 · desenli zemin **4,06**/3,95/4,63 · soluk kartlar gövde **2,52-2,54** ve etiket **2,98-2,99** — eski kapı 8,03-10,63 sanıyordu · 404 **1,12**) · `<body>` gradyan deneyi `/fiyat`'ta ölçülen **156 → 156** (eski model 157 → **0**) · hareket azaltma kolu: `/` açık 9 / kapalı 14 → **8 sahte**, `/ozellikler` 7 / 14 → **8 sahte** · sondalar: bozuk girdi → **48 sorun/çıkış 1**; temiz hedef → `✓ KAPI YEŞİL`/**çıkış 0**; metin opak örtü altında → **kontrast ihlali 0 olduğu hâlde** `kalan 64`/**çıkış 1** (sunucu kapanışı pozitif kontrolle, üç kez BOŞ→200→BOŞ) · `npm test` **210 geçti + 2 atlandı**. Kapsam: yalnız 1440×900 ve yalnız yayın kopyası (3100); 390/320 px, gerçek cihaz ve yapışkan katmanların kendi turu bu turun dışında.
 
 ---
-
-### TASK-3.03 — Kapı zemini (16 rota tek kaynaktan · yayın kopyası hedefi · çıkış kodu · kapsam eşiği)
-
-**Durum:** ✅ Tamamlandı · 2026-09-24 · **Detay:** `tasks/archive/TASK-3.03.md`
-
-**Özet:**
-- **İki kapı gerçekten kırmızıya dönebiliyor artık** — B-030'un kök nedeni kapandı: geçme satırı ile çıkış kodu tek bir değişkenden türüyor. `a11y` 8 → **16 rota** / çıkış 0 → **1**; `mobile-audit` 9 → **16 rota** / çıkış 0 → **1**.
-- **Rota listesi tek kaynağa bağlandı** (`research/lib/rotalar.mjs` — sitemap üzerinden 15 + `/olmayan-sayfa`), hedef **yayın kopyası** oldu, kapsam da eşiklendi (gezilen rota < 16 ya da 0 eleman → kırmızı). B-012'nin senkron kaybı kapandı; `a11y.mjs`'in `undefined` basan teşhis satırı (B-030 kalem e) düzeldi.
-- **Kapının kendisi dört sondayla sınandı** (hedef ölü · rota listesi çöktü · 0 eleman ölçüldü · temiz hedefte yeşil) — hepsi yerelde ve girdiye dokunarak; kaynağa dokunulmadı.
-
-**Test:** 3100'de `a11y` → **16 rota · 1906 eleman · 142 ölçülemeyen · 4 sorun**, çıkış kodu **1** · `mobile-audit` → **16 rota · 6290 eleman · 621 dokunma hedefi · 278 sorun**, çıkış kodu **1**, yatay kaydırma 16/16'da **yok** · `BASE=3000` ile a11y **birebir aynı** (16/1906/142/4), yani 3100'ün bayatlığının bu turun rakamlarına etkisi sıfır · kalibrasyon: 404 dev rakamı **1,17:1**, devralınan kayıtla (1,12–1,17) birebir · sondalar: ölü hedef → cümle + çıkış **1**; 3 rotalı site haritası → hata + çıkış **1**; 0 eleman ölçülen hedef → sorun sayısı **0 olduğu hâlde** çıkış **1**; temiz hedef → `✓ KAPI YEŞİL — 16 sayfada 0`, çıkış **0**; `ROTALAR` dar listesi kapıyı açmıyor (2 rota → çıkış 1) · `npm test` **210 geçti + 2 atlandı**. Kapsam: zemin ölçüldü, dedektör davranışı (kontrast yöntemi, kırpma, dokunma hedefi kademesi) TASK-3.04–3.08'de.
 
 <!-- KURAL: **Detay:** yolu task'ın DURUMUNA bağlıdır. ✅ Tamamlandı ise task arşive taşınmıştır (run-task Adım 7) ve yol `tasks/archive/…`'dır; task hâlâ `_dev/tasks/` altındaysa (🔄 / ⏸️ / 🔴) canlı yol yazılır. Özet Adım 5'te yazılır, taşıma Adım 7'de yapılır — sırayı izleyip tamamlanan task'a canlı yol yazmak, commit anında kırık bir referans bırakır ve bir sonraki audit turu onu "kırık dosya referansı" kalemi olarak açar. -->
 
@@ -146,7 +149,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-3.05.md` ⬜ (kapı kümesinin üçüncüsü — gradyan metin kendi dalını alır); son kapanan `tasks/archive/TASK-3.04.md` ✅
+**Aktif Task:** `tasks/TASK-3.06.md` ⬜ (kapı kümesinin dördüncüsü — başlık hiyerarşisi kapıya girer); son kapanan `tasks/archive/TASK-3.05.md` ✅
 **Aktif Faz:** `phases/PHASE-3.md` 🔄 (araştırma detayı: `PHASE-3-ARASTIRMA.md`) · son kapanan: `phases/PHASE-2.md` ✅ (kapsam: `PHASE-2-KAPSAM.md` · araştırma: `PHASE-2-ARASTIRMA.md` · UAT: `PHASE-2-UAT.md` · retrospektif ve kalite: `PHASE-2-RETROSPEKTIF.md`)
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
