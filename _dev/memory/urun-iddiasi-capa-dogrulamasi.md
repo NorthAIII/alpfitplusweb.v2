@@ -101,6 +101,10 @@ grep -rn "<yol>" web/src/lib mobile/src/api
 
 ⚠️ **Yorum satırları `grep`'te çağrı gibi görünür** — 4. satırı yanlış yapan tuzağın ikinci yarısı buydu: `revokeGrant` geçen 20+ satırın hepsi yorum ya da testti, tek gerçek çağrı başka bir isimdeydi (`revokeTemplate`).
 
+⚠️ **Devralınan RAKAM kadar devralınan TEŞHİS de ölçülür — ve teşhis ancak katmanları tek tek kapatarak ayrılır.** Bir bulgu kaydı çoğu zaman yalnız "ne kadar" değil "neden" de söyler; ikincisi ilkinden daha kolay yanlış olur, çünkü ölçen kişi tek bir aday gördüğünde onu tek neden sanar. Ölçüldü (TASK-3.12): hem `BULGULAR` atomu hem task dokümanı bir kontrast ihlalini **desene** bağlıyordu ("noktalar glifin altına denk geldiğinde"); deseni kapatıp ölçünce kalem **hâlâ eşik altıydı** (4,06 → 4,47), desen *ve* gölgeler birlikte kapatılınca **4,71** çıktı — yani ikinci, hiç adı geçmeyen bir katman (kartların gölgesi) tek başına payı yiyordu. Teşhis yanlış kalsaydı "doğru" çözüm (deseni açmak) uygulanır ve **hiçbir opaklıkta** çözmezdi (0,12'de doku yok, değer 4,47). **Yöntem:** aday katmanları enjekte CSS ile **tek tek ve birlikte** kapatıp ölç (`page.addStyleTag`, kaynağa dokunulmaz); "düzelttim, geçti" teşhisi doğrulamaz — yalnız sonucu doğrular.
+
+⚠️ **"Görsel bozulmadı" da ölçülebilir ve ölçülmeli.** Ekran görüntüsüne bakıp karar vermek yerine önce/sonra karesinin **piksel farkını** al: farklı piksel sayısı ve değişen bölgenin sınır kutusu. TASK-3.12'de değişen alan 1.108.800 pikselin içinde **319×14 px** çıktı — tam olarak düzeltilen metnin glif kutusu, yani "desen ve gölgeler korundu" bir izlenim değil kanıt oldu. Sahte güven de burada yakalanır: beklenenden **geniş** bir kutu, farkında olmadan başka bir şeye dokunduğunu söyler.
+
 ## Sınır
 
 Bu kural "her şeyi baştan ölç" demek değil. Ölçülen, **düzeltilecek kalemin kendisidir**; bulgunun geri kalanı kapsamı genişletmez (kapsam genişletme yasağı task dokümanlarında ayrıca yazılı). Ölçüm çeliştiğinde bulgu atomunun ilgili satırı **düzeltilir** ve gerekçesi Çözüm Kaydı'na yazılır — bulgu yaşayan dokümandır.

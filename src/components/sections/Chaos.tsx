@@ -88,7 +88,18 @@ export function Chaos() {
             </div>
 
             </div>
-            <p className="mt-7 text-center text-sm text-faint lg:text-right">
+            {/*
+              `faint` DEGIL `muted` — olculdu (TASK-3.12, p02 @1440):
+                faint, desen ve golge kapaliyken      4,71  (tokenin beyan ettigi deger)
+                faint, yalniz kart golgeleri altinda  4,47  ← zaten AA alti
+                faint, golge + bg-dotgrid/50 altinda  4,06  ← kapinin bastigi ihlal
+                muted, bugunku zeminin aynisinda      5,54  ← secilen
+              `faint`in AA payi 0,21 (4,71 vs 4,50); bu bolumde ustune binen IKI
+              katman var (desen + kartlarin shadow-lg'si) ve pay ikisini kaldirmiyor.
+              Desenin opakligini dusurmek COZMUYOR: 0,50 -> 0,12'de doku pratikte
+              kayboluyor ama deger 4,47'de kaliyor (olculdu) — tavan golgeden geliyor.
+            */}
+            <p className="mt-7 text-center text-sm text-muted lg:text-right">
               Bir kulübün bugün gerçekten kullandığı dört araç
             </p>
           </Reveal>

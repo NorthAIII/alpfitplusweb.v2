@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.11: üretim-derlemesi atomuna bir tuzak daha eklendi, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca atomu zaten 3100'ün tazeliğinin evi olarak gösteriyor). Tuzak tazelik **kontrolünü** vuruyor: yalnız CSS değişen turda ayırt edici HTML'de aranmaz — `globals.css`'teki kural yayınlanan sayfaya hiç girmez, içerik-hash'li ayrı bir parçada durur (`/_next/static/chunks/<hash>.css`; `static/css/` yolunu arayan grep boş döner ve "tazelenmemiş" gibi görünür). İki ayırt edici birlikte kullanılır: **parça adının değişmesi** ve o parçadaki **derlenmiş kuralın metni**. ⚠️ Süre de kanıt değil: yalnız CSS değişince `up -d --build web-prod` **11 saniyede** bitiyor (katman önbelleği).
+**Son Güncelleme:** 2026-09-24 — TASK-3.12: iddia/çapa doğrulama atomuna iki tuzak eklendi, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca atomu zaten devralınan iddianın yeniden ölçülmesinin evi olarak gösteriyor). Birincisi kapsamı genişletiyor: devralınan **rakam** kadar devralınan **teşhis** de ölçülür ve teşhis ancak aday katmanları enjekte CSS ile tek tek + birlikte kapatarak ayrılır — ölçüldü, bir ihlalin adı konmuş nedeni (desen) tek neden değildi ve "doğru" çözüm hiçbir değerde çözmezdi. İkincisi: **"görsel bozulmadı" da ölçülür** — önce/sonra karesinin piksel farkı ve değişen bölgenin sınır kutusu, beklenenden geniş kutu farkında olmadan dokunduğunu söyler.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
