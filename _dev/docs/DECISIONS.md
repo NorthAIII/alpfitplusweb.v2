@@ -20,6 +20,25 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-24 — Piksel kontrast ölçümünün okunma sözleşmesi: yargı değeri `p02`, ölçülemeyenin üç kovası, ve iki geçerlilik koşulu
+
+**Bağlam:** Bir gün önceki karar yöntemi seçmişti (piksel ölçümü, fg CSS'ten, yayın kopyası, hareket azaltma). İcra sırasında (TASK-3.04) yöntemin **okunmasına** dair üç şey daha sabitlenmek zorunda kaldı: her eleman artık tek bir sayı değil bir **dağılım** üretiyor (bir metnin binlerce glif pikseli var ve her birinin zemini farklı olabilir), "ölçülemedi" tek bir çöp kutusu olmaktan çıkıp sahibi belli kovalara ayrılıyor, ve ölçümün kendisi iki sessiz zamanlama yarışına açık çıktı. Üçü de **biriken verinin yorumunu** belirliyor: bundan sonra kayda geçen her kontrast rakamı bu sözleşmeye göre okunacak.
+
+**Karar:**
+- **Yargı değeri `p02`'dir** (en kötü %2 piksel), `min` ya da `med` değil. Her ihlal satırında üçü birlikte basılır.
+- **Ölçülemeyen beş kovaya ayrılır ve yalnız biri kapıyı düşürür.** `yapışkan borcu` (B-063) ve `gradyan metin` (TASK-3.05) adı konmuş, sahibi belli muafiyetlerdir — raporlanır, düşürmez. `görünmez` (ekran okuyucuya özel metin, etkin opaklığı sıfıra yakın) ve `ekran dışı` ölçüm dışıdır. **`kalan`** — ölçülmesi gerekirken tek piksel bile üretmeyen eleman — sıfır olmayan her değerde **kırmızıya döndürür** ve elemanlar adıyla basılır.
+- **Ölçümün iki geçerlilik koşulu yazılı hâle geldi:** (a) yumuşak kaydırma ölçüm süresince kapatılır **ve** her adımda kaydırmanın hedefe oturduğu ayrıca ölçülür; (b) her kare, stil değişiminin **boyamaya işlendiği** doğrulandıktan sonra alınır. İkisi de kapının kendi kodundadır ve atlanamaz.
+
+**Gerekçe:**
+- **`p02` ölçüldü, seçilmedi.** Desenli zeminde (nokta ızgarası glifin altına denk geldiğinde) `min` tek bir talihsiz pikseli cezalandırır, `med` sorunu tamamen gizler: `Chaos` bölümünün paragrafında üçü sırasıyla **3,95 / 4,06 / 4,63** — yani `med`'e bakan bir kapı bu ihlali hiç görmezdi. B-032 de aynı ölçütü kullanmıştı ve kayıtlı rakamlar ancak `p02` ile birebir yeniden üretilebiliyor.
+- **Tek bir "ölçülemedi" sayısı fail-open'dır.** B-031'in en can alıcı kalemi buydu: `<body>`'ye tek bir dekoratif gradyan konduğunda `/fiyat`'ta ölçülen eleman 157 → 0 düşerken kapı "TOPLAM SORUN: 0" diyordu. Sonda ile birebir sınandı: metni opak bir örtünün altına koyan hedefte yeni kapı **kontrast ihlali 0 olduğu hâlde** `kalan 64` deyip çıkış kodu 1 veriyor.
+- **İki yarış da ölçülerek bulundu, tahminle değil — ve ikisi de SAHTE KIRMIZI üretiyordu.** (a) `globals.css`'in `html{scroll-behavior:smooth}` kuralı `prefers-reduced-motion: reduce` altında **kapanmıyor** (o blok yalnız animasyon/geçiş süresini sıfırlıyor); DOM ölçümü ile ekran karesi farklı konumda alınınca sayfaların altındaki 25 eleman "ölçülemedi" diye kırmızıya düştü. (b) Glif gizleme stili eklenip kare hemen alındığında yalnız yapışkan başlığın kendi bileşke katmanı yeniden boyanmış çıktı, gövde metni kareye görünür girdi: `/kvkk` adım 1'de kare farkı **1.839 piksel**, komşu adımlarda 69.016. Boyama beklendikten sonra aynı adım **45.742** verdi ve **iki ardışık tam koşum birebir aynı** oldu.
+- **Alternatif — "kalan"ı raporlayıp kırmızıya döndürmemek** — reddedildi: o hâlde kapı tam da kör kaldığı yerde sessiz kalır ve kör nokta kimsenin bakmadığı bir sayıya dönüşür. Bedeli kabul edildi: ölçümün kendi arızası da kapıyı kırmızıya çevirir, ama elemanlar adıyla basıldığı için arıza ile gerçek ihlal ayrışıyor.
+
+**Etki:** `research/lib/piksel-kontrast.mjs` (yeni) + `research/scripts/a11y.mjs`. Bundan sonra kaydedilen kontrast rakamları `p02`'dir ve `min`/`med` ile birlikte anlam taşır; `1440×900`, yayın kopyası ve hareket azaltma dışında ölçülen bir rakam bu sözleşmenin dışındadır.
+
+---
+
 ### 2026-09-23 — Kontrast ve mobil kapılarının ölçüm sözleşmesi yeniden kuruluyor: piksel ölçümü, yayın kopyası, hareket azaltma, kademeli dokunma hedefi
 
 **Bağlam:** Faz 3'ün araştırması (`phases/PHASE-3.md` → Araştırma Bulguları) iki kapıyı gerçek kapı hâline getirmeden önce ölçüm yönteminin kendisini sınadı. Bugünkü model kontrastı **hesaplanmış stilden** türetiyor (renk + en yakın opak zemin) ve üç şeyi yapısal olarak göremiyor: gradyan/fotoğraf zemini, ata opaklığı, gradyanla boyanmış metin. Devralınan "çalışan uygulama scratchpad'de, devralınabilir" kaydı **ölçülerek çürütüldü** — adı geçen betiklerin hiçbiri yok; yöntem sıfırdan prototiplendi.

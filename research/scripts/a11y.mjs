@@ -9,9 +9,35 @@
  * Kapi kendi KAPSAMINI da esikler: kac rota gezildi, kac eleman olculdu.
  * "0 eleman olculdu" bir kirmizi kosuludur -- bos sayfa sunan bir hedef
  * yoksa "sorun yok" diye gecerdi (B-030 kalem a'nin a11y tarafindaki esi).
+ *
+ * KONTRAST OLCUMU PIKSELDEDIR (TASK-3.04). Hesaplanmis stil yolu KALDIRILDI:
+ * o model gradyan/fotograf zeminini, ata opakligini ve gradyanla boyanmis
+ * metni YAPISAL olarak goremiyordu ve <body>'ye tek bir dekoratif gradyan
+ * kondugunda olculen eleman 157 -> 0'a duserken kapi yine "TOPLAM SORUN: 0"
+ * diyordu (B-031). Yontem `../lib/piksel-kontrast.mjs`'te.
+ *
+ * Iki kosum kosulu, ikisi de TERCIH DEGIL DOGRULUK KOSULU:
+ *   1. Sayfa EKRAN EKRAN gezilir (pencerenin %90'i adimlarla). Tek ekran olcumu
+ *      B-032'nin kalemlerinin HICBIRINI gormuyor — 1440 px'te ilk ekranda ihlal
+ *      0, sayfa tamaminda 21.
+ *   2. Baglam `reducedMotion: 'reduce'` ile acilir. Ata opaklik carpimi
+ *      uygulandigi anda Reveal'in gecis ORTASI opakliklari olcume girer ve
+ *      sahte ihlal uretir (olculen ara degerler: 0,459 · 0,618 · 0,666 · 0,711
+ *      · 0,818). Hareket azaltma altinda `.reveal` kurali hic uygulanmaz
+ *      (globals.css:221 `no-preference` ile kapili), yerlesim oturur.
  */
 import { chromium } from "playwright";
 import { rotalar, BEKLENEN_ROTA } from "../lib/rotalar.mjs";
+import {
+  ADIM_ORANI,
+  KAYDIRMA_CSS,
+  adaylariTopla,
+  adimiIsle,
+  hamPiksel,
+  kareCifti,
+  kaydirVeDogrula,
+  rotaSonucu,
+} from "../lib/piksel-kontrast.mjs";
 
 // Varsayilan hedef yayin kopyasidir (arastirma karari, PHASE-3): olculen ile
 // yayinlanan ayni sey olur. BASE ile gelistirme sunucusuna yonlendirmek
@@ -19,6 +45,19 @@ import { rotalar, BEKLENEN_ROTA } from "../lib/rotalar.mjs";
 // Bedeli: 3100 bayat olabilir (B-019) -- `docker compose build web-prod` imaji
 // tazeler ama konteyneri YENIDEN YARATMAZ, `--profile prod up -d` gerekir.
 const BASE = process.env.BASE || "http://localhost:3100";
+
+const PENCERE = { width: 1440, height: 900 };
+const SECICI = "p,span,a,li,h1,h2,h3,h4,td,th,label,button,dt,dd";
+const TOPLAYICI_AYARI = {
+  secici: SECICI,
+  // Etkin opaklik bunun altindaysa metin gorsel olarak yok sayilir. Esik
+  // BILINCLI OLARAK dusuk: ProductStory'nin soluk kartlari 0,45 tasiyor ve
+  // olculmeleri bu task'in ta kendisi.
+  minOpaklik: 0.1,
+  // sr-only metni (1x1 px, kirpilmis) gorsel kontrast kavraminin disindadir.
+  minAlan: 16,
+};
+const ADIM_TAVANI = 60; // guvenlik: sonsuz dongu kapisi
 
 let PAGES;
 let ROTA_KAYNAGI;
@@ -33,137 +72,110 @@ try {
 
 console.log(`Hedef: ${BASE}`);
 console.log(`Rota kaynağı: ${ROTA_KAYNAGI}`);
+console.log(`Yöntem: piksel (glif maskesi + ata opaklığı) · hareket azaltma: açık · pencere ${PENCERE.width}×${PENCERE.height}`);
 
+const baslangic = Date.now();
 const b = await chromium.launch();
 let totalIssues = 0;
 let visited = 0;
 let measuredTotal = 0;
-let skippedTotal = 0;
+let adimToplam = 0;
+const kovaToplam = { yapiskan: 0, gradyan: 0, gorunmez: 0, ekranDisi: 0, kalan: 0 };
 const gezilemeyen = [];
+const olcumArizasi = [];
+const kalanOrnekleri = [];
 
 for (const path of PAGES) {
-  const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, locale: 'tr-TR' });
+  const ctx = await b.newContext({
+    viewport: PENCERE,
+    locale: "tr-TR",
+    reducedMotion: "reduce",
+  });
   const p = await ctx.newPage();
   try {
-    await p.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 });
+    await p.goto(BASE + path, { waitUntil: "networkidle", timeout: 45000 });
   } catch (e) {
     // Tek rotanin dusmesi turu bitirmez ama SESSIZ de gecmez: gezilen rota
     // sayisi esigin altina duser ve kapi kirmiziya doner.
     gezilemeyen.push(path);
     console.log(`\n── ${path}`);
-    console.log(`   ✗ sayfa açılamadı — ${e.message.split('\n')[0]}`);
+    console.log(`   ✗ sayfa açılamadı — ${e.message.split("\n")[0]}`);
     await ctx.close();
     continue;
   }
   await p.waitForTimeout(800);
+  // Yumusak kaydirma kapatilir — olcumun gecerlilik kosulu, gerekcesi lib'de.
+  await p.addStyleTag({ content: KAYDIRMA_CSS });
 
-  const r = await p.evaluate(() => {
-    // Tailwind 4 saydam renkleri oklab() olarak yaziyor. Elle ayristirmak yerine
-    // her rengi tuvale cizip pikselini okuyoruz — hangi renk uzayi gelirse gelsin
-    // dogru RGBA cikar.
-    const cv = document.createElement('canvas');
-    cv.width = cv.height = 1;
-    const cx = cv.getContext('2d', { willReadFrequently: true });
-    const toRGBA = (color) => {
-      cx.clearRect(0, 0, 1, 1);
-      cx.fillStyle = '#000';
-      cx.fillStyle = color;
-      cx.fillRect(0, 0, 1, 1);
-      const d = cx.getImageData(0, 0, 1, 1).data;
-      return [d[0], d[1], d[2], d[3] / 255];
-    };
-    const over = (fg, bg) =>
-      [0, 1, 2].map((i) => Math.round(fg[i] * fg[3] + bg[i] * (1 - fg[3])));
+  // --- kontrasttan bagimsiz a11y kontrolleri (tek sefer) -------------------
+  const temel = await p.evaluate(() => ({
+    noAlt: [...document.querySelectorAll("img")].filter((i) => !i.hasAttribute("alt")).length,
+    emptyLinks: [...document.querySelectorAll("a")].filter(
+      (a) => !a.textContent.trim() && !a.getAttribute("aria-label"),
+    ).length,
+    btnNoName: [...document.querySelectorAll("button")].filter(
+      (x) => !x.textContent.trim() && !x.getAttribute("aria-label"),
+    ).length,
+    h1: document.querySelectorAll("h1").length,
+  }));
 
-    const lum = (c) => {
-      const [r, g, b] = c.map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    };
-    const ratio = (fg, bg) => {
-      const a = lum(fg) + 0.05, c = lum(bg) + 0.05;
-      return Math.round((Math.max(a, c) / Math.min(a, c)) * 100) / 100;
-    };
+  // --- ekran ekran kontrast olcumu ----------------------------------------
+  // Belge yuksekligi HER ADIMDA yeniden okunur: tembel icerik gezerken
+  // yukleniyor, bastan hesaplanan adim sayisi sayfanin altini kacirirdi.
+  const adimPx = Math.max(1, Math.round(PENCERE.height * ADIM_ORANI));
+  const kayit = new Map();
+  let y = 0;
+  let adim = 0;
+  try {
+    while (adim < ADIM_TAVANI) {
+      // Kaydirmanin hedefe OTURDUGU olculur; oturmazsa cumleyle durulur.
+      await kaydirVeDogrula(p, y);
+      const toplam = await p.evaluate(adaylariTopla, TOPLAYICI_AYARI);
+      const [ka, kb] = await kareCifti(p);
+      const [A, B] = await Promise.all([hamPiksel(ka), hamPiksel(kb)]);
+      adimiIsle(kayit, toplam, A, B);
+      adim++;
 
-    // Zemini kokten asagiya dogru katman katman birlestir. Yol uzerinde bir
-    // background-image (gradyan, desen) varsa zemin tek bir renkle temsil
-    // EDILEMEZ — o eleman olculemez sayilir ve ayri raporlanir.
-    const bgOf = (el) => {
-      const chain = [];
-      let n = el;
-      while (n && n.nodeType === 1) { chain.push(n); n = n.parentElement; }
-      let bg = [255, 255, 255];
-      let painted = false;
-      for (const node of chain.reverse()) {
-        const cs = getComputedStyle(node);
-        if (cs.backgroundImage && cs.backgroundImage !== 'none') painted = true;
-        const c = toRGBA(cs.backgroundColor);
-        if (c[3] > 0) bg = over(c, bg);
-      }
-      return { bg, painted };
-    };
-
-    const hidden = (el) => el.closest('[aria-hidden="true"]') !== null;
-
-    const bad = [];
-    let skipped = 0;
-    let measured = 0;
-    for (const el of document.querySelectorAll('p,span,a,li,h1,h2,h3,h4,td,th,label,button,dt,dd')) {
-      if (!el.textContent?.trim()) continue;
-      if (el.children.length && !Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim())) continue;
-      const cs = getComputedStyle(el);
-      if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity < 0.3) continue;
-      if (hidden(el)) continue;                       // dekoratif, ekran okuyucudan gizli
-      // Fotografin uzerinde duran metin: zemin bir <img> ve onun ustundeki
-      // gradyan. Ikisi de elemanin ATASI degil KARDESI oldugu icin zemin
-      // rengi hesaplanamaz. Bu dugumler isaretli ve olcum disi; okunabilirlik
-      // gradyanin opakligiyla garanti ediliyor.
-      if (el.closest('[data-over-image]')) { skipped++; continue; }
-      const rect = el.getBoundingClientRect();
-      if (!rect.width || !rect.height) continue;
-
-      // background-clip:text ile gradyan metin — rengi seffaftir, olculemez.
-      if (cs.color === 'rgba(0, 0, 0, 0)' || cs.webkitTextFillColor === 'rgba(0, 0, 0, 0)') { skipped++; continue; }
-
-      const { bg, painted } = bgOf(el);
-      if (painted) { skipped++; continue; }           // gradyan zemin, tek renkle temsil edilemez
-      const fgRaw = toRGBA(cs.color);
-      const fg = over(fgRaw, bg);
-      const size = parseFloat(cs.fontSize);
-      const weight = +cs.fontWeight || 400;
-      const large = size >= 24 || (size >= 18.66 && weight >= 700);
-      const need = large ? 3 : 4.5;
-      const got = ratio(fg, bg);
-      measured++;
-      if (got < need) {
-        bad.push({
-          t: el.textContent.trim().slice(0, 46),
-          got, need,
-          size: Math.round(size),
-          fg: `rgb(${fg})`, bg: `rgb(${bg})`,
-        });
-      }
+      const dh = await p.evaluate(() => document.documentElement.scrollHeight);
+      if (y + PENCERE.height >= dh - 2) break;
+      y = Math.min(y + adimPx, dh - PENCERE.height);
     }
+  } catch (e) {
+    // Olcum arizasi SESSIZ gecmez: rota gezilmis sayilmaz, kapsam esigi duser.
+    olcumArizasi.push(path);
+    console.log(`\n── ${path}`);
+    console.log(`   ✗ ölçüm arızası — ${e.message.split("\n")[0]}`);
+    await ctx.close();
+    continue;
+  }
 
-    // diger a11y kontrolleri
-    const noAlt = [...document.querySelectorAll('img')].filter((i) => !i.hasAttribute('alt')).length;
-    const emptyLinks = [...document.querySelectorAll('a')].filter(
-      (a) => !a.textContent.trim() && !a.getAttribute('aria-label')).length;
-    const btnNoName = [...document.querySelectorAll('button')].filter(
-      (x) => !x.textContent.trim() && !x.getAttribute('aria-label')).length;
-    const h1 = document.querySelectorAll('h1').length;
-    return { bad: bad.slice(0, 14), badCount: bad.length, skipped, measured, noAlt, emptyLinks, btnNoName, h1 };
-  });
+  const { ihlaller, olculen, kovalar, kalanlar } = rotaSonucu(kayit);
 
   visited++;
-  measuredTotal += r.measured;
-  skippedTotal += r.skipped;
-  totalIssues += r.badCount + r.noAlt + r.emptyLinks + r.btnNoName + (r.h1 === 1 ? 0 : 1);
+  adimToplam += adim;
+  measuredTotal += olculen;
+  for (const k of Object.keys(kovaToplam)) kovaToplam[k] += kovalar[k];
+  if (kovalar.kalan) kalanOrnekleri.push(`${path}:${kovalar.kalan}`);
+
+  totalIssues +=
+    ihlaller.length + temel.noAlt + temel.emptyLinks + temel.btnNoName + (temel.h1 === 1 ? 0 : 1);
+
   console.log(`\n── ${path}`);
-  console.log(`   h1:${r.h1} · alt'sız img:${r.noAlt} · adsız link:${r.emptyLinks} · adsız buton:${r.btnNoName} · kontrast ihlali:${r.badCount} · ölçülen:${r.measured} · ölçülemeyen (gradyan/şeffaf):${r.skipped}`);
-  // Teshis satiri fg/bg degerlerini basar. Onceki hali `${x.color}` okuyordu ve
-  // her satirda `undefined` yaziyordu — kontrast hatasini duzeltmek icin gereken
-  // iki deger tam da teshis satirinda kayboluyordu (B-030 kalem e).
-  for (const x of r.bad) console.log(`   ✗ ${x.got}:1 (gereken ${x.need}) ${x.size}px  metin ${x.fg} / zemin ${x.bg} — "${x.t}"`);
+  console.log(
+    `   h1:${temel.h1} · alt'sız img:${temel.noAlt} · adsız link:${temel.emptyLinks} · adsız buton:${temel.btnNoName} · kontrast ihlali:${ihlaller.length}`,
+  );
+  console.log(`   adım:${adim} · ölçülen:${olculen} eleman`);
+  console.log(
+    `   ölçülemeyen → yapışkan borcu:${kovalar.yapiskan} · gradyan metin:${kovalar.gradyan} · görünmez:${kovalar.gorunmez} · ekran dışı:${kovalar.ekranDisi} · kalan:${kovalar.kalan}`,
+  );
+  for (const t of kalanlar) console.log(`   ? ölçülemedi (kalan) — ${t}`);
+  // Teshis satiri p02 ile birlikte min ve med'i de basar: p02 yargi degeridir
+  // ama desenli zeminde yargiyi yumusatmak icin otekiler gerekir (B-032).
+  for (const x of ihlaller.slice(0, 14)) {
+    console.log(
+      `   ✗ p02 ${x.p02}:1 (gereken ${x.gereken}) · min ${x.min} · med ${x.med} · ${x.px}px/${x.ag} · glif ${x.n}px — "${x.t}"`,
+    );
+  }
   await ctx.close();
 }
 await b.close();
@@ -172,14 +184,31 @@ await b.close();
 // Gecme satiri ile cikis kodu AYNI degiskenden turer.
 const kapsamSorunlari = [];
 if (visited < BEKLENEN_ROTA) {
-  kapsamSorunlari.push(`gezilen rota ${visited} < beklenen ${BEKLENEN_ROTA}` +
-    (gezilemeyen.length ? ` (açılamayan: ${gezilemeyen.join(', ')})` : ''));
+  kapsamSorunlari.push(
+    `gezilen rota ${visited} < beklenen ${BEKLENEN_ROTA}` +
+      (gezilemeyen.length ? ` (açılamayan: ${gezilemeyen.join(", ")})` : "") +
+      (olcumArizasi.length ? ` (ölçüm arızası: ${olcumArizasi.join(", ")})` : ""),
+  );
 }
 if (measuredTotal === 0) {
-  kapsamSorunlari.push('0 eleman ölçüldü — hedef boş sayfa sunuyor olabilir');
+  kapsamSorunlari.push("0 eleman ölçüldü — hedef boş sayfa sunuyor olabilir");
+}
+// Olculmesi gerekirken TEK PIKSEL bile uretmeyen eleman: sinifi bilinmeyen bir
+// kor noktadir. Adi konmus iki muafiyet (yapiskan borcu, gradyan metin) ayri
+// sayilir ve kapiyi dusurmez; "kalan" duserir.
+if (kovaToplam.kalan > 0) {
+  kapsamSorunlari.push(
+    `${kovaToplam.kalan} eleman ölçülemedi ve hiçbir muafiyete girmiyor (${kalanOrnekleri.join(", ")})`,
+  );
 }
 
-console.log(`\nKAPSAM: ${visited} rota gezildi · ${measuredTotal} eleman ölçüldü · ${skippedTotal} ölçülemeyen (gradyan/şeffaf)`);
+const sure = Math.round((Date.now() - baslangic) / 1000);
+console.log(
+  `\nKAPSAM: ${visited} rota gezildi · ${adimToplam} ekran adımı · ${measuredTotal} eleman ölçüldü · ${sure} sn`,
+);
+console.log(
+  `ÖLÇÜLEMEYEN: yapışkan katman borcu:${kovaToplam.yapiskan} (B-063 — bu fazın kapsamı dışı) · gradyan metin:${kovaToplam.gradyan} (TASK-3.05) · görünmez:${kovaToplam.gorunmez} · ekran dışı:${kovaToplam.ekranDisi} · kalan:${kovaToplam.kalan}`,
+);
 console.log(`${visited} sayfada TOPLAM SORUN: ${totalIssues}`);
 
 const gecti = totalIssues === 0 && kapsamSorunlari.length === 0;

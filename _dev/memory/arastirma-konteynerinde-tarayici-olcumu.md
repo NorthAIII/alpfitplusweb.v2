@@ -315,3 +315,50 @@ docker compose --profile research run --rm -e BASE=http://localhost:3457 researc
   kalır (yani `TOPLAM SORUN` sıfır çıkar) ama ölçülebilir metin sıfırdır —
   fail-open tam orada görünür. Tamamen boş gövde iki eşiği birden ateşler ve
   hangisinin çalıştığını söylemez.
+
+## Kaydırma ve kare alma iki sessiz yarış taşır — ikisi de SAHTE KIRMIZI üretir (TASK-3.04, 2026-09-24)
+
+Ekran ekran gezen her ölçüm (kontrast, kırpma, ilk-ekran turu) DOM okumasıyla ekran
+karesinin **aynı anı** gösterdiğini varsayar. Bu varsayım bu projede iki ayrı yerden
+kırıldı ve ikisi de sessizce "ölçülemedi" üretti, hata vermedi.
+
+**1. `scroll-behavior: smooth` hareket azaltmayla KAPANMAZ.** `globals.css:135`
+`html{scroll-behavior:smooth}` taşıyor; `prefers-reduced-motion: reduce` bloğu
+(`:232`) yalnız `animation-duration`, `animation-iteration-count` ve
+`transition-duration`'ı sıfırlıyor — kaydırmaya dokunmuyor. Yani `reducedMotion:
+'reduce'` bağlamında bile `window.scrollTo(0, y)` bir **animasyon** başlatır;
+kısa bir beklemeden sonra okunan `getBoundingClientRect` ile alınan kare farklı
+konumu gösterir. Ölçüldü: sayfaların altındaki **25 eleman** tek piksel bile
+üretmedi ve "ölçülemedi" diye kırmızıya düştü (`/kullanim-kosullari`'nda 04·05·06
+bölümlerinin tamamı).
+
+```js
+await p.addStyleTag({ content: "html{scroll-behavior:auto !important}" });  // kosma
+// ve KOSMA TEK BASINA KANIT DEGILDIR — her adimda oturmayi ayrica olc:
+await p.evaluate((y) => window.scrollTo(0, y), hedefY);
+const d = await p.evaluate(() => ({ y: Math.round(window.scrollY),
+  enBuyuk: Math.round(document.documentElement.scrollHeight - window.innerHeight) }));
+// beklenen = min(hedefY, max(0, enBuyuk)); sapma > 1 px ise YENIDEN DENE, oturmazsa DUR
+```
+
+**2. Stil değişikliği bir sonraki BOYAMAYA kadar kareye girmez — ve kısmen girer.**
+`page.addStyleTag()` hemen döner; arkasından alınan kare yalnız **kendi bileşke
+katmanı olan** kısmı güncellenmiş gösterebilir. Ölçüldü: glif gizleme stili
+eklenip kare hemen alındığında yalnız **yapışkan başlığın** metni silinmişti,
+gövde metni kareye görünür girdi — kare çiftinin toplam farkı `/kvkk` adım 1'de
+**1.839 piksel**, komşu adımlarda **69.016**. Yani ölçüm "kısmen" yanlış, bu
+yüzden de gözle fark edilmez.
+
+```js
+const bekleBoyama = (p) => p.evaluate(() => new Promise((r) =>
+  requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(r, 0)))));
+// her karenin ONUNDE cagrilir (stil eklemeden once de, ekledikten sonra da, kaldirdiktan sonra da)
+```
+
+Düzeltmeden sonra aynı adım **45.742** verdi ve **iki ardışık tam koşum birebir aynı**
+çıktıyı üretti — belirlenimlilik bu sınıfın tek güvenilir teyididir: bir tur ile
+öteki arasında oynayan rakam, ölçülen şeyin değil ölçümün oynadığını söyler.
+
+⚠️ **Her iki arıza da "kapı kırmızı" diye göründü, "kapı bozuk" diye değil.** Teşhis
+ancak kapı ölçemediği elemanı **adıyla** bastığı için mümkün oldu; sayı basan bir
+kapıda aynı arıza "site bozuk" diye okunup düzeltilmeye çalışılırdı.
