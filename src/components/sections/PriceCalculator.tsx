@@ -72,8 +72,13 @@ export function PriceCalculator({ compact = false }: { compact?: boolean }) {
               key={n}
               type="button"
               onClick={() => setBranches(n)}
+              // DOKUNMA HEDEFI (TASK-3.17): fiyati degistiren bes kisayol, yani
+              // donusum yuzeyi ve kapinin kritik kumesinde. Gorunur kutu buyur
+              // (`min-h-11` = 44 px, `py-2.5` kalkar) -- cipin kendi zemini ve
+              // halkasi var, gizli hedef alani burada yaniltici olurdu.
+              // Olculdu: 36 -> 44 px, /fiyat sayfa boyu 320/390'da +16 px.
               className={cn(
-                "rounded-full px-3.5 py-2.5 text-xs font-medium transition-colors",
+                "inline-flex min-h-11 items-center rounded-full px-3.5 text-xs font-medium transition-colors",
                 branches === n
                   ? "bg-sage-wash-2 text-sage-ink ring-1 ring-sage/35"
                   : "bg-surface text-muted ring-1 ring-line hover:text-ink",

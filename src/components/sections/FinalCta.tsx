@@ -79,9 +79,14 @@ export function FinalCta({
               <span aria-hidden>·</span>
               <span>Kredi kartı istemiyoruz</span>
               <span aria-hidden>·</span>
+              {/* DOKUNMA HEDEFI (TASK-3.17): `tel:` hedefli, yani kritik kume.
+                  Satirin icinde duruyor ve komsulari duz metin -- gorunur
+                  kutuyu buyutmek satir araligini acardi. Dolgu + negatif
+                  margin: kutu 20 -> 44 px, akistaki yuksekligi 20 px'te sabit
+                  (olculdu: /yazilim-secerken sayfa boyu 320/390'da birebir). */}
               <a
                 href={CONTACT.phone.href}
-                className="inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
+                className="-my-3 inline-flex items-center gap-1.5 py-3 font-medium underline-offset-4 hover:underline"
               >
                 <Phone className="size-3.5" strokeWidth={2.2} aria-hidden />
                 {CONTACT.whatsapp.display}

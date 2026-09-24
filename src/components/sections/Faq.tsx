@@ -29,11 +29,17 @@ export function Faq({
           <SectionHead label={label} title={title} lead={lead} />
           <div className="mt-7 rounded-card bg-surface p-5 ring-1 ring-line">
             <p className="text-sm text-muted">Cevabını bulamadınız mı?</p>
+            {/* DOKUNMA HEDEFI (TASK-3.17): `wa.me` hedefli -> kritik kume.
+                Ust bosluk `mt-3` (12 px) idi; dolgu onu ICERI alir, yani
+                `mt-3` KALKAR ve yerine `pt-3` gecer -- ikisi birlikte
+                kalsaydi metin 12 px asagi kayardi. Alt tarafta `-mb-3` dolgunun
+                karti buyutmesini engeller. Kutu 20 -> 44 px, sayfa boyu
+                320/390'da birebir (olculdu). */}
             <a
               href={CONTACT.whatsapp.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-2 font-display text-sm font-bold text-sage-ink underline-offset-4 hover:underline"
+              className="-mb-3 inline-flex items-center gap-2 py-3 font-display text-sm font-bold text-sage-ink underline-offset-4 hover:underline"
             >
               <MessageCircle className="size-4" strokeWidth={2.1} aria-hidden />
               WhatsApp'tan sorun

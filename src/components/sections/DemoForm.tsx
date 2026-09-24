@@ -324,16 +324,70 @@ export function DemoForm() {
         />
       </div>
 
+      {/*
+        ONAY KUTUSU — 18x18 KUTU, 44x44 HEDEF (TASK-3.17).
+
+        Kapi hedefi KONTROLUN KENDI kutusundan olcer, sarmalayan <label>'in
+        tiklanabilir alanindan degil (TASK-3.08'in bilincli karari), yani
+        `input`in kutusu 44x44 olmak ZORUNDA. Olculdu (2026-09-24, yayin
+        kopyasi, 320/390): `appearance: auto` iken tarayici kutuya yazilan
+        DOLGUYU ve KENARLIGI sifirliyor -- `padding:13px` verildiginde
+        hesaplanmis deger `0px` okundu ve kutu 18x18 kaldi; ayni denemede
+        `margin:-13px` UYGULANDI ve yerlesimi kaydirdi (etiket 113,75 -> 91,
+        gonder dugmesi 22,75 px yukari). `width/height:44px` kutuyu buyutuyor
+        ama yerli cizimi de 44 px'e olcekliyor. Yani kutuyu buyutmenin tek yolu
+        `appearance: none`; gorunur kutu da bu yuzden elle ciziliyor.
+
+        Yerlesim: 18x18'lik sarmalayici AKISTA durur (eski `input`in yerini
+        birebir alir: `mt-0.5 size-4.5 shrink-0`), `input` ise MUTLAK
+        konumlanir -- akis disi oldugu icin telafi margin'i gerekmez.
+
+        Hata deyimi (TASK-2.06) PARITE ile korunur: 2 px `neg` halka + alanin
+        altinda hata metni. `neg-wash` zemin EKLENMEDI -- yerli kutuda da yoktu
+        (zemini o zaman tarayici ciziyordu), 18 px'lik bir kutuda ayri bir wash
+        yalniz gurultu olurdu. Odak halkasi kirmizinin USTUNDE kalir: `input`in
+        kendi `:focus-visible` konturu bastirilir (yoksa 44 px'lik goruNMEZ
+        kutunun etrafinda cizilirdi) ve ayni kontur gorunur kutuya tasinir --
+        deger globals.css'in genel kuralinin aynisidir (2 px sage-deep, 3 px
+        offset). Kontur box-shadow halkasinin DISINDA cizilir, yani iki isaret
+        ust uste binmez.
+
+        Bedeli yazili: `appearance: none` yerli kutuyu birakir, yani zorunlu
+        renk kipinde (forced-colors) sistem kutu cizimi kaybolur. Kalem
+        BULGULAR Gelen Kutusu'nda.
+      */}
       <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-muted">
-        <input
-          id="consent"
-          type="checkbox"
-          name="consent"
-          required
-          aria-invalid={consentInvalid || undefined}
-          aria-describedby={consentInvalid ? CONSENT_ERROR_ID : undefined}
-          className="mt-0.5 size-4.5 shrink-0 accent-[#3e6b3c] aria-invalid:ring-2 aria-invalid:ring-neg"
-        />
+        <span className="relative mt-0.5 size-4.5 shrink-0">
+          <input
+            id="consent"
+            type="checkbox"
+            name="consent"
+            required
+            aria-invalid={consentInvalid || undefined}
+            aria-describedby={consentInvalid ? CONSENT_ERROR_ID : undefined}
+            // 44x44 kutu, ama YATAYDA 4 px SOLA KAYDIRILMIS. Simetrik
+            // (`-inset-[0.8125rem]`) hali olculdu: kutu 31..75, riza
+            // cumlesindeki "Aydinlatma metnini" baglantisi 74'te basliyor ->
+            // 1 px cakisma, ve `absolute` oldugu icin kutu ustte boyanip o
+            // 1 px'i baglantidan calıyordu. Sol -17 / sag -9 ile kutu 27..71
+            // olur: baglantiya 3 px acik kalir, sol kenar formun 24 px'lik
+            // dolgusunun 7 px icinde durur (tasma dali 0'da kalir).
+            className="peer absolute -inset-y-[0.8125rem] -left-[1.0625rem] -right-[0.5625rem] cursor-pointer appearance-none rounded-xl focus-visible:outline-none"
+          />
+          <span
+            aria-hidden
+            className={cn(
+              "pointer-events-none absolute inset-0 grid place-items-center rounded-[0.3rem] text-transparent transition-colors",
+              "peer-checked:bg-[#3e6b3c] peer-checked:text-canvas",
+              "peer-focus-visible:[outline:2px_solid_var(--color-sage-deep)] peer-focus-visible:[outline-offset:3px]",
+              consentInvalid
+                ? "bg-surface ring-2 ring-neg"
+                : "bg-surface ring-1 ring-line-2 peer-checked:ring-[#3e6b3c]",
+            )}
+          >
+            <Check className="size-3.5" strokeWidth={3.5} />
+          </span>
+        </span>
         <span>
           <Link href="/kvkk" className="font-medium text-sage-ink underline underline-offset-4">
             Aydınlatma metnini

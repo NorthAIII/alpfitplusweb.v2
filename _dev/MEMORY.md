@@ -7,7 +7,8 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.25: iddia/çapa atomuna tek yan kural eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: **kişisel veriyi bir dış adrese koyan arayüz yolu da yasal metnin aktarım beyanını tetikler** — ön-doldurulmuş `wa.me?text=` / `mailto:?body=` bağlantısında veri, kullanıcı mesajı göndermeden **tıklama anında** o tarafın sunucusuna gider; ölçüldü ve `legal.ts`'in dört kalemlik tedarikçi listesinde karşılığı çıkmadı. Kural: yolu ölç, karşılığı yoksa **bildir** — yeni aktarım cümlesi yazmak ölçülmemiş bir hukuki nitelendirme olur (B-008).
+**Son Güncelleme:** 2026-09-24 — TASK-3.17: iddia/çapa atomuna tek yan kural eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: **kapıyı yeşile çeviren düzeltme de ölçülür** — kapı ne ölçüyorsa onu görür, düzeltme o ölçünün dışındaki bir şeyi bozduğunda yeşil yalan söyler. Ölçülmüş örnek: dokunma hedefi kapısı elemanın kendi kutusunu ölçer, komşularıyla **çakışmasını görmez**; kutuyu görünmez biçimde büyütmek kapıyı geçirir ama yan yana iki hedef birden büyüyünce kutular üst üste biner ve boyama sırası kazanır (kapı 46,5 px görürken gerçek hedef 42,5 px). Kural: kutuyu büyüttüğünde komşuluk ilişkisini AYRICA ölç; "görünmez" düzeltme bedelsiz değildir.
+
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---

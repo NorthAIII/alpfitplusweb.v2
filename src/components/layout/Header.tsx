@@ -174,9 +174,15 @@ export function Header() {
                 <MessageCircle className="size-4.5" strokeWidth={2} aria-hidden />
                 WhatsApp'tan yazın
               </Button>
+              {/* DOKUNMA HEDEFI (TASK-3.17): `tel:` hedefli, yani proje
+                  kuralina gore kritik -- ama KAPI BUNU HIC GORMUYOR: panel
+                  yalniz menu aciklen render ediliyor, kapi ise etkilesimsiz
+                  hal olcuyor (B-015). Yine de ayni deyimle duzeltildi ve ELLE
+                  olculdu; kapiya girdigi gun zaten yesil olacak. Satir ici
+                  baglanti -> yalniz dolgu, telafi yok. */}
               <p className="pt-2 text-center text-sm text-faint">
                 veya arayın{" "}
-                <a href={CONTACT.phone.href} className="font-medium text-sage-ink underline underline-offset-4">
+                <a href={CONTACT.phone.href} className="py-3.5 font-medium text-sage-ink underline underline-offset-4">
                   {CONTACT.whatsapp.display}
                 </a>
               </p>

@@ -40,11 +40,16 @@ export default function NotFound() {
         </div>
 
         <nav className="mt-12 flex flex-wrap justify-center gap-2.5" aria-label="Öne çıkan sayfalar">
+          {/* DOKUNMA HEDEFI (TASK-3.17): `nav` icindeki bu cipler kritik
+              kumede. Burada tercih sirasinin BIRINCISI uygulanir -- gorunur
+              kutu buyur (`min-h-11` = 44 px), cunku cipin kendi zemini ve
+              halkasi var; dolguyu gizlemek yerine hedefi gostermek dogru.
+              Bedeli olculdu: 40 -> 44 px, sayfa 320/390'da +8 px. */}
           {[...NAV, { label: "Demo İste", href: "/demo" }].map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className="rounded-xl bg-surface px-4 py-2.5 text-sm font-medium text-ink shadow-sm ring-1 ring-line transition-colors hover:ring-sage/35"
+              className="inline-flex min-h-11 items-center rounded-xl bg-surface px-4 text-sm font-medium text-ink shadow-sm ring-1 ring-line transition-colors hover:ring-sage/35"
             >
               {n.label}
             </Link>

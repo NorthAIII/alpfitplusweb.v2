@@ -61,11 +61,13 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         </div>
 
         <nav className="mt-14 flex flex-wrap gap-3 border-t border-line pt-8" aria-label="Diğer yasal metinler">
+          {/* DOKUNMA HEDEFI (TASK-3.17): 404'teki cip seridiyle ayni kalip,
+              ayni gerekce -- gorunur kutu buyur (40 -> 44 px). */}
           {others.map((o) => (
             <Link
               key={o.slug}
               href={`/${o.slug}`}
-              className="rounded-xl bg-surface px-4 py-2.5 text-sm font-medium text-ink shadow-sm ring-1 ring-line transition-colors hover:ring-sage/35"
+              className="inline-flex min-h-11 items-center rounded-xl bg-surface px-4 text-sm font-medium text-ink shadow-sm ring-1 ring-line transition-colors hover:ring-sage/35"
             >
               {o.title}
             </Link>

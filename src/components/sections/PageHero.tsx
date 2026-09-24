@@ -27,7 +27,12 @@ export function PageHero({
           <nav aria-label="Konum" className="mb-6">
             <ol className="flex flex-wrap items-center gap-1 text-sm text-faint">
               <li>
-                <Link href="/" className="hover:text-sage-ink">
+                {/* DOKUNMA HEDEFI (TASK-3.17): icerik yolu `nav` icinde oldugu
+                    icin kapinin "menu" kovasinda, yani kritik. Baglanti SATIR
+                    ICI (`display:inline`) -- dikey dolgu satir kutusunu
+                    ETKILEMEZ, yani telafi margin'i GEREKMEZ: kutu 17 -> 45 px,
+                    sayfa boyu birebir (olculdu, 320/390). */}
+                <Link href="/" className="py-3.5 hover:text-sage-ink">
                   Ana sayfa
                 </Link>
               </li>

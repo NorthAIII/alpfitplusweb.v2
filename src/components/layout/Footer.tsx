@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { CONTACT, SITE } from "@/content/site";
 import { SEGMENTS } from "@/content/segments";
 import { SURFACES } from "@/lib/analytics";
+import { cn } from "@/lib/cn";
 import { KiwiBand } from "./KiwiBand";
 
 const COLS = [
@@ -49,18 +50,42 @@ export function Footer() {
               {SITE.description}
             </p>
             <div className="mt-6 flex flex-col gap-3 text-[0.9375rem]">
+              {/*
+                DOKUNMA HEDEFI (TASK-3.17). Bu iki baglanti `wa.me` ve `tel:`
+                hedefli, yani kapinin KRITIK kumesinde (TASK-3.08) ve 44 px
+                kuralina tabi. Ayni sutundaki e-posta/Instagram baglantilari
+                gezinme kulvarindadir ve BILINCLE bugunku halinde kalir
+                (kullanici karari, PHASE-3 -> Alinan Kararlar).
+                ⚠️ TELAFI TAM DEGIL, KASITLI OLARAK EKSIK -- ve bu OLCULEREK
+                secildi. Ilk deneme `-my-2 py-3` idi: kutu 46,5 px, akistaki yer
+                30,5 px'te SABIT, sayfa boyu birebir, gorunus 0 farkli piksel.
+                Ama iki baglanti YAN YANA ve ikisi de buyudu: 30,5 + 12 px
+                boslukla adim 42,5 px iken iki 46,5 px'lik kutu birbirine 4 px
+                giriyordu (olculdu: 16 rota x 2 genislik x 7 kaydirma turunda
+                "+90 535 937 59 55 ↔ Telefonla arayin" cifti). Ust uste binen
+                hedefte boyama sirasi kazanir, yani WhatsApp baglantisinin
+                GERCEK hedefi 42,5 px'e duserdi -- KAPI ise 46,5 gorup yesil
+                basardi. Gorunmez genisletmenin fail-open'i tam burada.
+                Bu yuzden telafi `-my-1`'de birakilir: kutu 46,5, akistaki yer
+                30,5 -> 38,5 px (+8), iki baglantinin arasinda 4 px acik kalir
+                ve mailto/Instagram satirlariyla da 4 px. Bedeli yazili: alt
+                bilgi 16 px uzar ve bu iki satirin cevresindeki bosluk 8 px
+                artar. Bes satir 42,5 px adimla dizilirken hepsine 44 px hedef
+                sigdirmak GEOMETRIK OLARAK mumkun degil; secim "gorunmez ama
+                cakisan" ile "4 px daha ferah ama gercek" arasindaydi.
+              */}
               <a
                 href={CONTACT.whatsapp.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="-my-1 inline-flex items-center gap-2.5 py-2 text-canvas/80 transition-colors hover:text-sage-br"
+                className="-my-1 inline-flex items-center gap-2.5 py-3 text-canvas/80 transition-colors hover:text-sage-br"
               >
                 <MessageCircle className="size-4.5 shrink-0 text-sage-br" strokeWidth={1.7} aria-hidden />
                 {CONTACT.whatsapp.display}
               </a>
               <a
                 href={CONTACT.phone.href}
-                className="-my-1 inline-flex items-center gap-2.5 py-2 text-canvas/80 transition-colors hover:text-sage-br"
+                className="-my-1 inline-flex items-center gap-2.5 py-3 text-canvas/80 transition-colors hover:text-sage-br"
               >
                 <Phone className="size-4.5 shrink-0 text-sage-br" strokeWidth={1.7} aria-hidden />
                 Telefonla arayın
@@ -103,9 +128,22 @@ export function Footer() {
               <ul className="mt-5 flex flex-col gap-3">
                 {col.links.map((l) => (
                   <li key={l.href}>
+                    {/* Kolonun TEK donusum baglantisi `/demo`'dur ve kapinin
+                        kritik kumesine oradan girer; kalan 15 baglanti alt
+                        bilgi gezinmesidir ve olculur, raporlanir, DUSURMEZ
+                        (kullanici karari). Ayrim bu yuzden href'e bakar --
+                        ikisine de ayni sinifi vermek ya 256 gezinme hedefini
+                        kapsam disi bir ise sokardi ya da donusum baglantisini
+                        esigin altinda birakirdi. Iki dal da CAKISMASIZ yazilir
+                        (`-my-1 py-2` / `-my-2 py-3`): ayni yardimcinin iki
+                        degerini tek sinif dizesine koymak sirayi CSS uretim
+                        duzenine birakirdi. */}
                     <Link
                       href={l.href}
-                      className="-my-1 inline-block py-2 text-[0.9375rem] text-canvas/70 transition-colors hover:text-canvas"
+                      className={cn(
+                        "inline-block text-[0.9375rem] text-canvas/70 transition-colors hover:text-canvas",
+                        l.href === "/demo" ? "-my-2 py-3" : "-my-1 py-2",
+                      )}
                     >
                       {l.label}
                     </Link>

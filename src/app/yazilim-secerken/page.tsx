@@ -214,7 +214,11 @@ export default function ChoosingPage() {
           <p className="mx-auto mt-8 max-w-3xl text-center text-[0.9375rem] leading-relaxed text-muted">
             Bunları yazıyoruz çünkü demoya girip yarısında “bu bizde yok” demek ikimizin de
             vaktini alıyor. Listedekiler sizin için engel değilse{" "}
-            <a href="/demo" className="font-medium text-sage-ink underline underline-offset-4">
+            {/* DOKUNMA HEDEFI (TASK-3.17): `/demo` hedefli -> kritik kume.
+                Govde cumlesinin ORTASINDA duruyor; satir ici oldugu icin dikey
+                dolgu satir kutusunu etkilemez -- kutu 19 -> 47 px, satir
+                araligi ve sayfa boyu birebir (olculdu, 320/390). */}
+            <a href="/demo" className="py-3.5 font-medium text-sage-ink underline underline-offset-4">
               konuşalım
             </a>
             .

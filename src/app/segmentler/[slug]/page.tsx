@@ -84,14 +84,24 @@ export default async function SegmentPage({
         <Container className="relative py-16 sm:py-20 lg:py-24">
           <nav aria-label="Konum" className="mb-7">
             <ol className="flex flex-wrap items-center gap-1 text-sm text-canvas/50">
+              {/* DOKUNMA HEDEFI (TASK-3.17). Iki baglanti da `nav` icinde,
+                  yani kapinin kritik kumesinde -- ama AYNI cozum ikisine de
+                  uymuyor ve fark DISPLAY'den geliyor:
+                    · "Ana sayfa" duz bir <li>'nin satir ici cocugu -> dikey
+                      dolgu satir kutusunu etkilemez, telafi gerekmez (17->45).
+                    · "Segmentler"in <li>'si `flex`, yani baglanti FLEX OGESI
+                      olarak bloklasiyor -> dolgu satir yuksekligini buyutur ve
+                      negatif margin ile telafi edilir (20->48, akistaki yer
+                      20 px'te sabit).
+                  Ikisi de olculdu: sayfa boyu 320/390'da birebir. */}
               <li>
-                <Link href="/" className="hover:text-sage-br">
+                <Link href="/" className="py-3.5 hover:text-sage-br">
                   Ana sayfa
                 </Link>
               </li>
               <li className="flex items-center gap-1">
                 <ChevronRight className="size-3.5" strokeWidth={2} aria-hidden />
-                <Link href="/segmentler" className="hover:text-sage-br">
+                <Link href="/segmentler" className="-my-3.5 py-3.5 hover:text-sage-br">
                   Segmentler
                 </Link>
               </li>
