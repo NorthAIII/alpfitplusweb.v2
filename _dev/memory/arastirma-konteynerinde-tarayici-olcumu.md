@@ -495,3 +495,28 @@ curl -s http://localhost:3100/ | grep -c devtools   # 0
 — ve dar genişlikte çıkan bir ihlal 3100'de tekrarlanmadan gerçek sayılmaz.
 Aynı bölümün başındaki B-019 uyarısıyla birlikte okunur: 3100 bayat olabilir,
 o yüzden yargıdan önce tazeliği pozitif kontrolle ölç.
+
+## Erişilebilirlik ağacı Playwright'tan DEĞİL, CDP'den alınır (TASK-3.13, 2026-09-24)
+
+"Ekran okuyucu bunu görüyor mu / ilk ne duyuruluyor" sorusunun refleks cevabı
+`page.accessibility.snapshot()`tur ve bu kurulumda **yoktur** — API kaldırılmış,
+çağrı `TypeError: Cannot read properties of undefined (reading 'snapshot')` ile
+düşer. Ağaç CDP'den alınır:
+
+```js
+const cdp = await ctx.newCDPSession(p);
+await cdp.send("Accessibility.enable");
+const { nodes } = await cdp.send("Accessibility.getFullAXTree");
+```
+
+⚠️ **Dönen dizi BELGE SIRASINDA değildir** — landmark'lar (`banner`, `main`,
+`contentinfo`) kendi alt ağaçlarından önce, kardeş olarak listelenir. Düz dizide
+`find(n => n.role === "heading")` bu yüzden alt bilgideki başlığı verebilir
+(ölçüldü: 404'te "ÜRÜN" çıktı, oysa gövdenin `h1`'i aranıyordu). Doğrusu
+`childIds` ile kökten özyinelemeli yürümek ve ilgilenilen landmark'ın alt
+ağacıyla sınırlamaktır.
+
+⚠️ **`aria-hidden` alt ağacı BUDAR, "ignored" işaretlemez.** Dekoratif ilan
+edilen bir metin ağaçta `ignored: true` bir düğüm olarak da **durmaz**, hiç
+düğüm üretmez — "gizlendi mi" sorusu `nodes.filter(ad === "404").length === 0`
+ile ölçülür, `ignored` bayrağıyla değil.

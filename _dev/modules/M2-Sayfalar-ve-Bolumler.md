@@ -34,6 +34,7 @@
 - 16 sayfanın hepsinde `a11y.mjs` 0 sorun, `font-guard.mjs` eksik karakter yok
 - Her sayfanın `metadata` (title, description, canonical) tanımlı; `sitemap.ts` hepsini listeler
 - Geçersiz segment slug'ı 404'e düşer
+- **404 ve çöküş yüzeyi** (`not-found.tsx` · `global-error.tsx`) kapı kapsamındadır (TASK-3.03'ün 16 rota kararı) ve iki kalemi sabittir (TASK-3.13): dev rakam **dekoratif**tir — `aria-hidden` taşır, kontrastı **ölçülmez ve yükseltilmez** (kullanıcı kararı, `phases/PHASE-3.md` → Alınan Kararlar; ölçüldü: `sage-wash-2` canvas üstünde 1,17 ve hiçbir kompozisyon katmanı bu payı açıklamıyor, yani rengi değiştirmeden 3:1 mümkün değil); ekran okuyucuda `main`'de ilk duyurulan öğe sayfanın `h1`'idir. Markalama ve istemci çöküşünün bir yere yazılması **kapsam dışı** (B-045)
 
 **Bağımlılık:** M1
 
@@ -50,6 +51,7 @@
 **Kabul Kriterleri:**
 - Tüm link ve butonlar erişilebilir adla (`a11y.mjs` "adsız link/buton" 0)
 - **Dönüşüme dokunan** dokunma hedefleri ≥ 44 px — `mobile-audit.mjs` bunu 320 ve 390 px'te ölçer ve eşik altında kırmızıya döner (TASK-3.08). Kritik küme: buton · form alanı · sekme · `header`/`nav` menüsü · `/demo`, `wa.me`, `tel:` bağlantıları (nerede olursa olsun). **Alt bilgi ve içerik yolu bağlantıları ölçülür ve raporlanır ama kapıyı düşürmez** (kullanıcı kararı, PHASE-3 → Alınan Kararlar: kural kademeli kurulur). Ölçülen kutu kontrolün kendisidir, sarmalayan `<label>` değil
+- **Alt bilgi kolon başlıkları `h2`dir, `h3` değil** (TASK-3.13): `Footer` 16 rotanın hepsinde çizildiği için başlık dizisinin doğruluğu sayfa gövdesinde `h2` bulunmasına **bağımlı olamaz** — `h3` iken gövdesinde `h2` olmayan tek sayfada (404) dizi `h1 → h3` atlamasına dönüyordu. Görünüş etkisi yok: `globals.css` `h1,h2,h3,h4`'ü aynı kurala bağlar, ölçü/ağırlık/harf aralığı yardımcı sınıflardan gelir (ölçüldü: 6 kombinde 0 farklı piksel)
 - Reveal animasyonu `prefers-reduced-motion` ile devre dışı kalır
 
 **Bağımlılık:** Yok

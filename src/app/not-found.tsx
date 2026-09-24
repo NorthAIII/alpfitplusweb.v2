@@ -11,7 +11,15 @@ export default function NotFound() {
       <div className="pointer-events-none absolute inset-0 bg-glow-soft" aria-hidden />
       <div className="pointer-events-none absolute inset-0 bg-dotgrid opacity-40 mask-fade-b" aria-hidden />
       <Container size="narrow" className="relative text-center">
-        <p className="font-display text-[5rem] font-extrabold leading-none text-sage-wash-2 sm:text-[7rem]">
+        {/* Dekoratif tipografi jesti. `sage-wash-2` canvas uzerinde 1,12:1
+            (gereken 3) ve karar GORUNUSU KORUMA yonunde (PHASE-3 -> Alinan
+            Kararlar), yani renk koyulastirilmaz. `aria-hidden` ile hem ekran
+            okuyucudan hem kontrast olcumunden cikar; hatayi asagidaki h1
+            zaten soyluyor, bilgi kaybi yok. Emsal: WhyUs.tsx dev sira no. */}
+        <p
+          className="font-display text-[5rem] font-extrabold leading-none text-sage-wash-2 sm:text-[7rem]"
+          aria-hidden
+        >
           404
         </p>
         <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Bu sayfayı bulamadık</h1>

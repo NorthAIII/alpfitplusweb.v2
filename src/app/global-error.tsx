@@ -26,7 +26,10 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
         }}
       >
         <main data-surface={SURFACES.notFound} style={{ maxWidth: "32rem", textAlign: "center" }}>
-          <p style={{ fontSize: "2.5rem", fontWeight: 800, color: "#dfeddd", margin: 0 }}>Hata</p>
+          {/* not-found.tsx'teki dev rakamin esi: dekoratif, 1,17:1 — aria-hidden. */}
+          <p aria-hidden style={{ fontSize: "2.5rem", fontWeight: 800, color: "#dfeddd", margin: 0 }}>
+            Hata
+          </p>
           <h1 style={{ fontSize: "1.75rem", fontWeight: 800, margin: "8px 0 0" }}>
             Beklenmedik bir sorun oluştu
           </h1>

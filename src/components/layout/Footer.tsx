@@ -90,9 +90,16 @@ export function Footer() {
 
           {COLS.map((col) => (
             <div key={col.title}>
-              <h3 className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-sage-br">
+              {/* h2, h3 DEGIL (TASK-3.13): alt bilgi 16 sayfanin hepsinde
+                  duruyor ve kolon basliklari sahipsiz. Govdesinde h2 olmayan
+                  bir sayfada (404) dizi h1 -> h3 atlamasina donuyordu. h2
+                  seviyesi sayfa govdesine BAGIMLI DEGILDIR, yani duzeltme 16
+                  rotanin hepsinde gecerli. Gorunus degismez: globals.css
+                  h1-h4'u ayni kurala bagliyor, olcu/agirlik/harf araligi
+                  buradaki yardimci siniflardan geliyor. */}
+              <h2 className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-sage-br">
                 {col.title}
-              </h3>
+              </h2>
               <ul className="mt-5 flex flex-col gap-3">
                 {col.links.map((l) => (
                   <li key={l.href}>
