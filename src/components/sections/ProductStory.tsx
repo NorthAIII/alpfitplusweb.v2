@@ -220,7 +220,21 @@ export function ProductStory() {
                   className={cn(
                     "rounded-card p-6 ring-1 transition-all duration-500 lg:bg-transparent lg:p-0 lg:ring-0",
                     "bg-white/5 ring-white/10",
-                    i === active ? "lg:opacity-100" : "lg:opacity-45",
+                    // ETKIN OLMAYAN KARTIN OPAKLIGI WCAG AA'NIN ALTINA INEMEZ
+                    // (TASK-3.09, B-032 kalem 1). Bu opaklik kartin ICINDEKI
+                    // her metin katmanini carpar, yani tabani EN ZAYIF katman
+                    // belirler -- burada govde, cunku onun kendi alfasi da var
+                    // (asagida text-canvas/78: 0,78 x 0,70 = 0,55 etkin alfa).
+                    // Olculdu (piksel yontemi, p02, 3100 @1440x900, a11y.mjs):
+                    //   0,45 -> govde 2,52-2,54 · etiket 2,98-2,99 · baslik 4,39-4,43
+                    //   0,70 -> govde 5,82-5,96 · etiket 5,34-5,43 · baslik 9,11-9,28
+                    //   esikler:        4,5              4,5             3 (24px/700)
+                    // Baslik 0,45'te DE geciyordu (buyuk metin esigi 3) -- kayitta
+                    // yazan "1,13:1" olcumde cikmadi; duzeltme onu da yukseltti.
+                    // Opakligi tek basina yukseltmek yetmezdi: 0,45'te govdeye
+                    // TAM BEYAZ verilse bile ink-deep uzerinde ~4,5 cikiyor
+                    // (hesap), yani pay yok -- o yuzden alfa da yukseldi.
+                    i === active ? "lg:opacity-100" : "lg:opacity-70",
                   )}
                 >
                   <span className="font-display text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-sage-br">
@@ -229,7 +243,16 @@ export function ProductStory() {
                   <h3 className="mt-3 font-display text-xl font-bold text-canvas sm:text-2xl">
                     {s.title}
                   </h3>
-                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-canvas/65">{s.body}</p>
+                  {/* /65 -> /78: govde IKI KEZ soluyordu (kendi alfasi x kartin
+                      opakligi), o yuzden esigi zorlayan katman oydu. Alfayi
+                      yukseltmek, kart opakligini 0,45'ten yalniz 0,70'e
+                      cikarmakla yetinmeyi mumkun kildi -- tek basina opaklikla
+                      ayni payi tutturmak 0,80 isterdi ve etkin/etkin-olmayan
+                      ayrimi gozle silinirdi. Olculdu (p02, 3100 @1440x900):
+                      soluk kart 2,52 -> 5,82 · etkin kart 8,03 -> 11,3. Dar
+                      ekranda kart opakligi HIC uygulanmaz (lg:), orada govde
+                      zaten geciyordu; bugun 390 px'te 9,70. */}
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-canvas/78">{s.body}</p>
 
                   {/* dar ekranda gorsel adimin icinde */}
                   <div className="mt-5 overflow-hidden rounded-xl ring-1 ring-white/10 lg:hidden">

@@ -162,7 +162,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.06 | TASK-3.06 | ✅ Tamamlandı | Başlık hiyerarşisi kontrolü kapıya girer |
 | 3.07 | TASK-3.07 | ✅ Tamamlandı | Kırpılmış taşma dedektörü, 320 px ve kaydırılabilir şerit ölçütü |
 | 3.08 | TASK-3.08 | ✅ Tamamlandı | Dokunma hedefi — kritik küme kırmızı, gezinme yüzeyi raporlanır |
-| 3.09 | TASK-3.09 | ⬜ Bekliyor | Ürün turunun soluk adım kartları AA'ya çıkar (etiket · başlık · gövde) |
+| 3.09 | TASK-3.09 | ✅ Tamamlandı | Ürün turunun soluk adım kartları AA'ya çıkar (etiket · başlık · gövde) |
 | 3.10 | TASK-3.10 | ⬜ Bekliyor | Kapanış çağrısı paragrafı gradyan bant üzerinde AA'ya çıkar (5 sayfa) |
 | 3.11 | TASK-3.11 | ⬜ Bekliyor | Gradyanla boyanmış metnin durakları koyulaştırılır |
 | 3.12 | TASK-3.12 | ⬜ Bekliyor | Desenli zemin ve kalan iki kontrast yüzeyi |

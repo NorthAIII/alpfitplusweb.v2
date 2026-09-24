@@ -454,3 +454,44 @@ yalnız bir anahtar onu üretti.
   olarak duruyor). Çare anahtarı şişirmek değil — her benzersiz satırın kendi
   **ölçü varyantlarını** ve kaç rotada göründüğünü basması; düzeltme listesi
   böyle eksiksiz kalır.
+
+## `BASE=http://localhost:3000` ile ara doğrulama dar ekranda SAHTE KIRMIZI basar (TASK-3.09, 2026-09-24)
+
+Ölçüm betikleri varsayılan olarak yayın kopyasına (3100) bakar, ama `BASE` ile
+geliştirme sunucusuna yönlendirmek bilinçli olarak açık — düzeltme task'larının
+ara doğrulaması için. **O kaçış yolunun ölçülmüş bir bedeli var:** `next dev`
+sayfaya kendi geliştirici göstergesini enjekte ediyor ve o **sabit, açık renkli**
+katman dar ekranda içeriğin üstüne biniyor; piksel kontrast kapısı onu metnin
+**zemini** sanıyor.
+
+Ölçüldü (`/`, 390×844, ürün turunun son adım etiketi `"05 · raporlar"`):
+
+| Hedef | p02 | glif | yargı |
+|---|---|---|---|
+| `BASE=http://localhost:3000` | **1,35** | 577 px | ✗ sahte ihlal |
+| `BASE=http://localhost:3100` (varsayılan) | **9,54** | 489 px | ✓ |
+
+Ayırt etmenin en ucuz yolu — göstergenin izi sayfanın HTML'inde:
+
+```bash
+curl -s http://localhost:3000/ | grep -c devtools   # 2
+curl -s http://localhost:3100/ | grep -c devtools   # 0
+```
+
+Üç şey bu tuzağı sinsi yapıyor:
+
+- **Belirlenimli.** Rakam iki hedefte de oynamıyor (3000'de 3/3, 3100'de 2/2
+  birebir), yani "ölçüm gürültüsü" diye elenmiyor — TASK-3.04'ün yarış
+  tuzaklarının aksine burada tekrar teyidi hiçbir şey söylemez.
+- **Genişliğe bağlı.** 1440 px'te iki hedef **birebir aynı** rakamları veriyor
+  (aynı 15 kalem, aynı p02'ler); fark yalnız gösterge içeriğin üstüne bindiği
+  dar ekranda doğuyor. Yani "dev ile prod aynı çıkıyor" diye bir kez bakmak
+  yanıltır.
+- **Kovaya düşmüyor.** Kapının "yapışkan katman borcu" kovası sitenin KENDİ
+  sabit katmanlarından türer; dışarıdan enjekte edilen bu katman o muafiyete
+  girmez, ihlal olarak sayılır.
+
+**Kural: ara doğrulama 3000'de yapılabilir, ama YARGI her zaman 3100'e aittir**
+— ve dar genişlikte çıkan bir ihlal 3100'de tekrarlanmadan gerçek sayılmaz.
+Aynı bölümün başındaki B-019 uyarısıyla birlikte okunur: 3100 bayat olabilir,
+o yüzden yargıdan önce tazeliği pozitif kontrolle ölç.

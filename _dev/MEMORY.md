@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.07: tarayıcı-ölçümü atomu bir tuzak daha kazandı, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca zaten atomu ölçüm tuzaklarının evi olarak gösteriyor). Tuzak sınıflandıran **her** dalı vurur: *"kesildikten sonra görünür alanı ~0 ise gizlidir"* kestirmesi yanlıştır — yatay kaydırılabilir bir şeritte görüş dışına kaymış kart da 0 alan verir; ölçüldü, 83 kalemin **66'sı** yanlış kovaya düşüyordu ve kaydırılabilir nüfus raporda görünmez oluyordu. Doğru ölçüt **beyandır** (`clip-path: inset(50%)` — Tailwind v4'te `clip` değil). Ayrıca: sınıflandırma **sırası** ve ölçüm **birimi** (metin menzili / eleman kutusu / tüm eleman) sonucu değiştirir, ikisi de bilinçle seçilir.
+**Son Güncelleme:** 2026-09-24 — TASK-3.09: tarayıcı-ölçümü atomuna bir tuzak daha eklendi, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca atomu zaten ölçüm tuzaklarının evi olarak gösteriyor). Tuzak ölçüm **hedefini** vuruyor: düzeltme task'larının ara doğrulama yolu `BASE=http://localhost:3000` dar ekranda sahte kırmızı basıyor — `next dev` sayfaya sabit, açık renkli bir geliştirici göstergesi enjekte ediyor ve piksel kapısı onu metnin zemini sanıyor (390 px'te aynı eleman 3000'de **1,35**, 3100'de **9,54**; 1440 px'te iki hedef birebir aynı). İkisi de belirlenimli, yani tekrar teyidi bu tuzağı elemez. **Yargı her zaman 3100'e aittir.**
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
