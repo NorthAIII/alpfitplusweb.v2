@@ -15,11 +15,14 @@
 **Kabul Kriterleri:**
 - Her betik geçme şartını çıktıda açıkça yazar (TOPLAM SORUN: 0 / yatay kaydırma: yok / eksik karakter yok / konsol temiz)
 - Eşik altı durumda sıfır-olmayan çıkış kodu döner
+- Her betik **kendi kapsamını da eşikler**: gezdiği rota sayısı ve ölçtüğü eleman sayısı çıktıya girer, beklenenin altına düşerse kırmızıya döner ("0 eleman ölçüldü" bir kırmızı koşuludur)
+
+**Durum (TASK-3.03, 2026-09-24):** İkinci ve üçüncü kriter `a11y.mjs` + `mobile-audit.mjs` için **kuruldu ve sınandı** (dört sonda: hedef kapalı · rota listesi çöktü · 0 eleman ölçüldü · temiz hedefte yeşil); `font-guard.mjs` çıkış kodunu zaten taşıyordu ama kapsam eşiği yok. `perf.mjs` ve `scan.mjs`'te ikisi de **hâlâ yok** — kapsam kararı onları "Kalite kapıları otomatik" fazına bıraktı (B-030).
 
 **Bağımlılık:** Yok
 
 **Edge Case'ler:**
-- `perf.mjs` ve `font-guard.mjs` üretim konteyneri (3100) ayakta değilse anlamlı ölçmez — betik bunu söyleyerek durmalı
+- Yayın kopyası (3100) ayakta değilse **dört betik** de anlamlı ölçmez — `a11y.mjs`, `mobile-audit.mjs`, `font-guard.mjs`, `perf.mjs`. İlk ikisi bunu TASK-3.03'ten beri **cümleyle** söyleyip sıfır-olmayan çıkış kodu döndürüyor (yığın izi basmıyor); `font-guard` ve `perf` bu satırı hâlâ karşılamıyor
 
 ---
 
@@ -94,3 +97,9 @@ Bu tablo **regresyon çizgisidir**: F6.2 tek komut bunları geçme eşiği olara
 
 - Çalıştırma: `docker compose --profile research run --rm research node scripts/<betik>`; üretim konteyneri `docker compose --profile prod up -d --build web-prod` (3100).
 - `ILKELER.md` → Kümülatif test ilkesi bugün karşılanmıyor; bu modülün F6.2–F6.4'ü onu kapatır.
+
+**Rota kaynağı ve ölçüm hedefi (TASK-3.03, 2026-09-24):**
+
+- **Rota listesi artık tek kaynaktan türer:** `research/lib/rotalar.mjs`, ayakta olan hedefin `/sitemap.xml`'ini HTTP ile okur, `<loc>`'ların **yol** kısmını alır ve `/olmayan-sayfa`'yı ekler → bugün **15 + 1 = 16**. Import edilmiyor çünkü araştırma konteyneri depoyu değil yalnız `./research` dizinini görüyor (`docker-compose.yml` → `research.volumes`), yani `src/app/sitemap.ts` oradan okunamaz. Yeni sayfa eklendiğinde liste kendiliğinden büyür; **taban** `BEKLENEN_ROTA = 16` ve altına düşerse betik hata verip durur (B-012'nin senkron kaybı bir daha doğamaz).
+- **`ROTALAR` kaçış yolu kaynağı değiştirir, eşiği değiştirmez:** elle verilen dar bir liste kapıyı yeşil bırakmaz — gezilen rota sayısı ayrıca eşiklenir (ölçüldü: 2 rota → `KAPSAM EŞİĞİ` + çıkış kodu 1).
+- **Varsayılan ölçüm hedefi yayın kopyasıdır** (3100) — `a11y.mjs` ve `mobile-audit.mjs` artık `font-guard.mjs`'in `BASE` desenini taşıyor; `BASE=http://localhost:3000` ile geliştirme sunucusuna yönlendirmek bilinçli olarak açık. ⚠️ Bedeli 3100'ün bayatlığıdır (B-019) ve **ölçüldü:** bu task koşarken 3100, `a17ca7a` (2026-09-23 19:11) commit'ini taşımıyordu — `docker compose build web-prod` imajı tazeler ama konteyneri yeniden yaratmaz, `--profile prod up -d` gerekir.

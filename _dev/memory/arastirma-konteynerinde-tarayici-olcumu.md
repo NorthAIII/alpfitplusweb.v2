@@ -282,3 +282,36 @@ yolu **root sahipli boş dizin** olarak açar ve konteyner **yine kalkar**
 bağlamada `EROFS` fırlatır, `rw` bağlamada geçer (ölçüldü, uid 0). Dokunulmaz
 bir depoya karşı "yazabiliyor muyum?" sorusunun tek güvenli sorulma biçimi
 budur — gerçek bir yazma denemesi, başarılı olduğu anda yasağı çiğnemiş olurdu.
+
+## Kapıyı sınamak için sahte hedef — statik site + `network_mode: host` (TASK-3.03, 2026-09-24)
+
+Bir ölçüm kapısının kendisini sınamak (bozuk girdi · boş kapsam · yeşil ayak)
+**kaynağa değil girdiye** dokunmayı ister. Bu projede bunun düzeneği hazır:
+`research` servisi `network_mode: host` taşıyor, yani araştırma konteyneri
+host'taki **her** portu `localhost` üzerinden görür. Sahte hedef bu yüzden
+konteyner gerektirmez:
+
+```bash
+SP=<scratchpad>/sinama/<varyant>
+# 16 rotanin dizin agaci + istenen govde
+for r in / /ozellikler ... /olmayan-sayfa; do mkdir -p "$SP$r"; printf '%s' "$GOVDE" > "$SP$r/index.html"; done
+# sitemap.xml: <loc> MUTLAK adres olmali (gercegin aynisi) — kapi yolu kendisi cikarir
+python3 -m http.server 3457 --bind 127.0.0.1 --directory "$SP" &
+docker compose --profile research run --rm -e BASE=http://localhost:3457 research node scripts/<kapi>.mjs
+```
+
+- **Port:** 3000 (dev) · 3100 (üretim provası) · 3200 (alternatif derleme) ·
+  8090 (lead deposu) dolu, **3001 makinede başka bir projede**. 3457 kullanıldı.
+- **`<loc>` mutlak yazılır** (`https://alpfitplus.com/...`) — gerçek sitemap
+  öyle; sahte hedef gerçeğin yolunu taklit etmezse kapının ayrıştırıcısı sınanmaz.
+- **Sondaların ayrı ağaçları olur, tek ağaç değiştirilmez.** Her varyant kendi
+  dizininde durur ve sunucu `--directory` ile ona bakar; böylece bir sondanın
+  gövdesi ötekine sızmaz.
+- **Sunucu her sondadan sonra kapatılır ve kapanma POZİTİF KONTROLLE ölçülür:**
+  durdurmadan önce port dolu görülür, durdurulduktan sonra aynı `curl` ile boş
+  görülür. `kill` sessizce başarısız olabilir; "kapattım" bir ölçüm değildir.
+- ⚠️ **Boş gövde ile "ölçülemez gövde" farklı sondalardır.** a11y'nin kapsam
+  eşiğini yalıtmak için `<h1 aria-hidden="true">` kullanıldı: `h1` sayımı 1
+  kalır (yani `TOPLAM SORUN` sıfır çıkar) ama ölçülebilir metin sıfırdır —
+  fail-open tam orada görünür. Tamamen boş gövde iki eşiği birden ateşler ve
+  hangisinin çalıştığını söylemez.

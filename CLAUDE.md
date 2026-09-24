@@ -248,8 +248,8 @@ docker compose exec web npm test                       # Vitest — web konteyne
 
 | Betik | Ne ölçer | Geçme şartı |
 |---|---|---|
-| `a11y.mjs` | Kontrast, h1, alt metni, adsız link/buton | TOPLAM SORUN: 0 |
-| `mobile-audit.mjs` | Yatay kaydırma, dokunma hedefi | yatay kaydırma: yok |
+| `a11y.mjs` | Kontrast, h1, alt metni, adsız link/buton (16 rota, yayın kopyasına karşı) | `✓ KAPI YEŞİL — 16 sayfada 0` **ve çıkış kodu 0** |
+| `mobile-audit.mjs` | Yatay kaydırma, taşan eleman, dokunma hedefi (16 rota, yayın kopyasına karşı) | `✓ KAPI YEŞİL — 16 sayfada 0` **ve çıkış kodu 0** |
 | `font-guard.mjs` | Font kapsaması (üretim konteynerine karşı) | kümede olmayan karakter yok |
 | `perf.mjs` | TTFB, FCP, LCP, CLS, sayfa ağırlığı | üretim konteyneri (3100) ayakta olmalı |
 | `scan.mjs <yol> <etiket> <en> <boy>` | Sayfayı ekran ekran gezer, konsol hatası toplar | konsol temiz |
@@ -258,6 +258,7 @@ docker compose exec web npm test                       # Vitest — web konteyne
 
 Başlangıç çizgisi (regresyon eşiği) `_dev/modules/M6-Kalite-Kapilari.md` → Teknik Notlar'da; ölçüm sonucu rakamıyla task/faz dokümanına yazılır.
 
+- **Dört betik yayın kopyasına (3100) bakar** — `a11y.mjs`, `mobile-audit.mjs`, `font-guard.mjs`, `perf.mjs`. Konteyner uzun ömürlüdür ve kendiliğinden yeniden derlenmez: `docker compose build web-prod` imajı tazeler ama **konteyneri yeniden yaratmaz**, `docker compose --profile prod up -d web-prod` gerekir. İlk üçü `BASE` env'i taşır (`BASE=http://localhost:3000` ile geliştirme sunucusuna yönlenir); `a11y` ve `mobile-audit` ayrıca `ROTALAR` ile elle liste alır — o kaçış yolu kaynağı değiştirir, kapsam eşiğini değiştirmez.
 - **Ürün görselleri elle konmaz.** `render-product.mjs` üretir; eski marka, gerçek sporcu adı ve karşılanmayan iddiayı temizler, sızıntı kalırsa **üretim durur**.
 - **Fotoğraflar** Pexels lisanslı; kaynak listesi `research/FOTOGRAF-KAYNAKLARI.txt` — önce listeye yaz, sonra `photos-build.mjs`.
 - **Fontlar** siteye özel daraltıldı (153 karakter, 5 dosya, 95 KB). Yeni karakter girerse `font-guard.mjs` yakalar; küme `research/FONT-KARAKTER-KUMESI.txt` + `font-subset.mjs` ile genişletilir.
