@@ -362,3 +362,36 @@ Düzeltmeden sonra aynı adım **45.742** verdi ve **iki ardışık tam koşum b
 ⚠️ **Her iki arıza da "kapı kırmızı" diye göründü, "kapı bozuk" diye değil.** Teşhis
 ancak kapı ölçemediği elemanı **adıyla** bastığı için mümkün oldu; sayı basan bir
 kapıda aynı arıza "site bozuk" diye okunup düzeltilmeye çalışılırdı.
+
+## "Bu eleman görünür mü" tek çağrıyla ölçülmez — `display` ile `visibility` ZIT davranır (TASK-3.06, 2026-09-24)
+
+Ekran ölçen her kapı er geç "bu elemanı sayayım mı" sorusuna gelir (başlık dizisi,
+kırpma dedektörü, dokunma hedefi…). Refleks `getComputedStyle(el)` okumaktır ve
+**yarısı sessizce yanlış cevap verir**:
+
+- **`display:none` bir ATADAYSA elemanın kendi hesaplanmış `display`'i yine kendi
+  değerini döndürür** (`"block"`, `"flex"`…). Kalıtılan bir özellik değildir; alt
+  ağaçtaki her eleman kendi değerini bildirir. Yani `getComputedStyle(el).display
+  !== "none"` kontrolü, gizli bir kabın içindeki elemanı **görünür** sayar.
+- **`visibility` ise KALITILIR**, yani hesaplanmış değer ata zincirini zaten taşır —
+  `getComputedStyle(el).visibility === "visible"` tek başına doğru cevaptır.
+
+Doğru ölçüt ikilidir ve render edilmişlik **geometriyle** alınır:
+
+```js
+if (el.closest('[aria-hidden="true"]')) return false;   // erisilebilirlik agacindan cikmis
+if (!el.getClientRects().length) return false;          // display:none (kendisi YA DA atasi)
+return getComputedStyle(el).visibility === "visible";   // visibility KALITILIR
+```
+
+⚠️ **`sr-only` bu süzgeçten GEÇER ve geçmelidir** — 1×1 px kırpılmış olsa da
+`visibility: visible` ve kutusu vardır; ekran okuyucu onu görür. Erişilebilirlik
+ölçen bir dalda (başlık sırası, adlandırma) `sr-only` **sayılır**; görsel ölçen bir
+dalda (kontrast) sayılmaz — a11y kapısı bunu `minAlan: 16` ile ayırır, `visibility`
+ile değil.
+
+⚠️ **Muafiyetin iş gördüğünü AYRICA ölç.** Süzgeç yazmak yetmez: aynı hedefte
+süzgeçli ve süzgeçsiz okumayı yan yana koy. TASK-3.06'da ölçüldü — sahte hedefte
+süzgeçsiz **368 başlık / 16 atlama**, süzgeçli **320 başlık / 0 atlama**; süzgeç
+olmasa 16 sahte ihlal doğuyordu. Süzgecin hiçbir şeyi elemediği hâl de ancak böyle
+görülür.

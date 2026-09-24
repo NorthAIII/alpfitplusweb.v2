@@ -25,6 +25,17 @@
  * kendisi ayrica esiklenir (BEKLENEN_GRADYAN) -- yoksa korlesen bir secici
  * "0 buldum" deyip kapiyi yesil birakirdi.
  *
+ * BASLIK HIYERARSISI KENDI DALIDIR (TASK-3.06). Kapi eskiden yalniz `h1`
+ * SAYISINA bakiyordu, SIRA hic olculmuyordu (B-031 kalem 4). Dal belge
+ * sirasina gore gorunur h1-h6'yi toplar ve ardisik iki basligin seviye farki
+ * ARTI yonde 1'den buyukse atlama sayar; geriye donus (h3 -> h2) ihlal
+ * DEGILDIR, bolum kapanisidir. Atlamalar olagan yoldan `TOPLAM SORUN`a girer
+ * ve `[baslik]` isaretiyle basilir; kumenin kendisi ayrica esiklenir
+ * (BEKLENEN_BASLIK) -- yoksa korlesen bir secici "0 atlama" deyip kapiyi yesil
+ * birakirdi. Dal kontrast kovalariyla KESISMEZ (yapiskan/gradyan/gorunmez
+ * ayrimi piksel olcumune aittir, baslik dali yalniz belge yapisina bakar), o
+ * yuzden siralamanin sonuca etkisi yoktur.
+ *
  * Iki kosum kosulu, ikisi de TERCIH DEGIL DOGRULUK KOSULU:
  *   1. Sayfa EKRAN EKRAN gezilir (pencerenin %90'i adimlarla). Tek ekran olcumu
  *      B-032'nin kalemlerinin HICBIRINI gormuyor — 1440 px'te ilk ekranda ihlal
@@ -69,6 +80,47 @@ const TOPLAYICI_AYARI = {
 };
 const ADIM_TAVANI = 60; // guvenlik: sonsuz dongu kapisi
 
+// Baslik hiyerarsisi dali (TASK-3.06). `sr-only` basliklar DISARIDA BIRAKILMAZ:
+// 1x1 px kirpilmis olsalar da ekran okuyucu onlari gorur ve hiyerarsinin
+// parcasidirlar (bugun sitede baslik sinifinda yok, kural ileriye donuktur).
+const BASLIK_SECICI = "h1,h2,h3,h4,h5,h6";
+
+/**
+ * Baslik dalinin KAPSAM TABANI (TASK-3.06) — BEKLENEN_ROTA ve BEKLENEN_GRADYAN
+ * ile ayni sozlesme: bu bir TABAN, ust sinir DEGIL.
+ *
+ * Gerekce dalin kendi sekline bagli: dal "ihlal YOKLUGUNU" raporluyor, yani
+ * sessiz kalmak onun basari halidir. Secici korlesirse ya da basliklar toptan
+ * gizlenirse dizi bosalir, atlama 0 cikar ve kapi YESIL kalir — "bakmadim" ile
+ * "sira dogru" ayni ciktiyi verir. Bugun 16 rotada olculen gorunur baslik: 316.
+ * Baslik bilerek SILINIRSE (bolum kaldirilir, sayfa sadelesir) taban da elle
+ * dusurulur; elle dusurulmeden kapi kirmizi kalir, ki amac odur.
+ */
+const BEKLENEN_BASLIK = 316;
+
+/**
+ * Belge sirasina gore GORUNUR baslik dizisi. Sayfa baglaminda kosar.
+ *
+ * Gizlilik olcutu ikilidir ve ikisi de olculerek secildi:
+ *   · `aria-hidden` — kendisinde YA DA bir atasinda (`closest`): erisilebilirlik
+ *     agacindan cikarilmis baslik hiyerarsinin parcasi degildir.
+ *   · GORUNURLUK — `display:none` elemanin KENDI hesaplanmis degerinde
+ *     gorunmez (alt agacta her eleman kendi degerini dondurur), o yuzden
+ *     render edilmislik `getClientRects()` ile olculur; `visibility` ise
+ *     KALITILIR, yani hesaplanmis deger ata zincirini zaten tasir.
+ */
+const baslikDizisiniTopla = (secici) =>
+  [...document.querySelectorAll(secici)]
+    .filter((el) => {
+      if (el.closest('[aria-hidden="true"]')) return false;
+      if (!el.getClientRects().length) return false;
+      return getComputedStyle(el).visibility === "visible";
+    })
+    .map((el) => ({
+      seviye: Number(el.tagName[1]),
+      metin: (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40),
+    }));
+
 let PAGES;
 let ROTA_KAYNAGI;
 try {
@@ -92,6 +144,7 @@ let measuredTotal = 0;
 let adimToplam = 0;
 const kovaToplam = { yapiskan: 0, gorunmez: 0, ekranDisi: 0, kalan: 0 };
 const gradyanToplam = { olculen: 0, esikAlti: 0 };
+const baslikToplam = { olculen: 0, atlama: 0, atlamaliRota: 0 };
 const gezilemeyen = [];
 const olcumArizasi = [];
 const kalanOrnekleri = [];
@@ -162,16 +215,38 @@ for (const path of PAGES) {
 
   const { ihlaller, olculen, gradyan, kovalar, kalanlar } = rotaSonucu(kayit);
 
+  // Baslik dizisi TUR BITTIKTEN SONRA okunur. Konum ikisi de olculerek secildi:
+  // bugun fark YOK (tur oncesi 316 = tur sonrasi 316, 16 rotanin hicbirinde
+  // sapma) — yani bu bir duzeltme degil, tembel mount'a karsi ucuz bir emniyet:
+  // ileride bir bolum gezilirken mount olursa erken okuma onu kacirir, gec
+  // okumanin maliyeti ise sifir. Kaydirma konumu diziyi etkilemez — olcut
+  // GORUNURLUKTUR, gorus alani degil.
+  const basliklar = await p.evaluate(baslikDizisiniTopla, BASLIK_SECICI);
+  const atlamalar = [];
+  for (let i = 1; i < basliklar.length; i++) {
+    if (basliklar[i].seviye - basliklar[i - 1].seviye > 1) {
+      atlamalar.push([basliklar[i - 1], basliklar[i]]);
+    }
+  }
+
   visited++;
   adimToplam += adim;
   measuredTotal += olculen;
   gradyanToplam.olculen += gradyan.olculen;
   gradyanToplam.esikAlti += gradyan.esikAlti;
+  baslikToplam.olculen += basliklar.length;
+  baslikToplam.atlama += atlamalar.length;
+  if (atlamalar.length) baslikToplam.atlamaliRota++;
   for (const k of Object.keys(kovaToplam)) kovaToplam[k] += kovalar[k];
   if (kovalar.kalan) kalanOrnekleri.push(`${path}:${kovalar.kalan}`);
 
   totalIssues +=
-    ihlaller.length + temel.noAlt + temel.emptyLinks + temel.btnNoName + (temel.h1 === 1 ? 0 : 1);
+    ihlaller.length +
+    atlamalar.length +
+    temel.noAlt +
+    temel.emptyLinks +
+    temel.btnNoName +
+    (temel.h1 === 1 ? 0 : 1);
 
   console.log(`\n── ${path}`);
   console.log(
@@ -181,6 +256,15 @@ for (const path of PAGES) {
   console.log(
     `   gradyan metin: ${gradyan.olculen} ölçüldü · ${gradyan.esikAlti} eşik altı`,
   );
+  console.log(
+    `   başlık dizisi: ${basliklar.map((h) => `h${h.seviye}`).join(" ") || "—"}`,
+  );
+  console.log(`   başlık hiyerarşisi: ${atlamalar.length} atlama`);
+  for (const [a, b] of atlamalar) {
+    console.log(
+      `   ✗ [başlık] h${a.seviye} → h${b.seviye} atlaması · "${a.metin}" → "${b.metin}"`,
+    );
+  }
   console.log(
     `   ölçülemeyen → yapışkan borcu:${kovalar.yapiskan} · görünmez:${kovalar.gorunmez} · ekran dışı:${kovalar.ekranDisi} · kalan:${kovalar.kalan}`,
   );
@@ -226,12 +310,23 @@ if (gradyanToplam.olculen < BEKLENEN_GRADYAN) {
   );
 }
 
+// Baslik dalinin kendi kapsam esigi: dal ihlalin YOKLUGUNU raporlar, o yuzden
+// korlesme sessiz gecerdi. Taban altina dusuldugunde kapi kirmizi doner.
+if (baslikToplam.olculen < BEKLENEN_BASLIK) {
+  kapsamSorunlari.push(
+    `görünür başlık ${baslikToplam.olculen} ölçüldü < beklenen taban ${BEKLENEN_BASLIK} — seçici körleşmiş ya da başlıklar toptan gizlenmiş olabilir`,
+  );
+}
+
 const sure = Math.round((Date.now() - baslangic) / 1000);
 console.log(
   `\nKAPSAM: ${visited} rota gezildi · ${adimToplam} ekran adımı · ${measuredTotal} eleman ölçüldü · ${sure} sn`,
 );
 console.log(
   `GRADYAN METİN: ${gradyanToplam.olculen} ölçüldü (taban ${BEKLENEN_GRADYAN}) · ${gradyanToplam.esikAlti} eşik altı`,
+);
+console.log(
+  `BAŞLIK HİYERARŞİSİ: ${baslikToplam.olculen} görünür başlık (taban ${BEKLENEN_BASLIK}) · ${baslikToplam.atlamaliRota} sayfada ${baslikToplam.atlama} atlama · kapsam: etkileşimsiz hâl (açılmamış sekme/akordeon içeriği dışarıda — B-015)`,
 );
 console.log(
   `ÖLÇÜLEMEYEN: yapışkan katman borcu:${kovaToplam.yapiskan} (B-063 — bu fazın kapsamı dışı) · görünmez:${kovaToplam.gorunmez} · ekran dışı:${kovaToplam.ekranDisi} · kalan:${kovaToplam.kalan}`,
