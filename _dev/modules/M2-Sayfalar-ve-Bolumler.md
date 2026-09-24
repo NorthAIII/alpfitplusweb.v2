@@ -49,7 +49,7 @@
 
 **Kabul Kriterleri:**
 - Tüm link ve butonlar erişilebilir adla (`a11y.mjs` "adsız link/buton" 0)
-- Dokunma hedefleri ≥ 44 px (`mobile-audit.mjs`)
+- **Dönüşüme dokunan** dokunma hedefleri ≥ 44 px — `mobile-audit.mjs` bunu 320 ve 390 px'te ölçer ve eşik altında kırmızıya döner (TASK-3.08). Kritik küme: buton · form alanı · sekme · `header`/`nav` menüsü · `/demo`, `wa.me`, `tel:` bağlantıları (nerede olursa olsun). **Alt bilgi ve içerik yolu bağlantıları ölçülür ve raporlanır ama kapıyı düşürmez** (kullanıcı kararı, PHASE-3 → Alınan Kararlar: kural kademeli kurulur). Ölçülen kutu kontrolün kendisidir, sarmalayan `<label>` değil
 - Reveal animasyonu `prefers-reduced-motion` ile devre dışı kalır
 
 **Bağımlılık:** Yok
