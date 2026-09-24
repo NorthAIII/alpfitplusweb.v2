@@ -160,7 +160,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.04 | TASK-3.04 | ✅ Tamamlandı | Kontrast ölçümü piksele taşınır — glif maskesi, ata opaklığı, ekran ekran, hareket azaltma |
 | 3.05 | TASK-3.05 | ✅ Tamamlandı | Gradyanla boyanmış metin kapıda kendi dalı olur |
 | 3.06 | TASK-3.06 | ✅ Tamamlandı | Başlık hiyerarşisi kontrolü kapıya girer |
-| 3.07 | TASK-3.07 | ⬜ Bekliyor | Kırpılmış taşma dedektörü, 320 px ve kaydırılabilir şerit ölçütü |
+| 3.07 | TASK-3.07 | ✅ Tamamlandı | Kırpılmış taşma dedektörü, 320 px ve kaydırılabilir şerit ölçütü |
 | 3.08 | TASK-3.08 | ⬜ Bekliyor | Dokunma hedefi — kritik küme kırmızı, gezinme yüzeyi raporlanır |
 | 3.09 | TASK-3.09 | ⬜ Bekliyor | Ürün turunun soluk adım kartları AA'ya çıkar (etiket · başlık · gövde) |
 | 3.10 | TASK-3.10 | ⬜ Bekliyor | Kapanış çağrısı paragrafı gradyan bant üzerinde AA'ya çıkar (5 sayfa) |

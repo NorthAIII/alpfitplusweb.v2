@@ -43,7 +43,7 @@ Yeni renk eklerken **kontrastı ölç** (`a11y.mjs`), rakamı CSS yorumuna yaz �
 | Tuzak | Belirti | Kural |
 |---|---|---|
 | `position: sticky` bölümün üst katmanında `overflow-hidden` | Sticky sessizce ölür, hata yok | Sticky kullanan bölümün **hiçbir atasında** `overflow-hidden` olmaz; taşma kesimi bölümün kendi içinde çözülür |
-| Izgara öğesinde `min-width: auto` varsayılanı | İçerik sütunu şişirir, sayfa yatay kayar (635 px / 390 px görüldü) | Grid/flex çocuğuna `min-w-0` ver; `mobile-audit.mjs` doğrular |
+| Izgara öğesinde `min-width: auto` varsayılanı | İçerik sütunu şişirir, sayfa yatay kayar (635 px / 390 px görüldü) — ya da hiç kaymaz ve içerik **sessizce kesilir** (320 px'te ölçüldü) | Grid/flex çocuğuna `min-w-0` ver. `mobile-audit.mjs` bunu **artık gerçekten doğruluyor** (TASK-3.07): 320 ve 390 px'te doğrudan metin taşıyan her elemanın kutusu onu kesen atasının kutusuna karşı ölçülür, kesilen tek eleman kapıyı kırmızıya çevirir. Kaydırılabilir kap · kayan şerit · `sr-only` yüzey muaftır ve ayrı sayılır |
 | Ekran üstü açıklama etiketi | Tam gösterdiği sayıyı örtüyordu | Ürün turunda **numaralı nokta** + kenarda açıklama; etiket görselin üstüne binmez |
 | Hero'da telefon etiketi | Telefon mockup'ının üstüne biniyordu | Mockup ve etiket ayrı grid alanlarında |
 
@@ -66,4 +66,4 @@ Konuşma diline yakın, salon sahibine hitap; kurumsal jargon yok. Kullanıcı 2
 
 ---
 
-**Son Güncelleme:** 2026-09-23 — TASK-2.06: form hatası deyimi (geçersiz alan halkası/zemini + alan bazlı metin) ölçülen kontrast rakamlarıyla eklendi.
+**Son Güncelleme:** 2026-09-24 — TASK-3.07: Düzen Tuzakları #2'nin *"`mobile-audit.mjs` doğrular"* cümlesi artık gerçek — kapı 320/390 px'te kırpılmış taşmayı ölçüyor; kuralın yanına ölçütü ve muafiyetleri yazdım.

@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.06: tarayıcı-ölçümü atomu bir tuzak daha kazandı, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca genişletildi). Tuzak ekran ölçen **her** kapıyı vurur ve sessizce *sahte yeşil* üretir: "bu eleman görünür mü" sorusu tek `getComputedStyle` çağrısıyla ölçülemez — `display:none` bir **atadaysa** elemanın kendi hesaplanmış `display` değeri yine kendi değerini döndürür (kalıtılmaz), `visibility` ise kalıtıldığı için doğrudan okunur. Doğru ölçüt üçlüdür: `aria-hidden` ataları + `getClientRects()` + `visibility`. Teyit ölçütü süzgeçli/süzgeçsiz karşı-ölçümdür (ölçüldü: 368/16 → 320/0).
+**Son Güncelleme:** 2026-09-24 — TASK-3.07: tarayıcı-ölçümü atomu bir tuzak daha kazandı, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca zaten atomu ölçüm tuzaklarının evi olarak gösteriyor). Tuzak sınıflandıran **her** dalı vurur: *"kesildikten sonra görünür alanı ~0 ise gizlidir"* kestirmesi yanlıştır — yatay kaydırılabilir bir şeritte görüş dışına kaymış kart da 0 alan verir; ölçüldü, 83 kalemin **66'sı** yanlış kovaya düşüyordu ve kaydırılabilir nüfus raporda görünmez oluyordu. Doğru ölçüt **beyandır** (`clip-path: inset(50%)` — Tailwind v4'te `clip` değil). Ayrıca: sınıflandırma **sırası** ve ölçüm **birimi** (metin menzili / eleman kutusu / tüm eleman) sonucu değiştirir, ikisi de bilinçle seçilir.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 

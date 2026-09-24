@@ -395,3 +395,39 @@ süzgeçli ve süzgeçsiz okumayı yan yana koy. TASK-3.06'da ölçüldü — sa
 süzgeçsiz **368 başlık / 16 atlama**, süzgeçli **320 başlık / 0 atlama**; süzgeç
 olmasa 16 sahte ihlal doğuyordu. Süzgecin hiçbir şeyi elemediği hâl de ancak böyle
 görülür.
+
+## "Görünür alanı sıfır" gizliliğin kanıtı DEĞİLDİR — kaydırılabilir kapta kayan içerik de sıfır verir (TASK-3.07, 2026-09-24)
+
+Kırpılmış/gizli içeriği sınıflandıran her dal şu kestirmeye uzanır: *"kesildikten
+sonra görünür alanı ~0 kaldıysa zaten gizlidir, muaf sayayım."* **Yanlış** — ve
+yanlışlığı sessizdir, çünkü sonuç yine "muaf" olur, yalnız **hangi kovaya** düştüğü
+değişir.
+
+Ölçüldü (320 px, 16 rota): alana bakan ölçüt **83** kalem yakalıyor; bunların
+**66'sı** aslında *kaydırılabilir* kovasına ait — yatay kaydırılabilir bir şeritte
+görüş alanının dışına kaymış kartların kesişim alanı da tam tamına 0'dır. Sonuç:
+kaydırılabilir nüfus raporda **görünmez** olur ve o dalın kapsam tabanı anlamsızlaşır.
+
+Doğru ölçüt **beyandır**: kesen kutunun kendisi görsel-gizleme deyimini ilan ediyor
+mu?
+
+```js
+const srOnlyBeyani = (cs, kb) =>
+  /inset\(\s*50%/.test(cs.clipPath || "") || (kb.width <= 2 && kb.height <= 2);
+```
+
+⚠️ **Tailwind v4'te `sr-only` `clip-path: inset(50%)` yazar, `clip` değil** —
+`getComputedStyle(el).clip` bu deyimde `"auto"` döner ve `clip`'e bakan bir ölçüt
+hiçbir şey yakalamaz (ölçüldü).
+
+⚠️ **Sınıflandırma SIRASI ölçümün sonucunu değiştirir**, o yüzden bilinçle seçilir
+ve gerekçesi yazılır. TASK-3.07'nin sırası: gizli → hareketli şerit →
+kaydırılabilir → gerçek. Hareket muafiyeti kaydırılabilirden **önce** gelmeli:
+kayan şeridin kesen kutusu `overflow:hidden`'dır, yani kaydırma testi önce koşarsa
+şerit "gerçek ihlal"e düşer.
+
+⚠️ **Ölçüm birimini de bilinçle seç — sonucu değiştirir.** Aynı kırpma üç tanımla
+ölçüldü: metin **menzili** (`Range`) 9 kalem/66 px · **doğrudan metin taşıyan
+elemanın kutusu** 19/70 · **tüm elemanlar** 47/2595. Devralınan bir rakama kalibre
+ediyorsan önce o rakamın hangi tanımdan geldiğini bul; bulgu gövdesinde iki tanım
+birden yazılı olabilir (B-033'te öyleydi).
