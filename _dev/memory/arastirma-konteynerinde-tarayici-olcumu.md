@@ -48,6 +48,42 @@ timeout 900 docker compose --profile research run --rm --name audit-<etiket> \
 - Saf fonksiyonlar artık `web` konteynerinde `npm test` (Vitest, `tests/`) ile sınanır —
   ayrı bir betik/kopyalama tarifi gerekmez (TASK-1.16).
 
+## Ekran ekran DOM taraması — geometri kaydırmadan bağımsızdır (TASK-3.01, 2026-09-24)
+
+Sayfayı `0,9 × viewport` adımlarla gezip **her adımda tüm DOM'u** taramak ölçümü
+kullanılamaz hâle getirir: her adımda `getComputedStyle` ile ata zinciri yürünürse
+16 rota × 5 genişlik **~2 saat** sürer (ölçüldü). Oysa `reducedMotion: 'reduce'`
+altında kırpma / taşma / ızgara / ekran-dışı-kontrol geometrisi **kaydırma
+konumundan bağımsızdır** — `.reveal` geçişleri `.01ms`'e indiği için yerleşim
+oturur ve yatay geometri hiç değişmez (reveal yalnız `translateY` + `opacity`).
+
+Doğru kurulum — aynı sonucu **4 dakikada** verir (`kirpilmis=19` değişmedi):
+
+- **Geometrik ölçüm:** rota+genişlik başına **tek tam-belge geçişi**, ekran ekran değil.
+- **Stil önbelleği:** `const SC = new Map()` + `st(el)` sarmalayıcı; aynı elemana
+  ikinci kez `getComputedStyle` çağrılmaz.
+- **Ata yürüyüşleri memoize edilir** (opaklık zinciri, yapışkan zinciri, animasyon
+  zinciri) — özyineleme + `Map`, her düğüm bir kez hesaplanır.
+- **Üst üste binme taraması** yaprakları `top`'a göre sıralar ve
+  `if (b.top >= a.bottom) break;` ile erken çıkar — O(n²) pratikte doğrusala iner.
+
+Ekran ekran gezinti yine de **korunur**, ama yalnız üç iş için: tembel içeriği
+uyandırmak, adım saymak, her ekranda sayfa yatay kaydırmasını ölçmek.
+
+⚠️ **Yapışkan/sabit katman ekran ekran ölçümde her adımda yeniden görünür.**
+İlk koşumda üst-üste-binme kovası 28 sahte pozitif verdi ve hepsi Header'ın
+"Plus" yaprağıydı. Zincirde `position: fixed|sticky` varsa öğe ölçüm dışına
+alınır **ve ayrı sayılır** — bu bir çözüm değil, kayıtlı borçtur (`BULGULAR.md`
+→ B-063).
+
+⚠️ **Sınır kutusu çakışması görsel çakışma DEĞİLDİR.** Satır-kutusu payı
+(`line-height` > glif yüksekliği), döndürülmüş öğenin eksen-hizalı kutusu ve
+mockup içi mikro-tablolar sahte pozitif üretir. 80 kombinde 4 aday çıktı, **1'i
+gerçekti**; ayırt etmenin tek güvenilir yolu hedefe **kaydırıp kırpılmış ekran
+görüntüsü** almaktır (kaydırmadan `clip` vermek "Clipped area is either empty or
+outside the resulting image" ile düşer — belge koordinatını al, `scrollTo` yap,
+sonra yerel koordinatla kırp).
+
 ## Locator tuzağı — aynı metin iki yerde (TASK-2.11, 2026-09-23)
 
 Sitenin **asistan paneli ve SSS akordiyonu aynı soruları taşıyor** ("Ürün hangi aşamada?",
