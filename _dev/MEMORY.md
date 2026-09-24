@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.16: tarayıcı ölçümü atomuna tek bölüm eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: **gezinme ölçümü `waitForLoadState("load")` ile yapılmaz** — Next.js App Router iç bağlantıları istemci-taraflı gezindiği için `load` bir daha ateşlenmez, çağrı anında döner ve okunan `p.url()` hâlâ eski sayfayı gösterir (ölçüldü: doğru çalışan bir bağlantı "yanlış sayfaya gitti" diye okundu); doğrusu `waitForURL("**/hedef")` + varışta ikinci bir çapa. Aynı bölümde locator tuzağının yeni hâli: **aynı href iki kırılımda** — `header a[href="/demo"]` masaüstü düğmesini (`display:none`) önce eşler ve tıklama zaman aşımına düşer, çare `:visible`.
+**Son Güncelleme:** 2026-09-24 — TASK-3.25: iddia/çapa atomuna tek yan kural eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: **kişisel veriyi bir dış adrese koyan arayüz yolu da yasal metnin aktarım beyanını tetikler** — ön-doldurulmuş `wa.me?text=` / `mailto:?body=` bağlantısında veri, kullanıcı mesajı göndermeden **tıklama anında** o tarafın sunucusuna gider; ölçüldü ve `legal.ts`'in dört kalemlik tedarikçi listesinde karşılığı çıkmadı. Kural: yolu ölç, karşılığı yoksa **bildir** — yeni aktarım cümlesi yazmak ölçülmemiş bir hukuki nitelendirme olur (B-008).
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---

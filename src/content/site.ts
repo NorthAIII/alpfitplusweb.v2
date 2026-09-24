@@ -26,6 +26,66 @@ export const CONTACT = {
   city: "Tuzla, İstanbul",
 } as const;
 
+/**
+ * 503 KURTARMA BAGLANTISI (TASK-3.25, B-022'nin ikincil onerisi).
+ *
+ * Form hedefe yazamayip 503 `no-sink` dondugunde kullanici WhatsApp'a
+ * yonlendiriliyor ama az once yazdigi her seyi elle yeniden yazmak zorunda
+ * kaliyordu. Asagidaki yardimci, `?text=` parametresiyle mesaj kutusunu
+ * onceden doldurulmus bir taslakla acar.
+ *
+ * ⚠️ TABAN `CONTACT.whatsapp.href` DEGISMEZ. Olculdu (2026-09-24):
+ * `CONTACT.whatsapp` src/ icinde 12 dosyada 23 kez geciyor, 15'i `.href`
+ * (Header, Footer, Hero, SSS, 404, asistan, destek, demo sayfasi, kapanis
+ * cagrisi, formun kendi iki baglantisi). Tabana `?text=` koymak sitedeki HER
+ * WhatsApp baglantisina bos ya da yanlis bir on-doldurma tasirdi; on-doldurma
+ * bu yuzden CAGRI YERINDE kurulur (memory/tek-kaynak-atlayan-cagri-sitesi-
+ * supurmesi.md).
+ *
+ * ⚠️ KAPSAM DAR TUTULDU: yalniz kullanicinin KENDI girdigi ad, kulup ve
+ * telefon tasinir. Serbest mesaj alani ve e-posta adresi BILINCLE disarida —
+ * adres satiri ucuncu bir tarafin (wa.me) sunucusuna gider, yani tasinan her
+ * alan ucuncu tarafa acilan bir yuzeydir. Alan kumesi burada, tek yerde,
+ * `WHATSAPP_DRAFT_FIELDS` olarak durur; kapi (tests/whatsapp-draft.test.ts)
+ * bu sabitten degil DAVRANISTAN olcer -- tum form kaydi verilir, ciktida
+ * yalniz uc alanin degeri cikmalidir.
+ *
+ * Bos alan satir uretmez; hicbir alan dolu degilse `?text=` HIC eklenmez ve
+ * baglanti bugunku sade haline duser (adres satirina bos bir sablon konmaz).
+ */
+export const WHATSAPP_DRAFT_FIELDS = [
+  { key: "name", label: "Ad" },
+  { key: "club", label: "Kulüp" },
+  { key: "phone", label: "Telefon" },
+] as const;
+
+/** Taslagin giris cumlesi — metin bilesende degil burada (CLAUDE.md → Kod kuralları). */
+const WHATSAPP_DRAFT_INTRO = "Merhaba, siteden demo talebi göndermek istedim ama form gönderilemedi. Bilgilerim:";
+
+/**
+ * Alan basina karakter tavani. Tarayici alanlarda `maxlength` tasimiyor, yani
+ * istemci tarafinda deger sinirsiz olabilir; adres satirinin uzunlugu ise
+ * sinirlidir (tarayici ve wa.me tarafinda). Tavan ucun kendi sinirlarinin
+ * (api/demo/route.ts → MAX: name 120, club 160, phone 40) ustunde degil,
+ * ALTINDA tutuldu — burada amac dogrulama degil adresi ayakta tutmak.
+ */
+const WHATSAPP_DRAFT_MAX = 120;
+
+/**
+ * Form kaydindan on-doldurulmus WhatsApp adresi uretir. Hicbir alan dolu
+ * degilse taban `href` aynen doner.
+ */
+export function whatsappDraftHref(values: Readonly<Record<string, string>>): string {
+  const lines = WHATSAPP_DRAFT_FIELDS.map(({ key, label }) => {
+    const value = (values[key] ?? "").replace(/\s+/g, " ").trim().slice(0, WHATSAPP_DRAFT_MAX);
+    return value ? `${label}: ${value}` : "";
+  }).filter(Boolean);
+
+  if (lines.length === 0) return CONTACT.whatsapp.href;
+  const text = [WHATSAPP_DRAFT_INTRO, ...lines].join("\n");
+  return `${CONTACT.whatsapp.href}?text=${encodeURIComponent(text)}`;
+}
+
 export const NAV = [
   { label: "Özellikler", href: "/ozellikler" },
   { label: "Segmentler", href: "/segmentler" },

@@ -17,6 +17,7 @@
 - Alan uzunluk sınırları (`MAX`) aşılınca değer sessizce kırpılır, istek reddedilmez; bozuk JSON gövdesi 400 döner
 - 6. istek 429 döner
 - Hiçbir hedef tanımlı değilse 503 döner; form WhatsApp bağlantısı gösterir, "gönderildi" demez
+- **503 (`no-sink`) hâlinde WhatsApp bağlantısı yazılanları taşır** (TASK-3.25): mesaj kutusu `?text=` ile ad, kulüp ve telefonla önceden dolu açılır. Kapsam üç yerden birden dar tutulur — (1) yalnız `no-sink`, doğrulama hatalarında ve hız sınırında bağlantı sade kalır (oralarda veri kaybolmaz); (2) yalnız üç alan, serbest mesaj ve e-posta **girmez**; (3) taban `CONTACT.whatsapp.href` değişmez, ön-doldurma çağrı yerinde kurulur. Alanların hepsi boşsa `?text=` hiç eklenmez. Kapı: `tests/whatsapp-draft.test.ts` (alan kümesini elle saymaz — fonksiyona tüm form kaydı verilir, çıktıda ne çıktığı ölçülür)
 - Rıza kutusu işaretsizse istemci göndermez
 
 **Bağımlılık:** M1 `CONTACT` (WhatsApp adresi)
@@ -35,7 +36,7 @@
 - Önizleme ortamından gönderilen gerçek bir demo talebi hedefte (depo koleksiyonu veya dosya) görünür
 - Depo düşerse (5xx, zaman aşımı, `413`/`429` ya da sözleşme dışı yanıt — yalnız `201` kayıt sayılır) uç e-postaya geçmeden önce hatayı loglar; kayıt **ve** e-posta birlikte düşerse 503 döner ve form kullanıcıya WhatsApp yolunu gösterir
 - Sır değerleri repoda yok; `.env.example` yalnız anahtar adlarını taşır
-- **Hatta yeni bir hedef, yeni bir alan ya da yeni bir sağlayıcı girdiğinde `src/content/legal.ts` aynı işte gözden geçirilir** ve neyin değiştiği (ya da neden değişmediği) yazılır — B-024'ün kalıcı koruma kalemi, TASK-2.16'da buraya kondu. Gerekçe ölçülmüş: metin gerçeğin **arkasında** kalmadı, gerçek metnin **önünden** geçti (lead hedefi değişti, hız sınırı sonradan eklendi, `ip_hash` gövdeye girdi, onay e-postası açıldı — dördü de metne yansımadan yayında durdu). Kapının mekanik yarısı ayrı evdedir ([B-060](../bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) → TASK-2.18/2.19); bu kriter insan tarafını tutar
+- **Hatta yeni bir hedef, yeni bir alan ya da yeni bir sağlayıcı girdiğinde `src/content/legal.ts` aynı işte gözden geçirilir** ve neyin değiştiği (ya da neden değişmediği) yazılır — B-024'ün kalıcı koruma kalemi, TASK-2.16'da buraya kondu. ⚠️ **"Yeni hedef" yalnız bizim seçtiğimiz tedarikçi değildir:** kişisel veriyi bir dış adrese koyan her arayüz yolu da (ön-doldurulmuş `wa.me`/`mailto:` bağlantısı gibi — veri, kullanıcı mesajı göndermeden, tıklama anında o tarafın sunucusuna gider) aynı gözden geçirmeyi tetikler. İlk örnek TASK-3.25: ölçüldü ve **karşılığı çıkmadı**, metne dokunulmadı, kayıt `BULGULAR.md` → Gelen Kutusu ve `tasks/archive/TASK-3.25.md`. Gerekçe ölçülmüş: metin gerçeğin **arkasında** kalmadı, gerçek metnin **önünden** geçti (lead hedefi değişti, hız sınırı sonradan eklendi, `ip_hash` gövdeye girdi, onay e-postası açıldı — dördü de metne yansımadan yayında durdu). Kapının mekanik yarısı ayrı evdedir ([B-060](../bulgular/B-060-yasal-beyani-koruyan-kapi-yok.md) → TASK-2.18/2.19); bu kriter insan tarafını tutar
 
 **Bağımlılık:** M7 F7.3 (Vercel projesi ve env)
 

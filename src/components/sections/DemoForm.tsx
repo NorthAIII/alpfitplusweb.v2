@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, Loader2, MessageCircle, Send, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { CONTACT } from "@/content/site";
+import { CONTACT, whatsappDraftHref } from "@/content/site";
 import { SEGMENTS } from "@/content/segments";
 import { cn } from "@/lib/cn";
 import { SURFACES, track } from "@/lib/analytics";
@@ -82,6 +82,17 @@ export function DemoForm() {
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState("");
   const [invalidFields, setInvalidFields] = useState<readonly string[]>([]);
+  // Hata kutusundaki kurtarma baglantisinin adresi (TASK-3.25). Varsayilan
+  // taban adrestir; YALNIZ uc 503 `no-sink` dondugunde on-doldurulmus surume
+  // yukseltilir. Dar tutulmasinin gerekcesi: `no-sink` talebin HICBIR hedefe
+  // yazilamadigi haldir, yani kullanicinin yazdiklari gercekten kaybolur ve
+  // WhatsApp tek kurtarma yoludur. Dogrulama hatalarinda (`missing`,
+  // `missing-contact`, `bad-contact`, `no-consent`) veri kaybolmaz -- alan
+  // duzeltilip yeniden gonderilir; oraya on-doldurma koymak hicbir sey
+  // kurtarmadan kisisel veriyi ucuncu tarafin adres satirina tasirdi.
+  // `rate-limited` ve ag hatasi da bilincle disarida: ikisinde de form dolu
+  // kalir ve tekrar denemek islerken, adresin kapsami kendiliginden genisler.
+  const [recoveryHref, setRecoveryHref] = useState<string>(CONTACT.whatsapp.href);
   // Sonuc yuzeyi: basari kutusu (role=status) ya da hata kutusu (role=alert).
   // Ikisi ayni anda DOM'da olmaz, tek ref ikisine de yeter.
   const resultRef = useRef<HTMLElement | null>(null);
@@ -128,6 +139,9 @@ export function DemoForm() {
     // duzeltilen alanda `aria-invalid`'in yeniden gonderime kadar surmesi
     // yaygin desendir (ARIA 1.2, GOV.UK).
     setInvalidFields([]);
+    // Onceki turun on-doldurmasi da burada dusurulur: bir sonraki hata baska
+    // bir kod olabilir ve eski taslak adres satirinda asili kalmamali.
+    setRecoveryHref(CONTACT.whatsapp.href);
     fieldToFocus.current = null;
     try {
       const res = await fetch("/api/demo", {
@@ -147,6 +161,16 @@ export function DemoForm() {
         setState("error");
         setError(json.message ?? "Bir sorun oldu. Lütfen WhatsApp'tan yazın.");
         const code = typeof json.code === "string" ? json.code : "";
+        if (code === "no-sink") {
+          // TUM form kaydi verilir; hangi alanin tasinacagini tek kaynak
+          // (`WHATSAPP_DRAFT_FIELDS`) secer -- burada alan adi sayilmaz ki
+          // secim iki yerde tutulmasin.
+          const values: Record<string, string> = {};
+          for (const [k, v] of Object.entries(data)) {
+            if (typeof v === "string") values[k] = v;
+          }
+          setRecoveryHref(whatsappDraftHref(values));
+        }
         const marked = markedFieldsFor(code, FIELD_ERRORS[code] ?? [], data);
         setInvalidFields(marked);
         const target = marked[0] ?? null;
@@ -346,7 +370,7 @@ export function DemoForm() {
           <span>
             {error}{" "}
             <a
-              href={CONTACT.whatsapp.href}
+              href={recoveryHref}
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold underline underline-offset-4"
