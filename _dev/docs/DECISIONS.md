@@ -20,6 +20,27 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-25 — `Benefits` bölümünün ritmi "döküm"dür: tam genişlikte saç teli satırlar + ortada tek gerçek fotoğraf; ızgara ve ikon karosu geri gelmez
+
+**Bağlam:** B-051, ana sayfada kullanıcının reddettiği kalıbın üç kez tekrarlandığını ölçmüştü. `Benefits` tarifin birebir örneğiydi: `lg:grid-cols-4` üzerinde 8 eşit kart, her kart `IconBox` karosu + başlık + iki satır gövde. STYLE-GUIDE → Kullanıcının Refleksleri → Kullanma: *"Jenerik ikonlu kart ızgarası (3×N eşit kart, ikon + başlık + iki satır). Bölüm tasarlarken düzen çeşitlendir: sahne, liste, çizim, fotoğraf kırpma."* Bölüm kickoff'tan önce yazılmıştı; refleks 2026-09-11'de kayda geçti ve mevcut bölümlere geri uygulanmadı.
+
+**Karar:**
+- **Bölümün ritmi DÖKÜMDÜR.** Kart yok, yüzey dolgusu yok, halka yok: sekiz kalem tam genişlikte, saç teli çizgilerle ayrılmış satırlar hâlinde durur. Satır geniş ekranda asimetriktir (**0,36 / 0,64** — başlık solda kendi kulvarında, gövde sağda, `items-baseline`), dar ekranda dikeye yığılır.
+- **İkon karosu geri gelmez.** İkon, başlığın satır içinde 18×18 `sage-ink` bir işarettir ve `aria-hidden` taşır. `IconBox` bu bölümde kullanılmaz.
+- **Bölümün ortasında tek bir gerçek fotoğraf bandı durur** (dördüncü kalemin ardında) ve **üzerine metin yazılmaz**. Bant kompozisyonlu bir zemindir; STYLE-GUIDE'ın `faint` kuralı böyle zeminlerde kontrast payının yendiğini ölçmüştür, o yüzden bant sessiz bırakılır. Bilgi taşımadığı için `alt=""`.
+- **Metin bu bölümün işi değildir.** Sekiz kalemin cümlesi ve sırası `src/content/product.ts` → `BENEFITS`'tedir; düzen değişimi cümleye de sıraya da dokunmaz.
+
+**Gerekçe:**
+- **"İki sütunlu bölme" bu sayfada ritim değişimi DEĞİLDİR — sayıldı:** ana sayfanın 15 bölümünün **8'i** zaten iki sütunlu bölme (Hero · Chaos · Roles · ProductStory · HowItWorks · PricingBlock · FounderProgram · Faq). Dokuzuncusunu eklemek kalıbı kırmaz. Tam genişlikte saç teli döküm sayfada hiç kullanılmıyor; öteki liste ritimleri (Chaos'un `divide-y` listesi, PricingBlock'un `dl`'i, Faq'ın akordeonu) hep bir bölmenin **dar** sütununda yaşıyor. Refleks listesinin kendisi de **liste**yi adıyla meşru alternatif sayıyor.
+- **"lg'de iki sütunlu döküm" reddedildi:** masaüstü boyunu yarıya indirirdi ama "8 eşit hücre"yi geri getirirdi — yasaklanan şeyin yumuşatılmış hâli.
+- **"Sahne / ürün görseline bağlı anlatım" reddedildi:** bir önceki bölüm (`ProductStory`) zaten yapışkan ürün turudur; aynı ritmi ard arda iki kez kullanmak "her bölüm bir öncekinden farklı ritimde" maddesini bozardı.
+- **"Üç kümeye ayırma" reddedildi** (bölümün kendi lead cümlesi *"para, kapasite ve üye"* diyor): küme etiketleri **yeni metin** olurdu ve sekiz kalem 3/2/2'ye temiz bölünmüyordu — "Çift kayıt biter" hiçbir kümeye oturmuyor.
+- **Fotoğraf bilinçli bir boy bedeli taşır ve bedeli ölçüldü.** Masaüstünde bölüm +447 px uzuyor, bunun ~272 px'i banttır. Fotoğrafsız hâl masaüstünde başa baş olurdu ama bölüm sade bir metin listesine inerdi; kullanıcının brief'i *"görsel olarak çok daha zengin"* ve refleks listesinin "İstiyor" maddesi gerçek fotoğrafı adıyla sayıyor. Kullanılan dosya (`salon-genis-wide.webp`, 2000×760) foto hattının kendi notunda *"Tam genişlik bant için"* diye üretilmiş ve bugüne kadar hiç çağrılmamıştı.
+- **Mobil boy düşer, masaüstü boyu artar — bilinçli.** Kayıttaki şikâyet mobil uzunluktur: @390 **−320 px**, @320 **−311 px**; masaüstünde **+447 px** (sayfanın %2,9'u).
+- **Ölçüldü ki kalıptan gerçekten çıkıldı** (3100, kalıbın üç mekanik ayağı ayrı ayrı sayıldı): ızgara kabı **1 → 0**, ikon karosu **8 × 44×44 → 0**, kalem kutusu benzersiz ölçü @1440 **1 → 2** (eskiden sekizi de birebir 271×231), gerçek fotoğraf **0 → 1**. Beş kapı da tabanda kaldı: mobil kapı **0 / çıkış 0 (yeşil)**, a11y **6 / çıkış 1** (tabana eşit), font-guard **85.129 karakter / çıkış 0**, perf `/` **141 KB masaüstü · 132 KB mobil** (fotoğraf tembel), `npm test` **219 + 2**. Hiçbir kapsam tabanı oynamadı.
+
+**Etki:** `src/components/sections/Benefits.tsx` (tek dosya). `src/content/product.ts`'e **dokunulmadı**. B-051'in ikinci yarısı (`Modules`'ün tırtıklı 5'li ızgarası) TASK-3.19'dadır ve bu kararın kapsamı dışındadır. **Kullanıcı beğenisi alınmadı** (koşumun duran yetkilendirmesiyle seçildi) → `kanal: UAT`; düzen reddedilirse eski hâl `ae80fb0`'da.
+
 ### 2026-09-24 — Gradyanla boyanmış metin muafiyet kovası değil, ölçülen bir daldır; yargı değeri gradyanın en açık durağıdır
 
 **Bağlam:** Bir gün önceki ölçüm sözleşmesi (aşağıdaki kayıt) `gradyan metin`i **"adı konmuş, sahibi belli bir muafiyet kovası"** olarak sabitlemişti: raporlanır, kapıyı düşürmez. İcra sırasında (TASK-3.05) bu fıkra düştü. Sebep teknik: `background-clip: text` ile boyanan metnin glif dolgusu **zaten** şeffaf olduğu için TASK-3.04'ün gizleme kuralı onu hiç değiştirmiyor — iki kare birebir aynı çıkıyor ve glif maskesi boş kalıyor. Ama boyayan şey metnin rengi değil, elemanın **gliflere kırpılmış arka planı**: o kaldırılınca maske doğuyor ve sınıf ölçülebilir hâle geliyor.

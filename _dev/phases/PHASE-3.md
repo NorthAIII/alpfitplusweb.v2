@@ -172,7 +172,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.16 | TASK-3.16 | ✅ Tamamlandı | Mobilde ilk ekranda demoya çıkan bir yol — menüye "Demo", yüzen düğme erken |
 | 3.25 | TASK-3.25 | ✅ Tamamlandı | Form 503 verdiğinde WhatsApp bağlantısı yazılanları taşır |
 | 3.17 | TASK-3.17 | ✅ Tamamlandı | Dönüşüme dokunan 19 hedef 44 px'e çıkar |
-| 3.18 | TASK-3.18 | ⬜ Bekliyor | Faydalar bölümünün 8 eşit kartı reddedilen kalıptan çıkar |
+| 3.18 | TASK-3.18 | ✅ Tamamlandı | Faydalar bölümünün 8 eşit kartı reddedilen kalıptan çıkar |
 | 3.19 | TASK-3.19 | ⬜ Bekliyor | Modüller bölümünün tırtıklı 5'li ızgarası yeniden kurulur |
 | 3.20 | TASK-3.20 | ⬜ Bekliyor | `priority`, `sizes` ve hi-dpi varyant tavanı gerçek yerleşime çekilir |
 | 3.21 | TASK-3.21 | ⬜ Bekliyor | Geçiş görselleri ağaçtan düşer, dekoratif bantların alt metni boşalır |
