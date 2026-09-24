@@ -84,6 +84,59 @@ görüntüsü** almaktır (kaydırmadan `clip` vermek "Clipped area is either em
 outside the resulting image" ile düşer — belge koordinatını al, `scrollTo` yap,
 sonra yerel koordinatla kırp).
 
+## JS kapalı sayfada page timer'ı hiç ateşlenmez — adımlamayı Node sürer (TASK-3.02, 2026-09-24)
+
+`javaScriptEnabled: false` bağlamında `page.evaluate` **çalışır** (ölçüldü: DOM sorguları,
+`getComputedStyle`, hatta `window.scrollTo` hepsi doğru sonuç verir) — ama sayfanın
+**zamanlayıcıları çalışmaz**. Yani `evaluate` içine konan
+
+```js
+await new Promise((r) => setTimeout(r, 20));   // ← JS kapaliyken ASLA cozulmez
+```
+
+sonsuza kadar asılır ve `page.evaluate`'in **varsayılan zaman aşımı yoktur**: koşum hata
+vermeden donar. Ölçüldü (2026-09-24): tur betiği JS-kapalı ayağının ilk sayfasında dondu,
+49 dakika boyunca %0,02 CPU'da bekledi, tek bir satır bile basmadı. Teşhisin ayırt edicisi
+`docker stats` — asılı koşum CPU'suzdur, yavaş koşum değildir.
+
+Doğrusu: **bekleme Node tarafında**, sayfa içinde değil.
+
+```js
+for (let i = 1; i <= n; i++) {
+  await p.evaluate((y) => window.scrollTo(0, y), hedefY);  // senkron, JS kapaliyken de calisir
+  await new Promise((r) => setTimeout(r, 45));             // Node'un kendi timer'i
+}
+```
+
+⚠️ **Çıktıyı ayak ayak yaz.** Aynı koşumda tamamlanmış yedi bağlamın sonucu tek dosyaya
+sonda yazılacağı için asılma anında hepsi birden kayboldu ve yeniden ölçmek gerekti.
+Uzun turda her ayak kendi dosyasına yazılır.
+
+## Hareket azaltma animasyonun ADINI bırakır, SÜRESİNİ sıfırlar (TASK-3.02, 2026-09-24)
+
+`globals.css:232` `prefers-reduced-motion: reduce` altında `animation-duration: .01ms` ve
+`animation-iteration-count: 1` dayatıyor. Sonuç: animasyonlu eleman **bitmiş** durumda
+durur ve `document.getAnimations()` onu koşar göstermez — ama `animationName` **yerinde
+kalır** (`marquee`, `pulse-ring`).
+
+Bu, kırpma/taşma dedektörünün muafiyet ölçütünü belirler: muafiyet **ada** bakmalı,
+**süreye değil**.
+
+```js
+const own = s.animationName && s.animationName !== 'none';          // DOGRU
+const own = s.animationName !== 'none' && parseFloat(s.animationDuration) > 0.05;  // YANLIS
+```
+
+Ölçüldü: süreye bakan sürüm, hareket azaltma altında koşan turda 390 px'te **18 sahte
+pozitif** verdi ve **hepsi** kayan tanıtım şeridinin (`Marquee`) etiketleriydi — taşma
+2.638 px'e kadar çıkıyordu, yani "gerçek" görünecek kadar büyüktü. Ada çevrildikten sonra
+aynı koşum **0** verdi.
+
+⚠️ **Bunu yakalayan şey kalibrasyon koşumuydu, gözden geçirme değil.** Devralınan bir
+rakama karşı koşulan bir tur (T1: *"390 px'te kırpılan 0"*) sahte pozitifi ilk turda
+görünür yapar. Yeni bir dedektör kurarken **her zaman** kayıtlı bir rakamı yeniden üreten
+bir kol koştur; "0 buldum" ile "bakmadım" ancak böyle ayrışır.
+
 ## Locator tuzağı — aynı metin iki yerde (TASK-2.11, 2026-09-23)
 
 Sitenin **asistan paneli ve SSS akordiyonu aynı soruları taşıyor** ("Ürün hangi aşamada?",

@@ -155,7 +155,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | # | Task | Durum | Açıklama |
 |---|------|-------|----------|
 | 3.01 | TASK-3.01 | ✅ Tamamlandı | Genişlik turu — 16 sayfa × 320/390/412/768/1440 px, bölüm bölüm |
-| 3.02 | TASK-3.02 | ⬜ Bekliyor | Dört yeni eksen turu — %200/%400 büyütme, hareket azaltma, JS kapalı, yatay tutuş |
+| 3.02 | TASK-3.02 | ✅ Tamamlandı | Dört yeni eksen turu — %200/%400 büyütme, hareket azaltma, JS kapalı, yatay tutuş |
 | 3.03 | TASK-3.03 | ⬜ Bekliyor | Kapı zemini — 16 rota tek kaynaktan, yayın kopyası hedefi, çıkış kodu, kapsam eşiği |
 | 3.04 | TASK-3.04 | ⬜ Bekliyor | Kontrast ölçümü piksele taşınır — glif maskesi, ata opaklığı, ekran ekran, hareket azaltma |
 | 3.05 | TASK-3.05 | ⬜ Bekliyor | Gradyanla boyanmış metin kapıda kendi dalı olur |

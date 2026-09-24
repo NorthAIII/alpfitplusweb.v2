@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-24 — **TASK-3.01 ✅ genişlik turu koşuldu:** 16 rota × 5 genişlik = 80 kombin, **881 ekran**. Devralınan **sekiz rakamın sekizi de birebir doğrulandı** (B-033: 320 px'te 19 kırpılmış düğüm / 390 px'te 0 · B-022: 390 px'te 6 boş sayfa, 320 px'te 13/16 · B-032 soluk kartlar yalnız 1440'ta · B-051 tırtıklı `[3,2]`) — hiçbir planlanmış düzeltmenin dayanağı çürümedi, **plan revizyonu gerekmedi**, kalan 24 task geçerli. Bir yeni bulgu: **B-064** (`/yazilim-secerken`'de 320/390/412 px'te iki fiyat etiketi üst üste biniyor, "99Alpfit Plus 1.800 ₺" okunuyor — ne kırpma ne kontrast kapısı bu sınıfı görüyor). Kapsam dışı iki not kanvasa düştü. Kırpma muafiyeti zorunluluğu yeniden ölçüldü: 235 ham isabetin **216'sı muaf**, 19'u gerçek.
+**Son Güncelleme:** 2026-09-24 — **TASK-3.02 ✅ dört yeni eksen turu koşuldu:** 12 bağlam × 16 rota = **192 kombin**, 240 ölçüm örneği. **M2 F2.3'ün hiç ölçülmemiş kriteri ilk kez ölçüldü ve geçti** — hareket azaltma altında `.reveal` sınıfı 0, koşan animasyon 0 (kontrol grubunda 134 ve 33-36), yani TASK-3.04'ün ön koşulu sağlam ve **plan revizyonu gerekmedi**. %400 büyütme reflow açısından **320 px'in tam eşi** çıktı (19 kırpılmış düğüm / 70 px, T1'in rakamıyla birebir); %200 ve %100'de 0. İlk ekran dönüşüm boşluğu büyütme ve yatay tutuşta çok daha geniş: %200'de 10/16, %400'de 16/16, yatay tutuşta 16/16. Bir yeni bulgu: **B-065** (JS kapalıyken demo formu talebi sessizce kaybediyor ve ad/telefon/e-postayı adres çubuğuna yazıyor — ölçüldü). Üç JS-kapalı kalemi kanvasa düştü; TASK-3.07 için **dördüncü** kapı muafiyeti ölçüldü (atlama bağlantısı).
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -11,7 +11,7 @@
 **Faz:** Phase 3 — Görsel ve mobil iyileştirme
 **Milestone:** Site dar telefondan büyütülmüş yazıya kadar bölüm bölüm gezildi (gerçek cihaz dâhil) ve çıkanlar triyaj edildi; ölçülmüş beş kontrast ihlali ve 320 px'te kesilen içerik kalmadı; telefonda her sayfanın ilk ekranında demoya çıkan bir yol var ve dönüşüme dokunan her hedef ≥ 44 px; kontrast ve mobil kapıları 16 sayfanın hepsini geziyor, boyanan gerçek rengi ölçüyor ve eşik altında kırmızıya dönüyor; ana sayfanın iki kart ızgarası reddedilen kalıptan çıktı; beş ölçüm yeşil. Tam metin ve kapsam kararları: `phases/PHASE-3.md`.
 **Adım:** task
-**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ · plan doğrulama ✅ · **task çalıştırma 🔄 (1/25)** — keşif ayağının ilki (TASK-3.01 genişlik turu) kapandı, plan revizyonu gerekmedi. Sıradaki TASK-3.02.
+**İlerleme:** Kapsam tartışması ✅ · teknik araştırma ✅ · task yazımı ✅ · plan doğrulama ✅ · **task çalıştırma 🔄 (2/25)** — **keşif ayağının ikisi de kapandı** (TASK-3.01 genişlik turu, TASK-3.02 dört yeni eksen turu); ikisinde de plan revizyonu gerekmedi. Sıradaki TASK-3.03 ile kapı kümesi başlıyor.
 **Faz Dokümanı:** `phases/PHASE-3.md` 🔄 (çocuğu: `PHASE-3-ARASTIRMA.md`) · son kapanan: `phases/PHASE-2.md` ✅ (çocukları: `PHASE-2-KAPSAM.md` · `PHASE-2-ARASTIRMA.md` · `PHASE-2-UAT.md` · `PHASE-2-RETROSPEKTIF.md`)
 
 ---
@@ -35,13 +35,16 @@
 
 ## Aktif Task
 
-**Task:** **TASK-3.02** — Dört yeni eksen turu (büyütme, hareket azaltma, JS kapalı, yatay tutuş) · `tasks/TASK-3.02.md`
-**Durum:** ⬜ Bekliyor — TASK-3.01 ✅ kapandı, keşif ayağının ikincisi
-**İlerleme:** 1 / 25
+**Task:** **TASK-3.03** — Kapı zemini (16 rota, yayın kopyası hedefi, çıkış kodu, kapsam eşiği) · `tasks/TASK-3.03.md`
+**Durum:** ⬜ Bekliyor — keşif ayağının ikisi de ✅ kapandı, kapı kümesi başlıyor
+**İlerleme:** 2 / 25
 **Not:**
 - ⚠️ **TASK-3.03'ten itibaren kapılar faz boyunca KIRMIZI koşar ve bu beklenen sonuçtur.** Kapı önce kurulur (16 rota + çıkış kodu + piksel kontrast + kırpma dedektörü), düzeltmeler ondan sonra gelir; her düzeltme task'ı kendi kalemini yeşile çevirir. CI olmadığı için kırmızı hiçbir şeyi bloke etmez — kapının çalıştığının kanıtıdır.
-- ⚠️ **Keşif ayağının ikisinden biri bitti.** TASK-3.01 ✅ kapandı ve **plan revizyonu gerektirmedi** (sekiz devralınan rakamın sekizi de birebir doğrulandı). TASK-3.02 hâlâ keşif ayağıdır: kalan task'ların doğruluğunu değiştiren bir bulgu çıkarsa ayak ✅ kapanır, arşive gider, DURUM Adım'ı `plan`'a çekilir ve `plan-phase` revizyon modu devralır.
-- ⚠️ **TASK-3.07 kapıyı kurarken ÜÇ muafiyeti birlikte kurmalı — üçü de TASK-3.01 turunda ölçüldü, yoksa kapı kalıcı kırmızı koşar.** (1) **Bal küpü** (`input#website`, sol ≈ −9912) beş genişlikte de "ekran dışı kontrol" verir — verify-plan'ın yazdığı muafiyetin gerekçesi yeniden üretildi. (2) **`/fiyat`'ın iki fiyat tablosu** (`min-w-[44rem]` = 704 px · `min-w-[38rem]` = 608 px) `overflow-x-auto` içinde 320/390/412'de pencereden geniştir; Roller şeridi için kurulan *"kaydırılabilir şeritte tek öğe pencereden geniş"* ölçütü **tabloyu da yakalar** ve tablo bu kalıbın meşru hâlidir. (3) **`Modules` kartlarının 40 px'lik "erişilmez içerik"i** dekoratif parıltı lekesidir (`span.pointer-events-none.absolute.-right-10.-top-10`) — bilerek kart dışına konup kırpılıyor, içerik kaybı yok.
+- ✅ **Keşif ayağının ikisi de bitti ve ikisi de plan revizyonu gerektirmedi.** TASK-3.01 sekiz devralınan rakamı birebir doğruladı; TASK-3.02 kendi tek revizyon tetiğini (*"hareket azaltma altında ara opaklık kalırsa TASK-3.04'ün ön koşulu bozulur"*) ölçtü ve tetik ateşlemedi. Kalan 23 task olduğu gibi geçerli.
+- ⚠️ **TASK-3.07 kapıyı kurarken DÖRT muafiyeti birlikte kurmalı — dördü de ölçüldü, yoksa kapı kalıcı kırmızı koşar.** (1) **Bal küpü** (`input#website`, sol ≈ −9912) her genişlikte "ekran dışı kontrol" verir. (2) **`/fiyat`'ın iki fiyat tablosu** (`min-w-[44rem]` = 704 px · `min-w-[38rem]` = 608 px) `overflow-x-auto` içinde 320/390/412'de pencereden geniştir; Roller şeridi için kurulan *"kaydırılabilir şeritte tek öğe pencereden geniş"* ölçütü **tabloyu da yakalar** ve tablo bu kalıbın meşru hâlidir. (3) **`Modules` kartlarının 40 px'lik "erişilmez içerik"i** dekoratif parıltı lekesidir (`span.pointer-events-none.absolute.-right-10.-top-10`) — bilerek kart dışına konup kırpılıyor. (4) **"İçeriğe atla" atlama bağlantısı** (`a.sr-only.focus:not-sr-only`, sol = −1, genişlik 1 px) **16 rotanın hepsinde, dört eksenin hepsinde** ekran dışı kontrol verir ve bal küpünden **ayrı bir elemandır** — bal küpü muafiyeti onu yakalamaz (TASK-3.02'de ölçüldü).
+- ⚠️ **Kırpma/taşma muafiyeti animasyonun ADına bakmalı, SÜRESİNE değil.** Hareket azaltma altında `animation-duration` `.01ms`'e iner ama `animation-name` durur; süreye bakan bir ölçüt kayan tanıtım şeridini sahte pozitif yapar — ölçüldü, 390 px'te **18 sahte isabet**, taşma 2.638 px'e kadar. Kapı kurulurken her zaman devralınan bir rakamı yeniden üreten bir kalibrasyon kolu koşturulur; *"0 buldum"* ile *"bakmadım"* ancak böyle ayrışır (`memory/arastirma-konteynerinde-tarayici-olcumu.md`).
+- ⚠️ **TASK-3.16'nın ÖLÇÜM kapsamı test kriterlerinde yazandan geniş olmalı.** Kriterler yalnız 320/390 diyor; ilk ekran dönüşüm boşluğu ölçüldüğü her yerde sürüyor — 412 px 6/16 · 768 px 5/16 (T1) · **%200 büyütme 10/16 · %400 büyütme 16/16 · yatay tutuş 844×390'da 16/16, 915×412'de 15/16** (TASK-3.02). Düzeltmenin kendisi (Header'ın mobil kolu + yüzen düğmenin erken eşiği) hepsini kapsıyor, eksik olan doğrulama.
+- ⚠️ **Yatay tutuş ölçüldü ve yapışkan katman orada ekranın altıda birini yiyor:** Header 68 px ve yükseklikten bağımsız → 390 px'lik yatay ekranda **%17,4** (dikte %8,1); kaydırınca yüzen düğme kümesi +%6,4 alan ekler. İlk ekranda kalan metin yatayda ortalama 251 karakter, dikte 416. TASK-3.16 ve TASK-3.17'nin dokunduğu yüzeyin tabanı budur.
 - ⚠️ **Üst üste binme bu fazın hiçbir kapısının görmediği bir sınıftır** (B-064 bu sınıftan doğdu): kırpma dedektörü taşma arar, kontrast kapısı tek metnin rengini ölçer. TASK-3.01'in dedektörü 80 kombinde 4 aday üretti, **1'i gerçekti** — sahte pozitifleri (satır-kutusu payı, döndürülmüş öğe, mockup içi mikro-tablo) elemeden kapıya girmemeli.
 - ⚠️ **Kullanıcıya bağlı iki iş bu fazın içinde ve ikisi de fazı kilitlemeyecek biçimde yerleştirilecek:** (1) **gerçek telefonla uçtan uca tur** — fazın sonunda, doğrulama olarak koşar (Faz 2'den devredilen form denemesi de bunun içinde); (2) **ürün deposunun demo destesine İKİ ekran eklenmesi — diyetisyen ve antrenör telefonu** (araştırmada büyüdü, 2026-09-23): deste tarandı, telefon yüzeyi yalnız üye ve patron tarafında var, yani antrenör sekmesi tek satırlık düzeltmeden sonra da telefon çerçevesinde masaüstü panosu gösterecek. Eklendikleri gün görsel hattı ikisini de olağan biçimde üretir; gelmezse iki sekme de bugünkü hâlinde kalır ve B-046 kanvasta açık durur.
 - ⚠️ **Kullanıcı gözü bekleyen dört doğrulama kalemi duruyor** (hiçbiri faz kapanışını engellemedi, hepsi *doğrulama kanalı* — ürün tarafı ölçüldü): Faz 2'den (1) onay e-postasının gelen kutusunda mı spam'de mi düştüğü, (2) ekran okuyucuda onay kutusunun iki kez duyurulup duyurulmadığı (kaydı `BULGULAR.md` → Gelen Kutusu, `[TASK-2.05]`; gerçek ekran okuyucu denemesi Faz 3'ün de kapsamı dışında); Faz 1'den (3) `DEMO_TO`'ya giden e-postanın yerleşimi, (4) Umami panelinin **arayüzünde** v2 kaydının gözle görülmesi (kaydı `phases/PHASE-1.md` → Milestone kapanış notu).
@@ -56,7 +59,7 @@
 | # | Task | Durum | Açıklama |
 |---|------|-------|----------|
 | 3.01 | TASK-3.01 | ✅ Tamamlandı | Genişlik turu — 16 sayfa × 320/390/412/768/1440 px |
-| 3.02 | TASK-3.02 | ⬜ Bekliyor | Dört yeni eksen turu — büyütme, hareket azaltma, JS kapalı, yatay tutuş |
+| 3.02 | TASK-3.02 | ✅ Tamamlandı | Dört yeni eksen turu — büyütme, hareket azaltma, JS kapalı, yatay tutuş |
 | 3.03 | TASK-3.03 | ⬜ Bekliyor | Kapı zemini — 16 rota, yayın kopyası hedefi, çıkış kodu, kapsam eşiği |
 | 3.04 | TASK-3.04 | ⬜ Bekliyor | Kontrast ölçümü piksele taşınır |
 | 3.05 | TASK-3.05 | ⬜ Bekliyor | Gradyanla boyanmış metin kapıda kendi dalı olur |
@@ -90,6 +93,19 @@
 ## Son Task Özetleri
 
 > **KURAL:** Sadece son 2 task özeti tutulur, daha eskileri **gerçekten silinir** (HTML comment'e sarma, "Önceki:" prefix, üstü çizili etiket yasak — detay için git log + arşivlenmiş task dokümanı). Her özet kısa formatlı: paragraf yasak, **bullet zorunlu**, "Özet" alanı max 3 bullet.
+
+### TASK-3.02 — Dört yeni eksen turu (büyütme · hareket azaltma · JS kapalı · yatay tutuş)
+
+**Durum:** ✅ Tamamlandı · 2026-09-24 · **Detay:** `tasks/archive/TASK-3.02.md`
+
+**Özet:**
+- 12 tarayıcı bağlamı × 16 rota = **192 kombin**, 240 ölçüm örneği, 1.577 ekran adımı; kod değişikliği yok — tur ölçer, düzeltmez.
+- **M2 F2.3'ün hiç ölçülmemiş kriteri ilk kez ölçüldü ve geçti** (hareket azaltmada `.reveal` 0 / kontrolde 134) → TASK-3.04'ün ön koşulu sağlam, **plan revizyonu gerekmedi**; %400 büyütme reflow açısından 320 px'in **tam eşi** çıktı, yeni kırpma sınıfı yok.
+- Bir yeni bulgu (**B-065** — JS kapalıyken demo formu talebi kaybediyor, kişisel veriyi adres çubuğuna yazıyor) + kanvasa üç JS-kapalı kalemi + TASK-3.07 için **dördüncü** kapı muafiyeti + TASK-3.16 için genişlemiş ölçüm kapsamı.
+
+**Test:** Hareket azaltma: `.reveal` **0**, koşan animasyon **0** (kontrol grubu: 134 ve 33-36) · %400 büyütme kırpma **19 düğüm / 70 px**, %200 ve %100'de **0**, kök font üç seviyede de 16 px · iki yönlü kaydırma **192/192 kombinde yok** · JS kapalı: 16 rotanın 16'sında huniye çıkan yol var, metin uzunluğu JS açıkla **birebir aynı** · yatay tutuş: ilk ekran boş **16/16** (844×390) ve 15/16 (915×412), yapışkan kaplama %17,4 · kalibrasyon: dik 390'da ilk ekran boş **6/16** (T1 ile birebir). Kapsam: geliştirme sunucusu (3000); yayın kopyası ve gerçek cihaz bu turun dışında.
+
+---
 
 ### TASK-3.01 — Genişlik turu (16 sayfa × 320/390/412/768/1440 px)
 
@@ -127,7 +143,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** `tasks/TASK-3.02.md` ⬜ (keşif ayağının ikincisi); son kapanan `tasks/archive/TASK-3.01.md` ✅
+**Aktif Task:** `tasks/TASK-3.03.md` ⬜ (kapı kümesinin ilki); son kapanan `tasks/archive/TASK-3.02.md` ✅
 **Aktif Faz:** `phases/PHASE-3.md` 🔄 (araştırma detayı: `PHASE-3-ARASTIRMA.md`) · son kapanan: `phases/PHASE-2.md` ✅ (kapsam: `PHASE-2-KAPSAM.md` · araştırma: `PHASE-2-ARASTIRMA.md` · UAT: `PHASE-2-UAT.md` · retrospektif ve kalite: `PHASE-2-RETROSPEKTIF.md`)
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`
