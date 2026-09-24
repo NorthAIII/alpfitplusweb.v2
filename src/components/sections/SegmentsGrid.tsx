@@ -5,7 +5,18 @@ import { Section, SectionHead } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { SEGMENTS } from "@/content/segments";
 
-export function SegmentsGrid() {
+/**
+ * @param eagerFirst  Ilk kartin fotografini `loading="eager"` yapar.
+ *   YALNIZ /segmentler'de acilir ve olcumle secildi (TASK-3.20, B-046 kalem 1):
+ *   o sayfada 768 px'te LCP elemani ilk kartin fotografi ve bugun `lazy` --
+ *   Next 16'nin kendi uyarisinin kosulu tam olarak budur (`get-img-props.js`:
+ *   `lcpImage.loading === 'lazy'`), ve uyarinin onerdigi carе `loading="eager"`.
+ *   `priority` SECILMEDI: o ayrica bir preload baglantisi dogurur ve 390 px'te
+ *   kart ilk ekranin ALTINDA kaliyor (olculdu; orada LCP bir <p>), yani preload
+ *   dar ekranda 63 KB'i one cekerdi. `/` sayfasinda bayrak kapali cunku orada
+ *   LCP Hero'nun urun ekrani ve segment kartlari cok asagida.
+ */
+export function SegmentsGrid({ eagerFirst = false }: { eagerFirst?: boolean }) {
   return (
     <Section tone="soft" id="segmentler">
       <SectionHead
@@ -32,7 +43,13 @@ export function SegmentsGrid() {
                   src={s.photo.thumb}
                   alt={s.photo.alt}
                   fill
-                  sizes="(max-width: 640px) 100vw, 42vw"
+                  // Olculen yerlesim: <640 tek sutun (100vw - 2x px-5) ·
+                  // >=640 iki sutun, (kapsayici - gap-5) / 2 · >=1152
+                  // kapsayici max-w-6xl'e oturur ve 534 px'te donar.
+                  // Olculen: 350 / 342 / 534 px (390 / 768 / 1440). Eski
+                  // beyan 42vw = 605 px idi (@1440), gercek 534 px.
+                  sizes="(min-width: 1152px) 534px, (min-width: 640px) calc((100vw - 84px) / 2), calc(100vw - 40px)"
+                  loading={eagerFirst && i === 0 ? "eager" : undefined}
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.045]"
                 />
                 <span

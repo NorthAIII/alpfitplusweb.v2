@@ -86,7 +86,10 @@ export function Benefits() {
                     alt=""
                     width={2000}
                     height={760}
-                    sizes="(min-width: 1152px) 1088px, 100vw"
+                    // 640-1151 arasinda gercek slot `100vw` degil, kapsayici
+                    // genisligi: @768 704 px olculdu (100vw - 2x px-8). Eski
+                    // beyan orada %9 fazlasini soyluyordu (TASK-3.20).
+                    sizes="(min-width: 1152px) 1088px, (min-width: 640px) calc(100vw - 64px), calc(100vw - 40px)"
                     className="h-28 w-full object-cover object-center sm:h-40 lg:h-48"
                   />
                 </figure>

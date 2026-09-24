@@ -67,12 +67,20 @@ export function HowItWorks() {
             </p>
 
             <div className="relative mt-8 hidden overflow-hidden rounded-lg shadow-lg ring-1 ring-line lg:block">
+              {/* BANT VARYANTI (TASK-3.20). Slot @1440 544x224 = 2,43:1; eski
+                  kaynak `-sm` 800x534 (3:2) idi ve `object-cover` dikey
+                  pikselin %38,3'unu atiyordu, ustelik dpr2'de teslim/gereken
+                  0,74'te kaliyordu. `-band` 1600x608 (2,63:1) ikisini birden
+                  kapatir. Ayni fotograf, ayni alt metin.
+                  `sizes` olculen yerlesim: >=1024 (kapsayici - gap-16) x
+                  0,85/2 = %42,5 · >=1472 kapsayici 88rem'e oturur, 544 px'te
+                  donar. Bant `hidden lg:block`, dar ekranda hic cizilmez. */}
               <Image
-                src="/foto/grup-dersi-sm.webp"
+                src="/foto/grup-dersi-band.webp"
                 alt="Bir stüdyoda daire şeklinde yapılan grup dersi"
-                width={800}
-                height={534}
-                sizes="40vw"
+                width={1600}
+                height={608}
+                sizes="(min-width: 1472px) 544px, (min-width: 1024px) calc((100vw - 128px) * 0.425), 100vw"
                 className="h-56 w-full object-cover"
               />
               <span

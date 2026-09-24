@@ -154,12 +154,20 @@ export function Roles() {
             className="pointer-events-none absolute inset-6 rounded-[3rem] bg-[radial-gradient(60%_60%_at_50%_45%,rgba(116,179,111,.20),transparent_70%)] blur-2xl"
             aria-hidden
           />
+          {/* `sizes` OLCULEN yerlesimden (TASK-3.20; sekmeye TIKLANARAK olculdu
+              -- ilk boyada yalniz etkin sekmenin gorseli cizilir, B-015).
+              Telefon: kutu w-56/w-64, icteki gorsel 212 / 244 px.
+              Tarayici: <640 100vw-40 · 640-1023 100vw-64 (tek sutun) ·
+              >=1024 (icerik - gap-12) x 1,08/2 = %54 · >=1216 kapsayici
+              max-w-6xl'e oturdugu icin 561,6 px'te donuyor. Olculen: 350 /
+              704 / 492,5 / 561,6 px (390 / 768 / 1024 / 1440). */}
           {isPhone ? (
             <PhoneFrame
               src={shot.src}
               alt={shot.alt}
               width={shot.width}
               height={shot.height}
+              sizes="(min-width: 640px) 244px, 212px"
               className="relative w-56 sm:w-64"
             />
           ) : (
@@ -168,6 +176,7 @@ export function Roles() {
               alt={shot.alt}
               width={shot.width}
               height={shot.height}
+              sizes="(min-width: 1216px) 562px, (min-width: 1024px) calc((100vw - 112px) * 0.54), (min-width: 640px) calc(100vw - 64px), calc(100vw - 40px)"
               className="relative w-full"
             />
           )}

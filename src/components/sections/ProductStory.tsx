@@ -144,6 +144,18 @@ export function ProductStory() {
                 </div>
 
                 <div className="relative">
+                  {/* `priority` BU GORSELDEN KALKTI (TASK-3.20, B-046 kalem 1).
+                      Olcum: bu sutun `hidden lg:block` icinde, yani 390 ve 768
+                      px'te `display:none` -- ama `priority` bir preload
+                      baglantisi dogurdugu icin tarayici onu YINE DE cekiyordu
+                      (olculdu, 3100: 390'da 17 KB / 768'de 39 KB, ve
+                      /ozellikler'de mobildeki TEK gorsel preload'u oydu).
+                      Yerine mobil karttaki gorsele `priority` VERILMEDI, cunku
+                      o da simetrik olarak masaustunde gizli. Dogrusu ikisini de
+                      tembel birakmak: olculdu ki `loading="lazy"` + gizli
+                      eleman HIC istek uretmiyor (0 bayt), ve urun turunun
+                      gorseli 16 rotanin hicbirinde LCP elemani degil --
+                      /ozellikler'de LCP 390/768/1440'ta da bir <p>. */}
                   {STEPS.map((s, i) => (
                     <Image
                       key={s.key}
@@ -151,8 +163,11 @@ export function ProductStory() {
                       alt={s.shot.alt}
                       width={s.shot.width}
                       height={s.shot.height}
-                      sizes="58vw"
-                      priority={i === 0}
+                      // Olculen yerlesim: >=1024'te (kapsayici - gap-14) x
+                      // 1,18/2 = %59; >=1472'de kapsayici 88rem'e oturur ve
+                      // 759,9 px'te donar. Eski beyan 58vw = 835 px idi
+                      // (@1440), gercek 759,9 px.
+                      sizes="(min-width: 1472px) 760px, (min-width: 1024px) calc((100vw - 120px) * 0.59), 100vw"
                       className={cn(
                         "block h-auto w-full transition-opacity duration-500",
                         i === active ? "opacity-100" : "pointer-events-none absolute inset-0 opacity-0",
@@ -261,7 +276,12 @@ export function ProductStory() {
                       alt={s.shot.alt}
                       width={s.shot.width}
                       height={s.shot.height}
-                      sizes="100vw"
+                      // Kartin ICINDE duruyor: kapsayici dolgusu (2x20 / 2x32)
+                      // ustune kartin `p-6`si (2x24) dusulur -- olculdu 302 px
+                      // (@390) ve 656 px (@768). Eski `100vw` 390'da 390 px
+                      // diyordu ve dpr2'de 828'lik varyant geliyordu; gerceginde
+                      // 640 yetiyor.
+                      sizes="(min-width: 640px) calc(100vw - 112px), calc(100vw - 88px)"
                       className="block h-auto w-full"
                     />
                   </div>

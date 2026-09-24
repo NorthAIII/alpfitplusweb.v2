@@ -166,12 +166,19 @@ export default function MigrationPage() {
                 lead="Tarihi birlikte belirliyoruz. O güne kadar mevcut düzeninizle çalışmaya devam ediyorsunuz."
               />
               <div className="relative mt-8 hidden overflow-hidden rounded-lg shadow-lg ring-1 ring-white/10 lg:block">
+                {/* BANT VARYANTI (TASK-3.20). Slot @1440 576x192 = 3,00:1;
+                    eski kaynak `-sm` 800x534 (3:2) idi ve dikey pikselin
+                    %50,1'ini atiyordu, dpr2'de teslim/gereken 0,69. `-band`
+                    1600x608 (2,63:1) ikisini de kapatir. Ayni fotograf, ayni
+                    alt metin. `sizes`: >=1024 (kapsayici - gap-16) x 0,9/2 =
+                    %45 · >=1472 kapsayici 88rem'e oturur, 576 px'te donar.
+                    Bant `hidden lg:block`. */}
                 <Image
-                  src="/foto/cok-subeli-zincir-sm.webp"
+                  src="/foto/cok-subeli-zincir-band.webp"
                   alt="Sade ve aydınlık bir stüdyo iç mekânı"
-                  width={800}
-                  height={534}
-                  sizes="40vw"
+                  width={1600}
+                  height={608}
+                  sizes="(min-width: 1472px) 576px, (min-width: 1024px) calc((100vw - 128px) * 0.45), 100vw"
                   className="h-48 w-full object-cover opacity-80"
                 />
               </div>

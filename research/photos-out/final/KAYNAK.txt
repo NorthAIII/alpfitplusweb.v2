@@ -30,13 +30,13 @@ cok-subeli-zincir
   Pexels id : 36833354
   Sayfa     : https://www.pexels.com/photo/36833354/
   Aciklama  : Sade ve aydinlik studyo ic mekani. Kisi yok, marka yok.
-  Uretilen  : cok-subeli-zincir.webp 1600×1067 51KB · cok-subeli-zincir-sm.webp 800×534 20KB
+  Uretilen  : cok-subeli-zincir.webp 1600×1067 51KB · cok-subeli-zincir-sm.webp 800×534 20KB · cok-subeli-zincir-band.webp 1600×608 38KB
 
 grup-dersi
   Pexels id : 6339386
   Sayfa     : https://www.pexels.com/photo/6339386/
   Aciklama  : Daire seklinde grup dersi, sicak ahsap duvar.
-  Uretilen  : grup-dersi.webp 1600×1067 82KB · grup-dersi-sm.webp 800×534 27KB
+  Uretilen  : grup-dersi.webp 1600×1067 82KB · grup-dersi-sm.webp 800×534 27KB · grup-dersi-band.webp 1600×608 55KB
 
 salon-genis
   Pexels id : 7031705

@@ -42,7 +42,10 @@ export default function SegmentsPage() {
         lead="Reformer stüdyosunun derdi kapasite ve seans hakkı. Boks kulübünün derdi yoklama ve aidat. Zincirin derdi şube karşılaştırması. Alpfit Plus üçünü de aynı üründe karşılar."
       />
 
-      <SegmentsGrid />
+      {/* Bu sayfada ilk kartin fotografi 768 px'te LCP elemani (olculdu) ve
+          `lazy` idi; `eagerFirst` onu ilk yukleme partisine alir. Ayrinti ve
+          `priority` yerine neden bu secildigi: SegmentsGrid basligi. */}
+      <SegmentsGrid eagerFirst />
 
       <Section tone="canvas">
         <SectionHead

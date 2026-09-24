@@ -108,4 +108,27 @@ Glif ölçümü, teslim ölçümü ve preload sayımı scratchpad'de.
 
 ⚠️ **Atomun kendi iddiası bu turda GENİŞLEDİ (ikinci kez).** Triyaj *"doğru ekran bugün üretilen kümede zaten var"* diyordu; araştırma bunu *"var ama masaüstü"* diye düzeltmişti. Bu tur görselin kendisi okundu: `antrenor.webp` (kaynağı `../Alpfit.v1/demo/antrenor.html`, `<title>` *"Antrenör Performansı"*, `<h1>` *"Antrenör Detayı"*) **yönetim panelinin** bir ekranıdır — üst solda "YÖNETİM", altta "Zehra G. · Şube Müdürü", kenar çubuğunda "Diyetisyenler" menü kalemi. Destedeki **bütün** masaüstü yakalamaları aynı paneldir (`takvim`, `grup`, `raporlar`, `finans`, `cockpit` gözle doğrulandı). Yani TASK-3.24'ün kapsamı "dikey bir yakalama" değil **rolün kendi yüzeyi** olmalı.
 
-Kalem (1), (3), (4), (5), (6) açık → TASK-3.20 · 3.21 · 3.23. Atom arşive taşınmadı; çözüm teyidinin evi `verify-phase` Adım 6'dır.
+**Kalem (1) KAPANDI ve kalem (6) KISMEN kapandı — TASK-3.20, 2026-09-25.** Ölçüm 4 profil (390/2 · 768/2 · 1440/2 · 1440/1) × 16 rota = **156 `<img>`** üzerinden yeniden kuruldu; teslim yine `_next/image` yanıtı `sharp` ile açılarak okundu. **Atomun altı satırının altısı da birebir doğrulandı** (0,79 · 0,75 · 0,74 · 0,69 · 0,56 · 2,05) — tablo bayat değil.
+
+**Kalem (1):** `priority` mobil karta *taşınmadı*, ProductStory'nin **ikisinden de kaldırıldı**. Gerekçe ölçüm: ürün turunun görseli 16 rotanın hiçbirinde, üç profilin hiçbirinde **LCP elemanı değil** (`/ozellikler`'de LCP 390/768/1440'ta da bir `<p>`), ve `loading="lazy"` + `display:none` eleman **hiç istek üretmiyor**. Taşımak sorunu simetrik olarak masaüstüne geçirirdi. Ölçülen kazanç: görünmez görsele giden istek **390'da 17 KB → 0**, **768'de 39 KB → 0**; görsel preload **28 → 24**; `/ozellikler`'de mobil preload **1 → 0**. `/segmentler`'in ilk kartı `priority` değil **`loading="eager"`** aldı ve sayfa-kapsamlı (`eagerFirst` prop'u) — Next 16.3.4'ün uyarı koşulu tam olarak `lcpImage.loading === 'lazy'` ve uyarının kendi önerdiği çare bu; bileşen `/`'da da kullanıldığı için bayrak sayfaya bağlandı. Negatif kontrol: bayrak kapatılınca uyarı geri geldi.
+
+**`sizes`:** atomun saydığı **üç** yanlış beyan **dokuz**a çıktı. `Frames.tsx`'in iki bileşeninin de **ikişer çağrı yeri** var ve gerçek genişlikleri birbirinin iki katı (@1440 `BrowserFrame` Hero'da 659,7 ↔ Roller'de 561,6; `PhoneFrame` Hero'da 156 ↔ Roller'de 244), yani beyan bileşende sabitlenemiyordu → `sizes` prop'a çevrildi. En kötü sapma atomda hiç yazmıyordu: `(max-width: 1024px) 100vw, 62vw` @1024'te Roller çerçevesi için 1024 px söylüyor, gerçeği **492,5 px** — tarayıcı **2048 px'lik** varyantı çekiyordu (sitedeki en büyük fazla teslim). Bugün dokuz beyanın sapması **≤ %3**.
+
+**Kalem (6) — altı satırın hâli:**
+
+| Kullanım | gereken | teslim önce | teslim sonra | oran | |
+|---|---|---|---|---|---|
+| Ürün turu `raporlar` | 1520 | 1200 | 1200 | 0,79 | **açık** — kaynak 1200 px, `render-product.mjs` işi |
+| Segment kartı (`-sm`) | 1068 | 800 | 800 | 0,75 | **açık** — kaynak 800 px, yeni varyant gerekir |
+| HowItWorks bandı | 1088 | 800 | **1200** | **1,10** | ✅ `-band` |
+| `/gecis` bandı | 1152 | 800 | **1200** | **1,04** | ✅ `-band` |
+| Segment kahramanı | 2880 | 1600 | 1600 | 0,56 | **bilinçle açık** — `opacity-45` + `from-ink-deep/92` altında dekoratif doku; atomun kendi deyimiyle *"neredeyse görünmez bir doku için en pahalı tek istek"*, oraya 2880 px teslim etmek yanlış yön olurdu |
+| ~~Roller~~ **Hero** telefon çerçevesi | 312 | 640 | **384** | **1,23** | ✅ |
+
+⚠️ **Atomun *"Roller telefon çerçevesi"* satırının ADI YANLIŞ, rakamı doğru** (ölçüldü): 2,05 fazla teslim **Hero'nun bindirme telefonuna** ait (@1440/2 **156 px**); Roller'inki **244 px** ve oranı 1,31'di.
+
+**Bant slotları `salon-genis-wide`'ı KULLANMADI — Koruma Önerisi'nin o cümlesi iki kere çürüdü.** (a) Dosya artık öksüz değil: TASK-3.18 onu `Benefits`'e koydu, `/` HTML'inde 10 kez geçiyor. (b) İki bandın fotoğrafını onunla değiştirmek `alt` metinlerini (*"daire şeklinde yapılan grup dersi"*, *"sade ve aydınlık bir stüdyo iç mekânı"*) yalan yapardı ve aynı fotoğraf sitede üç yerde görünürdü. Onun yerine önerinin **ikinci** cümlesi izlendi: `photos-build.mjs`'e **`-band` varyantı** (1600×608, 2,63:1 — `-wide` ile aynı oran) eklendi ve **aynı fotoğrafların** bant kırpımı üretildi. Dikey piksel kaybı `/gecis`'te **%50,1 → %12,3**, HowItWorks'te **%38,3 → %0** (orada kalan kayıp yatay, %7,7). `Benefits` bandının kaybı **%53,6'da değişmedi** — slotu 5,67:1, kaynak 2,63:1; kendi varyantı yok ve bu tur kapsamına alınmadı.
+
+**Toplam etki:** 27 slot düzeldi, 0 slot bozuldu. Fazla teslim @1440/1 **14 → 1**, @390/2 **13 → 2**. `/` sayfa ağırlığı masaüstünde **141 → 111 KB**, mobilde **132 → 111 KB** (avif 46 → 16 ve 37 → 16 KB; font 95 KB birebir). Beş kapının beşi de önceki hâlini korudu.
+
+Kalem (3), (4), (5) açık → TASK-3.21 · 3.23; kalem (6)'nın üç satırı yukarıdaki gerekçelerle açık. Atom arşive taşınmadı; çözüm teyidinin evi `verify-phase` Adım 6'dır.

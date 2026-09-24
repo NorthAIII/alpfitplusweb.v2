@@ -80,12 +80,20 @@ export function Hero() {
               aria-hidden
             />
 
+            {/* `sizes` OLCULEN yerlesimden yazildi (TASK-3.20, 3100'e karsi):
+                <640 kapsayici genisligi (100vw - 2×px-5) · 616-1023 arasi
+                max-w-[36rem] tavani 576'da sabitliyor · >=1024 grid sutunu
+                (icerik - gap) x 1,05/2,05 = %51,22 · >=1472 kapsayici 88rem'e
+                oturdugu icin 659,7 px'te donuyor. Olculen: 350 / 576 / 471,2 /
+                659,7 px (390 / 768 / 1024 / 1440). Bu gorsel `/` sayfasinin
+                LCP elemani (768 ve 1440'ta olculdu), `priority` yerinde. */}
             <BrowserFrame
               src={SHOTS.cockpit.src}
               alt={SHOTS.cockpit.alt}
               width={SHOTS.cockpit.width}
               height={SHOTS.cockpit.height}
               priority
+              sizes="(min-width: 1472px) 660px, (min-width: 1024px) 46vw, (min-width: 616px) 576px, calc(100vw - 40px)"
               className="relative"
             />
 
@@ -105,11 +113,19 @@ export function Hero() {
             </div>
 
             {/* sol alt: uye telefonu, panelin uzerine binen */}
+            {/* Panelin uzerine binen kucuk telefon: kutu w-28/w-36/w-[10.5rem],
+                icteki gorsel p-1.5 dusuldukten sonra 100 / 132 / 156 px
+                (olculdu). Eski ortak beyan (`55vw, 260px`) burada 390 px'te
+                214 px, 1440 px'te 260 px soyluyordu ve 640 px'lik varyant
+                geliyordu -- gereken 312'ye karsi 2,05 kat fazla teslim
+                (B-046 kalem 6'nin "Roller telefon cercevesi" satiri aslinda
+                BU gorsel; olculdu, Roller'inki 244 px). */}
             <PhoneFrame
               src={SHOTS.uyeTelefon.src}
               alt={SHOTS.uyeTelefon.alt}
               width={SHOTS.uyeTelefon.width}
               height={SHOTS.uyeTelefon.height}
+              sizes="(min-width: 1024px) 156px, (min-width: 640px) 132px, 100px"
               className="absolute -bottom-14 -left-1 w-28 sm:-bottom-16 sm:-left-8 sm:w-36 lg:-bottom-16 lg:-left-16 lg:w-[10.5rem]"
             />
 

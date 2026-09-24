@@ -1,12 +1,22 @@
 import Image from "next/image";
 import { cn } from "@/lib/cn";
 
+// `sizes` BU BILESENDE SABITLENEMEZ, CAGRI YERINDEN GELIR (TASK-3.20). Ikisinin
+// de iki cagrani var ve gercek yerlesim genislikleri birbirinin iki kati:
+// olculdu (yayin kopyasi 3100) -- BrowserFrame @1440 Hero'da 659,7 px, Roller'de
+// 561,6 px; PhoneFrame @1440 Hero'da 156 px, Roller'de 244 px. Tek bir beyan
+// ikisini birden dogru anlatamiyordu: eski `(max-width:1024px) 100vw, 62vw`
+// @1024'te Roller cercevesi icin 1024 px soyluyordu, gercegi 492,5 px --
+// tarayici 2048 px'lik varyanti cekiyordu (sitedeki en buyuk fazla teslim).
+// Varsayilan deger her iki cagranin da gecmedigi hale karsi guvenli taban.
+
 /** Tarayici cercevesi — koyu urun ekran goruntusunu acik zeminde tasir. */
 export function BrowserFrame({
   src,
   alt,
   className,
   priority = false,
+  sizes = "100vw",
   label = "app.alpfitplus.com",
   width = 1600,
   height = 1000,
@@ -15,6 +25,7 @@ export function BrowserFrame({
   alt: string;
   className?: string;
   priority?: boolean;
+  sizes?: string;
   label?: string;
   width?: number;
   height?: number;
@@ -42,7 +53,7 @@ export function BrowserFrame({
         width={width}
         height={height}
         priority={priority}
-        sizes="(max-width: 1024px) 100vw, 62vw"
+        sizes={sizes}
         className="block h-auto w-full"
       />
     </figure>
@@ -55,6 +66,7 @@ export function PhoneFrame({
   alt,
   className,
   priority = false,
+  sizes = "100vw",
   width = 720,
   height = 1520,
 }: {
@@ -62,6 +74,7 @@ export function PhoneFrame({
   alt: string;
   className?: string;
   priority?: boolean;
+  sizes?: string;
   width?: number;
   height?: number;
 }) {
@@ -81,7 +94,7 @@ export function PhoneFrame({
           width={width}
           height={height}
           priority={priority}
-          sizes="(max-width: 640px) 55vw, 260px"
+          sizes={sizes}
           className="block h-auto w-full rounded-[1.6rem]"
         />
       </div>
