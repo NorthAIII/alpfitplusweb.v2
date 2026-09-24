@@ -28,7 +28,19 @@ export function FinalCta({
             <h2 className="text-3xl font-extrabold leading-tight text-ink-deep sm:text-4xl">
               {title}
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-[1.0625rem] leading-relaxed text-ink-deep/75">
+            {/*
+              Kapanis paragrafi TAM OPAK — opaklik bir tercih degil, olcumun
+              zorladigi deger (TASK-3.10, B-032 kalem 2). Sage gradyan bandi
+              uzerinde `ink-deep`in etkin rengi alfayla birlikte zemine yaklasir
+              ve kontrast duser; 10 sayfada olculdu (p02, yayin kopyasi):
+                /75 → 3,92-4,17 @1440 · 3,55-3,65 @390 · 3,42-3,98 @320   (esik 4,5)
+                /90 → 4,37-4,55 @390 — HALA ESIK ALTI (`/` 4,48 · `/fiyat` 4,37)
+                1,0 → 4,81-5,00 @390 · 4,93-5,59 @320 · gecer
+              Yani ara bir deger yok: paragraf tam opak olmak zorunda.
+              Hiyerarsi opaklikla degil punto ve agirlikla tasinir (STYLE-GUIDE) —
+              baslik 30/36px 800, bu paragraf 17px 400.
+            */}
+            <p className="mx-auto mt-4 max-w-xl text-[1.0625rem] leading-relaxed text-ink-deep">
               {lead}
             </p>
 
@@ -51,7 +63,18 @@ export function FinalCta({
               </Button>
             </div>
 
-            <p className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-ink-deep/70">
+            {/*
+              Ayni bandin ikinci satiri. Task yalniz ustteki paragrafi
+              adlandiriyordu; kapi bu satiri da sayiyor ve /70 ile esigin
+              altindaydi — biri duzeltilip oteki birakilsa kapi kirmizi kalirdi.
+              Olculdu (p02, 10 sayfa, yayin kopyasi):
+                /70 → "15 gun ucretsiz deneme" 4,44-4,49 her uc genislikte;
+                      "Kredi karti istemiyoruz" 320 px'te 4,45-4,49 (390/1440'ta gecer)
+                1,0 → 7,67-7,76 (gereginden fazla; ustteki paragrafla ayni tona duser)
+                /80 → 5,50-5,70 — secilen: esikten pay var ve satir hala
+                      paragraftan daha sessiz (tam opak degil).
+            */}
+            <p className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-ink-deep/80">
               <span>{PRICING.trialDays} gün ücretsiz deneme</span>
               <span aria-hidden>·</span>
               <span>Kredi kartı istemiyoruz</span>
