@@ -8,10 +8,33 @@ import { ROLES } from "@/content/product";
 import { SHOTS } from "@/content/shots";
 import { cn } from "@/lib/cn";
 
+/**
+ * Sekme -> urun ekran goruntusu eslemesi.
+ *
+ * TASK-3.15 (B-046 kalem 2): esleme bir satir kaymisti — `antrenor` rezervasyon
+ * takvimini, `diyetisyen` antrenor detay ekranini gosteriyordu. Antrenor satiri
+ * duzeltildi; diyetisyen satiri hala VEKILDIR ve bu bilincli, KAPANMAMIS bir
+ * bosluktur (B-046 kanvasta acik durur):
+ *
+ *   Urunun kendisinde diyetisyen ekranlari VAR (../Alpfit.v1/web/src/pages/
+ *   DietitianMembersPage.tsx), ama gorsel hattinin kaynagi olan demo destesinde
+ *   (../Alpfit.v1/demo/) diyetisyen ekrani YOK — hat bu yuzden uretemiyor.
+ *   Deste eklendigi gun (TASK-3.24) bu satir gercek ekrana baglanir.
+ *
+ * VEKIL NEDEN `grup`: destedeki masaustu yakalamalarin hepsi ayni YONETIM
+ * panelidir; hicbiri diyetisyen ekrani degil. Aralarindan `antrenor` secilemez,
+ * cunku goruntunun kendi basligi "Antrenor Detayi" yazar — "Diyetisyen"
+ * sekmesinin altinda hem gozle hem ekran okuyucuda sekmeyle CELISIR (B-046'nin
+ * adiyla sikayet ettigi kusur) ve komsu sekmeyle ayni kareyi tekrarlardi.
+ * `grup`un basligi baska bir rolu adlandirmaz ve alt metni ("grup dersleri
+ * ekrani: kontenjan, katilimci listesi ve yoklama") goruntude GERCEKTEN duran
+ * seyi anlatir — yani vekil, olmadigi bir sey oldugunu iddia etmez
+ * (docs/CLAIMS.md -> kanitsiz iddia siniri).
+ */
 const VISUAL = {
   uye: SHOTS.uyeTelefon,
-  antrenor: SHOTS.takvim,
-  diyetisyen: SHOTS.antrenor,
+  antrenor: SHOTS.antrenor,
+  diyetisyen: SHOTS.grup,
   yonetim: SHOTS.cockpit,
 } as const;
 
@@ -19,7 +42,15 @@ export function Roles() {
   const [active, setActive] = useState(0);
   const role = ROLES[active];
   const shot = VISUAL[role.key as keyof typeof VISUAL];
-  const isPhone = role.device === "mobil";
+  // CERCEVE GORSELIN SEKLINDEN TURER, rolun `device` alanindan DEGIL (TASK-3.15).
+  // Gerekce: `device` urun gercegini soyler (antrenor kendi TELEFONUNDAN calisir —
+  // faq.ts, gecis.ts ve bu bolumun kendi lead cumlesi bunu yaziyor) ama elimizdeki
+  // antrenor yakalamasi 1200x866, yani bir masaustu paneli. Rolun `device`ini
+  // "web"e cekmek cerceveyi duzeltirdi ama siteye YANLIS bir cumle soyletirdi;
+  // cerceveyi goruntunun kendi oranina baglamak ikisini de dogru tutar.
+  // Gecicidir ve KENDILIGINDEN geri doner: TASK-3.24 dikey (telefon) bir antrenor
+  // yakalamasi ekledigi gun bu kosul yeniden PhoneFrame secer, kod degismez.
+  const isPhone = shot.height > shot.width;
 
   return (
     <Section tone="soft" id="roller">
@@ -55,7 +86,20 @@ export function Roles() {
                   aria-selected={on}
                   onClick={() => setActive(i)}
                   className={cn(
-                    "group relative shrink-0 rounded-card px-5 py-4 text-left transition-all duration-200 lg:w-full",
+                    // max-w TAVANI KABA BAGLIDIR, pencereye degil (TASK-3.15).
+                    // Kartin dogal genisligi 360 px (`max-w-xs` ozet + 2x20 dolgu);
+                    // seridin gorunur genisligi 320 px pencerede 280, 390'da 350 —
+                    // yani dar ekranda tek kart bile hicbir zaman tumuyle gorunmuyordu
+                    // (WCAG 1.4.10 icerik kaybi; B-033 ikinci kalem). Yuzde, esnek
+                    // kabin ICERIK kutusuna gore cozulur, viewport'a gore degil: bu,
+                    // kapinin olcutuyle (cocuk genisligi <= kabin clientWidth'i) AYNI
+                    // referanstir. 3rem pay bilincli — 8 px gap dusulunce sonraki
+                    // karttan 40 px gorunur kalir, yani seridin kaydirilabilir oldugu
+                    // gorulur; tavansiz halde ilk kart ekrani tam doldurur ve kalan
+                    // uc rol icin hicbir ipucu kalmaz. Tavan yalnizca ~464 px'in
+                    // altinda isirir; 640 px ve uzerinde kart genisligi, serit ve
+                    // bolum yuksekligi BIREBIR bugunku degerlerdir (olculdu).
+                    "group relative shrink-0 rounded-card px-5 py-4 text-left transition-all duration-200 max-w-[calc(100%_-_3rem)] lg:w-full lg:max-w-none",
                     on
                       ? "bg-surface shadow-md ring-1 ring-sage/35"
                       : "bg-surface/55 ring-1 ring-line hover:bg-surface hover:ring-line-2",

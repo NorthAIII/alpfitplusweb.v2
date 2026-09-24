@@ -80,4 +80,10 @@ Yani `min-w-0` tabanın *geçişini* kesiyor, `nowrap`'in kalkması *tabanın ke
 
 **Yan bulgu:** aynı butonun WhatsApp ikonu 320 px'te **1,00 px**'e eziliyordu (`shrink-0` yok); düzeltmeden sonra **16,31 px** (doğal boy 18). Kalan sıkışma `BULGULAR.md` → Gelen Kutusu, `[TASK-3.14]`.
 
-**İkinci kalem açık:** `Roles.tsx:47` sekme şeridi (320 **ve** 390 px'te ihlal) → **TASK-3.15**. Atom bu yüzden arşive taşınmadı.
+**İkinci kalem (Roller şeridi) de kapandı — TASK-3.15, 2026-09-24.** Sekme butonuna kap-bağımlı bir tavan kondu: `max-w-[calc(100%_-_3rem)] lg:max-w-none`. Kapı (`mobile-audit.mjs`) şerit ihlali **@320 8 → 0 · @390 8 → 0**, `TOPLAM SORUN` **266 → 250**. Kapsam tabanları oynamadı (16 rota · 2038 metin elemanı · 289 kritik hedef · **5 kaydırılabilir kap** — şerit `overflow-x-auto` kaldığı için `BEKLENEN_SERIT` sabit).
+
+⚠️ **Bu atomun "320 px'te ikinci, daha küçük kalem" başlığı EKSİKTİ ve düzeltmenin yönünü değiştiriyordu.** Atom da TASK-3.07'nin test kriteri de kalemi *320 px'e* bağlıyordu; ölçüt ise **pencere değil kabın görünür genişliğidir**. Şeridin `clientWidth`'i 390 px penceresinde **350** (kapsayıcı dolgusu 2×20), kartlar 360/360/360/358 — yani **390 px'te de** her kart eksik görünüyordu. Ölçülen ihlal iki genişlikte de 4'er kart, ve şerit **iki rotada** var (`/` ve `/ozellikler`), toplam **16**. Pencereye göre yazılmış bir düzeltme 320'yi yeşile çevirse bile kapıyı 390'da kırmızı bırakırdı.
+
+**Tavan `100%` değil `100% - 3rem` seçildi** (iki aday 2 rota × 7 genişlikte yan yana koşuldu): tam tavan kapıyı yeşile çevirir ama ilk kart görünür alanı tamamen doldurur ve kalan üç sekmenin varlığına dair hiçbir ipucu kalmaz. Seçilen pay her dar genişlikte **40 px'lik bir sonraki-kart payı** bırakır; bedeli 412 px'te kartın 360 → 324'e inmesidir (orada ihlal yoktu). Dikey yerleşim hiçbir genişlikte kaymadı (şerit yüksekliği 118, bölüm ve sayfa yüksekliği üç adayda da birebir) ve görünüş farkı **≥ 640 px'te 6 kombinde 0 piksel**, < 640 px'te tek bir 118 px'lik banda kapalı.
+
+**Atom hâlâ arşive taşınmadı:** iki kalemin de düzeltmesi ölçüldü ama çözüm teyidinin evi `verify-phase` Adım 6'dır.

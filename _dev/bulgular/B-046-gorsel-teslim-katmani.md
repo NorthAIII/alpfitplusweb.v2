@@ -102,4 +102,10 @@ Glif ölçümü, teslim ölçümü ve preload sayımı scratchpad'de.
 
 ## Çözüm Kaydı
 
-—
+**Kalem (2)'nin ANTRENÖR ayağı kapandı — TASK-3.15, 2026-09-24; DİYETİSYEN ayağı AÇIK.** `Roles.tsx` → `VISUAL.antrenor`: `SHOTS.takvim` → `SHOTS.antrenor`. Çerçeve artık rolün `device` alanından değil **görselin kendi oranından** türüyor (`shot.height > shot.width`): rolün `device`ini `web`e çekmek çerçeveyi düzeltirdi ama `faq.ts`, `gecis.ts` ve bölümün kendi lead cümlesi *"antrenör kendi telefonundan"* dediği için siteye yanlış bir cümle söyletirdi. Ölçüldü (elle tıklanarak, 320 · 390 · 1440 px): antrenör görselinin kutusu **244×129 telefon çerçevesinden** 280×202 / 350×253 / **562×405**'e çıktı — atomun *"okunmaz bir şeride iniyor"* tespiti kapandı.
+
+**Diyetisyen vekili `SHOTS.antrenor` → `SHOTS.grup`'a taşındı, ama bu bir çözüm DEĞİL kusur önlemedir.** Antrenör satırı doğru ekrana bağlanınca iki sekme **aynı kareyi** gösterecekti, üstelik görüntünün kendi başlığı "Antrenör Detayı" yazdığı için "Diyetisyen" sekmesinin altında gözle de çelişerek. `grup`un başlığı başka bir rolü adlandırmaz ve alt metni (*"grup dersleri ekranı: kontenjan, katılımcı listesi ve yoklama"*) görüntüde gerçekten duranı anlatır — atomun *"alt metni sekmeyle tutarlı hâle getirilir"* koşulu böyle karşılandı, `src/content/shots.ts` hiç değişmeden. **Sitenin tek "gerçek fark"ının kendi görüntüsü hâlâ yok.**
+
+⚠️ **Atomun kendi iddiası bu turda GENİŞLEDİ (ikinci kez).** Triyaj *"doğru ekran bugün üretilen kümede zaten var"* diyordu; araştırma bunu *"var ama masaüstü"* diye düzeltmişti. Bu tur görselin kendisi okundu: `antrenor.webp` (kaynağı `../Alpfit.v1/demo/antrenor.html`, `<title>` *"Antrenör Performansı"*, `<h1>` *"Antrenör Detayı"*) **yönetim panelinin** bir ekranıdır — üst solda "YÖNETİM", altta "Zehra G. · Şube Müdürü", kenar çubuğunda "Diyetisyenler" menü kalemi. Destedeki **bütün** masaüstü yakalamaları aynı paneldir (`takvim`, `grup`, `raporlar`, `finans`, `cockpit` gözle doğrulandı). Yani TASK-3.24'ün kapsamı "dikey bir yakalama" değil **rolün kendi yüzeyi** olmalı.
+
+Kalem (1), (3), (4), (5), (6) açık → TASK-3.20 · 3.21 · 3.23. Atom arşive taşınmadı; çözüm teyidinin evi `verify-phase` Adım 6'dır.
