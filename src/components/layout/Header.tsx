@@ -107,17 +107,41 @@ export function Header() {
           </Button>
         </div>
 
-        <button
-          ref={triggerRef}
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="mobil-menu"
-          aria-label={open ? "Menüyü kapat" : "Menüyü aç"}
-          className="inline-grid size-11 place-items-center rounded-xl ring-1 ring-line-2 bg-surface text-ink transition-colors hover:ring-sage lg:hidden"
-        >
-          {open ? <X className="size-5" strokeWidth={1.9} /> : <Menu className="size-5" strokeWidth={1.9} />}
-        </button>
+        {/*
+          Mobil kol (TASK-3.16, B-022). 1024 px altinda ustteki "Demo Iste" +
+          WhatsApp blogu HIC render edilmiyordu ve yuzen dugme de 480 px
+          kaydirmaya kadar gizliydi; sonuc olarak ilk ekranda tiklanacak tek
+          sey hamburger'di — 16 sayfanin 13'unde (320 px) ve 6'sinda (390 px)
+          hicbir donusum yuzeyi yoktu (olculdu).
+
+          Etiket "Demo Iste" DEGIL "Demo": 320 px'te basliktaki kap 280 px ve
+          logo 132,41 + hamburger 44 aliyor; "Demo Iste" (72 px metin + 28 px
+          dolgu = 100) satiri tasirdi, "Demo" (42 + 28 = 70) 11,6 px payla
+          siğar. Rozet/parilti/dolgu YOK — kullanicinin reddettigi kaliplar
+          (docs/STYLE-GUIDE.md) ve "gorunumu neredeyse degistirmemek" kararin
+          parcasi. Yukseklik h-11 = 44 px: baglanti `/demo`'ya gittigi icin
+          mobil kapinin KRITIK dokunma hedefi kumesine girer (TASK-3.08).
+        */}
+        <div className="flex items-center gap-1.5 lg:hidden">
+          <Link
+            href="/demo"
+            className="inline-flex h-11 items-center rounded-xl px-3.5 text-[0.9375rem] font-medium text-sage-ink transition-colors hover:bg-sage-wash"
+          >
+            Demo
+          </Link>
+
+          <button
+            ref={triggerRef}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobil-menu"
+            aria-label={open ? "Menüyü kapat" : "Menüyü aç"}
+            className="inline-grid size-11 place-items-center rounded-xl ring-1 ring-line-2 bg-surface text-ink transition-colors hover:ring-sage"
+          >
+            {open ? <X className="size-5" strokeWidth={1.9} /> : <Menu className="size-5" strokeWidth={1.9} />}
+          </button>
+        </div>
       </div>
 
       {open ? (

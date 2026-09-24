@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.14: tarayıcı ölçümü atomuna tek bölüm eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: "görünüş bozulmadı" ölçümünün hakemi kare değil **DOM geometrisidir** — bir bölüm **kesirli** (65,5 px) uzayınca altındaki her metin satırı yarım piksel kayar ve kaydırmalı kıyasta bile "farklı" görünür; `locator.screenshot()` ile alınan eleman karesi de aynı nedenle geometrisi birebir aynı bir butonu %21 farklı gösterir. Dokunulmamış genişlikte ölçüt yine de karedir ve **0** olmalıdır.
+**Son Güncelleme:** 2026-09-24 — TASK-3.16: tarayıcı ölçümü atomuna tek bölüm eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: **gezinme ölçümü `waitForLoadState("load")` ile yapılmaz** — Next.js App Router iç bağlantıları istemci-taraflı gezindiği için `load` bir daha ateşlenmez, çağrı anında döner ve okunan `p.url()` hâlâ eski sayfayı gösterir (ölçüldü: doğru çalışan bir bağlantı "yanlış sayfaya gitti" diye okundu); doğrusu `waitForURL("**/hedef")` + varışta ikinci bir çapa. Aynı bölümde locator tuzağının yeni hâli: **aynı href iki kırılımda** — `header a[href="/demo"]` masaüstü düğmesini (`display:none`) önce eşler ve tıklama zaman aşımına düşer, çare `:visible`.
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
 ---

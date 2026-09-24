@@ -39,8 +39,17 @@ export function Assistant() {
   const launcherRef = useRef<HTMLButtonElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
 
+  // Yuzen dugmelerin gorunme esigi (TASK-3.16, B-022). Eskiden 480 px'ti:
+  // mobilde ziyaretcinin WhatsApp'a ya da asistana ulasmasi icin once yarim
+  // ekran kaydirmasi gerekiyordu. 120 px, esigin var olma gerekcesini
+  // ("sayfanin TEPESINDE gorsel gurultu olmasin") koruyacak kadar yuksek —
+  // ilk ekran acilista temiz kalir, birinci kaydirma hareketinde dugmeler
+  // gelir. SIFIR bilincle secilmedi: ilk ekran zaten basliktaki "Demo"
+  // baglantisiyla kapaniyor (asagi bak), ve sifir esik yuzen katmani her
+  // sayfanin ilk ekranindaki metnin ustune koyardi — bu projede olculmus,
+  // hicbir kapinin gormedigi bir cakisma sinifi (B-063/B-064).
   useEffect(() => {
-    const onScroll = () => setShowFabs(window.scrollY > 480);
+    const onScroll = () => setShowFabs(window.scrollY > 120);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);

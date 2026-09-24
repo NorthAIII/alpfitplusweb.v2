@@ -169,7 +169,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.13 | TASK-3.13 | ✅ Tamamlandı | 404 / çöküş — dev rakam dekoratif olur, başlık hiyerarşisi düzelir |
 | 3.14 | TASK-3.14 | ✅ Tamamlandı | 320 px'te kesilen içerik ve işlev — `Button` tabanı + `FounderProgram` ızgarası |
 | 3.15 | TASK-3.15 | ✅ Tamamlandı | Roller — sekme şeridi 320 px'te sığar, görsel eşlemesi düzelir |
-| 3.16 | TASK-3.16 | ⬜ Bekliyor | Mobilde ilk ekranda demoya çıkan bir yol — menüye "Demo", yüzen düğme erken |
+| 3.16 | TASK-3.16 | ✅ Tamamlandı | Mobilde ilk ekranda demoya çıkan bir yol — menüye "Demo", yüzen düğme erken |
 | 3.25 | TASK-3.25 | ⬜ Bekliyor | Form 503 verdiğinde WhatsApp bağlantısı yazılanları taşır |
 | 3.17 | TASK-3.17 | ⬜ Bekliyor | Dönüşüme dokunan 19 hedef 44 px'e çıkar |
 | 3.18 | TASK-3.18 | ⬜ Bekliyor | Faydalar bölümünün 8 eşit kartı reddedilen kalıptan çıkar |

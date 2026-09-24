@@ -112,10 +112,15 @@ const GENISLIKLER = [320, 390];
  * onun basari halidir. Secici korlesirse taranan kume bosalir, "0 kirpma"
  * cikar ve kapi YESIL kalir — "bakmadim" ile "hicbir sey kirpilmiyor" ayni
  * ciktiyi verir. Bugun 16 rotada olculen dogrudan metin tasiyan eleman sayisi
- * her iki genislikte de 2038. Sayfa/bolum bilerek SILINIRSE taban elle
+ * her iki genislikte de 2054. Sayfa/bolum bilerek SILINIRSE taban elle
  * dusurulur; dusurulmeden kapi kirmizi kalir, ki amac odur.
+ *
+ * 2038 -> 2054 (TASK-3.16): basliga 1024 px altinda gorunen bir "Demo"
+ * baglantisi eklendi ve 16 rotanin hepsinde ciziliyor (+16, olculdu). Taban
+ * BILINCLE yukseltildi — eski deger birakilsaydi ileride 16 metin elemaninin
+ * sessizce kaybolmasi kapida gorunmezdi (fail-open penceresi).
  */
-const BEKLENEN_METIN_ELEMANI = 2038;
+const BEKLENEN_METIN_ELEMANI = 2054;
 
 /**
  * SERIT dalinin KAPSAM TABANI. Ayni gerekce: kaydirilabilir kap bulunamazsa
@@ -132,9 +137,19 @@ const HEDEF_ESIK = 44;
  *
  * Bu dal ihlalin VARLIGINI raporlar, yani korlesmis bir siniflandirici "0
  * kritik ihlal" deyip kapiyi YESIL birakir — T3'un fail-open sondasinin tam
- * karsiligi. Bugun her genislikte 289 kritik hedef olculuyor (buton 111 ·
- * donusum baglantisi 125 · menu 45 · form alani 8; `[role=button]` ve
+ * karsiligi. Bugun her genislikte 305 kritik hedef olculuyor (buton 111 ·
+ * donusum baglantisi 125 · menu 61 · form alani 8; `[role=button]` ve
  * `<summary>` bugun 0 eseliyor, ileriye donuk guvencedir).
+ *
+ * 289 -> 305 (TASK-3.16): basliga 1024 px altinda gorunen bir "Demo"
+ * baglantisi eklendi, 16 rotanin hepsinde cizilir (+16). Kova MENU'dur,
+ * "donusum baglantisi" DEGIL — yukaridaki siniflandirma sirasinda `header,
+ * nav` icindeki `<a>` donusum dalindan ONCE eslenir; olculdu (menu 45 -> 61,
+ * donusum baglantisi 125 -> 125). Iki kova da kritik kumede oldugu icin
+ * 44 px kurali yine gecerli ve saglaniyor: esik ALTI sayi degismedi
+ * (125 -> 125), cunku baglanti 70x44 olculdu. Taban BILINCLE yukseltildi —
+ * yoksa siniflandirici ileride 16 kritik hedefi kaybetse bile kapi sessiz
+ * kalirdi.
  *
  * TEK taban bilincli: gezinme kulvari cikis kodunu ETKILEMEZ, o yuzden ona
  * ayri bir taban koymak bakim borcu ekler ama hicbir fail-open kapatmaz —
@@ -144,7 +159,7 @@ const HEDEF_ESIK = 44;
  *
  * Sayfa/bolum bilerek SILINIRSE taban elle dusurulur.
  */
-const BEKLENEN_KRITIK_HEDEF = 289;
+const BEKLENEN_KRITIK_HEDEF = 305;
 
 let PAGES;
 let ROTA_KAYNAGI;

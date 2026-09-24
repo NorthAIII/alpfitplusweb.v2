@@ -159,6 +159,35 @@ türediği için (TASK-2.11) hem sunucu HTML'inde hem de JS chunk'ında yalnız 
 duruyor; render edilmiş cümle **yalnız tarayıcıda** oluşur. `grep` ile "yeni cümle var mı"
 diye bakmak boş döner ve yanlışlıkla "değişmemiş" diye okunur.
 
+## Gezinme ölçümü `load` ile YAPILMAZ — `waitForURL` gerekir (TASK-3.16, 2026-09-24)
+
+Bir bağlantının gerçekten doğru sayfaya gidip gitmediğini ölçerken refleks şudur:
+
+```js
+await el.click();
+await p.waitForLoadState("load");        // ← YUMUSAK GEZINMEDE HIC ATESLENMEZ
+console.log(new URL(p.url()).pathname);  // hala ESKI sayfayi basar
+```
+
+Site Next.js App Router kullanıyor: iç bağlantılar **istemci-taraflı** gezinir, belge
+yeniden yüklenmez ve `load` olayı bir daha ateşlenmez. `waitForLoadState("load")` zaten
+tamamlanmış eski yüklemeyi görüp **anında döner**; ardından okunan `p.url()` henüz
+güncellenmemiş olabilir. Ölçüldü (TASK-3.16): başlıktaki "Demo" bağlantısı `/fiyat`'ta
+tıklandı, ölçüm `/fiyat` yazdı — bağlantı **doğru çalışıyordu**, yanlış olan ölçümdü.
+Doğrusu hedefi adıyla beklemektir:
+
+```js
+await el.click();
+await p.waitForURL("**/demo", { timeout: 15000 });
+const h1 = await p.locator("h1").first().textContent();   // varista IKINCI bir capa
+```
+
+⚠️ Aynı turda ikinci tuzak: `header a[href="/demo"]` **iki** eleman eşliyor — masaüstü
+"Demo İste" düğmesi (`lg:` altında `display:none`) DOM'da önce geliyor, Playwright onu
+seçiyor ve tıklama "element is not visible" ile **zaman aşımına** düşüyor. Bu, yukarıdaki
+"aynı metin iki yerde" tuzağının **aynı href / farklı kırılım** hâlidir; çare aynı:
+`p.locator('header a[href="/demo"]:visible').first()`.
+
 ## İzleyici ve hidrasyon sınamaları (audit-product 2026-09-13'te doğrulandı)
 
 - **Umami izleyicisi canlı kuruluma veri göndermeden sınanır.** `umami.kiwiailab.com` kullanıcının
