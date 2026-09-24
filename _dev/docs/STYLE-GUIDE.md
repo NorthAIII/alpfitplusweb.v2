@@ -28,6 +28,8 @@
 
 Yeni renk eklerken **kontrastı ölç** (`a11y.mjs`), rakamı CSS yorumuna yaz — mevcut token yorumları bu geleneği kurdu.
 
+**Gradyan metin vurgusu** (`.text-gradient-sage`, TASK-3.11): açık zemindeki başlık vurgularının gradyanı `sage-deep` → `#41813d` → `#44943d`. Kapı gradyanın **en açık durağını** zemine karşı ölçer; eski üst duraklar (`sage` 2,28 · `sage-br` 1,64 canvas-soft üstünde) eşiği deliyordu, yenisi üç genişlikte **3,30-3,65** (gereken 3,0). Rampanın yönü korundu, yalnız açıklık aralığı sıkıştırıldı — ton 117→116→115, doygunluk 28→36→42, açıklık 33→37→41. ⚠️ **Düzeltme token'a değil sınıfa yapılır ve öyle kalmalı:** aynı `sage-br` otuzu aşkın yerde **koyu** zeminde kullanılıyor (Button, Icon, Footer, kapanış çağrısı bandı) ve orada parlaklığı doğrudur; iki inline gradyan vurgusu (`Solution` 8,92 · `FounderProgram` 9,84) da ondan beslenir ve geçer. **Kural genel:** bir marka renginin açık ve koyu zeminde farklı hükmü varsa düzeltme **kullanım sınıfına** iner, token'a değil.
+
 **Form hatası deyimi** (TASK-2.06): geçersiz alan 2 px `neg` halka + `neg-wash` zemin alır, hata metni (`text-neg`) alanın **hemen altında** durur — renk tek işaret değildir (WCAG 1.4.1). Ölçülen kontrast: metin form zemininde 5,25 · alan zemininde 4,96 · halka 5,25 (gri halka 1,46). ⚠️ `aria-invalid:` varyantı Tailwind 4.3.3'te **yerleşik değil** ve tanımsızken sessizce hiçbir kural üretmez; `globals.css` → `@custom-variant aria-invalid` ile kayıtlıdır. Odak halkası kırmızının üstünde kalmalı (`aria-invalid:focus:`), yoksa geçersiz alanda odak görünmez olur.
 
 ## Tipografi
@@ -66,4 +68,4 @@ Konuşma diline yakın, salon sahibine hitap; kurumsal jargon yok. Kullanıcı 2
 
 ---
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.07: Düzen Tuzakları #2'nin *"`mobile-audit.mjs` doğrular"* cümlesi artık gerçek — kapı 320/390 px'te kırpılmış taşmayı ölçüyor; kuralın yanına ölçütü ve muafiyetleri yazdım.
+**Son Güncelleme:** 2026-09-24 — TASK-3.11: Tokenlar bölümüne "Gradyan metin vurgusu" kuralı eklendi — açık zemindeki gradyanın durakları AA'ya çekildi (17 kalem 1,63-1,74 → 3,30-3,65) ve düzeltmenin token'a değil **kullanım sınıfına** indiği genel kuralı yazıldı. Token tablosuna dokunulmadı.

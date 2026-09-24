@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.09: tarayıcı-ölçümü atomuna bir tuzak daha eklendi, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca atomu zaten ölçüm tuzaklarının evi olarak gösteriyor). Tuzak ölçüm **hedefini** vuruyor: düzeltme task'larının ara doğrulama yolu `BASE=http://localhost:3000` dar ekranda sahte kırmızı basıyor — `next dev` sayfaya sabit, açık renkli bir geliştirici göstergesi enjekte ediyor ve piksel kapısı onu metnin zemini sanıyor (390 px'te aynı eleman 3000'de **1,35**, 3100'de **9,54**; 1440 px'te iki hedef birebir aynı). İkisi de belirlenimli, yani tekrar teyidi bu tuzağı elemez. **Yargı her zaman 3100'e aittir.**
+**Son Güncelleme:** 2026-09-24 — TASK-3.11: üretim-derlemesi atomuna bir tuzak daha eklendi, **yeni dosya açılmadı, index'e satır eklenmedi** (kanca atomu zaten 3100'ün tazeliğinin evi olarak gösteriyor). Tuzak tazelik **kontrolünü** vuruyor: yalnız CSS değişen turda ayırt edici HTML'de aranmaz — `globals.css`'teki kural yayınlanan sayfaya hiç girmez, içerik-hash'li ayrı bir parçada durur (`/_next/static/chunks/<hash>.css`; `static/css/` yolunu arayan grep boş döner ve "tazelenmemiş" gibi görünür). İki ayırt edici birlikte kullanılır: **parça adının değişmesi** ve o parçadaki **derlenmiş kuralın metni**. ⚠️ Süre de kanıt değil: yalnız CSS değişince `up -d --build web-prod` **11 saniyede** bitiyor (katman önbelleği).
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 

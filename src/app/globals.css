@@ -200,8 +200,34 @@
     mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
   }
   /* metin gradyani */
+  /*
+    Duraklar ACIK ZEMIN icin secildi (TASK-3.11, B-032 kalem 3). Bu sinif
+    yalnizca canvas / canvas-soft uzerindeki baslik vurgularinda kullanilir ve
+    kapi gradyanin EN ACIK DURAGINI zemine karsi olcer (a11y.mjs gradyan dali).
+    Eski ust duraklar orada esigi deliyordu — olculdu (p02, yayin kopyasi):
+      sage #74b36f      canvas 2,41 · canvas-soft 2,28
+      sage-br #94d08e   canvas 1,74 · canvas-soft 1,64   (gereken 3,0)
+    16 rotadaki 17 kalemin hepsi esik altiydi: 1,63-1,74 @1440 · 1,57-1,74 @390
+    ve @320. Yeni duraklar (ayni olcum, uc genislik): 3,30-3,65 — en kotu deger
+    Hero'daki "tek platformda" (@390 ve @320, dekoratif zemin).
+
+    ⚠️ DUZELTME TOKEN'A DEGIL BU SINIFA YAPILDI ve oyle kalmali. `--color-sage-br`
+    30'u askin yerde KOYU zeminde kullaniliyor (Button, Icon, Footer, FinalCta
+    bandi) ve orada parlakligi DOGRU; iki inline gradyan vurgusu da ondan
+    besleniyor ve bugun geciyor (Solution 8,92 · FounderProgram 9,84). Token
+    koyulastirilsaydi o kalemler asagi cekilirdi.
+
+    Rampa yonu korundu — aile icinde yalnizca ACIKLIK araligi sikistirildi:
+      ton   117 → 116 → 115   (eski 117 → 116 → 114,5)
+      doygunluk 28 → 36 → 42  (eski 28 → 31 → 41)
+      aciklik  33 → 37 → 41   (eski 33 → 57 → 69)
+    Orta ve ust durak @theme'e TOKEN olarak eklenmedi: bu iki deger yalnizca
+    bu gradyanin acik-zemin kisitini karsilamak icin var; token olsalardi koyu
+    zeminde de kullanilmaya acilirlardi ve bu task'in ta kendisi o sinifin
+    bedelidir.
+  */
   .text-gradient-sage {
-    background-image: linear-gradient(135deg, var(--color-sage-deep) 0%, var(--color-sage) 55%, var(--color-sage-br) 100%);
+    background-image: linear-gradient(135deg, var(--color-sage-deep) 0%, #41813d 55%, #44943d 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

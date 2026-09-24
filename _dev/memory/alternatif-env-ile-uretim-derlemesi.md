@@ -132,3 +132,11 @@ konteyneri uzun ömürlüdür ve kendiliğinden yeniden derlenmez — B-019'un m
   pozitif kontrolle teyit edilir (200 → bağlantı reddedildi).
 - **İlk koşum soğuktur:** taze konteynerde rota başına ilk render LCP'yi şişirir (ölçüldü: ana sayfa 308 ms → ısınınca
   100 ms). Çizgiyle kıyaslamadan önce `perf.mjs`'i **iki kez** koştur, ikincisini raporla.
+- **Yalnız CSS değişen turda ayırt ediciyi HTML'de arama — stil sayfası içerik-hash'li ayrı bir parçada durur**
+  (TASK-3.11'de ölçüldü). `globals.css`'teki bir kural yayınlanan HTML'e **hiç girmez**; sayfa yalnız
+  `<link href="/_next/static/chunks/<hash>.css">` taşır (Next 16 onu `static/css/` altına koymuyor — o yolu arayan
+  `grep` boş döner ve "tazelenmemiş" gibi görünür). İki ayırt edici birlikte kullanılır: **parça adının değişmesi**
+  (`01cjvk5fnifi7.css` → `3akz_pa--pbiq.css`) ve o parçadaki **derlenmiş kuralın metni**
+  (`curl -s localhost:3100/_next/static/chunks/<hash>.css | grep -o '<sinif>{[^}]*}'`). ⚠️ Süre kanıt değildir:
+  yalnız CSS değişince `up -d --build web-prod` **11 saniyede** bitiyor (katman önbelleği) — "çok hızlıydı, bayat
+  kalmıştır" da "derleme koştu" kadar yanlış bir çıkarım.
