@@ -431,3 +431,26 @@ kayan şeridin kesen kutusu `overflow:hidden`'dır, yani kaydırma testi önce k
 elemanın kutusu** 19/70 · **tüm elemanlar** 47/2595. Devralınan bir rakama kalibre
 ediyorsan önce o rakamın hangi tanımdan geldiğini bul; bulgu gövdesinde iki tanım
 birden yazılı olabilir (B-033'te öyleydi).
+
+⚠️ **"Benzersiz" bir rakam, ölçümün değil GRUPLAMA ANAHTARININ sonucudur — ve bu
+tuzak bu projede iki kez ısırdı.** Ölçüm birimi doğru seçilse bile, sonucu
+"N benzersiz kalem" diye raporlarken kullandığın anahtar sayıyı değiştirir.
+Ölçüldü (TASK-3.08, dokunma hedefi, 390 px × 16 rota): aynı 125 kalem
+`etiket|ad` ile **19**, `etiket|ad|en×boy` ile **22**, `etiket|ad|href` ile
+**20**, `sınıf|ad` ile **20** benzersiz çıkıyor. Devralınan rakam 19'du ve
+yalnız bir anahtar onu üretti.
+
+İki sonucu var:
+
+- **Devralınan bir "N benzersiz" rakamına kalibre ederken anahtarı da ara**,
+  ölçüm birimini bulmakla yetinme. Aynı fazda TASK-3.04 bunun öteki yüzünü
+  yaşadı: araştırmanın "11 benzersiz gradyan metin" rakamı aslında **tek bir
+  rotanın** sayısıydı, 16 rotada 17 benzersiz / 19 eleman çıktı — orada
+  saklı değişken anahtar değil **kapsamdı**. Ölçüt ortak: *benzersiz sayı, üç
+  seçimin (birim · anahtar · kapsam) bileşkesidir ve üçü de yazılmadan rakam
+  taşınamaz.*
+- **Anahtar bilgi kaybettirir; kaybı raporda geri ver.** `etiket|ad` iki farklı
+  bileşeni aynı satıra toplayabilir (telefon bağlantısı hem 147×20 hem 350×39
+  olarak duruyor). Çare anahtarı şişirmek değil — her benzersiz satırın kendi
+  **ölçü varyantlarını** ve kaç rotada göründüğünü basması; düzeltme listesi
+  böyle eksiksiz kalır.
