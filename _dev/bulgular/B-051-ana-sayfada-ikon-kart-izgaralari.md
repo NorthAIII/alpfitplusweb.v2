@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** tutarsızlık / öneri-ui-ux | **Alan:** M2 — Sayfalar ve bölümler (F2.1 Ana sayfa)
 **Kaynak:** audit-product (Gelen Kutusu `[TASK-1.07]` notunun mezuniyeti) | **Tarih:** 2026-09-13
-**Durum:** → Faz 3 (yalnız `Benefits`'in 8 kartı ve `Modules`'ün tırtıklı ızgarası; 5'li ikon şeridi kullanıcı kararıyla kapsam dışı)
+**Durum:** Çözüldü (TASK-3.18 + TASK-3.19) — kapsama alınan iki ızgara da yeniden kuruldu; 5'li ikon şeridi kullanıcı kararıyla kapsam dışı kaldı ve **olduğu gibi duruyor**. Teyidin evi `verify-phase`, o yüzden atom arşivlenmedi.
 
 ## Gözlem
 
@@ -50,4 +50,18 @@ Tasarım refleksleri kayda geçtiğinde yeni bölümler için kural oldu, var ol
 
 ## Çözüm Kaydı
 
-—
+**Kapsama alınan iki ızgara da yeniden kuruldu ve "kalıptan çıktı" iddiası her ikisinde de ÖLÇÜLEREK kapatıldı.** Ölçüt STYLE-GUIDE'ın kendi tarifinden türetildi ve üç mekanik ayağa bölündü (TASK-3.18'de kuruldu, TASK-3.19'da aynı tanımla tekrarlandı): **(1)** `display:grid` olan ve ≥ 4 çocuk taşıyan kap, **(2)** kare (±2 px), ≥ 32 px, zemini/halkası olan ve içinde svg bulunan ikon karosu, **(3)** kalem kutularının benzersiz ölçü sayısı.
+
+| Bölüm | Izgara kabı | İkon karosu | Benzersiz kutu ölçüsü @1440 | Tur |
+|---|---|---|---|---|
+| `Benefits` (8 eşit kart → döküm) | 1 → **0** | 8 × 44×44 → **0** | 1 → **2** (eskiden sekizi de 271×231) | TASK-3.18 |
+| `Modules` öne çıkanlar (5 eşit kart → pano) | 1 → **0** | 5 × 44×44 → **0** | 2 → **3** (631×262,5 · 457×262,5 · 362,7×287,9) | TASK-3.19 |
+| `Modules` kalan modüller (5'li ikon şeridi) | 1 → **1** | 5 × 36×36 → **5** | — | **kapsam dışı, kullanıcı kararı** |
+
+Seçilen ritimler bilinçle **birbirinden farklı**: `Benefits` tam genişlikte saç teli döküm + tek gerçek fotoğraf bandı; `Modules` tek çerçeveli, eşit olmayan hücreli (2 + 3) ve **ikonsuz** pano. İkisinin de gerekçesi, elenen adayları ve ölçümü `docs/DECISIONS.md` (2026-09-25, iki kayıt). `Modules`'te tırtıklı satır kalmadı: üst sıra 0,58 + 0,42, alt sıra 3 × eşit, iki sıra da kabın genişliğini tam dolduruyor.
+
+**Öne çıkan sayısı 5'te kaldı ve gerekçesi ölçüldü:** kapsam dışı şerit `lg:grid-cols-5`'tir, yani öne çıkanı 4'e ya da 6'ya çekmek tırtıklı satırı çözmez, dokunulmayacak şeride taşır. Bulgunun "öne çıkanların sayısı ızgaraya göre değil içeriğe göre seçilir" önerisi böyle karşılandı: sayı içeriğin (10 modülün 5/5 bölünmesi) verdiği sayıdır, değişen düzendir.
+
+**Koruma önerisinin metin ayağı yazıldı:** `docs/STYLE-GUIDE.md` artık kalıbın üç mekanik ayağını ve "ardışık bölümler aynı ritmi tekrarlamaz" ölçütünü sayfanın sayılmış ritim envanteriyle birlikte taşıyor (TASK-3.19). Mekanik kapı hâlâ yok — kalıp bir estetik yargı olduğu için bir betiğe bağlanmadı; bugünkü koruma ölçülebilir tarif + yeni bölüm senaryosunda okunması zorunlu doküman.
+
+**Kullanıcı beğenisi alınmadı** (iki turda da): düzenler koşumun duran yetkilendirmesiyle seçildi → `kanal: UAT`. Yön reddedilirse iki bölüm de tek dosyadır — `Benefits` eski hâli `ae80fb0`'da, `Modules` eski hâli `091f2a9`'da.

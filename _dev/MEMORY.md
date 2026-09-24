@@ -7,7 +7,7 @@
 >
 > Bu yapı şişmeyi önler: index ince kalır (hep yüklü), detay yalnızca gerekince okunur.
 
-**Son Güncelleme:** 2026-09-24 — TASK-3.17: iddia/çapa atomuna tek yan kural eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: **kapıyı yeşile çeviren düzeltme de ölçülür** — kapı ne ölçüyorsa onu görür, düzeltme o ölçünün dışındaki bir şeyi bozduğunda yeşil yalan söyler. Ölçülmüş örnek: dokunma hedefi kapısı elemanın kendi kutusunu ölçer, komşularıyla **çakışmasını görmez**; kutuyu görünmez biçimde büyütmek kapıyı geçirir ama yan yana iki hedef birden büyüyünce kutular üst üste biner ve boyama sırası kazanır (kapı 46,5 px görürken gerçek hedef 42,5 px). Kural: kutuyu büyüttüğünde komşuluk ilişkisini AYRICA ölç; "görünmez" düzeltme bedelsiz değildir.
+**Son Güncelleme:** 2026-09-25 — TASK-3.19: tarayıcı-ölçümü atomunun kare-farkı bölümüne tek yan kural eklendi, **yeni dosya açılmadı, index'e satır eklenmedi**. Konu: **"alt taraf değişti mi" sorusunun kesin cevabı TELAFİ KONTROLÜDÜR** — kaynağa dokunmadan bölüme boy farkı kadar dolgu enjekte edilir, sayfa ve bölüm boyunun eski değere birebir döndüğü doğrulanır, şerit karesi yeniden alınır; fark sıfırlanıyorsa değişim konumsaldır (ölçüldü: 68.402 ve 78.179 farklı piksel → 0 ve 0). İki ayrıntı: telafi, telafi ettiği kutunun **duyarlı** değerini taşımalı (`py-18 sm:py-24` → ≥ 640 px'te 24 px eksik kalır), ve koyu zeminli gradyan belge konumuna bağlı tarandığı için düşük genlikli (maks 2-7) ama geniş alanlı fark verir — piksel **sayısı** değil maksimum kanal farkı okunur. ⚠️ Atom 19,5 k token, kırmızı çizgiye yakın.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 

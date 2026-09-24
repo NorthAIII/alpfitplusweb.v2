@@ -583,3 +583,17 @@ ayrıca gösterildikten sonra delil sayılır.
 **Değişmemesi gereken yüzeyde ölçüt yine de karedir ve kesindir:** dokunulmamış
 genişliklerde tam sayfa farkı **0** çıkmalıdır (bu turda 4 sayfa / 40 M piksel,
 sayfa boyları da birebir). Sıfır olmayan bir rakam orada mazeret kabul etmez.
+
+**TELAFİ KONTROLÜ — "kaydı mı, değişti mi" sorusunun kesin cevabı** (TASK-3.19,
+2026-09-25): şüpheli fark kalırsa kaynağa dokunmadan bölüme kısaldığı/uzadığı
+kadar dolgu **enjekte et** (`#bolum{padding-bottom:calc(<özgün dolgu> + Δpx)}`),
+sayfa ve bölüm boyunun **eski değere birebir döndüğünü doğrula**, şeridi yeniden
+al. Fark sıfırlanıyorsa değişim **konumsaldır**. Ölçüldü: 68.402 ve 78.179
+farklı piksel → **0** ve **0**; @1440'ta Δ kesirli olduğu için 12.062 → **205**
+px (%0,016) kaldı. ⚠️ İki ayrıntı: (a) telafi, telafi ettiği kutunun **duyarlı**
+değerini taşımalı — `Section` dolgusu `py-18 sm:py-24`, `calc(4.5rem + …)`
+≥ 640 px'te 24 px eksik telafi eder ve fark kapanmaz; (b) **koyu zeminli gradyan
+belge konumuna bağlı taranıyor** — genlik düşük (maks kanal farkı 2-7) ama alan
+geniş, yani "on binlerce farklı piksel" tek başına içerik değişimi demek
+değildir; maksimum kanal farkına bak. Önce **belirlenimliliği** sına (aynı
+yapıyı iki kez ölç → 0 fark), yoksa telafi kontrolü de yorumlanamaz.

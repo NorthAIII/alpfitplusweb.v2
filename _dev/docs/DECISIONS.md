@@ -20,6 +20,27 @@
 
 <!-- Her yeni karar aşağıdaki formatta en üste eklenir (en yeni en üstte) -->
 
+### 2026-09-25 — `Modules`'ün öne çıkan beş modülü "pano"dur: tek çerçeve, eşit olmayan hücreler (2 + 3), ikonsuz; öne çıkan sayısı 5'tir ve bunu kapsam dışı şerit belirler
+
+**Bağlam:** B-051'in ikinci ızgarası. Öne çıkan beş modül `md:grid-cols-2 lg:grid-cols-3` üzerinde beş **eşit** kart olarak diziliyordu (ölçüldü @1440: beşi de 349,3 px genişlikte, iki yükseklik değeri — 378,1 ve 358,1) ve masaüstünde 3 + 2 dizildiği için ikinci satır **tırtıklı** bitiyordu. Her kart `IconBox` (44×44 karo) + başlık + blurb + dört madde taşıyordu. Aynı bölümün ikinci yarısı (kalan beş modülün `lg:grid-cols-5` şeridi) kullanıcı kararıyla **kapsam dışıdır**.
+
+**Karar:**
+- **Bölümün ritmi PANODUR.** Beş hücre tek bir çerçeveli panonun (`rounded-card ring-1 ring-line bg-surface`) içinde, iç saç teli çizgilerle ayrılır. Üst sıra **iki** hücre (`0,58 / 0,42`), alt sıra **üç** hücre; iki sıra da tam dolar, yani **tırtıklı satır kalmaz**. `lg` altında hücreler tek sütuna yığılır ve panonun içinde kalır.
+- **Omurga hücresi vardır ve üç ayrı işaretle belirtilir:** genişlik (0,58), punto (başlık `text-xl sm:text-2xl`, ötekiler `text-lg`) ve soluk zemin (`surface-2` — bölümün ikinci yarısındaki şeridin tonuyla aynı). Seçilen modül **Takvim ve Rezervasyon**'dur; gerekçe içeriğin kendi cümlesidir (*"Ürünün en kritik modülü"*), yeni bir etiket yazılmadı.
+- **Panoda ikon yoktur ve yerine başka bir ikon konmaz.** `IconBox` karosu reddedilen kalıbın ikinci ayağıydı; satır içi küçük işaret ise TASK-3.18'in (Faydalar) jestidir — aynı hareketi iki bölümde tekrarlamak "düzen çeşitliliği" değil kopyadır. Madde işareti svg değil, `::before` ile çizilen 10 px'lik tek piksellik bir çizgidir.
+- **Öne çıkan sayısı BEŞTİR ve bu sayı düzene göre değil içeriğe göre sabitlenmiştir.** Kapsam dışı şerit `lg:grid-cols-5`'tir; öne çıkanı dörde ya da altıya çekmek tırtıklı satırı çözmez, yalnızca **dokunulmayacak şeride** taşır (4 öğe / 5 sütun ya da 6 öğe / 5 sütun). Düzeltilen sayı değil düzendir.
+- **Metin bu bölümün işi değildir.** Beş modülün başlığı, blurb'ü, madde sırası ve `slice(0, 4)` kırpması `src/content/product.ts` → `MODULES`'tedir; `git diff -- src/content/` **boş**.
+
+**Gerekçe:**
+- **Sayfanın bugünkü ritmine karşı seçildi.** İki sütunlu bölme sayfada zaten 8 kez var (TASK-3.18'de sayıldı) — dokuzuncusu ritim değişimi olmaz. Tam genişlikte saç teli döküm bir önceki turda `Benefits`'e verildi, tekrarı olurdu. Eşit kartlı ızgara zaten `WhyUs` ve `SegmentsGrid`'in ritmidir. Çerçeveli, eşit olmayan hücreli pano sayfada başka hiçbir yerde yok.
+- **Pano bölümün kendi cümlesini görselleştiriyor:** *"Kulübün tamamı, parça parça değil."* Beş ayrı kart yerine tek bir nesne.
+- **Kalıptan gerçekten çıkıldığı ölçüldü** (3100, T18'in üç mekanik ayağı aynı tanımla): öne çıkanlar tarafında ızgara kabı **1 → 0**, ikon karosu **5 × 44×44 → 0**, kalem kutusu benzersiz ölçü @1440 **2 → 3** (631×262,5 · 457×262,5 · 362,7×287,9 — iki sıra da 1088 px'i tam dolduruyor). Bölümde kalan tek ızgara kabı ve kalan beş karo **kapsam dışı şeride** aittir.
+- **Bölüm her genişlikte kısaldı** (mobil uzunluk şikâyeti — Gelen Kutusu `[kickoff SORU]`): @320 **3181 → 2624 (−557)** · @390 **2812 → 2281 (−531)** · @1440 **1388 → 1182 (−206)**. Sayfa boyu farkı üç genişlikte de bölüm boyu farkına **eşit**, yani başka hiçbir bölümün yüksekliği oynamadı.
+- **Soluk zeminin bedeli ölçüldü:** omurga hücresindeki gövde metni `#fff` yerine `surface-2` üstünde duruyor ve `p02` **7,05 → 6,61**'e, başlık **17,57 → 16,48**'e düşüyor (gerekenler 4,5 ve 3). Üç genişlikte de **45 kalem, 0 eşik altı**.
+- **Kapılar tabanda kaldı:** mobil kapı **0 / çıkış 0 (yeşil)**, a11y **6 / çıkış 1** (tabana eşit, hepsi `/gecis`), font-guard **85.129 karakter / çıkış 0** (birebir), perf `/` **141 KB masaüstü · 132 KB mobil** (birebir), `npm test` **219 + 2**. Hiçbir kapsam tabanı oynamadı.
+
+---
+
 ### 2026-09-25 — `Benefits` bölümünün ritmi "döküm"dür: tam genişlikte saç teli satırlar + ortada tek gerçek fotoğraf; ızgara ve ikon karosu geri gelmez
 
 **Bağlam:** B-051, ana sayfada kullanıcının reddettiği kalıbın üç kez tekrarlandığını ölçmüştü. `Benefits` tarifin birebir örneğiydi: `lg:grid-cols-4` üzerinde 8 eşit kart, her kart `IconBox` karosu + başlık + iki satır gövde. STYLE-GUIDE → Kullanıcının Refleksleri → Kullanma: *"Jenerik ikonlu kart ızgarası (3×N eşit kart, ikon + başlık + iki satır). Bölüm tasarlarken düzen çeşitlendir: sahne, liste, çizim, fotoğraf kırpma."* Bölüm kickoff'tan önce yazılmıştı; refleks 2026-09-11'de kayda geçti ve mevcut bölümlere geri uygulanmadı.
