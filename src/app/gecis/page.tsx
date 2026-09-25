@@ -173,9 +173,18 @@ export default function MigrationPage() {
                     alt metin. `sizes`: >=1024 (kapsayici - gap-16) x 0,9/2 =
                     %45 · >=1472 kapsayici 88rem'e oturur, 576 px'te donar.
                     Bant `hidden lg:block`. */}
+                {/* DEKORATIF → BOS ALT (TASK-3.21, B-046 kalem 3; QUALITY 7).
+                    Olculdu (3100 @1440): (a) baglanti/buton icinde DEGIL;
+                    (b) etkin opaklik 0,80 ve uzerinde hic metin yok — bu bir
+                    atmosfer seridi, bolumun anlatisi (gun gun gecis takvimi)
+                    tumuyle sagdaki <ol>de; (c) eski alt'in 4 icerik
+                    kelimesinden yalniz 1'i ("studyo") sayfa metninde geciyordu.
+                    Ayni foto /segmentler'de LINK icinde kart olarak duruyor ve
+                    orada alt'i KORUNUYOR — yani betimleme siteden silinmiyor,
+                    yalnizca bilgi tasimadigi yerden kalkiyor. */}
                 <Image
                   src="/foto/cok-subeli-zincir-band.webp"
-                  alt="Sade ve aydınlık bir stüdyo iç mekânı"
+                  alt=""
                   width={1600}
                   height={608}
                   sizes="(min-width: 1472px) 576px, (min-width: 1024px) calc((100vw - 128px) * 0.45), 100vw"

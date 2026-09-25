@@ -69,9 +69,29 @@ export default async function SegmentPage({
       {/* Segment kahraman bolumu: baglam fotografi tam genislikte, metin
           uzerine biner. Foto kaynagi ve lisansi research/FOTOGRAF-KAYNAKLARI.txt */}
       <section className="relative isolate overflow-hidden bg-ink-deep">
+        {/* DEKORATIF → BOS ALT (TASK-3.21, B-046 kalem 3; QUALITY 7).
+            `seg.photo.alt` DEGISMEDI — bosaltma CAGRI YERINE ait, cunku ayni
+            metin /segmentler'deki kartta bilgi tasiyor (orada foto tam
+            opaklikta ve bir <a>'nin icinde). Burada olculdu (3100 @1440, dort
+            segment sayfasinin dordu):
+              (a) baglanti/buton icinde DEGIL — bosalan alt hicbir erisilebilir
+                  adi dusurmez;
+              (b) etkin opaklik 0,45 VE uzerine `from-ink-deep/92 via-/78
+                  to-/45` gradyan biniyor; B-046'nin kendi deyimiyle
+                  "neredeyse gorunmez bir doku";
+              (c) kahramanin uzerinde 11 metin dugumu var (icerik yolu, h1,
+                  giris, iki CTA) — bolumun butun bilgisi metinde;
+              (d) alt'in 4-7 icerik kelimesinden yalniz 1'i sayfa metninde
+                  geciyordu ve o da h1'in kendi kelimesi (reformer / boks /
+                  crossfit / studyo).
+            Kaynaklar Pexels atmosfer fotograflaridir (FOTOGRAF-KAYNAKLARI.txt:
+            dordunde de "Kisi yok, marka yok") — metin, veri, urun arayuzu yok.
+            ⚠️ TASK-3.22 bu <Image>'a `sizes`/LCP tarafindan dokunuyor; iki
+            degisiklik ayri niteliklerdir. O task gorseli CSS arka planina
+            alirsa eleman tumuyle kalkar ve bu satir kendiliginden duser. */}
         <Image
           src={seg.photo.src}
-          alt={seg.photo.alt}
+          alt=""
           fill
           priority
           sizes="100vw"

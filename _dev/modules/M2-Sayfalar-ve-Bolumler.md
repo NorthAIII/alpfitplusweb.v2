@@ -14,7 +14,8 @@
 
 **Kabul Kriterleri:**
 - 390 px genişlikte yatay kaydırma yok (`mobile-audit.mjs`)
-- Kontrast ihlali 0, tek h1, tüm görsellerde alt metni (`a11y.mjs`)
+- Kontrast ihlali 0, tek h1, tüm görsellerde **alt niteliği** (`a11y.mjs` — kontrol `!img.hasAttribute("alt")`, yani niteliğin yokluğunu arar; `alt=""` bilinçli bir beyandır ve hata sayılmaz, ölçüldü TASK-3.21)
+- **Dekoratif görsel boş alt alır, bilgi taşıyan görsel almaz — ve ayrım ÖLÇÜLÜR** (TASK-3.21, QUALITY 7). Dört ayak, sırayla: (1) görsel bir `<a>`/`<button>` **içinde mi** — evetse `alt` erişilebilir adın parçasıdır, boşaltılmaz; (2) görselin **üzerinde kendi DOM metni** var mı — varsa bilgi metindedir, görsel zemindir; (3) `alt`ın **içerik kelimelerinden kaçı sayfanın kendi metninde** geçiyor — ürün ekranlarında 10'da 8 (`alt` ürünün sözlüğünü konuşur, bilgi taşır), atmosfer fotoğraflarında 4-7'de 1-3 ve eşleşenler sayfanın başlığından gelen jenerik sözcükler; (4) varlığın **cinsi** — `public/product/*` ürün arayüzü yakalamasıdır ve `docs/CLAIMS.md`'nin *"anlatmak yerine göstermek"* kanıt yüzeyidir, `public/foto/*` Pexels atmosfer fotoğrafıdır (kaynak kaydı `research/FOTOGRAF-KAYNAKLARI.txt`) ve içinde metin/veri yoktur. ⚠️ **Piksel katkısı bu ayrımı ÖLÇMEZ** — zaten boş alt taşıyan `Benefits` bandı kutusunun %99,89'unu değiştiriyor (maks kanal 251, ölçüldü); o ölçüt "görünür mü"yü ölçer, "bilgi taşıyor mu"yu değil. Bugünkü hâl: 16 rotada 39 görsel, **7'si boş alt** (Benefits bandı, HowItWorks bandı, `/gecis` bandı, dört segment kahramanı), alt niteliği olmayan **0**
 - Yapışkan ürün turu 1440 px ve 390 px'te çalışıyor (üst katmanda `overflow-hidden` yok)
 - Sayfa ağırlığı masaüstü ≤ 150 KB, LCP yerel üretimde < 1 s (`perf.mjs`)
 
@@ -34,6 +35,7 @@
 - 16 sayfanın hepsinde `a11y.mjs` 0 sorun, `font-guard.mjs` eksik karakter yok
 - Her sayfanın `metadata` (title, description, canonical) tanımlı; `sitemap.ts` hepsini listeler
 - Geçersiz segment slug'ı 404'e düşer
+- **`opacity: 0` bir elemanı erişilebilirlik ağacından ÇIKARMAZ** (TASK-3.21): ürün turunun çapraz geçiş yığınında beş karenin beşi de ağaçtaydı ve dördü görünmezdi, yani ekran okuyucu beş ürün ekranının alt metnini arka arkaya okuyordu (`/` 13 görsel düğümün 4'ü, `/ozellikler` 6'nın 4'ü). Çare etkin olmayan kareye `aria-hidden` (odak kesilmesi gerekmiyor, görsel odaklanabilir değil — `inert` gereksiz); **etkin kare ağaçta kalır**, yoksa bölüm ekran okuyucuda tümüyle sessizleşir. Ölçüm CDP `Accessibility.getFullAXTree` iledir, `page.accessibility.snapshot()` değil — düşen düğümün *"ignored olarak bile yok"* olduğu ancak tam ağaçta görülür (aynı davranış TASK-3.13'ün 404 dev rakamında da ölçüldü). Doğrulama ölçütü **kaydırma duraklarıyla**dır: 6 durak × 2 rota × 2 genişlikte ağaçtaki ürün turu düğümü **tam bir tane** ve DOM'da görünür olanla birebir
 - **404 ve çöküş yüzeyi** (`not-found.tsx` · `global-error.tsx`) kapı kapsamındadır (TASK-3.03'ün 16 rota kararı) ve iki kalemi sabittir (TASK-3.13): dev rakam **dekoratif**tir — `aria-hidden` taşır, kontrastı **ölçülmez ve yükseltilmez** (kullanıcı kararı, `phases/PHASE-3.md` → Alınan Kararlar; ölçüldü: `sage-wash-2` canvas üstünde 1,17 ve hiçbir kompozisyon katmanı bu payı açıklamıyor, yani rengi değiştirmeden 3:1 mümkün değil); ekran okuyucuda `main`'de ilk duyurulan öğe sayfanın `h1`'idir. Markalama ve istemci çöküşünün bir yere yazılması **kapsam dışı** (B-045)
 
 **Bağımlılık:** M1

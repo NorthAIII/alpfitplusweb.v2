@@ -550,6 +550,15 @@ edilen bir metin ağaçta `ignored: true` bir düğüm olarak da **durmaz**, hi�
 düğüm üretmez — "gizlendi mi" sorusu `nodes.filter(ad === "404").length === 0`
 ile ölçülür, `ignored` bayrağıyla değil.
 
+⚠️ **`alt=""` de aynı şeyi yapar, ve GÖRSELDE ikinci bir mekanizmadır** (TASK-3.21,
+2026-09-25): boş alt taşıyan `<img>` ağaçta `image` rolüyle **hiç görünmez**,
+`ignored` olarak da durmaz. Bu yüzden `<img>` sayısı ile ağaçtaki görsel düğüm
+sayısı birbirini tutmaz ve fark üç kaynaktan gelir: `display:none` · boş alt ·
+`aria-hidden`. Ölçüldü (`/`, 3100 @1440): **19 `<img>` → 13 düğüm** (eksilen 6 =
+5 gizli kopya + 1 boş alt), düzeltmeden sonra **19 → 8**. ⚠️ **`opacity: 0` bu
+listede YOKTUR** — görünmez bir kare ağaçta tam düğüm olarak durur; "görünmüyor"
+ile "duyurulmuyor" ayrı şeylerdir.
+
 ## Kare farkının hakemi DOM geometrisidir — kesirli öteleme her metin satırını "değişmiş" gösterir (TASK-3.14, 2026-09-24)
 
 "Görünüş bozulmadı" iddiası önce/sonra kare farkıyla ölçülür (T12, T13). Ama

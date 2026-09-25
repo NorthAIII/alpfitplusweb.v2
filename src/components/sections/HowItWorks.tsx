@@ -75,9 +75,31 @@ export function HowItWorks() {
                   `sizes` olculen yerlesim: >=1024 (kapsayici - gap-16) x
                   0,85/2 = %42,5 · >=1472 kapsayici 88rem'e oturur, 544 px'te
                   donar. Bant `hidden lg:block`, dar ekranda hic cizilmez. */}
+              {/* DEKORATIF → BOS ALT (TASK-3.21, B-046 kalem 3; QUALITY 7'nin
+                  "dekoratif olanlar bos alt" maddesi). Bir alt'i bosaltmak da
+                  bir IDDIADIR, o yuzden olculdu (3100 @1440):
+                    (a) bant bir <a>/<button> ICINDE DEGIL — bosalan alt
+                        hicbir erisilebilir adi dusurmez (kiyas: ayni fotonun
+                        /segmentler'deki karti LINK icinde, orada alt duruyor);
+                    (b) bandin UZERINDE kendi DOM metni var (asagidaki <p>:
+                        "Ilk hafta yaninizdayiz...") — bilgi metinde, fotograf
+                        zemin;
+                    (c) eski alt'in 6 icerik kelimesinden yalniz 3'u
+                        ("studyoda", "grup", "dersi") sayfanin kendi metninde
+                        geciyordu ve ucu de bolumun BASLIGINDAN gelir; kalan uc
+                        kelime fotografin kendi gorunumunu anlatiyordu. Kiyas
+                        olcumu: urun ekranlarinin alt'i 10 icerik kelimesinin
+                        8'ini sayfa metninde buluyor — onlar bilgi tasir ve
+                        dokunulmadi.
+                  Kaynak bir Pexels atmosfer fotografidir (research/
+                  FOTOGRAF-KAYNAKLARI.txt) — icinde metin, veri ya da urun
+                  arayuzu yok. `a11y.mjs` bos alt'i hata SAYMAZ: kontrol
+                  `!img.hasAttribute("alt")`, yani niteligin YOKLUGUNU arar
+                  (dogrulandi — Benefits bandi TASK-3.18'den beri alt="" ve
+                  kapi "alt'siz img: 0" basiyor). */}
               <Image
                 src="/foto/grup-dersi-band.webp"
-                alt="Bir stüdyoda daire şeklinde yapılan grup dersi"
+                alt=""
                 width={1600}
                 height={608}
                 sizes="(min-width: 1472px) 544px, (min-width: 1024px) calc((100vw - 128px) * 0.425), 100vw"

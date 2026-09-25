@@ -168,6 +168,26 @@ export function ProductStory() {
                       // 759,9 px'te donar. Eski beyan 58vw = 835 px idi
                       // (@1440), gercek 759,9 px.
                       sizes="(min-width: 1472px) 760px, (min-width: 1024px) calc((100vw - 120px) * 0.59), 100vw"
+                      // ETKIN OLMAYAN KARE ERISILEBILIRLIK AGACINDAN DUSER
+                      // (TASK-3.21, B-046 kalem 3).
+                      //
+                      // `opacity: 0` bir elemani agactan CIKARMAZ. Olculdu
+                      // (CDP `Accessibility.getFullAXTree`, 3100 @1440x900):
+                      // bu yiginin 5 karesinin 5'i de agactaydi ve 4'u
+                      // gorunmezdi (`etkin opaklik = 0`, ama `getClientRects`
+                      // dolu) — yani ekran okuyucu bes urun ekraninin alt
+                      // metnini arka arkaya okuyordu. `/`da toplam 13 gorsel
+                      // dugumun 4'u, `/ozellikler`de 6'nin 4'u bu yigindandi.
+                      //
+                      // `aria-hidden` alt agaci gercekten budar: emsali
+                      // TASK-3.13'un 404 dev rakamidir, orada olculdu ki
+                      // dugum agacta "ignored" olarak BILE kalmaz. Odagi
+                      // kesmeye gerek yok (gorsel odaklanabilir degil), o
+                      // yuzden `inert` degil `aria-hidden`.
+                      //
+                      // Sirali degil kosullu yazilir: etkin kare agacta KALIR,
+                      // yoksa urun turu ekran okuyucuda tumuyle sessizlesirdi.
+                      aria-hidden={i === active ? undefined : true}
                       className={cn(
                         "block h-auto w-full transition-opacity duration-500",
                         i === active ? "opacity-100" : "pointer-events-none absolute inset-0 opacity-0",
