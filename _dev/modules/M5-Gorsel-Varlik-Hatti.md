@@ -51,17 +51,22 @@
 
 ### F5.3: Font daraltma → Phase —
 
-**Açıklama:** `font-subset.mjs` sitede geçen karakterler + tam Türkçe alfabe ile Sora/Inter'i daraltır: 153 karakter, 5 dosya, 95 KB (219 KB'dan). `font-guard.mjs` üretim konteynerine karşı kapsamayı ölçer. Kickoff öncesi tamamlandı.
+**Açıklama:** `font-subset.mjs` sitede geçen karakterler + tam Türkçe alfabe ile Sora/Inter'i daraltır: 153 karakter, 5 dosya, 95 KB (219 KB'dan). `font-guard.mjs` üretim konteynerine karşı sözleşmenin **iki yüzünü** de ölçer. Kickoff öncesi tamamlandı; ikinci dal TASK-3.23'te eklendi.
 
 **Kabul Kriterleri:**
-- `font-guard.mjs`: 16 sayfada kümede olmayan karakter yok
+- **Dal 1 — site metni ⊆ küme:** `font-guard.mjs` 16 sayfada kümede olmayan karakter bulmaz
+- **Dal 2 — küme ⊆ woff2 glifleri** (TASK-3.23, B-046 kalem 4): küme dosyasındaki her karakter, **üretilen ve servis edilen** her woff2'de tek tek sınanır; muaf olmayan eksik glif kapıyı kırmızıya çevirir. Ölçüm dosya başınadır (her woff2 tekil bir aile adına izole edilir, yoksa aynı ailenin öbür ağırlığı eksikliği örter) ve her span'a bir **çapa karakter** eklenir, yoksa CDP boş liste döndürüp ölçüm "sonuçsuz" kalabilir
+- **Muafiyet adıyla durur, sınıf olarak değil** ve iki yandan doğrulanır: muafiyet yalnız adı geçen aile için geçerli, **taşıyan** ailenin o karakteri gerçekten taşıdığı ölçülür, ve karakter sitenin **gerçek yığınlarında** indirilmiş bir yüzden gelmek zorundadır. Bugünkü liste beş karakter, hepsi Sora için: `₺` ve dört ok `←↑→↓` — Sora'da yok, Inter'de var, yığında Inter hemen sonra geliyor
+- **Dal 2'nin üç kapsam tabanı var** (bulamayan seçici "0 buldum" deyip yeşil kalmasın): keşfedilen woff2 yüzü ≥ 5 · kesin ölçüm ≥ 765 · sitede kullanılan (yığın, ağırlık) çifti ≥ 6. Ölçüldü: dalın kendi hüküm satırı, hiçbir şey ölçmediği hâlde yeşil kalıyor — kırmızıyı bu tabanlar basıyor
 - Küme dosyası `research/FONT-KARAKTER-KUMESI.txt` ile üretilen fontlar tutarlı
 
 **Bağımlılık:** Yok
 
 **Edge Case'ler:**
-- Sora'da ₺ yok; Inter yedeği `STYLE-GUIDE.md`
-- Metin tonu (M1 F1.2) yeni karakter getirirse küme genişletilir ve betik yeniden koşar
+- **Sora, kümedeki beş karakteri taşımıyor** — `₺` (U+20BA) Unifont'a, dört ok `←↑→↓` (U+2190-2193) Liberation Serif'e düşüyor; ikisi de Sora 700 ve 800'de. Inter'in üç ağırlığı 153/153 tam. Yedek zinciri `STYLE-GUIDE.md` → Tipografi; okların kümede **kalma** gerekçesi TASK-3.23
+- Metin tonu (M1 F1.2) yeni karakter getirirse küme genişletilir ve betik yeniden koşar. ⚠️ Yeni karakter Sora'da yoksa dal 2 kırmızı döner — o hâlde ya karakter Sora bağlamında kullanılmaz ve muafiyete girer, ya küme değişmez
+- **Küme küçültmek ucuz değil:** `font-subset.mjs` beş dosyayı Google Fonts'tan yeniden indirir, yani TASK-3.22'nin metrik eşlenmiş yedek yüz değerleri (`size-adjust` 115 / 105,88) o günkü sürüme bağlı kalır — küme değişimi CLS ölçümünü de gerektirir
+- **Dal 2, kümenin kendisini doğrulamaz:** `font-subset.mjs`'in yazdığı `research/fonts-out/charset.txt` ile kapının okuduğu `research/FONT-KARAKTER-KUMESI.txt`'in aynı olduğu kontrol edilmiyor (2026-09-25'te birebir, elle ölçüldü)
 
 ---
 

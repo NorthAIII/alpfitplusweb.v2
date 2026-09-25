@@ -17,7 +17,7 @@
 - Eşik altı durumda sıfır-olmayan çıkış kodu döner
 - Her betik **kendi kapsamını da eşikler**: gezdiği rota sayısı ve ölçtüğü eleman sayısı çıktıya girer, beklenenin altına düşerse kırmızıya döner ("0 eleman ölçüldü" bir kırmızı koşuludur)
 
-**Durum (TASK-3.03, 2026-09-24):** İkinci ve üçüncü kriter `a11y.mjs` + `mobile-audit.mjs` için **kuruldu ve sınandı** (dört sonda: hedef kapalı · rota listesi çöktü · 0 eleman ölçüldü · temiz hedefte yeşil); `font-guard.mjs` çıkış kodunu zaten taşıyordu ama kapsam eşiği yok. `perf.mjs` ve `scan.mjs`'te ikisi de **hâlâ yok** — kapsam kararı onları "Kalite kapıları otomatik" fazına bıraktı (B-030).
+**Durum (TASK-3.03 → TASK-3.23, 2026-09-25):** İkinci ve üçüncü kriter `a11y.mjs` + `mobile-audit.mjs` için **kuruldu ve sınandı** (dört sonda: hedef kapalı · rota listesi çöktü · 0 eleman ölçüldü · temiz hedefte yeşil). `font-guard.mjs` **ikiye ayrıldı ve yalnız yeni dalı eşikli** (TASK-3.23): dal 2'nin üç tabanı var (yüz ≥ 5 · kesin ölçüm ≥ 765 · kullanılan yığın çifti ≥ 6) ve beş sondayla sınandı; **dal 1'in tabanı hâlâ yok ve bedeli ölçüldü** — hiçbir şey servis etmeyen bir hedefe karşı dal 1 *"16 sayfa · 48 karakter tarandı · ✓"* diyerek yeşil kaldı (yalnız dal 2'nin tabanları kırmızı bastı). Dal 1'in eşiklenmesi bilinçle "Kalite kapıları otomatik" fazına bırakıldı. `perf.mjs` ve `scan.mjs`'te ikisi de **hâlâ yok** (B-030).
 
 **Bağımlılık:** Yok
 
@@ -80,20 +80,23 @@
 
 ## Teknik Notlar
 
-**Başlangıç ölçümü (2026-09-11, kickoff — DURUM'dan taşındı, yeniden ölçülmedi):**
+**Regresyon çizgisi.** F6.2 tek komut eşiklerini **doğrudan bu tablodan** alır. Sonraki ölçümler faz dokümanlarına yazılır, buraya yığılmaz.
 
-| Kontrol | Sonuç |
-|---|---|
-| Kontrast ihlali (a11y.mjs) | 0 |
-| Yatay kaydırma, mobil (mobile-audit.mjs) | 0 |
-| Font kapsaması (font-guard.mjs) | 16 sayfa, eksik karakter yok |
-| Konsol hatası (scan.mjs) | 0 |
-| Üretim derlemesi | 23 rota, geçiyor |
-| Ana sayfa ağırlığı | masaüstü 144 KB · mobil 133 KB |
-| Ana sayfa LCP | 96 ms (üretim konteyneri, yerel) |
-| CLS | 0 – 0,005 |
+⚠️ **Rakam tek başına eşik değildir — kapsamıyla birlikte okunur.** Faz 3, a11y ve mobil betiklerini yeniden yazdı: aynı *"0"* artık çok daha geniş bir şeyi anlatıyor (16 rota · piksel kontrastı · gradyan metin dalı · başlık hiyerarşisi · kırpılmış taşma · iki kulvarlı dokunma hedefi). Bu yüzden dört satır **yeniden ölçüldü** (TASK-3.23, 2026-09-25, yayın kopyası 3100) ve kapsamıyla yazıldı; kalan dört satırın yöntemi bu fazda değişmedi, **kickoff değerinde bırakıldı** (B-035 kapsam dışı).
 
-Bu tablo **regresyon çizgisidir**: F6.2 tek komut bunları geçme eşiği olarak kullanır. Sonraki ölçümler faz dokümanlarına yazılır, buraya yığılmaz.
+| Kontrol | Eşik | Kapsam |
+|---|---|---|
+| Erişilebilirlik (`a11y.mjs`) | TOPLAM SORUN **6** · çıkış 1 — altısı `/gecis`'in adlandıran task'ı olmayan kontrast kalemi; başlık atlaması **0** | 16 rota × **1440 px** · 105 ekran adımı · 1834 eleman · kontrast **piksel** yöntemiyle (`p02` = en kötü %2) · gradyan metin dalı 19 durak · görünür başlık 316 · `alt`sız img 0. Ölçemediği: yapışkan katman 151 kalem (B-063) · görünmez 43. `lg:` altında çizilen metin **kapsam dışı** |
+| Mobil kırpma ve şerit (`mobile-audit.mjs`) | TOPLAM SORUN **0** · çıkış 0 (`✓ KAPI YEŞİL`) — kırpılmış taşma 0, şerit ihlali 0, yatay kaydırma 0 | **2 genişlik (320 / 390 px)** × 16 rota · 6253 eleman · 2054 metin elemanı · 5 kaydırılabilir kap. Kesim ölçütü: metin taşıyan elemanın kutusu, onu kesen **atasının** kutusuna karşı. Kaydırılabilir kap · hareketli şerit · `sr-only` muaf ve ayrı sayılır |
+| Dokunma hedefi (`mobile-audit.mjs`) | kritik küme **305 ölçüldü / 0 eşik altı** · gezinme kulvarı 333 / **261 eşik altı** (raporlanır, kapıyı düşürmez — kullanıcının kademeli kuralı) | Eşik **44×44 px, iki boyut da sayılır**; ölçülen kutu **kontrolün kendisi** (sarmalayan `<label>` değil). Kritik küme sırayla: buton → form alanı → sekme → menü → dönüşüm bağlantısı. Yapışkan katman içindeki hedefler hariç. **Çakışma ölçülmüyor** |
+| Font kapsaması (`font-guard.mjs`) | **iki dal, ikisi de geçmeli** · çıkış 0 — dal 1: eksik karakter **0** · dal 2: muaf olmayan eksik glif **0** (muaf 10) | Dal 1: 16 rota × 1440 px, `body.innerText`, 85.129 karakter; `display:none` içeriği ve hata kutusu **kapsam dışı**, kapsam tabanı **yok**. Dal 2: **5 woff2 × 153 karakter = 765 kesin ölçüm, 0 sonuçsuz** (rota bağımsız, dosya ölçümü) + muafiyet 5 karakter × 6 (yığın, ağırlık) çifti = 30 ölçüm. Muaf 10 kalem = `₺` + `←↑→↓`, Sora'nın iki yüzünde |
+| Konsol hatası (`scan.mjs`) | 0 | ⚠️ Hedef **geliştirme sunucusu (3000), kodda sabit** — yayın kopyası hiç ölçülmüyor (B-030'un yanında duran ayrı bir boşluk, TASK-3.22'de ölçüldü). 2026-09-25'te `/` @1440 18 kare / 15.405 px · @390 20 kare / 25.872 px, ikisinde de temiz |
+| Üretim derlemesi | 23 rota, geçiyor | 2026-09-11 (kickoff) — bu fazda yeniden ölçülmedi |
+| Ana sayfa ağırlığı | masaüstü 144 KB · mobil 133 KB | 2026-09-11 (kickoff) — bu fazda yeniden ölçülmedi; bugünkü değer faz dokümanında |
+| Ana sayfa LCP | 96 ms (üretim konteyneri, yerel) | 2026-09-11 (kickoff) — bu fazda yeniden ölçülmedi |
+| CLS | 0 – 0,005 | 2026-09-11 (kickoff) — bu fazda yeniden ölçülmedi |
+
+**Font ağırlığı** ayrıca `perf.mjs` ile izlenir: `font/woff2` **95 KB** (5 dosya) — kickoff'tan beri değişmedi, TASK-3.23'te birebir doğrulandı. `/demo` 73 KB gösterir çünkü orada üç yüz çizilir.
 
 - Çalıştırma: `docker compose --profile research run --rm research node scripts/<betik>`; üretim konteyneri `docker compose --profile prod up -d --build web-prod` (3100).
 - `ILKELER.md` → Kümülatif test ilkesi bugün karşılanmıyor; bu modülün F6.2–F6.4'ü onu kapatır.
