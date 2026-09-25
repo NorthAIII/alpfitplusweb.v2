@@ -176,7 +176,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.19 | TASK-3.19 | ✅ Tamamlandı | Modüller bölümünün tırtıklı 5'li ızgarası yeniden kurulur |
 | 3.20 | TASK-3.20 | ✅ Tamamlandı | `priority`, `sizes` ve hi-dpi varyant tavanı gerçek yerleşime çekilir |
 | 3.21 | TASK-3.21 | ✅ Tamamlandı | Geçiş görselleri ağaçtan düşer, dekoratif bantların alt metni boşalır |
-| 3.22 | TASK-3.22 | ⬜ Bekliyor | Segment LCP görseli ve yedek yazı tipinin metrik eşlemesi |
+| 3.22 | TASK-3.22 | ✅ Tamamlandı | Segment LCP görseli ve yedek yazı tipinin metrik eşlemesi |
 | 3.23 | TASK-3.23 | ⬜ Bekliyor | `font-guard` ikinci dal — küme ⊆ woff2 |
 | 3.24 | TASK-3.24 | ⬜ Bekliyor | **(koşullu)** Diyetisyen ve antrenör telefon ekranları üretilir |
 

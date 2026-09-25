@@ -606,3 +606,23 @@ belge konumuna bağlı taranıyor** — genlik düşük (maks kanal farkı 2-7) 
 geniş, yani "on binlerce farklı piksel" tek başına içerik değişimi demek
 değildir; maksimum kanal farkına bak. Önce **belirlenimliliği** sına (aynı
 yapıyı iki kez ölç → 0 fark), yoksa telafi kontrolü de yorumlanamaz.
+
+## `route.fulfill` ağ kısıtlamasını BAYPAS EDER — enjekte ölçüm çizimi ölçer, zamanlamayı ÖLÇMEZ (TASK-3.22, 2026-09-25)
+
+Bu projede aday değerler kaynağa yazılmadan **enjekte edilerek** ölçülüyor ve
+yöntem çizim tarafında sadık: aynı derlemede A/B kurulur, iki kez koşulur, fark
+0 çıkar. ⚠️ **Ama `page.route` + `route.fulfill` ile servis edilen gövde CDP'nin
+`Network.emulateNetworkConditions` kanalından GEÇMEZ** — Playwright sürecinden
+doğrudan verilir, yani kısıtlı ağda "anında" iner. Ölçüldü: 87 KB'lık bir LCP
+görselinin yerine 44 KB'lık aday enjekte edilince LCP 2672 → **1624 ms** okundu;
+gerçek değişiklik derlenip ölçüldüğünde **1800 ms** çıktı. Yani enjeksiyon o
+turda yalnızca *"görsel bedava olsa LCP nerede olurdu"* sorusunun cevabını
+verdi — iyileşmenin **tavanını**, gerçeğini değil.
+
+**Kural:** aday bir **bayt/ağ** etkisini ölçüyorsan enjeksiyon geçersizdir,
+yeniden derle. Enjeksiyon **çizim** (piksel, kutu, yerleşim, erişilebilirlik
+ağacı) ve **stil** (CSS değişkeni, `@font-face` değeri) için geçerlidir. Sadakat
+testi tek satır: aynı adayı hem enjekte ederek hem derleyerek ölç ve *ağdan
+bağımsız* bir büyüklüğün (bölüm yüksekliği, toplam yeniden akış) birebir
+çıktığını göster — bu turda Σ|Δbölüm| enjekte ve derlenmiş hâlde **1.670 px**
+ile aynı çıktı, LCP ise çıkmadı.

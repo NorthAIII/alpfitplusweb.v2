@@ -86,11 +86,52 @@ export default async function SegmentPage({
                   crossfit / studyo).
             Kaynaklar Pexels atmosfer fotograflaridir (FOTOGRAF-KAYNAKLARI.txt:
             dordunde de "Kisi yok, marka yok") — metin, veri, urun arayuzu yok.
-            ⚠️ TASK-3.22 bu <Image>'a `sizes`/LCP tarafindan dokunuyor; iki
-            degisiklik ayri niteliklerdir. O task gorseli CSS arka planina
-            alirsa eleman tumuyle kalkar ve bu satir kendiliginden duser. */}
+            TASK-3.22 ayni <Image>'in KAYNAGINI kucultuyor (alt not), `alt`
+            bosluguna dokunmuyor — ikisi ayri niteliklerdir. */}
+        {/* LCP: KAYNAK KUCULTULDU, `sizes` DOGRU KALDI (TASK-3.22, B-057 a).
+            Olculdu (yayin kopyasi 3100, yavas 4G + CPU 4x, medyan/3 kosum):
+            bu gorsel 390 ve 412 px'in ikisinde de LCP ELEMANIYDI ve metin
+            1.62 s'de boyanmisken LCP'yi 390'da 2,09 s'ye, 412'de 2,67 s'ye
+            itiyordu (esik 2,5 s). Sebep `sizes="100vw"`: 412x3 = 1236 aygit
+            pikseli -> tarayici srcset'ten 1920w'yi seciyor ve 87 KB iniyor.
+            ⚠️ B-057'nin tablosu 412'yi "1200w / 52 KB" diye yaziyor; bugun
+            olculen 1920w / 87 KB (390'da 1200w / 50 KB, o satir dogru).
+
+            `sizes` DEGISTIRILMEDI. Kucuk bir vw kesri (33vw) da 640w'ye
+            dusuruyor ama beyani yanlis hale getirirdi — TASK-3.20 dokuz
+            `sizes` beyanini tam bu yuzden olculen yerlesime cekti (sapma
+            <= %3). Cozum kaynagi kucultmek: `thumb` ayni fotografin 800 px
+            kopyasi, yani teslim 29 KB'da tavanlanir ve beyan dogru kalir.
+
+            Gorunus bedeli OLCULDU (kahraman seridi, 4 profil, aday varyant
+            enjekte edilerek — kaynaga dokunmadan): en kotu tek kanal farki
+            390/3'te 15, 412/3'te 21, 1440/2'de 29; degisen piksellerde
+            ortalama fark 1,3-1,6/255. Gorunmez olmasinin sebebi yazili:
+            gorsel `opacity-45` ve uzerinde `from-ink-deep/92 via-/78
+            to-/45` gradyan var. (640w adayi 9 KB daha kucuktu ve gorunus
+            farki neredeyse ayniydi — 24 ve 30 kanal; secimi bytes degil
+            beyanin dogrulugu belirledi.)
+
+            CSS ARKA PLANI DALI OLCULEREK REDDEDILDI (B-057 ikinci onerisi):
+            diskteki dosya webp ve 57 KB; `next/image` ayni resmi 29 KB avif
+            olarak veriyor, yani arka plana almak baytlari NEREDEYSE IKIYE
+            KATLAR ve bicim pazarligini kaybeder. `priority` kaliyor —
+            kaldirmak gorseli LCP elemani olmaktan cikarmaz, yalnizca daha
+            geç getirir (LCP'yi kotulestirir).
+
+            DUSEN KALEM YAZILI: bu degisiklikle `photo.src` (1600 px asil
+            kopya) artik HICBIR cagri yerinde kullanilmiyor — kartlar zaten
+            `thumb` okuyor. Dort asil dosyanin temizligi bu task'in isi
+            degil (hatti ve uretilen dosya listesini degistirir); kalem
+            `BULGULAR.md` -> Gelen Kutusu'nda.
+            OLCULEMEYEN DAL: `quality` dusurmek (tam cozunurluk + daha az
+            bit) bu turda olculemedi — Next 16.3.4 `images.qualities`
+            disindaki her q'ya HTTP 400 veriyor (olculdu: q50/40/30/20),
+            yani aday ancak `next.config.ts`'e izin yazip YENIDEN DERLEYEREK
+            olculebilir; sharp ile taklit denendi ve tutmadi (ayni q75'te
+            219 KB uretti, Next'in verdigi 89 KB). */}
         <Image
-          src={seg.photo.src}
+          src={seg.photo.thumb}
           alt=""
           fill
           priority

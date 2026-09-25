@@ -2,7 +2,7 @@
 
 **Önem:** 🟢 | **Tip:** öneri-performans (ilk ölçüm) | **Alan:** M2 — segment sayfası · M5 — font teslimi · M6 — ölçüm yöntemi
 **Kaynak:** audit-product (performansın ilk ölçümü) | **Tarih:** 2026-09-13
-**Durum:** → Faz 3 (yalnız (a) LCP görseli ve (b) font metrik eşlemesi; (c) ölçüm yönteminin yeniden çizilmesi "Kalite kapıları otomatik" fazında)
+**Durum:** (a) ve (b) KAPANDI — TASK-3.22, 2026-09-25 (ayrıntı → Çözüm Kaydı); **(c) AÇIK** — ölçüm yönteminin yeniden çizilmesi "Kalite kapıları otomatik" fazında
 
 ## Gözlem
 
@@ -124,4 +124,22 @@ npx -y lighthouse@12 https://alpfitplus-web-v2.vercel.app/demo --form-factor=mob
 
 ## Çözüm Kaydı
 
-—
+**(a) ve (b) KAPANDI — TASK-3.22, 2026-09-25.** Ölçüm yayın kopyasına (3100) karşı, yavaş 4G (562,5 ms RTT · 184 KB/s) + CPU 4x ile, CDP `Network.emulateNetworkConditions` üzerinden — yani atomun önerdiği `devtools` kulvarı, `simulate` değil. 390×844@3 ve 412×915@3, rota başına 3 koşum, her koşum pozitif kapıdan (HTTP 200 + tek `h1`).
+
+**Atomun mekanizmaları doğrulandı, BİR RAKAMI çürüdü.** 412@3'te inen varyant atomun tablosunda *"1200w · 52 KB"* yazıyor; ölçülen **1920w · 87 KB** (412×3 = 1236 aygıt pikseli, srcset'te 1236'nın üstündeki ilk aday 1920). 390@3 satırı doğru: **1200w · 50 KB**. LCP'nin mutlak değerleri de farklı çünkü hedef Vercel kenarı değil yerel yayın kopyası; ama ilişki aynı: metin **1,62 s**'de boyanıyor, görsel LCP'yi **390'da 2,07-2,09 s**'ye, **412'de 2,67-2,69 s**'ye itiyordu.
+
+**(a) Koruma önerisinin İKİ dalı da ölçüldü, seçilen üçüncüsü oldu.** `sizes`'ı 640w'ye çeken dal çalışıyor (**20.777 bayt**) ama beyanı yanlış hâle getirir — TASK-3.20 dokuz `sizes` beyanını tam bu yüzden ölçülen yerleşime çekmişti (sapma ≤ %3). **CSS arka planı dalı ölçülerek reddedildi:** diskteki dosya webp ve **57.474 bayt**, `next/image` aynı resmi **29.890 bayt** avif veriyor — arka plana almak baytları neredeyse ikiye katlar ve biçim pazarlığını kaybeder. Uygulanan: kaynak küçültüldü (`seg.photo.src` 1600 px → `seg.photo.thumb` 800 px), `sizes="100vw"` ve `priority` **dokunulmadı**. Sonuç: teslim **87 → 29 KB** (412@3) ve **50 → 29 KB** (390@3); LCP **2,67 → 1,80 s** ve **2,09 → 1,79 s**; CLS'in görselle ilgisi olmadığı ayrıca ölçüldü (üç varyantta da aynı).
+
+⚠️ **Görsel LCP elemanı OLMAYA DEVAM EDİYOR — atomun "LCP adaylığından çıkarılsın" ifadesi bu yolla sağlanamaz.** Chrome'un elediği üç sınıf ölçüldü ve hiçbiri tutmuyor: opaklık 0 değil (**0,45**), görüntü alanını kaplamıyor (**290.460 ↔ 376.980 px²**), düşük entropili değil (**0,56 bpp**). `priority`yi kaldırmak da eleme yapmaz, yalnız görseli geciktirir — yani LCP'yi kötüleştirirdi. Sağlanan şey kriterin ikinci şıkkı: görselin ittiği süre **1050 → ~160 ms**.
+
+**(b) Yedek yüzler metrik eşlendi ve değerler tarayıcıda ÖLÇÜLDÜ.** `globals.css`'te iki `@font-face`: `Sora Yedek` (`size-adjust: 115%` · `ascent-override: 84.35%` · `descent-override: 25.22%`) ve `Inter Yedek` (105,88 · 91,61 · 22,67), ikisi de `line-gap-override: 0%` (ölçüldü: iki yüzde de `line-height: normal` = asc+desc, yani satır boşluğu 0) ve `src` yalnız `local()`. Türetme `next/font`'un formülü (override = metrik / size-adjust). Yığında yedekler **Inter'den sonra** durur; ₺ zinciri ölçülerek doğrulandı (yığında ₺ ilerlemesi **63** = Inter'in değeri, yedekte **50** olurdu).
+
+**Kazanç aynı derlemede A/B ile ölçüldü.** Fontlar engelli hâlin yerleşimi ↔ fontlar yüklü hâlin yerleşimi, 16 rota × 2 genişlik: bölüm üstlerinin toplam kayması **25.633 → 1.670 px** (−%93,5), en kötü tek bölüm **778,6 → 61,6 px**. Negatif kontrol: yalnız iki CSS değişkeni eski hâline enjekte edilince rakamlar **birebir** eski değerlere döndü.
+
+**CLS — dört ölçülen kombin:** 390 segment **0,0348 → 0,0000** · 412 segment **0,1595 → 0,0000** · 390 `/demo` **0,1413 → 0,0000** · 412 `/demo` **0,1508 → 0,1588**. 16 rota × 2 genişlikte 32 kombinin **28'i tam 0**, 30'u ≤ 0,0122.
+
+⚠️ **Tek kombin açık kaldı ve kapatan değer arızayı TAŞIYOR: `/demo` @412 `h1` (0,1588).** `size-adjust` 112-119 arası tarandı. 118,4 o kombini kapatıyor ama `/fiyat` @390'ı **29,25 → 115,75 px**, `/ozellikler` @390'ı **~0 → 99,97 px** kaymaya çıkarıyor; `/demo` @412'nin düzeldiği eşik ile segment @390'ın 4 satırdan 5'e taştığı eşik **aynı aralıkta**, yani ikisini birlikte sağlayan pencere yok. Kalem `BULGULAR.md` → Gelen Kutusu'nda.
+
+⚠️ **Atomun "çift preload etiketi temizlensin" alt kalemi ARAŞTIRMADA çürütülmüştü ama bu tur yayın kopyasında 4 ETİKET ölçtü** (kaynakta 2; fazlası React 19'un aynı bağlantıyı kaynak olarak yeniden yayması). Çift *istek* yok, yani atomun *"çift istek oluşmuyor"* ölçümü doğru — yanlış olan araştırmanın *"2 etiket"* saptaması. Kalem Gelen Kutusu'nda.
+
+**(c) AÇIK ve bu turda dokunulmadı** — M6 başlangıç çizgisinin yeniden ölçümü ve `perf.mjs`'in ağırlık muhasebesi (B-035) "Kalite kapıları otomatik" fazında. Bu turun ölçüm harness'i o iş için kullanılabilir bir zemin bıraktı: yavaş 4G + CPU 4x + iki CLS tanımı, dökümü `tasks/archive/TASK-3.22.md`. Ayrıca oraya ait iki ölçülmüş kısıt: **`route.fulfill` CDP ağ kısıtlamasını baypas eder** (enjekte ölçüm çizim için sadık, zamanlama için değil) ve **Next 16.3.4 `images.qualities` dışındaki her `quality` değerine HTTP 400 verir** (yani bir kalite kapısı `quality` ile oynayacaksa önce `next.config.ts`'e izin yazılmalı; `sharp` ile taklit **tutmuyor** — aynı q75'te 219.519 ↔ 89.185 bayt).

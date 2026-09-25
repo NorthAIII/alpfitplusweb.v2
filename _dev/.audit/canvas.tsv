@@ -83,7 +83,7 @@ id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	a
 68	_dev/docs/STYLE-GUIDE.md	pending					0	2026-09-12	
 69	_dev/memory/alternatif-env-ile-uretim-derlemesi.md	pending					0	2026-09-12	
 111	_dev/memory/anahtar-kasasi-config-alpfit.md	pending					0	2026-09-22	
-70	_dev/memory/arastirma-konteynerinde-tarayici-olcumu.md	pending					0	2026-09-12	
+70	_dev/memory/arastirma-konteynerinde-tarayici-olcumu.md	pending					0	2026-09-12	2026-09-25|c15d28d2156f64ca467e3a94df85ab72ee0041cab34f62eb86d57a14dc5117ad|TASK-3.22: kirmizi cizgi asildi (19.868 -> 20.636 token). Teshis GERCEK BUYUME — 19 ## bolumunun her biri ayri bir olculmus olcum tuzagi, sisme/yanlis-ev/soft-delete yok. Bolme gerekiyor ama KESIM KURALLI DEGIL: 19 kardes bolum arasindan tek sonuc veren bir kesim yok, gruplama ad icadi gerektiriyor -> kalem KULLANICIYA SORU (CLAUDE.md -> Onay Olcutu kosul 2). Kap karari verilmedigi icin KURAL yorumu YAZILMADI. Kalan doluluk gecici olarak kabul edildi.
 71	_dev/memory/asama-bagimli-davranis-ara-hal-sinamasi.md	pending					0	2026-09-12	
 72	_dev/memory/hiz-sinirli-uca-test-bataryasi.md	pending					0	2026-09-12	
 112	_dev/memory/kendi-sunucu-n8n-bunker-umami.md	pending					0	2026-09-22	

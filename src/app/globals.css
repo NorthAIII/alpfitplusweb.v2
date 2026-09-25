@@ -57,14 +57,82 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
+   METRIK ESLENMIS YEDEK YUZLER (TASK-3.22, B-057 b)
+
+   `font-display: swap` ilk kareyi yedek yuzle cizer; yedegin ilerleme
+   genislikleri Sora/Inter'den farkli oldugu icin yuz gelince metin YENIDEN
+   SARIYOR. Olculdu (yayin kopyasi 3100, fontlar engelli hale karsi fontlar
+   yuklu hal, 16 rota x 2 genislik): bolum ustlerinin toplam kaymasi
+   25.633 px, en kotu tek bolum 778,6 px. Ornekler: /demo'da h1 3 satirdan
+   4'e cikiyor (33,6 px) ve 412 px'te segment sayfasinin icerik yolu ikinci
+   satira kiriliyor (24 px) -- ikisi de Lighthouse CLS'ini esigin (0,1)
+   uzerine tasiyordu.
+
+   Cozum: yedek yuz ARTIK BEYAN EDILIYOR. Yerel bir Arial-sinifi yuz
+   `size-adjust` ile Sora/Inter'in ilerleme genisligine, `ascent/descent-
+   override` ile onlarin satir metriklerine cekilir (next/font'un formulu:
+   override = metrik / size-adjust, cunku size-adjust onlari yeniden carpar).
+
+   DEGERLER OLCUMDEN GELIR, tablodan degil (tarayicida, 100 px'te):
+     Sora 800  asc 0,97 desc 0,29 · Inter 400 asc 0,97 desc 0,24
+     genislik korpusu (turkce govde cumlesi) / ayni korpus Arial'de
+       Sora 800 / Arial(800 istenince) -> 1,15   ⇒ size-adjust 115%
+       Inter 400 / Arial               -> 1,0588 ⇒ size-adjust 105,88%
+     ascent 0,97/1,15 = 84,35% · descent 0,29/1,15 = 25,22%   (Sora)
+     ascent 0,97/1,0588 = 91,61% · descent 0,24/1,0588 = 22,67% (Inter)
+   `line-gap-override: 0%` cunku iki yuzde de satir bosluğu 0 (olculdu:
+   line-height:normal = asc+desc, 126 px ve 121 px).
+
+   SORA ICIN 115 SECILDI VE BEDELI YAZILI: aday degerler 112-119 arasinda
+   16 rota x 2 genislikte tarandi; toplam kayma 115'te EN AZ (25.633 ->
+   1.670 px, en kotu tek bolum 61,6 px). 119, /demo'nun 412 px'teki 33,6
+   px'lik h1 kaymasini da kapatiyor AMA toplami 2.808 px'e cikariyor
+   (390 px'te segment h1'i 4 satirdan 5'e tasiyor, yani kaymayi ters yone
+   cevirip yeniden doguruyor). Tek bir yedek her dizeyi her genislikte
+   ayni yere saramaz; secim TOPLAM kaymaya gore yapildi. Kalan kalem:
+   /demo @412 h1 (62,85 -> 33,6 px).
+
+   `font-weight: 100 900`: yuz istenen her agirligi KENDISI karsilar, yani
+   tarayici sentetik kalinlik uretmez -- olculdu, sentetik kalin dal
+   (descriptor 400 + 800 istegi) 106,93 size-adjust ile bile /demo ve
+   segment h1'lerini kapatamadi.
+
+   src yalnizca `local()`: hicbiri cozulmezse yuz YUKLENMEZ ve yigin
+   bugunku haline duser (fail-safe, ek istek yok).
+   ⚠️ Yigindaki yer: "Sora", "Inter", <yedek>. Inter SORA'DAN SONRA KALIR --
+   ₺ (U+20BA) Sora'da yok ve Inter'den gelir (STYLE-GUIDE -> Tipografi);
+   yedek yuz o zincirin ARKASINA eklenir, arasina girmez.
+   ───────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: "Sora Yedek";
+  src: local("Arial"), local("Helvetica Neue"), local("Helvetica"), local("Liberation Sans");
+  font-weight: 100 900; font-style: normal;
+  size-adjust: 115%;
+  ascent-override: 84.35%;
+  descent-override: 25.22%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Yedek";
+  src: local("Arial"), local("Helvetica Neue"), local("Helvetica"), local("Liberation Sans");
+  font-weight: 100 900; font-style: normal;
+  size-adjust: 105.88%;
+  ascent-override: 91.61%;
+  descent-override: 22.67%;
+  line-gap-override: 0%;
+}
+
+/* ─────────────────────────────────────────────────────────────
    TASARIM TOKENLARI — acik tema, sage aksan
    ───────────────────────────────────────────────────────────── */
 @theme {
   /* Sora'da ₺ (U+20BA) YOK — olcduk: glif genisligi monospace yedegiyle birebir
      aynı cikiyor. Inter'i araya koyunca eksik glifler sistem fontuna degil
      govde fontuna duser ve fiyat rakamlari tek dilde kalir. */
-  --font-display: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Yedek yuzler Inter'den SONRA gelir — ₺ zinciri bozulmaz (yukaridaki
+     METRIK ESLENMIS YEDEK YUZLER blokuna bak). */
+  --font-display: "Sora", "Inter", "Sora Yedek", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Inter Yedek", ui-sans-serif, system-ui, sans-serif;
 
   /* yuzeyler */
   --color-canvas: #fbfbf9;
