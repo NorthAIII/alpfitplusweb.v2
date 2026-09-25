@@ -178,7 +178,7 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 | 3.21 | TASK-3.21 | ✅ Tamamlandı | Geçiş görselleri ağaçtan düşer, dekoratif bantların alt metni boşalır |
 | 3.22 | TASK-3.22 | ✅ Tamamlandı | Segment LCP görseli ve yedek yazı tipinin metrik eşlemesi |
 | 3.23 | TASK-3.23 | ✅ Tamamlandı | `font-guard` ikinci dal — küme ⊆ woff2 |
-| 3.24 | TASK-3.24 | ⬜ Bekliyor | **(koşullu)** Diyetisyen ve antrenör telefon ekranları üretilir |
+| 3.24 | TASK-3.24 | ❌ İptal | **(koşullu)** Diyetisyen ve antrenör telefon ekranları — ön koşul sağlanmadı, kullanıcı iptal etti |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -189,7 +189,11 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 
 **Numara sırası tablo sırasından sapıyor (bilinçli):** `verify-plan` TASK-3.16'yı ikiye böldü — lead hattına ait olan ayak (form düşünce WhatsApp'ın yazılanları taşıması) ayrı bir modülün işi, ayrı dosyaya dokunuyor ve kişisel veriyi bağlantı adresine koyduğu için kendi çağrı-sitesi süpürmesini gerektiriyor. Yeni task en büyük numarayı alır (TASK-3.25) ama **tabloda kaynağının hemen ardında** koşar; ölçüt tablo sırasıdır (TASKS-README → Lineer Çalıştırma).
 
-**Fazı kilitlemeyen iki kalem:** TASK-3.24 ürün deposuna iki ekranın eklenmesine bağlıdır ve gelmezse ❌ İptal edilir (B-046 kanvasta açık kalır); kullanıcının gerçek telefon turu ise task değil, `verify-phase` UAT'ının konusudur.
+**Fazı kilitlemeyen iki kalem — biri GERÇEKLEŞTİ:** TASK-3.24 ürün deposuna iki ekranın eklenmesine bağlıydı ve gelmedi, **❌ İptal edildi** (2026-09-25); kullanıcının gerçek telefon turu ise task değil, `verify-phase` UAT'ının konusudur.
+
+**TASK-3.24'ün iptal kaydı (2026-09-25) — kapsam kararının ölçülmüş sonucu.** Ön koşul ölçüldü, varsayılmadı: `../Alpfit.v1/demo/` salt okunur tarandı ve **iki ekranın ikisi de yok** — `diyetisyen.html` diye bir dosya yok ("Diyetisyen" destede yalnız kenar çubuğu menüsü, `uye.html`'in veri alanı, baş sayısı satırları ve sunum slaytları olarak geçiyor), `.phone` yüzeyi **tam üç** dosyada (`takvim` · `grup` · `patron-mobil`) ve `antrenor.html`'de **0**. Deste **2026-06-21**'den beri hiç değişmemiş (`git log -1 -- demo/` → `1fdeac3`; izlenmeyen dosya yok), yani ön koşul geçici değil **kalıcı olarak** sağlanmadı. Ekranları ekleyecek olan kullanıcıydı (`../Alpfit.v1` bu oturumların **salt okunur** deposu) ve *"iptal et, faza devam"* dedi.
+
+**Milestone'un o ayağı bu yüzden AÇIK sayılır** (yukarıdaki verify-plan notu bu hâli zaten tarif ediyordu): *"Roller sekmeleri doğru ekranı gösteriyor"* kriterinin **eşleme ayağı kapandı** (TASK-3.15, koşulsuz), **diyetisyen ayağı açık kaldı** — sekme `SHOTS.grup` ödünç görselini göstermeye devam ediyor (alt metni görüntüde gerçekten duranı anlatıyor, sekmeyle çelişmiyor) ve **B-046 kanvasta durur**. "Bilinçli tercih" kaydı **bilinçle yazılmadı** — sonraki denetimlere yanlışlıkla "kapandı" sinyali verirdi. Hiçbir kod dosyasına dokunulmadı; F5.1'in çıktı sayısı **7'de** doğru olduğu gibi kaldı. Ekranlar sonradan gelirse iş **ayrı bir quick turudur**. Döküm `tasks/archive/TASK-3.24.md`.
 
 ---
 

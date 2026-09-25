@@ -155,4 +155,20 @@ Glif ölçümü, teslim ölçümü ve preload sayımı scratchpad'de.
 
 **Kalem (5)'in adlandıran task'ı YOK — atomun bu satırı yanlıştı.** Bu satır *"kalem (4), (5) açık → TASK-3.23"* diyordu; TASK-3.23'ün hedefi, alt görevleri ve test kriterleri **yalnız kalem (4)**'tür, preload beyanına hiç değinmiyor. Kalem (5) (ilk ekranda Inter 500 → 28 öğe ve Sora 700 → 5 öğe ölçülmüşken preload yalnız `inter-400` + `sora-800`) açık kalıyor ve kaydı `BULGULAR.md` → Gelen Kutusu'na düştü. ⚠️ Yanında duran ikinci ölçüm: HTML'de preload **4 etiket** (kaynakta 2) — bu tur yeniden doğrulandı.
 
-Kalem (5) açık (adlandıran task yok) · kalem (6)'nın üç satırı yukarıdaki gerekçelerle açık (segment kahramanının teslimi TASK-3.22'de küçültüldü, oranı bilinçle 0,28'e düştü). Atom arşive taşınmadı; çözüm teyidinin evi `verify-phase` Adım 6'dır.
+**Kalem (2)'nin DİYETİSYEN ayağı AÇIK KALDI — ve bu bir kusur değil, KULLANICI KARARIDIR (TASK-3.24 ❌ İptal, 2026-09-25).** Kalıcı çözüm bu deponun dışındaydı (triyajın kendi cümlesi: *"kalıcı çözüm ürün deposunda … kullanıcı tetikler"*) ve kullanıcı tetiği çekmemeye karar verdi: *"iptal et, faza devam."*
+
+**Ön koşul ölçüldü, varsayılmadı** — `../Alpfit.v1/demo/` salt okunur tarandı (tek bayt yazılmadı) ve **istenen iki ekranın ikisi de yok:**
+
+| Aranan | Ölçüm | Sonuç |
+|---|---|---|
+| Diyetisyen ekranı | `diyetisyen.html` diye dosya yok; "Diyetisyen" dizesi destede **dört sınıfta** geçiyor ve hiçbiri ekran değil — 11 panelin kenar çubuğu menüsü (`:75` `Diyetisyenler</a`) · `uye.html:420` veri alanı *"Diyetisyen · Adem Bona"* ve `:488` *"Diyetisyen Notu"* · `cockpit.html:208` / `sube.html:224` baş sayısı · `sunum*.html` slaytları | **yok** |
+| Antrenörün kendi telefon yüzeyi | `.phone` **tam üç** dosyada: `takvim.html` (1) · `grup.html` (1) · `patron-mobil.html` (1); `antrenor.html` → **0**. Hattın ürettiği tek telefon karesi de `takvim.html`'in `.phone`'undan türüyor (`render-product.mjs:50` → `uye-telefon.webp`) | **yok** |
+| Deste sonradan büyüdü mü | `git log -1 -- demo/` → `1fdeac3` *"chore: rebrand demo site Alpfit → Weekend Plus"*, **2026-06-21**; `git status --porcelain -- demo/` **boş** (yeni/izlenmeyen dosya yok) | **değişmedi** |
+
+**Atomun 2026-09-23 triyaj hükmü aynen yürürlükte ve bu tur onu bilinçle KORUDU:** *"bilinçli tercih kaydı yazmak sonraki denetimlere yanlışlıkla 'kapandı' sinyali verirdi."* Bu yüzden ayak **açık** bırakıldı, `BULGULAR.md` → Bilinçli Tercihler'e satır **yazılmadı** ve atom arşive taşınmadı. `docs/CLAIMS.md`'nin *"gerçek fark"* dediği tek kalemin sitede kendi görüntüsü **hâlâ yok**; gösterilen `SHOTS.grup` bir yamadır (TASK-3.15) ve alt metni yalnızca sekmeyle çelişmemeyi sağlar.
+
+**Hiçbir kod dosyasına dokunulmadı** (`src/` + `public/` + `research/` → 0 değişiklik): TASK-3.15'in orandan türeyen çerçeve çözümü yerinde kaldı ve F5.1'in çıktı sayısı **7**'de doğru olduğu gibi durdu. **Ekranlar sonradan gelirse rota ayrı bir `/devflow:quick` turudur** — TASK-3.24 yeniden açılmaz; o gün hat ikisini de olağan biçimde üretir ve temizler.
+
+⚠️ **TASK-3.15'in devrettiği çapa DOĞRU OLGU için YANLIŞ DİZE taşıyor — düzeltildi.** T15'in *"destedeki bütün masaüstü yakalamaları aynı paneldir"* tespiti bağımsız olarak doğrulandı ve güçlendi: **11 yakalamanın 11'i de** aynı kabuğu ve aynı rol etiketini taşıyor — `class="ur">Kadıköy Müdürü`. Yani `antrenor.html` (`<title>` *"Antrenör Performansı"*, `<h1>` *"Antrenör Detayı"*) antrenörün kendi yüzeyi değil **şube müdürünün antrenöre bakan ekranıdır**. Ama T15'in yazdığı kanıt dizeleri — `YÖNETİM` ve `Zehra G. · Şube Müdürü` — **kaynakta hiç yok** (grep → 0); onları `render-product.mjs`'in temizlik tablosu üretiyor (`Kadıköy` gerçek bir semt adı ve sızıntı denetiminin kapsamında). **Sonraki turlar kaynakta `YÖNETİM` aramamalı:** temizlik tablosundan geçen bir varlıkta kaynak ile çıktı **ayrı çapa kümesidir**.
+
+Kalem (2)'nin **diyetisyen ayağı açık — kullanıcı kararıyla, ürün deposuna bağlı** (TASK-3.24 ❌ İptal) · kalem (5) açık (adlandıran task yok) · kalem (6)'nın üç satırı yukarıdaki gerekçelerle açık (segment kahramanının teslimi TASK-3.22'de küçültüldü, oranı bilinçle 0,28'e düştü). Atom arşive taşınmadı; çözüm teyidinin evi `verify-phase` Adım 6'dır.
