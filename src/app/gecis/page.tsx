@@ -66,7 +66,19 @@ export default function MigrationPage() {
           {GECIS_FEARS.map((f, i) => (
             <Reveal key={f.q} delay={i * 70}>
               <div className="h-full rounded-card bg-surface p-7 shadow-sm ring-1 ring-line">
-                <span className="font-display text-4xl font-extrabold text-sage-wash-2">
+                {/* DEKORATIF TIPOGRAFI JESTI (TASK-3.26; kural STYLE-GUIDE ->
+                    "Dekoratif tipografi jesti `aria-hidden` alir"). Olculdu
+                    (3100, 320/390/1440 px'in ucunde de birebir): `p02` = `min`
+                    = `med` = 1,21:1 (gereken 3) ve zemin UC GENISLIKTE DE %100
+                    saf beyaz — yani kompozisyon payi yok, tek carpan rengin
+                    kendi degeri; koyulastirmadan esige cikmanin yolu yok.
+                    Karar GORUNUSU KORUMA yonunde (kullanici karari, TASK-3.13),
+                    o yuzden renge dokunulmuyor. Bilgi kaybi yok: sira disinda
+                    bir sey soylemiyor, sorunun kendisi asagidaki h3'te duruyor
+                    ve bolum basligi zaten "Uc soru" diyor. Kart bir <ol> degil
+                    grid hucresi, yani atilan bir liste semantigi de yok.
+                    Emsaller: WhyUs.tsx dev sira no · not-found.tsx "404". */}
+                <span className="font-display text-4xl font-extrabold text-sage-wash-2" aria-hidden>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-3 font-display text-lg font-bold leading-snug text-ink">{f.q}</h3>
@@ -203,7 +215,27 @@ export default function MigrationPage() {
               />
               {GECIS_WEEK.map((s, i) => (
                 <Reveal as="li" key={s.day} delay={i * 60} className="relative flex gap-5 pb-9 last:pb-0">
-                  <span className="relative z-10 grid size-12 shrink-0 place-items-center rounded-2xl bg-white/8 font-display text-sm font-extrabold text-sage-br ring-1 ring-white/12">
+                  {/* ROZET ZEMINI OPAK (TASK-3.26). Rakam BILGI TASIYOR ve
+                      `aria-hidden` ALMAZ: komsu h3 gun ADINI soyluyor ("Sozlesme
+                      gunu", "Hazirlik"...), sirayi yalniz bu rakam yaziyor ve
+                      <ol>'un sira semantigine guvenilemez (`list-style:none`
+                      altinda bazi ekran okuyuculari liste rolunu dusuruyor —
+                      bu projede olculemez, o yuzden tercih sayilmadi).
+                      Sorun rakamin rengi degildi: rozet `bg-white/8` ile YARI
+                      SAYDAMDI ve ustundeki dikey baglanti cizgisi (from-sage/45)
+                      rakamin glifinin altindan GECIYORDU. Olculdu (3100):
+                      1440/390/320 px'te `1` p02 3,49 / 3,49 / 3,44 · `2` 4,23 /
+                      4,23 / 4,12 (gereken 4,5 — 14px/800 BUYUK METIN DEGIL),
+                      `3` 5,2 · `4` 6,5 · `5` 8,0 (cizgi asagi dogru soluyor).
+                      Suclu 1 px'lik cizgi: ihlal veren pikseller x=711'de tek
+                      bir sutunda ve zeminleri rgb(76,103,73), rozetin geri
+                      kalani rgb(33,35,31).
+                      Cozum rengi degil ZEMINI duzeltiyor: ayni bileske deger
+                      opak yaziliyor (`color-mix` ile beyaz %8 + ink-deep =
+                      bugunku rgb(33,35,31)), yani rozet AYNI gorunuyor, cizgi
+                      artik ustunden degil ARKASINDAN geciyor. Sonuc: bes rakam
+                      da uc genislikte min = p02 = med = 8,81 ve tek zemin. */}
+                  <span className="relative z-10 grid size-12 shrink-0 place-items-center rounded-2xl bg-[color-mix(in_srgb,#fff_8%,var(--color-ink-deep))] font-display text-sm font-extrabold text-sage-br ring-1 ring-white/12">
                     {i + 1}
                   </span>
                   <div className="pt-1.5">

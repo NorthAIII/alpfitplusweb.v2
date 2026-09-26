@@ -1,6 +1,6 @@
 # TASK-3.26: `/gecis`'in altı kontrast kalemi — kontrast kapısı yeşile döner
 
-**Durum:** ⬜ Bekliyor
+**Durum:** 🔄 Devam ediyor — **beş kalem kapandı, altıncısı sayfanın değil ÖLÇÜMÜN kusuru çıktı ve kullanıcı kararı bekliyor** (aşağıda Oturum Kaydı 2026-09-26)
 
 <!-- KURAL: Durum alanı tek değer taşır ve değer kümesinin TEK KAYNAĞI TASKS-README → Durum Kodları'dır (⬜ Bekliyor · 🔄 Devam ediyor · ⏸️ Duraklatıldı · ✅ Tamamlandı · 🔴 Bloke · ❌ İptal). Buraya kısaltılmış bir menü kopyalama: kopya bir kez eksik yazıldı (⏸️/🔴/❌ düşmüştü) ve iki ev sessizce ayrıştı. -->
 **Modül:** M2 — Sayfalar ve Bölümler (`modules/M2-Sayfalar-ve-Bolumler.md`)
@@ -44,22 +44,22 @@ Faz 3'ün kayıtlı kullanıcı kararı şudur: *"Kontrast ihlallerinin tamamı 
 
 ## Alt Görevler
 
-- [ ] **1. Üç dev adım rakamını dekoratif ilan et**
+- [x] **1. Üç dev adım rakamını dekoratif ilan et**
   - `src/app/gecis/page.tsx:69` — `<span className="font-display text-4xl font-extrabold text-sage-wash-2">` → `aria-hidden` ekle
   - Renge **dokunma**: `sage-wash-2` canvas üstünde 1,17 ve kompozisyon payı ihmal edilebilir; yükseltmek görünüşü bozar (STYLE-GUIDE'da ölçülü)
   - Bilgi kaybı olmadığını doğrula: adımın kendi başlığı (`f.q`, `h3`) sırayı zaten söylüyor mu?
 
-- [ ] **2. "Elle tutulan kayıtlar için birlikte bir öncelik…" paragrafını AA'ya çıkar**
+- [ ] **2. "Elle tutulan kayıtlar için birlikte bir öncelik…" paragrafını AA'ya çıkar** ⚠️ **AÇIK — ve bu alt görevin ÖNCÜLÜ ÖLÇÜLEREK ÇÜRÜTÜLDÜ:** paragraf kompozisyonlu bir zeminde durmuyor, zemini saf beyaz ve gerçek değeri **7,05**. Yapılacak bir mürekkep düzeltmesi yok; kalan kırmızı `a11y.mjs`'in maske sızıntısıdır (B-063) ve çaresi bu task'ın kapsamı dışında
   - Ölçülen: `p02` **3,25** · min 3,21 · **med 7,05** · 15px/400 · glif 2955px. `med`in yüksekliği metnin **kompozisyonlu** bir zeminde (desen ya da gradyan) durduğunu söylüyor
   - Önce zemini teşhis et, sonra STYLE-GUIDE'ın kuralını uygula: kompozisyonlu zeminde `faint` kullanılmaz, bir tık koyu `muted` kullanılır
   - `grep -n` ile yeniden konumla — satır numaraları faz boyunca kaydı
 
-- [ ] **3. Küçük adım rakamlarını (`1`, `2`) AA'ya çıkar**
+- [x] **3. Küçük adım rakamlarını (`1`, `2`) AA'ya çıkar**
   - Ölçülen: `1` **p02 3,49** (min 3,49 · med 8,73) · `2` **p02 4,23** (min 4,23 · med 8,91) · ikisi de **14px/800**
   - ⚠️ 14px/800 **büyük metin değildir** (eşik 4,5, 3,0 değil — büyük metin ölçütü ≥ 24px ya da ≥ 18,66px bold)
   - Bunlar bilgi taşıyor mu taşımıyor mu ayır: taşıyorsa kontrast yükselir, dekoratifse (1. alt görevle aynı sınıf) `aria-hidden` alır. Karar Noktaları'na bak
 
-- [ ] **4. Düzeltmeleri üç genişlikte ölç ve kapıyı koştur**
+- [x] **4. Düzeltmeleri üç genişlikte ölç ve kapıyı koştur**
   - Aday değerleri kaynağa yazmadan önce `page.addStyleTag` ile yayın kopyasına enjekte ederek ölç (TASK-3.10'un yöntemi; sadakati birebir ölçüldü) — her aday için 2-4 dakikalık derleme beklenmez
   - Kazanan değer yazıldıktan sonra 3100 tazelenir (`docker compose --profile prod up -d --build web-prod`; `build` tek başına konteyneri yeniden yaratmaz) ve tazelik **pozitif kontrolle** doğrulanır
   - `a11y.mjs` + `mobile-audit.mjs` yeniden koşar
@@ -90,13 +90,13 @@ src/app/
 
 ## Test Kriterleri
 
-- [ ] `docker compose --profile research run --rm research node scripts/a11y.mjs` → 16 rotada **TOPLAM SORUN: 0 · çıkış 0**
-- [ ] Aynı koşumda **kapsam tabanlarının hiçbiri oynamadı**: 16 rota · 105 ekran adımı (±) · 1834 eleman (±) · gradyan metin **19 (taban 19) / 0 eşik altı** · başlık **316 (taban 316) / 0 atlama** · `alt`sız img 0 · ölçülemeyen **kalan: 0**
-- [ ] Altı kalemin her biri **320 · 390 · 1440 px**'te ayrıca ölçüldü ve `p02` eşiğin üstünde (14px/800 için eşik **4,5**, 3,0 değil)
-- [ ] `mobile-audit.mjs` yeşil kaldı: **TOPLAM SORUN 0 · çıkış 0**, altı kapsam tabanı oynamadı
-- [ ] `/gecis`'in görünüşü kasıtsız değişmedi — şerit karesi yöntemiyle ölçüldü (bölümün üstünden ve altından 900 px'lik görüntü-penceresi kareleri; **tam sayfa `fullPage` karesi çok uzun sayfada ASILIYOR**)
-- [ ] `docker compose exec web npm test` → **219 geçti + 2 atlandı** (iki env kapısı kapalı) · `npx tsc --noEmit` → 0
-- [ ] `a11y.mjs`'in kırmızı dalı hâlâ çalışıyor — `kontrol:` ölü hedefte (`BASE=http://localhost:3457`) cümle + **çıkış 1**
+- [ ] `docker compose --profile research run --rm research node scripts/a11y.mjs` → 16 rotada **TOPLAM SORUN: 0 · çıkış 0** — **ULAŞILMADI: 6 → 1.** Kalan 1 sayfanın değil kapının kusuru (B-063 maske sızıntısı); kapatılması bu task'ın kapsamı dışında, karar bekliyor
+- [x] Aynı koşumda **kapsam tabanlarının hiçbiri oynamadı**: 16 rota ✓ · 105 ekran adımı ✓ · **1834 → 1831 eleman** (bilinçli: üç dev rakam `aria-hidden` ile kapsamdan çıktı, taban değil ölçüm sayısıdır) · gradyan metin **19 (taban 19) / 0** ✓ · başlık **316 (taban 316) / 0 atlama** ✓ — **`aria-hidden` hiçbir başlığı düşürmedi** · `alt`sız img 0 ✓ · ölçülemeyen **kalan: 0** ✓ · yapışkan 151 ✓ · görünmez 43 ✓
+- [x] Altı kalemin her biri **320 · 390 · 1440 px**'te ayrıca ölçüldü (eşik 14px/800 için **4,5**, 3,0 değil — uygulandı)
+- [x] `mobile-audit.mjs` yeşil kaldı: **TOPLAM SORUN 0 · çıkış 0 · ✓ KAPI YEŞİL**, altı kapsam tabanının hiçbiri oynamadı
+- [x] `/gecis`'in görünüşü kasıtsız değişmedi — üç genişlikte tam sayfa kapsayan **28 görüntü-penceresi karesi** (şerit yöntemi; `fullPage` kullanılmadı): 22 karede **0 farklı piksel**, kalan 6 karede fark yalnız rozet sütununda ve %93'ü 1-2 kanal birimi; sayfa boyu üç genişlikte de **birebir**
+- [x] `docker compose exec web npm test` → **219 geçti + 2 atlandı** · `npx tsc --noEmit` → **0** · `lint` 30 (değişen dosyada **0** kalem)
+- [x] `a11y.mjs`'in kırmızı dalı hâlâ çalışıyor — ölü hedefte (`BASE=http://localhost:3457`) cümle + **çıkış 1** (yığın izi yok)
 
 ---
 
@@ -125,7 +125,58 @@ src/app/
 
 ## Oturum Kayıtları
 
-<!-- Task çalıştırıldığında doldurulacak -->
+### Oturum — 2026-09-26
+
+**Durum:** 🔄 Devam edecek — **6 kalemin 5'i kapandı; 6.'sı sayfanın kusuru değilmiş, kullanıcı kararı bekliyor**
+
+**Yapılanlar:**
+- **Alt görev 1 — üç dev adım rakamı (`01`/`02`/`03`) dekoratif ilan edildi.** `gecis/page.tsx` kart rakamına `aria-hidden` kondu, **renge dokunulmadı**. Sınıf varsayılmadı, ölçüldü: `p02` = `min` = `med` = **1,21** ve zemin **320/390/1440 px'in üçünde de `rgb(255,255,255)` — 652/804/798 pikselin tamamı**, yani kompozisyon payı **tam 0** ve tek çarpan rengin kendi değeri (T13'ün 404 ölçümüyle aynı sonuç). Bilgi kaybı kontrolü: kartın kendi `h3`'ü sorunun **tam metnini** taşıyor, bölüm başlığı zaten *"Üç soru"* diyor, ve kart bir `<ol>` öğesi değil **grid hücresi** — yani düşürülen bir liste semantiği de yok.
+- **Alt görev 3 — küçük adım rakamları (`1`, `2`) AA'ya çıkarıldı, ama RENKLE DEĞİL.** Teşhis izolasyonla yapıldı: ihlal veren pikseller **tek bir sütunda** (x=711 @1440) ve zeminleri `rgb(76,103,73)` / `rgb(72,88,69)` iken rozetin geri kalanı `rgb(33,35,31)` — suçlu, yarı saydam (`bg-white/8`) rozetin **altından geçen 1 px'lik dikey bağlantı çizgisi** (`from-sage/45`). Rozet zemini aynı bileşke değerle **opaklaştırıldı** (`bg-[color-mix(in_srgb,#fff_8%,var(--color-ink-deep))]`); rakamın rengi (`sage-br`) korundu.
+- **Alt görev 4 — üç genişlikte ölçüm + iki kapı + görünüş + belirlenimlilik + kırmızı dal kontrolü** (aşağıda Test Sonuçları).
+- **Alt görev 2 — YAPILMADI, çünkü öncülü çürütüldü** (aşağıda Sorunlar).
+- **Doküman:** `docs/STYLE-GUIDE.md` (üç ölçülmüş kalem) · `modules/M6-Kalite-Kapilari.md` (regresyon satırı + kapının üçüncü kör noktası) · `bulgular/B-063-*.md` (borcun ikinci yüzü + naif yamanın ölçülmüş bedeli) + `BULGULAR.md` kancası.
+
+**Sorunlar:**
+- **Altı kalemden biri SAYFANIN DEĞİL ÖLÇÜMÜN kusuru çıktı — task dokümanının kendi teşhisi ölçülerek çürütüldü.** Task *"`med`in yüksekliği metnin kompozisyonlu bir zeminde durduğunu söylüyor → `faint` yerine `muted`"* diyordu. Ölçüm: paragraf **zaten `muted`**, `med` **7,05** = `muted`'ın saf beyaz üstündeki tam değeri, ve zemin dağılımı 2955 pikselin 1744'ünde `rgb(255,255,255)`. Yani kompozisyonlu zemin **yok**. Gerçek mekanizma: kontrast maskesi iki karenin piksel farkıdır ve **glifin kime ait olduğunu bilemez**; yapışkan başlık (`bg-canvas/88 backdrop-blur-xl`, 68 px) adım ızgarasının bir adımında paragrafın ilk satırını örtüyor ve **başlığın kendi çağrı düğmesinin etiketi** paragrafın maskesine giriyor — kapı da paragrafın mürekkebini o düğmenin sage zeminiyle eşleştiriyor. **İki bağımsız izolasyon:** (a) `header{display:none}` → `p02` 3,25 → **7,05**, zemin tek renk beyaz; (b) başlığın **yalnız kendi metni** iki karede de şeffaf (geometri, bulanıklık, düğme zemini aynen yerinde) → maske **2955 → 1861 px**, `p02` → **6,98**; düşen 1094 piksel düğmenin etiketi. **Üçüncü kontrol:** aynı paragraf 390 px'te **7,05**, 320 px'te **6,80** — kalem tek genişlikte, tek adımda var.
+- **Naif çare ölçüldü ve reddedildi.** *"Örtülü adımda o elemanı ölçme"* yaması 16 rotada koşuldu (kaynağa dokunulmadan, scratchpad kopyasıyla): `TOPLAM SORUN` 6 → **5** (artefakt düşüyor, beş gerçek kalem rakamıyla duruyor) **ama gradyan metin 19 → 18** (kendi kapsam tabanının altına düşüyor → kapı başka sebeple kırmızı) ve **"ekran dışı" 0 → 8** (bu sekiz eleman hiçbir adımda başlığın altından çıkmıyor, yani hiç ölçülmez oluyor); 171 (eleman, adım) çifti atlandı. Doğru çare B-063'ün kendi kayıtlı önerisidir — yapışkan katmanlar için **kaydırma sıfırdayken ikinci bir tur** — ve o tur **bilinçle ertelendi** (kullanıcı kararı, verify-plan 2026-09-23 → "Kalite kapıları otomatik" fazı).
+
+**Kararlar:**
+- **Küçük rakamlar `aria-hidden` ALMADI — bilgi taşıyorlar:** komşu `h3` gün **adını** söylüyor ("Sözleşme günü", "Hazırlık", "Kontrol", "Geçiş günü", "İlk hafta"), sırayı yalnız rakam yazıyor. `<ol>`'un sıra semantiğine dayanmak da reddedildi: Tailwind preflight `list-style: none` veriyor ve bazı ekran okuyucuları o hâlde liste rolünü düşürüyor — **bu projede ekran okuyucu ölçüm kanalı yok**, yani ölçülemeyen bir şey tercihin dayanağı yapılmadı.
+- **Rakamın rengi yerine rozetin zemini düzeltildi:** `sage-br`'yi `rgb(76,103,73)` zeminine karşı 4,5'e taşımak için gereken metin ışığı **0,70** (bugünkü `sage-br` 0,53) — yani rakam neredeyse beyaz olurdu. Zemini opaklaştırmak aynı sonucu **rengi hiç değiştirmeden** verdi ve beş rakamı birden `8,81`'e çıkardı.
+- **`a11y.mjs`'e DOKUNULMADI.** Kapıyı onarmak B-063'ün bilinçle ertelenmiş alanına girer ve aksi yönde **tarihli bir kullanıcı kaydı** var; üstelik naif yaması ölçülerek yetersiz çıktı. Kapıyı "kalemi görmesin" diye değiştirmek de ölçümü kılavuzlamak olurdu.
+- docs/DECISIONS.md'ye eklendi: **Hayır** — bu turda geri alınamaz bir sözleşme/ad/şema kararı doğmadı; doğacak karar (kapının ikinci turu bu faza girsin mi) kullanıcıya ait ve henüz verilmedi.
+
+**Kalan İşler:**
+- **Tek kalem:** `a11y` kapısının son 1 kırmızısı. İki yol var ve seçim **kullanıcınındır**: (A) B-063'ün iki turlu çaresi bu faza alınır → yeni bir task gerekir (`run-task` task yazamaz; evi `plan-phase` revizyon modu); (B) kapı **1 ile** kapanır, kalem B-063'te ölçülmüş hâliyle durur ve fazın *"beş ölçüm yeşil"* kriteri bu kalemle birlikte `review-phase`'de hükme bağlanır.
+- **TASK-3.27 bu kararı BEKLEMİYOR** — konusu ayrı (hareket azaltmada çapa kaydırması) ve bu turdan etkilenmedi.
+
+**Son Yaklaşım:**
+Beş kalem kapandı ve kapı 6 → 1'e indi. Kalan 1, `/gecis`'in *"Elle tutulan kayıtlar…"* paragrafı; sayfada düzeltilecek bir şey **yok** (gerçek değeri 7,05, iki izolasyonla). Kapıyı 0'a indirmenin tek yolu ölçüm betiğini onarmaktır ve o iş B-063'ün ertelenmiş alanıdır.
+
+**Sonraki Adım Detayı:**
+Kullanıcı (A) derse: `plan-phase` revizyon modunda B-063'ün iki turlu çaresi için task yazılır — **iki madde birlikte** kurulmalı (akan turda örtülü piksel maskeye girmez **+** yapışkan katmanlar kaydırma sıfırdayken ayrı turda ölçülür), yoksa gradyan tabanı 18'e düşer ve 8 eleman ölçüm dışına çıkar (ölçüldü). Dışarıda bırakılan piksel ayrıca raporlanmalı ve eşiklenmeli. (B) derse: bu task ✅ ile kapanır (beş kalem kapandı), `PHASE-3.md` → Milestone hükmünde *"ölçülmüş kontrast ihlali kalmadı"* kriteri **kalan 1'in artefakt olduğu** kaydıyla değerlendirilir ve `verify-phase` baştan koşar. İki hâlde de bu turun kod değişikliği yerinde kalır.
+
+**Dosya Değişiklikleri:**
+- `src/app/gecis/page.tsx` → iki değişiklik: (1) `:69` dev adım rakamına `aria-hidden` + ölçümlü gerekçe yorumu; (2) `:206` rozet zemini `bg-white/8` → `bg-[color-mix(in_srgb,#fff_8%,var(--color-ink-deep))]` + ölçümlü gerekçe yorumu. **`globals.css`'e dokunulmadı** (token değişimi gerekmedi — düzeltme kullanım sınıfına indi, T11/T12'nin ailesi).
+- `_dev/docs/STYLE-GUIDE.md` → dekoratif jest kuralının **sınırı** (sıra numarası her zaman dekoratif değil) · `faint` bloğuna **teşhis uyarısı** (`p02` düşük + `med` yüksek ≠ kompozisyonlu zemin) · Düzen Tuzakları'na **yarı saydam rozet** kalemi. Refleks listesine ve token değerlerine dokunulmadı.
+- `_dev/modules/M6-Kalite-Kapilari.md` → `a11y.mjs` regresyon satırı (6 → 1, 1834 → 1831) + **Maske sızıntısı** başlığı (mekanizma, üç ölçüm, naif yamanın tablosu).
+- `_dev/bulgular/B-063-*.md` → *İkinci yüz* bölümü + kanıt + reddedilen yamanın tablosu + Koruma Önerisi'ne ikinci madde. `BULGULAR.md` → kanca satırı ve Son Güncelleme.
+
+**Test Sonuçları:**
+<!-- Ölçüm kimliğiyle: ne çalıştırıldı, hangi kapsamda. -->
+- **Hedef ve tazelik.** Yargı **yayın kopyası (3100)**; `scan.mjs` betikte sabit olduğu için **geliştirme sunucusu (3000)**. 3100 **iki kez tazelendi** (`--profile prod up -d --build web-prod`): `lastmod` **2026-09-25T01:05:55.970Z → 2026-09-26T10:57:52.747Z** (kod değişikliği) **→ 2026-09-26T11:22:05.415Z** (yalnız bir kod yorumu düzeltildi; kapı bu son imaja karşı **üçüncü kez** koştu ve yedi rakam birebir çıktı). **Pozitif kontrol (her iki derlemede):** `/gecis`'te `aria-hidden="true">01` ×1 · üretilen CSS'te `color-mix(in srgb,#fff 8%,var(--color-ink-deep))` ×1 · `/` hâlâ `-sm.webp` ×**68** (taban). **Negatif kontrol:** eski `rounded-2xl bg-white/8` ×**0** · olmayan varlık `salon-genis.webp` ×**0**.
+- **`a11y` (3100, 16 rota × 1440 px): 6 → 1 · çıkış 1.** 105 ekran adımı (birebir) · **1831 eleman** (1834 − 3, `aria-hidden`) · gradyan **19 (taban 19) / 0** · başlık **316 (taban 316) / 0 atlama** · `alt`sız img 0 · ölçülemeyen yapışkan **151** · görünmez **43** · ekran dışı **0** · **kalan 0**. `/gecis`: kontrast ihlali **6 → 1**, ölçülen 104 → 101, başlık dizisi **birebir aynı** (24 başlık). **Belirlenimlilik:** iki koşum, kalan kalemin dört rakamı da birebir (3,25 / 3,21 / 7,05 / 2955 px).
+- **Üç genişlikte kalem kalem (3100, gerçek derleme):** `01`/`02`/`03` → kapsam dışı (AX'te yok, aşağı bak). `1`·`2`·`3`·`4`·`5` → **min = p02 = med = 8,81** ve tek zemin `rgb(33,35,31)`, **1440/390/320'nin üçünde de** (önce: `1` 3,49/3,49/**3,44**, `2` 4,23/4,23/**4,12**, `3` 5,28/5,27/5,21, `4` 6,68/6,58/6,48, `5` 8,59/8,05/8,02). ⚠️ 320'de `1` ve `2` kapının gördüğünden **daha kötüydü** — kapı yalnız 1440'ta koşuyor. *"Elle tutulan kayıtlar…"* → 1440 **3,25** (artefakt) · 390 **7,05** · 320 **6,80**.
+- **Enjekte ↔ gerçek derleme sadakati:** rozet adayı önce `page.addStyleTag` ile ölçüldü (**8,81**, üç genişlik), sonra kaynağa yazılıp 3100 tazelendikten sonra yeniden ölçüldü (**8,81**, üç genişlik) — **birebir**.
+- **`aria-hidden` kapıyı gerçekten atlatıyor mu (T13'ün üç ayaklı kanıt ölçüsü):** (i) kapının ölçtüğü eleman 1834 → **1831**, tam üç eksik; (ii) **CDP `Accessibility.getFullAXTree`** → "01"/"02"/"03" **0 düğüm, "ignored" olarak bile yok**, 1440/390/320'nin üçünde de. **Negatif kontrol aynı ağaçta:** gizlemediğim adım rakamları ("1", "2", "5") her genişlikte **2'şer düğüm, 0 ignored** ve liste yapısı duruyor (`list` 7 · `listitem` 31); (iii) kovalar: yapışkan 151 · görünmez 43 · ekran dışı 0 · kalan 0 — **hiçbiri oynamadı**, yani kalem başka kovaya taşınmadı, **kapsamdan çıktı**. Başlık tabanı **316 → 316**: `aria-hidden` hiçbir başlığı düşürmedi (brief'in adıyla uyardığı risk ölçülerek kapatıldı).
+- **`mobile-audit` (3100, 2 genişlik × 16 rota): TOPLAM SORUN 0 · çıkış 0 · ✓ KAPI YEŞİL — YEŞİL KALDI.** Altı kapsam tabanının hiçbiri oynamadı: eleman **6253** · metin elemanı **2054** (taban 2054) · kritik hedef **305 / 0 / 0 benzersiz** (taban 305) · kaydırılabilir kap **5** (taban 5) · dokunma hedefi **638** · gezinme **333 / 261** (raporlanır, düşürmez) · kırpma **0** · şerit **0**.
+- **Görünüş (şerit yöntemi — `fullPage` KULLANILMADI):** 3 genişlik × tam sayfayı kapsayan görüntü-penceresi kareleri, **28 kare / 14,3 M piksel**. Sayfa boyu üç genişlikte de **birebir** (1440: 5191 · 390: 8436 · 320: 9489). **22 karede 0 farklı piksel** — dev rakamların bulunduğu kare dâhil, yani `aria-hidden` ekranda **hiçbir şey değiştirmedi**. Kalan 6 karede fark yalnız **rozet sütununda** (x 688-735 @1440 · x 20-67 @390/320): toplam **13.486 piksel (%0,094)**, dağılımı **1-2 birim: 12.564** (bölümün ışık lekesi artık rozetin içinden sızmıyor — gözle görünmez) · 3-8: 468 · 9-30: 179 · **31+: 275** (asıl kastedilen değişim: 1 px'lik bağlantı çizgisi artık rozetlerin **arkasından** geçiyor).
+- **Kova sızıntısı kontrolü:** `a11y`'nin dört kovasının toplamı ve dağılımı değişmedi (151/43/0/0); yani ne `aria-hidden` ne rozet değişikliği bir kalemi "ölçüldü"den "ölçülemedi"ye kaydırmadı.
+- **Kırmızı dal kontrolü:** `BASE=http://localhost:3457` (ölü hedef) → cümleyle durdu, yığın izi yok, **çıkış 1**. Yani bugünkü "1" gerçek bir ölçümdür, ölü koşum değil.
+- **Diğer kapılar (regresyon):** `font-guard` **iki dal ✓ / çıkış 0** — dal 1 **85.129 karakter** (birebir), dal 2 **765/765 kesin · 0 sonuçsuz · muaf 10**. `perf` (3100) `/` **111 KB** iki profilde · LCP 84/64 ms · **8 kombinde CLS 0** · `font/woff2` **95 KB** — hepsi taban. `scan` (**3000**, geliştirme) `/gecis` @1440 6 kare / 5191 px ve @390 10 kare / 8436 px, ikisinde de **konsol temiz**. `npm test` (`web` konteyneri) **219 geçti + 2 atlandı** · `npx tsc --noEmit` **0** · `lint` **30** (taban; değişen dosyada **0** kalem).
+- **Koşulmayan:** `/gecis` `perf.mjs`'in dört rotasında değil, yani bu sayfanın kendi ağırlığı ölçülmedi (değişiklik tek CSS kuralı + bir nitelik, bayt etkisi yok). Ekran okuyucu ile **gerçek** duyurum ölçülmedi — projede o kanal yok (`kanal: UAT`).
+
+---
 
 ---
 

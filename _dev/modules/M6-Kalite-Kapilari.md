@@ -86,7 +86,7 @@
 
 | Kontrol | Eşik | Kapsam |
 |---|---|---|
-| Erişilebilirlik (`a11y.mjs`) | TOPLAM SORUN **6** · çıkış 1 — altısı `/gecis`'in adlandıran task'ı olmayan kontrast kalemi; başlık atlaması **0** | 16 rota × **1440 px** · 105 ekran adımı · 1834 eleman · kontrast **piksel** yöntemiyle (`p02` = en kötü %2) · gradyan metin dalı 19 durak · görünür başlık 316 · `alt`sız img 0. Ölçemediği: yapışkan katman 151 kalem (B-063) · görünmez 43. `lg:` altında çizilen metin **kapsam dışı** |
+| Erişilebilirlik (`a11y.mjs`) | TOPLAM SORUN **1** · çıkış 1 — kalan tek kalem `/gecis`'in bir paragrafı ve **sayfanın değil ölçümün kusuru** (B-063'ün maske sızıntısı yüzü; gerçek değeri 7,05 ölçüldü); başlık atlaması **0** | 16 rota × **1440 px** · 105 ekran adımı · **1831 eleman** (TASK-3.26 üç dev rakamı `aria-hidden` ile kapsamdan çıkardı: 1834 → 1831) · kontrast **piksel** yöntemiyle (`p02` = en kötü %2) · gradyan metin dalı 19 durak · görünür başlık 316 (`aria-hidden` bir başlık DÜŞÜRMEDİ, ölçüldü) · `alt`sız img 0. Ölçemediği: yapışkan katman 151 kalem (B-063) · görünmez 43. `lg:` altında çizilen metin **kapsam dışı** |
 | Mobil kırpma ve şerit (`mobile-audit.mjs`) | TOPLAM SORUN **0** · çıkış 0 (`✓ KAPI YEŞİL`) — kırpılmış taşma 0, şerit ihlali 0, yatay kaydırma 0 | **2 genişlik (320 / 390 px)** × 16 rota · 6253 eleman · 2054 metin elemanı · 5 kaydırılabilir kap. Kesim ölçütü: metin taşıyan elemanın kutusu, onu kesen **atasının** kutusuna karşı. Kaydırılabilir kap · hareketli şerit · `sr-only` muaf ve ayrı sayılır |
 | Dokunma hedefi (`mobile-audit.mjs`) | kritik küme **305 ölçüldü / 0 eşik altı** · gezinme kulvarı 333 / **261 eşik altı** (raporlanır, kapıyı düşürmez — kullanıcının kademeli kuralı) | Eşik **44×44 px, iki boyut da sayılır**; ölçülen kutu **kontrolün kendisi** (sarmalayan `<label>` değil). Kritik küme sırayla: buton → form alanı → sekme → menü → dönüşüm bağlantısı. Yapışkan katman içindeki hedefler hariç. **Çakışma ölçülmüyor** |
 | Font kapsaması (`font-guard.mjs`) | **iki dal, ikisi de geçmeli** · çıkış 0 — dal 1: eksik karakter **0** · dal 2: muaf olmayan eksik glif **0** (muaf 10) | Dal 1: 16 rota × 1440 px, `body.innerText`, 85.129 karakter; `display:none` içeriği ve hata kutusu **kapsam dışı**, kapsam tabanı **yok**. Dal 2: **5 woff2 × 153 karakter = 765 kesin ölçüm, 0 sonuçsuz** (rota bağımsız, dosya ölçümü) + muafiyet 5 karakter × 6 (yığın, ağırlık) çifti = 30 ölçüm. Muaf 10 kalem = `₺` + `←↑→↓`, Sora'nın iki yüzünde |
@@ -100,6 +100,14 @@
 
 - Çalıştırma: `docker compose --profile research run --rm research node scripts/<betik>`; üretim konteyneri `docker compose --profile prod up -d --build web-prod` (3100).
 - `ILKELER.md` → Kümülatif test ilkesi bugün karşılanmıyor; bu modülün F6.2–F6.4'ü onu kapatır.
+
+**Maske sızıntısı — kapının ölçülmüş üçüncü kör noktası (TASK-3.26, 2026-09-26):**
+
+Kontrast ölçümü iki kare alır (normal · glif dolgusu şeffaf) ve farkı **glif maskesi** sayar. Maske testi saf piksel farkıdır, **glifin kime ait olduğunu bilemez**: ölçülen elemanın satır kutusunun içine düşen *başka* bir elemanın glifleri de maskeye girer, ve zemin o yabancı elemanın zemininden okunur. Yapışkan başlık bunu **her adımda** üretir — ekran ekran gezme, akan içeriği başlığın altından geçirir.
+
+Ölçülen örnek: `/gecis`'in *"Elle tutulan kayıtlar…"* paragrafı. Kapı `p02` **3,25** / `med` 7,05 / glif 2955 px basıyor; iki bağımsız izolasyon sonucu çürütüyor — (a) `header{display:none}` → **7,05** (zemin %100 beyaz), (b) başlığın yalnız **kendi metni** iki karede de şeffaf yapıldığında (geometri, bulanıklık, düğme zemini aynen yerinde) maske 2955 → **1861 px** ve `p02` → **6,98**. Düşen 1094 piksel başlığın kendi çağrı düğmesinin etiketidir; kapı paragrafın mürekkebini o düğmenin sage zeminiyle eşleştiriyordu. 390 ve 320 px'te aynı paragraf **7,05** ve **6,80** — yani kalem tek genişlikte, tek adımda ve yalnız adım ızgarası satırı düğmenin altına denk getirdiği için var.
+
+⚠️ **Naif çare ÖLÇÜLDÜ ve YETMEDİ:** "örtülü adımda o elemanı ölçme" yaması 16 rotada koşuldu — `TOPLAM SORUN` 6 → 5 (artefakt düştü, beş gerçek kalem rakamıyla durdu) ama **gradyan metin 19 → 18** (kendi kapsam tabanının altına düşüyor, yani kapı başka bir sebeple kırmızı) ve **"ekran dışı" 0 → 8** (bu sekiz eleman hiçbir adımda başlığın altından çıkmıyor, yani hiç ölçülmez oluyor). 171 (eleman, adım) çifti atlandı. Doğru çare B-063'ün kayıtlı önerisidir — **yapışkan katmanlar için kaydırma sıfırdayken ayrı bir tur** — ve o tur bilinçle "Kalite kapıları otomatik" fazına ertelendi (kullanıcı kararı, verify-plan 2026-09-23).
 
 **Rota kaynağı ve ölçüm hedefi (TASK-3.03, 2026-09-24):**
 
