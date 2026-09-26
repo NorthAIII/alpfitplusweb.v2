@@ -8,7 +8,7 @@
      1. İÇERİK DOKÜMANLARI (modules/, docs/, PRD içerik dosyaları, projeye özgü sabitler) → TEK TEK enumere edilir, her birinin ne içerdiği yazılır. Konumu ve içeriği öngörülemez; hangi alanda doküman olduğu yalnızca burada bilinir. Yeni içerik dokümanı oluşturulduğunda INDEX güncellenir. Sadece mevcut dokümanlar listelenir, oluşturulmamışlar yazılmaz.
      2. SIRALI/ÖNGÖRÜLEBİLİR DOKÜMANLAR (tasks/, phases/) → TEK TEK enumere EDİLMEZ. Sadece klasör konumu ve isim deseni belirtilir. Güncel liste zaten DURUM.md (aktif task, task durumu) ve PHASES.md (faz özeti)'nde tutulur — burada tekrar edilmez.
      3. BULGULAR.md oluşturulduğunda "Planlama Dokümanları" listesine tek satırla eklenir; bulgular/ klasörü ve atomları TEK TEK enumere EDİLMEZ — güncel liste zaten BULGULAR.md index'indedir (arşiv: ls _dev/bulgular/archive/).
-     4. claude/ (CLAUDE.md doktrin çocukları) — proje bölünmüşse (`_dev/claude/` varsa) yalnızca aşağıdaki Doküman Hiyerarşisi ağacında görünür, bölünmemişse ağaca hiç yazılmaz; "Her Oturum Başında OKU" listelerine hiçbir hâlde GİRMEZ — kök CLAUDE.md onları @import ettiği için içerikleri zaten bağlamdadır, okuma listesine yazmak aynı metni ikinci kez okutur. Kesim motorda sabittir (templates/claude/), projede yeniden kararlaştırılmaz. -->
+     4. claude/ (CLAUDE.md doktrin çocukları) — proje bölünmüşse (`_dev/claude/` varsa) yalnızca aşağıdaki Doküman Hiyerarşisi ağacında görünür, bölünmemişse ağaca hiç yazılmaz; "Her Oturum Başında OKU" listelerine hiçbir hâlde GİRMEZ — parent CLAUDE.md (kökte ya da `.claude/` altında) onları @import ettiği için içerikleri zaten bağlamdadır, okuma listesine yazmak aynı metni ikinci kez okutur. Kesim motorda sabittir (.claude/commands/devflow/templates/claude/), projede yeniden kararlaştırılmaz. -->
 <!-- NOT: Tüm dokümanlar _dev/ klasöründedir. Aşağıdaki yollar _dev/ klasörüne göredir. -->
 
 ## Tüm Dokümanlar
@@ -52,7 +52,7 @@ Bu projede PRD yok (kullanıcı kararı, kickoff 2026-09-11). Feature davranış
 | `modules/M4-Site-Asistani.md` | M4 — Hazır akış asistanı; Claude bağlantısı; iddia test seti |
 | `modules/M5-Gorsel-Varlik-Hatti.md` | M5 — render-product, photos-build, font-subset, brand-assets |
 | `modules/M6-Kalite-Kapilari.md` | M6 — Beş ölçüm betiği; tek komut; CI; sızıntı denetimi; **başlangıç ölçümü** (regresyon çizgisi) |
-| `modules/M7-Yayin-ve-Altyapi.md` | M7 — Docker, Vercel ayrı proje, env, başlıklar, analitik, 301 haritası (20 adres) |
+| `modules/M7-Yayin-ve-Altyapi.md` | M7 — Docker, Vercel ayrı proje, env, başlıklar, analitik, 301 haritası |
 
 ### Faz Dokümanları (Aktif Faz OKU)
 
@@ -69,7 +69,7 @@ Bu projede PRD yok (kullanıcı kararı, kickoff 2026-09-11). Feature davranış
 
 | Doküman | İçerik |
 |---------|--------|
-| `docs/DECISIONS.md` | Karar günlüğü — **giriş noktası**: aktif karar serisi (2026-09-14'ten bugüne) + kapanan aralıkların pointer listesi. Kararı ararken önce burası okunur |
+| `docs/DECISIONS.md` | Karar günlüğü — **giriş noktası**: aktif karar serisi (2026-09-23'ten bugüne) + kapanan aralıkların pointer listesi. Kararı ararken önce burası okunur |
 | `docs/DECISIONS-2026-09-10..2026-09-13.md` | Kapanan karar aralığı (22 kayıt) — tek dil, fiyat sunumu, fotoğraf ve görsel ton, chatbot sırası, modül yapısı, rakip adsızlığı, faz sırası, Vercel ortam modeli, analitik, lead hedefinin ilk iki turu, Vitest |
 | `docs/DECISIONS-2026-09-14..2026-09-22.md` | Kapanan karar aralığı (12 kayıt) — lead hedefinin son turu ve depo sözleşmesinin sınanması, Umami site kaydı, `notify_*` ve onu geçersiz kılan onay e-postası kararı, anahtar kasası, analitik olay adları, `.env` sızıntısının ölçülen kapsamı ve döndürmenin düşmesi, ölçüm sunucusunun ham IP gerçeği, yetenek iddialarının tek listeden türemesi |
 | `docs/DECISIONS-2026-09-23..2026-09-23.md` | Kapanan karar aralığı (7 kayıt) — Faz 2'nin kapanış günü: `CAPABILITIES` tek kaynağı, sürüm etiketinin çapası, yayınlanan kalemin eski cümleyi derleme hatasına çevirmesi, sözlükte rakip adı tutulmaması, devralınan ölçüm özetinin riski, yasal aktarımın olgu olarak yazılması, onay e-postası tavanı |
@@ -146,7 +146,7 @@ Bu projede PRD yok (kullanıcı kararı, kickoff 2026-09-11). Feature davranış
 1. Temel dokümanlar
 2. `docs/CLAIMS.md` — sınır
 3. `modules/M1-Icerik-ve-Iddia-Kaynagi.md` — tek kaynak sabitleri ve ton
-4. Değişiklik sonrası: `a11y.mjs`, `font-guard.mjs`, `scan.mjs` (CLAUDE.md → Ölçüm betikleri)
+4. Değişiklik sonrası: `npm test` (iddia/yetenek ve yasal beyan kapıları), `a11y.mjs`, `font-guard.mjs`, `scan.mjs` (CLAUDE.md → Ölçüm betikleri)
 
 ### SENARYO: Yeni bölüm / sayfa tasarımı (projeye özgü)
 1. Temel dokümanlar
@@ -217,7 +217,7 @@ proje-repo/
 
 ---
 
-**Son Güncelleme:** 2026-09-26 — research-phase (Faz 4): `docs/DECISIONS.md` yeniden kırmızı çizgiyi aştığı için (23.039 token) aktif serinin en eski kapanan aralığı — Faz 2'nin 7 kaydı — üçüncü arşiv çocuğuna mezun edildi (parent 15.252, çocuk 10.959 token) ve Bilgi Havuzu tablosuna işlendi.
+**Son Güncelleme:** 2026-09-26 — audit-docs: doktrin klasörü kuralı motor metnine hizalandı; aktif karar serisinin başlangıcı (09-23) ve M7 satırının bayat adres sayısı düzeltildi; metin senaryosuna `npm test` eklendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 <!-- KURAL: Tamamlanmış fazların task arşiv listesini INDEX'e ekleme — `ls _dev/tasks/archive/` zaten görür. INDEX yalnızca aktif klasör konumlarını gösterir; statik liste dokümanı değildir. -->
