@@ -38,15 +38,11 @@ Secret'lar ve ortama bağlı değerler koda gömülmez. Merkezi, değişken-taba
 
 Test atlanmaz. Test altyapısı her geliştirmeyle üstüne koyarak büyür — her yeni yetenek kendi güvencesini de getirir. Geriye dönük güven zamanla artmalı, azalmamalı.
 
-**Bu projede bugünkü hâli (2026-09-11):** Beş ölçüm betiği var (a11y, mobil, font, perf, tarama) ama hepsi elle koşuyor; hiçbiri commit'i durdurmuyor, CI yok. İlke bugün **karşılanmıyor**; "Kalite kapıları otomatik" faz konusu bunu kapatır (`PHASES.md` → Sıradaki Fazlar).
-
 ---
 
 ## Bu Projeye Özgü
 
 Kickoff/PRD sırasında kullanıcıya sorularak doldurulur. Boş bir alan "henüz konuşulmadı ya da ertelendi" demektir — varsayma, gerektiğinde kullanıcıya sor.
-
-> v1 sitesinin (`../Alpfitplus-website.v1/_dev/ILKELER.md`) ilkeleri kickoff'ta (2026-09-11) aynen devralındı; tek ekleme "İddia sınırı ve rakip adsızlığı" maddesidir.
 
 ### Proje Ufku
 
@@ -60,7 +56,7 @@ Kararsız kalınan yerde sırasıyla bunlara göre tercih yapılır (eksen tanı
 
 1. **Dönüşüm** — Ziyaretçiyi talebe çevirmek ve hiçbir talebi kaybetmemek. İki seçenek arasında kalındığında dönüşümü artıran kazanır.
 2. **Ölçülebilirlik** — Ne olduğunu görebilmek. Ölçülmeyen şey iyileştirilemez; yeni bir dönüşüm yüzeyi ölçümüyle birlikte gelir.
-3. **Bakım kolaylığı** — Tek kişilik ekip gerçeği. Tek kaynak konfigürasyon, tekrar etmeyen içerik, test güvencesi; bugün ucuz olan değil, altı ay sonra ucuz olan seçilir.
+3. **Bakım kolaylığı** (`QUALITY.md` → Bakım Maliyeti) — Tek kişilik ekip gerçeği. Tek kaynak konfigürasyon, tekrar etmeyen içerik, test güvencesi; bugün ucuz olan değil, altı ay sonra ucuz olan seçilir.
 
 ### Pazarlık Konusu Olmayanlar
 

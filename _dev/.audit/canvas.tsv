@@ -5,7 +5,7 @@ id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	a
 2	_dev/BULGULAR.md	pending					0	2026-09-12	2026-09-26|6e5c60364888507a1a2898dd8be9e17f21bf0e4945c3f4d91509c7b00744ceb4|S1 temizliği uygulandı (38.176 → 37.049 token); kalan doluluk triyaj bekliyor: Gelen Kutusu 65 not / dokümanın %63'ü + 41 açık bulgu (rehber ~30). Supabı audit-product uzlaştırması / verify-phase Adım 1 — audit-docs'un işi değil (BULGULAR KURAL :26-30, :242). audit-docs 2026-09-26
 3	_dev/DURUM.md	conformant		2	2026-09-22	5dfef07ace9bcd1dff6fa24e355592bddf950492d0e528e3eb3b5b132f9db3e5	0	2026-09-12	
 4	_dev/GIT-STRATEJI.md	conformant		2	2026-09-26	860116810990bda7a0a3885fc7c42f0436b0606be0b03beec67ab42801976684	0	2026-09-12	
-5	_dev/ILKELER.md	pending					0	2026-09-12	
+5	_dev/ILKELER.md	conformant		2	2026-09-26	30459ec2a7aad7a7f185111f5cf8e23e63ecc2998427033acb604d50db3f7a87	0	2026-09-12	
 6	_dev/INDEX.md	pending					0	2026-09-12	
 7	_dev/MEMORY.md	pending					0	2026-09-12	
 8	_dev/MODULE-MAP.md	pending					0	2026-09-12	
