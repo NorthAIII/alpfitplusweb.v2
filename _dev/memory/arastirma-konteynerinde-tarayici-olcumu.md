@@ -45,8 +45,6 @@ timeout 900 docker compose --profile research run --rm --name audit-<etiket> \
 - `npm run build` **koşturulmaz**: `.next` isimli hacim `web` servisiyle paylaşılır ve çalışan
   geliştirme sunucusunun derlemesini ezer (kurulumu
   [Alternatif env ile üretim derlemesi](alternatif-env-ile-uretim-derlemesi.md)).
-- Saf fonksiyonlar artık `web` konteynerinde `npm test` (Vitest, `tests/`) ile sınanır —
-  ayrı bir betik/kopyalama tarifi gerekmez (TASK-1.16).
 
 ## Ekran ekran DOM taraması — geometri kaydırmadan bağımsızdır (TASK-3.01, 2026-09-24)
 
@@ -114,7 +112,7 @@ Uzun turda her ayak kendi dosyasına yazılır.
 
 ## Hareket azaltma animasyonun ADINI bırakır, SÜRESİNİ sıfırlar (TASK-3.02, 2026-09-24)
 
-`globals.css:232` `prefers-reduced-motion: reduce` altında `animation-duration: .01ms` ve
+`globals.css:326` `prefers-reduced-motion: reduce` altında `animation-duration: .01ms` ve
 `animation-iteration-count: 1` dayatıyor. Sonuç: animasyonlu eleman **bitmiş** durumda
 durur ve `document.getAnimations()` onu koşar göstermez — ama `animationName` **yerinde
 kalır** (`marquee`, `pulse-ring`).
@@ -200,12 +198,6 @@ seçiyor ve tıklama "element is not visible" ile **zaman aşımına** düşüyo
 - **Hidrasyon öncesi davranış sınanırken yalnız `.js` geciktirilir.** `**/_next/static/chunks/**`
   deseni dev'de CSS'i de tutar, boyama ve DCL bekler. "Görünür ama hidrate değil" hâli yerine
   boyanmamış sayfa ölçülür, tıklama hidrasyondan sonraya düşer.
-- **Çapraz-kökenli isteğin gerçek boyutu `Resource Timing API`'den ÇIKMAZ.** `umami.kiwiailab.com`
-  gibi başka bir kökene giden istekte `performance.getEntriesByType("resource")`'ın `transferSize`/
-  `encodedBodySize` alanları, yanıt `Timing-Allow-Origin` başlığı taşımadığı sürece **sessizce 0**
-  döner (hata yok, sadece yanlış rakam). Gerçek tel-üzeri bayt için CDP `Network` alanına geçilir:
-  `ctx.newCDPSession(page)` + `Network.enable`, `Network.loadingFinished` olayının
-  `encodedDataLength`'i (TASK-1.09, Umami betiği + olay isteği ağırlığı ölçümü).
 
 ## Locator tuzağı — açık `role` niteliği rolü ezer (TASK-2.12, 2026-09-23)
 
@@ -244,14 +236,12 @@ const imgs = await p.$$eval('img', (els) => els.map((e) => ({
 const hedef = imgs.find((i) => i.src.includes('/product/antrenor.webp'));
 ```
 
-Yukarıdaki iki locator tuzağıyla **aynı aile**: ortak ders yine *bulamayan
-ölçüm yeşil kalır*. Bulunan sayıyı (`imgs.filter(...).length` ya da eşleşen
-dosya adları) her koşumda yazdır; "0 buldum" ile "yok" aynı şey değildir.
+Aynı aile (↑ locator tuzakları): bulunan sayıyı her koşumda yazdır.
 
 **Hangi sekme hangi görseli gösteriyor, varsayılmaz — `Roles.tsx` okunur.**
-Eşleme birebir değil: `diyetisyen: SHOTS.antrenor`, `antrenor: SHOTS.takvim`
-(`Roles.tsx:12-15`). "Antrenör sekmesine tıklayıp antrenör görselini ölçmek"
-boş döner.
+Eşleme birebir değil: diyetisyen sekmesi `SHOTS.grup`'u ödünç alıyor
+(`Roles.tsx:37`, `VISUAL` sabiti). "Diyetisyen sekmesine tıklayıp diyetisyen
+görselini ölçmek" boş döner.
 
 ## `-v` ile mount noktası `/work`'ün İÇİNE düşerse repoya boş dosya bırakır (TASK-2.14, 2026-09-23)
 
@@ -572,53 +562,22 @@ sayısı birbirini tutmaz ve fark üç kaynaktan gelir: `display:none` · boş a
 listede YOKTUR** — görünmez bir kare ağaçta tam düğüm olarak durur; "görünmüyor"
 ile "duyurulmuyor" ayrı şeylerdir.
 
-## Kare farkının hakemi DOM geometrisidir — kesirli öteleme her metin satırını "değişmiş" gösterir (TASK-3.14, 2026-09-24)
+## Kare farkının hakemi DOM geometrisidir (TASK-3.14 · TASK-3.19)
 
-"Görünüş bozulmadı" iddiası önce/sonra kare farkıyla ölçülür (T12, T13). Ama
-**değişen bir bölümün ALTINDAKİ içerik kare farkında da değişmiş görünür** ve
-bunun iki ayrı nedeni vardır; ikisi de ölçüldü:
+Kesirli öteleme, eleman karesinin yalanı ve **telafi kontrolü** faz retrosunda
+yazılı: `phases/PHASE-3-RETROSPEKTIF.md` → Task-Spesifik Teknik Öğrenimler (kare
+kıyası + koyu zemin gradyanı maddeleri) ve → Ne Kötü Gitti? madde (3); ölçüm
+dökümü `tasks/archive/TASK-3.14.md` · `TASK-3.19.md`. Retroda olmayan üç ölçüm
+ayrıntısı:
 
-1. **Öteleme.** Bölüm uzayınca altındaki her şey aşağı kayar. Çare kaydırmalı
-   kıyastır: `once[y]` ile `sonra[y + Δ]` karşılaştırılır.
-2. **Ötelemenin KESİRLİ olması.** Bölüm 65,5 px uzadıysa alttaki metin yarım
-   piksel kayar ve **her glif satırı farklı rasterize olur**. Kaydırmalı kıyas
-   bile temizlenmez: 17-25 satırlık bantlar hâlinde ~1000-1700 farklı piksel
-   çıkar (satır yüksekliği kadar = imza budur). Arka planlar aynı kalır, yalnız
-   yazı satırları farklıdır.
-
-⚠️ **Tam sayı sanılan boy farkı kesirli olabilir** — `Math.round`'lu bir ölçüm
-"66" der, gerçek değer **65,5**'tir. Δ'yı `getBoundingClientRect().height` ile
-**ondalıklı** oku, yoksa yukarıdaki tuzağı hiç göremezsin.
-
-**Hakem karedir değil, DOM geometrisidir.** Her elemanın `left/width/height` ve
-satır kutusu sayısı iki hâlde toplanıp indeks indeks karşılaştırılırsa soru
-kesin cevaplanır: *"ne değişti"* ile *"ne kaydı"* ayrışır (ölçüldü: 1396
-elemanın 46'sı değişmiş, 45'i tek bir bölümün içinde, 46'ncısı `<main>`'in
-boyu). Kare farkı bu ayrımı yapamaz.
-
-⚠️ **`locator.screenshot()` ile alınan ELEMAN karesi de kirlenir.** Eleman
-görünüre kaydırılarak rasterize edilir; sayfa boyu iki hâlde farklıysa eleman
-farklı yarım-piksel konumuna düşer ve **geometrisi birebir aynı olan** bir
-buton %21 farklı piksel verir (ölçüldü). Eleman karesi ancak geometri eşitliği
-ayrıca gösterildikten sonra delil sayılır.
-
-**Değişmemesi gereken yüzeyde ölçüt yine de karedir ve kesindir:** dokunulmamış
-genişliklerde tam sayfa farkı **0** çıkmalıdır (bu turda 4 sayfa / 40 M piksel,
-sayfa boyları da birebir). Sıfır olmayan bir rakam orada mazeret kabul etmez.
-
-**TELAFİ KONTROLÜ — "kaydı mı, değişti mi" sorusunun kesin cevabı** (TASK-3.19,
-2026-09-25): şüpheli fark kalırsa kaynağa dokunmadan bölüme kısaldığı/uzadığı
-kadar dolgu **enjekte et** (`#bolum{padding-bottom:calc(<özgün dolgu> + Δpx)}`),
-sayfa ve bölüm boyunun **eski değere birebir döndüğünü doğrula**, şeridi yeniden
-al. Fark sıfırlanıyorsa değişim **konumsaldır**. Ölçüldü: 68.402 ve 78.179
-farklı piksel → **0** ve **0**; @1440'ta Δ kesirli olduğu için 12.062 → **205**
-px (%0,016) kaldı. ⚠️ İki ayrıntı: (a) telafi, telafi ettiği kutunun **duyarlı**
-değerini taşımalı — `Section` dolgusu `py-18 sm:py-24`, `calc(4.5rem + …)`
-≥ 640 px'te 24 px eksik telafi eder ve fark kapanmaz; (b) **koyu zeminli gradyan
-belge konumuna bağlı taranıyor** — genlik düşük (maks kanal farkı 2-7) ama alan
-geniş, yani "on binlerce farklı piksel" tek başına içerik değişimi demek
-değildir; maksimum kanal farkına bak. Önce **belirlenimliliği** sına (aynı
-yapıyı iki kez ölç → 0 fark), yoksa telafi kontrolü de yorumlanamaz.
+- **Öteleme kaydırmalı kıyasla ayıklanır:** `once[y]` ile `sonra[y + Δ]`
+  karşılaştırılır.
+- **Kesirli ötelemenin imzası banttır:** kaydırmalı kıyas bile temizlemez —
+  satır yüksekliği kadar (17-25 px) bantlarda ~1000-1700 farklı piksel çıkar;
+  arka plan aynı kalır, yalnız yazı satırları farklıdır.
+- **Δ ondalıklı okunur:** `Math.round`'lu ölçüm "66" der, gerçek değer **65,5**
+  olabilir — `getBoundingClientRect().height` kullan, yoksa kesirli ötelemeyi
+  hiç göremezsin.
 
 ## `route.fulfill` ağ kısıtlamasını BAYPAS EDER — enjekte ölçüm çizimi ölçer, zamanlamayı ÖLÇMEZ (TASK-3.22, 2026-09-25)
 
