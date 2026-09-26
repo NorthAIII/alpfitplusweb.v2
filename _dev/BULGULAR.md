@@ -109,6 +109,7 @@
 - [PHASE-3] **`DEMO_TO`'ya giden bildirim e-postasının yerleşimi hiç gözle görülmedi** (Faz 1'den devredildi). İçeriği testlerle çivili, ama *"okunur görünüyor mu"* sorusunun kanalı kullanıcının posta kutusu
 - [PHASE-3] **Umami panelinin ARAYÜZÜNDE v2 kaydının göründüğü hiç doğrulanmadı** (Faz 1'den devredildi). Ürün tarafı kurulumun kendi okuma API'siyle ölçülmüştü (olay · yüzey · ortam-etiketi kırılımı); açık olan yalnız panelin kendi ekranı — kullanıcı panele bakabildiğinde kapanır (`memory/kendi-sunucu-n8n-bunker-umami.md`)
 - [PHASE-4 research] **`public/` altında create-next-app'ten kalma beş SVG yayında** (`file.svg` · `globe.svg` · `next.svg` · `vercel.svg` · `window.svg`): `src/` ve `research/scripts/` içinde kullanımı 0, önizlemede `/next.svg` → 200 (ölçüldü 2026-09-26). Zararsız ama geçişle canlı alan adında çerçevenin kendi varlıkları servis edilir; silmek `public/` dokunulmazlığının dışında (yalnız `product/` ve `fonts/` betik çıktısı) — kapsam kararı bekliyor
+- [audit-docs] Motor şablonu `.claude/commands/devflow/templates/GIT-STRATEJI.md:65` KURAL yorumunda numaralı ve adsız atıf ("bkz. doldurma tarifi md. 4") kullanıyor — motorun kendi kuralı bunu yasaklıyor (`lib/git-strategy-kurulum.md:43`: "bölüm numarası değil bölüm adı"; doğru ad `4. Doğrulama kapısı: varsayma, sına`). Atıf bugün çözülüyor, kırık değil. Projedeki kopya (`_dev/GIT-STRATEJI.md:68`) motorla birlikte değişir, elle düzeltilmez; rota DevFlow deposu.
 
 ## Açık Bulgular
 
