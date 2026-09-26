@@ -35,6 +35,7 @@ Kapsam kararı: B-011 geçişten **önce** kapanır ve UAT senaryosudur.
 - `_dev/DURUM.md` · `_dev/phases/PHASE-4.md`
 - `_dev/bulgular/B-011-…` → Çözüm Kaydı + `Durum`; `_dev/BULGULAR.md` index
 - `_dev/modules/M7-Yayin-ve-Altyapi.md` → F7.5 Edge Case satırı (kapandı, ölçümüyle)
+- `_dev/memory/hiz-sinirli-uca-test-bataryasi.md` — canlı/gerçek hedefe giden test talebinin e-posta adresi kuralı (Resend test adresi; belgeden doğrulanan biçimiyle) — ilk kullanan task bu
 
 ---
 
@@ -44,7 +45,9 @@ Kapsam kararı: B-011 geçişten **önce** kapanır ve UAT senaryosudur.
 - [ ] **2. MX ölçümü** — DoH, iki bağımsız çözümleyici (`dns.google` + `cloudflare-dns.com`): beş kayıt, öncelikler 1 / 5 / 5 / 10 / 10. Boş dönerse "girilmedi" ile "henüz yayılmadı" ayrımı negatif önbellek süresiyle (SOA minimum 300 sn) — tekrar ölç.
 - [ ] **3. Taban karşılaştırması** — atomdaki tabloya karşı: apex TXT (SPF + site doğrulaması), `google._domainkey`, `resend._domainkey`, `_dmarc`, NS, A — birebir.
 - [ ] **4. Gelen posta** — kullanıcı dışarıdan (kişisel bir adresten) `destek@alpfitplus.com`'a test postası gönderir ve kutuda görür.
-- [ ] **5. Giden posta regresyonu** — dal önizlemesinden (atlatma başlığıyla) işaretli tek test talebi ("TEST — silinecek", kendine özgü e-posta adresi): Resend'de ekip bildirimi `last_event: delivered`. Kayıt **önizleme** koleksiyonuna düşer (canlıya değil).
+- [ ] **5. Giden posta regresyonu** — dal önizlemesinden (atlatma başlığıyla) işaretli tek test talebi ("TEST — silinecek"): Resend'de ekip bildirimi `last_event: delivered`. Kayıt **önizleme** koleksiyonuna düşer (canlıya değil).
+  - **E-posta alanı Resend'in kendi test adresidir** (`delivered@resend.dev` — biçim ve etiket desteği Resend belgesinden doğrulanır, tahminle yazılmaz); hayali bir alan adı (`example.com` gibi) **kullanılmaz** (kullanıcı kararı, verify-plan 2026-09-26). Gerekçe: talep sahibine onay e-postası da gider; hayali adrese giden posta geri döner ve bu hacimde tek bir geri dönüş bile `alpfitplus.com`'un gönderici itibarını düşürür. İlk canlı testte (TASK-1.18) `test@example.com` kullanılmıştı — o gün onay e-postası yoktu.
+  - Onay e-postası tavanı adres başına 24 saatte 3 — aynı adres tekrar denenecekse sayılır (memory `hiz-sinirli-uca-test-bataryasi.md`).
 - [ ] **6. Kayıtlar** — B-011 çözüm kaydı (dört adımın sonucu, tarihleriyle), BULGULAR index, M7 Edge Case.
 
 ---
@@ -55,6 +58,7 @@ Kapsam kararı: B-011 geçişten **önce** kapanır ve UAT senaryosudur.
 _dev/bulgular/B-011-apex-mx-kaydi-yok.md
 _dev/BULGULAR.md
 _dev/modules/M7-Yayin-ve-Altyapi.md
+_dev/memory/hiz-sinirli-uca-test-bataryasi.md   # canlı test adresi kuralı
 ```
 
 Kod dosyası değişmez.
@@ -75,7 +79,7 @@ Kod dosyası değişmez.
 - [ ] DoH, iki çözümleyici: beş MX kaydı, öncelikler 1/5/5/10/10
 - [ ] Taban tablosunun TXT / NS / A satırları birebir
 - [ ] Dışarıdan gönderilen test postası `destek@` kutusuna ulaştı — **kanal: UAT** (kullanıcı gözü)
-- [ ] Giden: regresyon talebinin ekip bildirimi Resend'de `delivered`
+- [ ] Giden: regresyon talebinin ekip bildirimi Resend'de `delivered`; talep sahibine giden onay e-postası Resend'in test adresine ve `delivered` (geri dönüş yok)
 
 ---
 

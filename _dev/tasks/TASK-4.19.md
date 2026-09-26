@@ -16,9 +16,10 @@ Geçişin zaman isteyen kalemleri ve kayıt kapanışları:
 2. **Search Console** — kullanıcı yeni site haritasını (`https://alpfitplus.com/sitemap.xml`) bildirir; Claude neyin bildirileceğini ve sonraki günlerde neye bakılacağını (dizin kapsamı, yönlendirme raporu, eski site haritası adresinin 301'i) yazar.
 3. **Kararlılık** — geçiş betiği canlıda ikinci kez (farklı gün) **✓ KAPI YEŞİL**; `/api/demo` canlı gecikmesi (`422` yolu ×3, fonksiyon ayağı `fra1`).
 4. **Bulgu kapanışları** — B-043 · B-016 · B-042 (kalem 1 ve 3; parite dışı kalemler açık kalır) · B-065 (açık kalemi varsa) · B-027 (canlı ayağı; önizleme kartı açık kalır): atomların Çözüm Kayıtları ölçümleriyle, BULGULAR index.
-5. **Modül hizası** — M7 F7.5 kabul kriterleri gerçekle: "20 adres" → ölçülen envanter (45 kalem + iki biçim + kesişim ekleri), tek atlama, `/404` ailesi.
+5. **Modül hizası** — M7 F7.5 kabul kriterleri gerçekle: "20 adres" → ölçülen envanter (45 kalem + iki biçim + kesişim ekleri), tek atlama, `/404` ailesi; parite kriteri satırı (↓ 6).
+6. **Bilinçle bırakılan parite kalemlerinin kaydı** — kapsam kararı (PHASE-4 → Kapsam Tartışması, ilk madde): v1'in yapıp v2'nin bilinçle yapmadığı her kalem `BULGULAR.md` → Bilinçli Tercihler'e gerekçesiyle iner; sonraki denetimler onları yeniden bulgulaştırmaz (kullanıcı onayı, verify-plan 2026-09-26).
 
-Tamam sayılır: beş kalem ölçülmüş ya da (Search Console gibi) kullanıcıya bağlı kalan açıkça işaretlenmiş.
+Tamam sayılır: altı kalem ölçülmüş ya da (Search Console gibi) kullanıcıya bağlı kalan açıkça işaretlenmiş.
 
 ---
 
@@ -33,6 +34,7 @@ Tamam sayılır: beş kalem ölçülmüş ya da (Search Console gibi) kullanıc�
 **Güncellenmesi Gereken (Task Sonunda):**
 - `_dev/DURUM.md` · `_dev/phases/PHASE-4.md`
 - Beş bulgu atomu + `_dev/BULGULAR.md` index
+- `_dev/BULGULAR.md` → Bilinçli Tercihler — bırakılan parite kalemleri (↓ alt görev 6)
 - `_dev/modules/M7-Yayin-ve-Altyapi.md` → F7.5 kabul kriterleri
 
 ---
@@ -43,7 +45,13 @@ Tamam sayılır: beş kalem ölçülmüş ya da (Search Console gibi) kullanıc�
 - [ ] **2. Search Console** — kullanıcıya bildirilecek adres ve bakılacak raporlar; kullanıcı bildirir ve sonucu söyler. Gelmezse kalem "kullanıcıya bağlı iş" olarak BULGULAR'a düşer — fazı kilitlemez (ILKELER).
 - [ ] **3. Kararlılık** — betik canlıda; gecikme ölçümü.
 - [ ] **4. Bulgular** — her atomda hangi kalemin kapandığı, hangisinin neden açık kaldığı, ölçüm çapası.
-- [ ] **5. M7 F7.5** — kriterler.
+- [ ] **5. M7 F7.5** — kriterler; parite kriteri satırı eklenir (B-059 → Koruma Önerisi'nin önerdiği satır, fazın gerçeğiyle): *"v1'in canlıda yaptığı her davranış kalem kalem karşılaştırıldı; taşınmayan her kalem gerekçesiyle `BULGULAR.md` → Bilinçli Tercihler'de."*
+- [ ] **6. Bilinçli Tercihler** — bırakılan her kalem tek satır, KURAL biçimiyle (`- [konu] — neden bilinçli (tarih)`). Bugün bilinen dört kalem:
+  - v1'in yazı tipi adresleri (`/fonts/*-latin-*.woff2`, 4 referanslı) → 404 — yalnız v1'in kendi HTML'i referans veriyordu (araştırma, `PHASE-4-ARASTIRMA.md` → adres envanteri);
+  - `hreflang` alternatifleri yok — tek dil kararı (TASK-4.08);
+  - `/404` ailesi: v1'de `/en/404` **200**, `/404.html` **308** veriyordu; v2'de üçü de **404** — ana sayfaya yönlendirmek "yumuşak 404" sayılır (kullanıcı, `docs/DECISIONS.md` 2026-09-26 md. 2);
+  - Umami `data-domains` kullanılmıyor — ortam ayrımı `data-tag` ile (`layout.tsx`'teki yorum).
+  - ⚠️ **Liste tamlığı iddia edilmez:** kaynak TASK-4.02 envanterindeki `düşer` beklentili kalemler + TASK-4.17 kesişiminde "kural gerekmez" diye sınıflanan adresler + fazın task kayıtlarında "taşınmadı" denen her davranıştır — satırlar bu üç kaynaktan sayılarak yazılır.
 
 ---
 
@@ -75,6 +83,7 @@ Kod dosyası değişmez.
 - [ ] Canlı betik ikinci koşum **✓ KAPI YEŞİL**; `x-vercel-id` fonksiyon ayağı `fra1`
 - [ ] Site haritası bildirimi yapıldı — **kanal: UAT** (kullanıcının Search Console hesabı)
 - [ ] Beş atomun durumu ölçümle hizalı; açık kalan kalemler gerekçeli
+- [ ] Bilinçli Tercihler'de bırakılan her parite kalemi tek satır ve gerekçeli; sayısı üç kaynağın (envanterin `düşer` kalemleri · kesişimde kuralsız bırakılanlar · task kayıtlarındaki "taşınmadı") toplamıyla eşit; M7 F7.5'te parite kriteri satırı var
 
 ---
 

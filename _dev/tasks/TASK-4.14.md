@@ -68,6 +68,7 @@ tests/legal-consistency.test.ts       # dal 8 iki yönlü
 - Üç değişiklik **aynı commit'te** — ayrı commit'e bölünmez; aynı yayına binmeleri iki dal düzeninde bununla garanti olur.
 - `vercel.json` Vercel derlemesini başka hiçbir şekilde etkilememeli (çerçeve tespiti, çıktı dizini, `output`) — yalnız `regions`; dal önizlemesi derlemesinin Ready olması TASK-4.17'de görülür.
 - Bölge Hobby'de de değiştirilebilir (belge: Hobby tek bölge) — ücretli plana bağlı değildir.
+- Vercel'in bölge belgesi dayanak yorumuna **şemasız** yazılır (`legal.ts:129`'daki gibi) — dal 5, `src/` içindeki `https://` host'larını yorumlar dahil dondurulmuş listeyle birebir karşılaştırır ve `vercel.com` o listede yok.
 - Resend, Hetzner, Google Workspace ve Umami satırları değişmez; TASK-4.13'ün WhatsApp ayağına dokunulmaz.
 - Dal 9 env kapılıdır — tam koşum `-e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks` ile (CLAUDE.md).
 - `422` yolu hız sınırı sayacına girer (IP başına 10 dk'da 5) — ölçüm üç istekle sınırlı kalır.

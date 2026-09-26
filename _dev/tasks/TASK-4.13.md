@@ -69,6 +69,7 @@ tests/legal-consistency.test.ts       # yeni dal
 
 - **Kapsam öznede saklıdır, olumsuz beyanda sınır daha sıkıdır** (memory): cümleyi yazdıktan sonra öznesini sor — "hiç kimseye veri gitmez" hangi yolu kapsıyor, hangisini kapsamıyor.
 - Hukuki nitelendirme yazılmaz ("açık rıza ile", "zorunlu olarak" gibi); `legal.ts` başlığı: yayından önce hukuk danışmanı (B-008 — dış aktör, fazı kilitlemez).
+- **Kaynak adresini dayanak yorumuna şemasız yaz.** `tests/legal-consistency.test.ts` → dal 5, `src/` içindeki her `https://` adresinin host'unu **yorumlar dahil** (tarama ham kaynağa bakar) dondurulmuş listeyle birebir karşılaştırır; WhatsApp'ın gizlilik belgesini `https://` ile yazmak listeye yeni bir host sokar ve dalı kırar. Mevcut blok da böyle yazıyor (`legal.ts:129` → `vercel.com/docs/...`).
 - **Barındırma satırına ve dal 8'e dokunulmaz** — onlar TASK-4.14'ün (Frankfurt). İki task aynı bölümü sırayla düzenler; bu task önce koşar.
 - `tests/legal-consistency.test.ts` dal 9 env kapılıdır — tam koşum `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` (bağlama `up -d web` ile gelir, `restart` ile gelmez — CLAUDE.md).
 - `CLAIMS.md` tablosu etkilenmez.

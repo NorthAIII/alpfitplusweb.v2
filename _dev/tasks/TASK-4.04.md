@@ -84,7 +84,7 @@ tests/yonlendirmeler.test.ts    # YENİ
 - Envanter (TASK-4.02) bağımsız kâhindir: bu task **envanteri kural tablosundan güncellemez**; bir kalem uyuşmazsa önce hangisinin yanlış olduğu ölçülür.
 - Host kuralı aşamaya bağlıdır çünkü koşulsuz yazılırsa ilk yayında (TASK-4.18, taşımadan önce) `.vercel.app` hâlâ v1'i gösteren apex'e yönlenir.
 - Site haritası etkilenmez (`sitemap.ts` eğik çizgisiz yazar; ana sayfa `<loc>`'u `/` ile biter ve kök kurala takılmaz).
-- `npm test` bugünkü taban **209 geçti + 2 atlandı** — yeni testlerle birlikte yeni sayı yazılır.
+- `npm test` bugünkü taban **219 geçti + 2 atlandı** (Faz 3'ün son kaydı, `tasks/archive/TASK-3.27.md`; kök `CLAUDE.md`'deki 209 bayat — Gelen Kutusu'nda kayıtlı) — yeni testlerle birlikte yeni sayı yazılır.
 
 ---
 

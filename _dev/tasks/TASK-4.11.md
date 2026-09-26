@@ -30,6 +30,7 @@ Tamam sayılır: üç tarayıcı hâli rakamıyla ölçülmüş; B-065'in çöz�
 - `_dev/DURUM.md` · `_dev/phases/PHASE-4.md`
 - `_dev/bulgular/B-065-…` → Çözüm Kaydı (rakamlarla) + `Durum`; `_dev/BULGULAR.md` index
 - `_dev/modules/M3-Lead-Hatti.md` → F3.1 kabul kriteri: "JavaScript olmadan gönderilen talep kayda gider; adres çubuğunda kişisel veri doğmaz"
+- `_dev/modules/M7-Yayin-ve-Altyapi.md` → F7.4 Edge Case'ler — JavaScript'siz yolun gönderimleri `demo-submit` olayına girmez (↓ Dikkat Noktaları)
 
 ---
 
@@ -44,7 +45,7 @@ Tamam sayılır: üç tarayıcı hâli rakamıyla ölçülmüş; B-065'in çöz�
   - Her hâlde adres çubuğunda `name=` / `phone=` / `email=` / `website=` **0**. Başarı yolunun tarayıcı ucu `page.route` ile 303 → `/demo/gonderildi` taklidiyle (kota ve depo yazımı yok).
 - [ ] **4. Yorum hizası** — `layout.tsx`'teki Umami yorumu artık var olmayan GET yolunu anlatıyor; gerçekle hizalanır (`data-exclude-search` kalır, gerekçesi sorgu dizesinin genel koruması olarak).
 - [ ] **5. Kapılar** — 3100: `a11y.mjs`, `mobile-audit.mjs`; `npm test`.
-- [ ] **6. Kayıtlar** — B-065 çözüm kaydı (üç hâlin rakamları), BULGULAR index, M3 F3.1 kriteri. Kalıcı kapı önerisi (JavaScript kapalı `/demo` taraması) B-015 ile "Kalite kapıları otomatik" fazının işi — atomda not.
+- [ ] **6. Kayıtlar** — B-065 çözüm kaydı (üç hâlin rakamları), BULGULAR index, M3 F3.1 kriteri, M7 F7.4 Edge Case satırı (analitik sınırı — ↓ Dikkat Noktaları). Kalıcı kapı önerisi (JavaScript kapalı `/demo` taraması) B-015 ile "Kalite kapıları otomatik" fazının işi — atomda not.
 
 ---
 
@@ -63,6 +64,7 @@ src/app/layout.tsx                     # Umami yorumu (davranış değişmez)
 - Çift gönderim riski: native gönderim başlamışsa JS işleyicisi bağlanmamıştır; (b) ölçümü bu sınırı kapsar.
 - Ölçüm betiği scratchpad'de kalır (repoya girmez); "locator bir şey buldu mu" sayısı her koşumda yazdırılır.
 - Gerçek bir JS'siz talebin **gerçek depoya** düştüğünün kanıtı bu task'ın yerel koşucusunun dışındadır — kanal aşağıda.
+- **JavaScript'siz gönderim `demo-submit` olayını tetiklemez — bilinçli kabul** (kullanıcı, verify-plan 2026-09-26). Olay istemcide, başarılı `fetch`'ten sonra atılıyor (`DemoForm.tsx:157`); native yolda o kod hiç çalışmaz. JS sonuç sayfasında yüklenebildiyse `/demo/gonderildi` görüntülemesi Umami'de sinyal verir, JS tamamen kapalıysa hiç sayılmaz. Sunucu tarafında sayım (uçtan ölçüm sunucusuna olay) yeni bir veri akışı açacağı için alınmadı. Sınır M7 F7.4'e, reklam engelleyici satırının yanına yazılır; `demo-submit` sayısı bundan sonra bir **alt sınır** olarak okunur.
 - `layout.tsx`'e dokunan diğer task'lar (4.05, 4.06, 4.08) farklı alanlara dokunur.
 
 ---

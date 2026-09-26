@@ -55,7 +55,7 @@ Araştırma → Sıra şartları: **env yaz → taşı → yeniden derle; arada 
 - [ ] **4. Taşıma** — `POST /v1/projects/{v1}/domains/alpfitplus.com/move` (gövde: v2 proje kimliği) ve `www.alpfitplus.com` (yönlendirme apex, `redirectStatusCode: 301`); çağrı gövdeleri belgeden doğrulanır. Öncesi ve sonrası iki projenin alan adı listesi.
 - [ ] **5. Yeniden derleme** — v2'nin 2. adımdaki üretim dağıtımının **redeploy**'u → Ready.
 - [ ] **6. Canlı ölçüm** — `BASE=https://alpfitplus.com`, `BEKLENEN_ASAMA=production`: yönlendirme (host grubu dahil — `www` 301, `.vercel.app` 301, `alpfitplus-website.vercel.app` → apex), başlık, dizin (üç katman açık, `robots.txt` site haritasını beyan ediyor), kart (canonical / `og:image` / site haritası 200 ve alan adı — B-027'nin canlı ayağı). HTML'de Umami etiketi v1 kimliğiyle ve `data-tag=production`.
-- [ ] **7. Talep hattı** — canlıdan işaretli tek test talebi ("TEST — silinecek", kendine özgü e-posta adresi) → sunucuda **salt-okunur** teyit: kayıt `leads`'te (`leads_preview`'da değil), `env=production`, `ip_hash` dolu, `notify_team=sent`; Resend'de ekip bildirimi `delivered`. Silme yöntemi Karar Noktası; kullanıcı onayıyla silinir ve silindiği salt-okunur okumayla teyit edilir.
+- [ ] **7. Talep hattı** — canlıdan işaretli tek test talebi ("TEST — silinecek"; e-posta alanı **Resend'in test adresi** — biçim TASK-4.15'te belgeden doğrulandı, `memory/hiz-sinirli-uca-test-bataryasi.md`; hayali alan adı kullanılmaz, onay e-postası geri döner ve gönderici itibarını düşürür) → sunucuda **salt-okunur** teyit: kayıt `leads`'te (`leads_preview`'da değil), `env=production`, `ip_hash` dolu, `notify_team=sent`; Resend'de ekip bildirimi `delivered`. Silme yöntemi Karar Noktası; kullanıcı onayıyla silinir ve silindiği salt-okunur okumayla teyit edilir.
 - [ ] **8. Geri dönüş kuralı** — 6 ya da 7'de **talep hattı ya da sitenin açılması** bozuksa aynı taşıma ucu tersine (hedef v1) **hemen**; kısmi kırmızıda (tek adres, tek başlık) 30 dk ileri düzeltme (`dev`'de düzelt → kapı → yayın), olmazsa geri.
 - [ ] **9. v1 projesi** — alan adları ayrıldı, proje duruyor, `alpfitplus-website.vercel.app` ona bağlı (API).
 - [ ] **10. Kayıtlar** — GIT-STRATEJI, M7, memory, DURUM.
@@ -98,7 +98,7 @@ Kod dosyası değişmez (değişiklik gerekirse 8. adımın ileri düzeltme rota
 - [ ] Env tablosu: iki paylaşılan kayıt yalnız `preview`; `production`'da üç yeni kayıt; hiçbir değer basılmadı — **kanal: UAT** (üç değerin üçü de fazın UAT senaryosu — Faz 2 retrosunun kaydı)
 - [ ] Taşıma sonrası: apex ve `www` v2 projesinde; `www` → apex **301**; v1 projesi duruyor
 - [ ] Canlı betik: **✓ KAPI YEŞİL** (host grubu dahil); aşama `production`, üç `noindex` katmanı kalktı
-- [ ] Test talebi `leads` koleksiyonunda (`leads_preview`'da değil), `env=production`; bildirim `delivered`; kullanıcı onayıyla silindi ve silindiği teyit edildi — **kanal: UAT**
+- [ ] Test talebi `leads` koleksiyonunda (`leads_preview`'da değil), `env=production`; ekip bildirimi ve onay e-postası (Resend test adresine) `delivered`; kullanıcı onayıyla silindi ve silindiği teyit edildi — **kanal: UAT**
 - [ ] Geri dönüşe gerek kalmadı — ya da kalmışsa hangi adımda, hangi gerekçeyle ve geri taşımanın ölçümü kayıtta
 
 ---

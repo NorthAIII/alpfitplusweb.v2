@@ -16,7 +16,7 @@ Betiğe milestone'un geri kalan ölçümleri üç dal olarak eklenir:
 2. **Dizin açıklığı** — üç `noindex` katmanı (`X-Robots-Tag` başlığı · `robots.txt` · HTML robots meta) `BEKLENEN_ASAMA`'ya göre: `production` → üçü de açık ve `robots.txt` site haritasını beyan ediyor; diğer aşamalar → üçü de kapalı.
 3. **Paylaşım kartı ve site haritası** — site haritasındaki her sayfada `canonical` sayfanın kendi yolu · `og:url` = canonical · `og:title` sayfaya özgü (sayfalar arasında benzersiz) · `og:image` ve `twitter:image` mutlak ve **200** · `og:image:alt` var; site haritası 15 `<loc>`, hepsi beklenen alan adında ve 200.
 
-Tamam sayılır: üç dal 3100'e karşı koşar ve bugünkü kırmızıları kalem kalem basar (CSP yok · `SAMEORIGIN` · eski `Permissions-Policy` · `og:url` ana sayfa · `og:image:alt` yok); ayırt etme gücü negatif kontrolle sınanmış.
+Tamam sayılır: üç dal 3100'e karşı koşar ve bugünkü kırmızıları kalem kalem basar (CSP yok · `SAMEORIGIN` · eski `Permissions-Policy` · `og:url` ana sayfa · `og:title` 15 sayfada aynı · `og:image:alt` yok); ayırt etme gücü negatif kontrolle sınanmış.
 
 ---
 
@@ -33,12 +33,14 @@ Tamam sayılır: üç dal 3100'e karşı koşar ve bugünkü kırmızıları kal
 - `_dev/DURUM.md` · `_dev/phases/PHASE-4.md`
 - `_dev/modules/M7-Yayin-ve-Altyapi.md` → F7.2 kriteri: "Sitemap 16 sayfayı listeler" → **15** (sayı ölçülerek)
 - `_dev/modules/M6-Kalite-Kapilari.md` → Teknik Notlar — betiğin üç dalı ve bugünkü çizgisi
+- `_dev/GIT-STRATEJI.md` → Yayın → doğrulama kapısı — betik bu task'la tamamlanınca kapıya girer (araştırma → Ölçüm katmanı: "Yayın kapısının parçası olur"; TASK-4.17 ve 4.18 kapıyı onunla koşar, TASK-4.01 ise betik henüz yokken yazılır). Korumalı doküman — değişim tarifi `.claude/commands/devflow/lib/git-strategy-kurulum.md`, raporda tek satır
+- Kök `CLAUDE.md` → Ölçüm betikleri tablosu — `gecis-dogrula.mjs` satırı ve geçme şartı (hedef ve `BEKLENEN_ASAMA` kipleriyle)
 
 ---
 
 ## Alt Görevler
 
-- [ ] **1. Beklenen başlık değerleri tek evde** — `research/lib/gecis-envanteri.mjs`: v1'in CSP dizesi (`PHASE-4-ARASTIRMA.md` → Parite ve yüzey), `DENY`, `camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), browsing-topics=()`, HSTS `max-age=63072000; includeSubDomains; preload`. TASK-4.12 politikayı yazarken bu değerle birebir karşılaştırılır.
+- [ ] **1. Beklenen başlık değerleri tek evde** — `research/lib/gecis-envanteri.mjs`: v1'in CSP dizesi (`PHASE-4-ARASTIRMA.md` → Parite ve yüzey), `DENY`, `camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), browsing-topics=()`, HSTS `max-age=63072000; includeSubDomains; preload`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin` (son ikisi v1 ile v2'de bugün birebir aynı — `../Alpfitplus-website.v1/vercel.json:11-12` ↔ `next.config.ts:37,39`). TASK-4.12 politikayı yazarken bu değerle birebir karşılaştırılır.
 
 - [ ] **2. Başlık dalı** — her yanıt türünde (HTML, statik varlık, font, ürün görseli, görsel iyileştirici çıktısı, API, 404, `robots.txt`, site haritası) başlık kümesi; eksik ya da farklı değer kalem kalem kırmızı. Bir başlığın **sessizce düşmesi** kırmızıya döner (B-016 koruma önerisi).
 
@@ -48,7 +50,7 @@ Tamam sayılır: üç dal 3100'e karşı koşar ve bugünkü kırmızıları kal
 
 - [ ] **5. Site haritası** — `<loc>` sayısı, alan adı, her birinin 200'ü; sayı `rotalar.mjs` tabanıyla tutarlı.
 
-- [ ] **6. Başlangıç çizgisi** — 3100 (taze imaj) koşumu kayda: başlık dalında 3 kalem × yanıt türü kırmızı; dizin dalı `BEKLENEN_ASAMA=local` iken yeşil; kart dalında `og:url` 14 sayfada (ana sayfa hariç) ve `og:image:alt` 15 sayfada kırmızı, canonical 15/15 yeşil.
+- [ ] **6. Başlangıç çizgisi** — 3100 (taze imaj) koşumu kayda: başlık dalında 3 kalem × yanıt türü kırmızı; dizin dalı `BEKLENEN_ASAMA=local` iken yeşil; kart dalında `og:url` 14 sayfada (ana sayfa hariç), `og:title` benzersizliği 15 sayfada (hepsi kök yerleşimin tek değeri — `layout.tsx:84`; alt sayfalar `openGraph` vermiyor) ve `og:image:alt` 15 sayfada kırmızı, canonical 15/15 yeşil.
 
 ---
 
@@ -77,7 +79,7 @@ _dev/modules/M7-Yayin-ve-Altyapi.md   # F7.2 kriter rakamı 16 → 15
 
 - [ ] 3100: başlık dalı CSP · `X-Frame-Options` · `Permissions-Policy` için kırmızı, HSTS · `nosniff` · `Referrer-Policy` yeşil; kalem sayısı yanıt türü başına basılıyor
 - [ ] 3100: dizin dalı `BEKLENEN_ASAMA=local` → yeşil; `BEKLENEN_ASAMA=production` → kırmızı (negatif kontrol)
-- [ ] 3100: kart dalı — `og:url` 14 kırmızı, `og:image:alt` 15 kırmızı, canonical 15/15 yeşil, `og:image` yolu 200
+- [ ] 3100: kart dalı — `og:url` 14 kırmızı, `og:title` benzersizliği 15 kırmızı, `og:image:alt` 15 kırmızı, canonical 15/15 yeşil, `og:image` yolu 200
 - [ ] Site haritası 15 `<loc>`; M7 F7.2 kriteri 15'e düzeltildi
 - [ ] Kapsam: ölçülen sayfa sayısı tabanın altına düştüğünde kırmızı (kontrollü denemeyle gözlendi)
 

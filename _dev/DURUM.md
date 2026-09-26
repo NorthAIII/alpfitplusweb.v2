@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-26 — **plan-phase: Faz 4'ün task listesi yazıldı — 19 task, yedi küme** (yayın düzeni → geçiş betiği → parite → B-065 → CSP → yasal metin + Frankfurt → kullanıcı adımları, prova, geçiş); kapı düzeltmelerin önünde, kullanıcıya bağlı iki task geçişin hemen önünde. Faz dokümanı task tablosuyla kırmızı çizgiyi aştı (21.568 token) ve faz hâlâ aktifken bölündü: araştırma detayı `PHASE-4-ARASTIRMA.md`'ye taşındı (kesim kullanıcıyla seçildi), parent 14.569 token. **Sıradaki adım `verify-plan`.**
+**Son Güncelleme:** 2026-09-26 — **verify-plan: Faz 4'ün planı doğrulandı** — 19 task temiz bağlamla okundu, kod çapaları repoda tek tek sınandı; **7 mekanik düzeltme** (eksik beklenen başlık değerleri ve paylaşım başlığı kırmızısı, yayın kapısına betiğin girmesi, bayat test tabanı 209 → 219, B-023 kaydı, başlık testinin tek evi, yasal yorumdaki `https://` tuzağı) ve **4 onaylı yapısal karar** (bırakılan parite kalemlerinin kaydı 4.19'a · hata ekranının WhatsApp adresi 4.08'e · JS'siz gönderimin olay sayımı dışında kalması bilinçli · canlı test talebinde Resend'in test adresi); task sayısı ve sırası değişmedi. **Sıradaki adım `run-task` → TASK-4.01.**
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -10,8 +10,8 @@
 
 **Faz:** Phase 4 — Alan adı geçişi
 **Milestone:** `alpfitplus.com` + `www` v2'ye bakıyor ve site dizine açık; v1'in canlı adres kümesi (bugün 27) ölçülerek 301 → 200; canlı kayıt işaretli tek testle kanıtlandı, ölçüm v1'in Umami kaydında; v1 paritesi kapandı ve yasal metin WhatsApp aktarımını söylüyor; `destek@` posta alıyor; JS kapalı form veri sızdırmıyor; yayın iki dallı ve kapılı; ücretli plan + Frankfurt; v1 projesi duruyor. Tam cümle `PHASES.md` → Faz Durumu ve `phases/PHASE-4.md`.
-**Adım:** verify-plan
-**İlerleme:** Kapsam tartışması ✅ · araştırma ✅ · **task yazımı ✅** — 19 task dokümanı yazıldı, hiçbiri çalıştırılmadı; sıradaki adım plan doğrulama (`verify-plan`). Araştırma detayı ve adres envanteri tablosu `phases/PHASE-4-ARASTIRMA.md`'de; kararların gerekçesi `docs/DECISIONS.md` 2026-09-26. ⚠️ **Sıra şartları task sırasına işlendi:** iki dal ayrımı ilk task (4.01), B-011 ve ücretli plan geçişten önce (4.15 · 4.16), B-065 CSP'den önce (4.09-4.11 → 4.12), Frankfurt + yasal metin + dal 8 aynı commit'te (4.14), üç canlı env değeri taşımayla aynı yeniden derlemede (4.18).
+**Adım:** task
+**İlerleme:** Kapsam tartışması ✅ · araştırma ✅ · task yazımı ✅ · **plan doğrulama ✅** — 19 task dokümanı hazır, hiçbiri çalıştırılmadı; sıradaki adım task çalıştırma (`run-task`). Araştırma detayı ve adres envanteri tablosu `phases/PHASE-4-ARASTIRMA.md`'de; kararların gerekçesi `docs/DECISIONS.md` 2026-09-26. ⚠️ **Sıra şartları task sırasına işlendi:** iki dal ayrımı ilk task (4.01), B-011 ve ücretli plan geçişten önce (4.15 · 4.16), B-065 CSP'den önce (4.09-4.11 → 4.12), Frankfurt + yasal metin + dal 8 aynı commit'te (4.14), üç canlı env değeri taşımayla aynı yeniden derlemede (4.18).
 **Faz Dokümanı:** `phases/PHASE-4.md` (çocuğu: `PHASE-4-ARASTIRMA.md`) · son kapanan: `phases/PHASE-3.md` ✅ (çocukları: `PHASE-3-KAPSAM.md` · `PHASE-3-ARASTIRMA.md` · `PHASE-3-UAT.md` · `PHASE-3-RETROSPEKTIF.md`)
 
 ---
@@ -35,10 +35,11 @@
 
 ## Aktif Task
 
-**Task:** — yok · 19 task yazıldı ama hiçbiri başlamadı; sıradaki adım plan doğrulama (`verify-plan`), ondan sonra sırayla `run-task`
-**Durum:** ⬜ Tablo sırasındaki ilk task **TASK-4.01** (iki dallı yayın düzeni)
+**Task:** **TASK-4.01** — İki dallı yayın düzeni + dal önizlemesi atlatma anahtarı · `tasks/TASK-4.01.md`
+**Durum:** ⬜ Bekliyor — plan doğrulandı, çalıştırılmaya hazır
 **İlerleme:** 0 / 19
 **Not:**
+- ⚠️⚠️ **TASK-4.01 ağaç temiz değilken dal açmaz ve ilk alt görevde durur** — bugün `.claude/commands/devflow/**` altında DevFlow motor güncellemesinin **commit'lenmemiş 22 dosyası** duruyor (plan ve verify-plan oturumlarının değil; iki oturum da dokunmadı). Kullanıcı bunları commit'lemeli ya da motoru kaynağından yeniden kurmalı; aksi hâlde dal değişimi onları `dev`'e taşır (COMMIT.md → Paralel Oturum Farkındalığı).
 - ⚠️⚠️ **`a11y` kapısı bugün `1 · çıkış 1` veriyor ve bu bir eksik DEĞİL, kayıtlı bir kullanıcı kararıdır** (2026-09-26, seçenek B). Kalan tek kalem `/gecis`'in *"Elle tutulan kayıtlar…"* paragrafı ve **sayfanın değil ölçüm betiğinin kusuru** — paragrafın gerçek kontrastı **7,05**, kırmızıyı yapışkan başlığın kendi düğme etiketinin ölçüm maskesine sızması üretiyor (B-063'ün maske sızıntısı yüzü, iki izolasyonla gösterildi). **Sonraki turlar bunu "kapı kırmızı, düzeltilmeli" diye okumasın** ve bir regresyon aranırken bu kalem **hariç** okunsun. Eşik ve kapsam tablosu: `modules/M6-Kalite-Kapilari.md` → Teknik Notlar; mekanizma `bulgular/B-063-*.md`; kararın tam metni `tasks/archive/TASK-3.26.md` → Kapanış Gerekçesi.
 - ⚠️ **Yasal metnin WhatsApp aktarımı TASK-4.13'te yazılır** (kullanıcı kararı 2026-09-26, seçenek a) ve Frankfurt'un bölge cümlesiyle (TASK-4.14) aynı yayına biner. Metin değişene dek site **alan adına bağlanmaz** — geçiş (TASK-4.18) ikisinin arkasında durur.
 - ⚠️ **`_dev/` dokümanları Tailwind taramasına dahil — doküman metnine yazılan bir sınıf adı üretim CSS'ine gerçek kural ekliyor** (TASK-3.27'de kazara ölçüldü: 85.312 → 85.350 bayt; dize çıkarılınca md5 birebir döndü). Bugünkü çözüm yalnız bir yazım kuralı (`docs/STYLE-GUIDE.md` → sınıf adını bölerek yaz); kalıcı çare üç seçenekli bir karar ve Gelen Kutusu'nda. ⚠️ `perf.mjs` KB cinsinden ölçtüğü için bu sızıntıyı yuvarlayıp gizler — `_dev/` yazan tur CSS'i bayt + md5 ile sınamalı.
@@ -63,7 +64,7 @@
 | 4.05 | TASK-4.05 | ⬜ Bekliyor | İkon teslimi — `.ico`, SVG, `apple-touch-icon` |
 | 4.06 | TASK-4.06 | ⬜ Bekliyor | Sayfa başına paylaşım kartı (1/2) — yardımcı + iki pilot sayfa |
 | 4.07 | TASK-4.07 | ⬜ Bekliyor | Sayfa başına paylaşım kartı (2/2) — 13 sayfa + süpürme kapısı |
-| 4.08 | TASK-4.08 | ⬜ Bekliyor | JSON-LD paritesi |
+| 4.08 | TASK-4.08 | ⬜ Bekliyor | JSON-LD paritesi + hata ekranının WhatsApp adresi |
 | 4.09 | TASK-4.09 | ⬜ Bekliyor | B-065 (1/3) — iki sonuç sayfası |
 | 4.10 | TASK-4.10 | ⬜ Bekliyor | B-065 (2/3) — uç form kodlamasını kabul eder, 303 |
 | 4.11 | TASK-4.11 | ⬜ Bekliyor | B-065 (3/3) — form `method`/`action`, hidrasyonsuz ölçüm |
@@ -74,7 +75,7 @@
 | 4.16 | TASK-4.16 | ⬜ Bekliyor | Vercel ücretli plan (kullanıcı adımı) |
 | 4.17 | TASK-4.17 | ⬜ Bekliyor | Geçiş provası — dal önizlemesi, envanter kesişimi |
 | 4.18 | TASK-4.18 | ⬜ Bekliyor | Geçiş anı |
-| 4.19 | TASK-4.19 | ⬜ Bekliyor | Geçiş sonrası — Umami, site haritası bildirimi, bulgu kapanışları |
+| 4.19 | TASK-4.19 | ⬜ Bekliyor | Geçiş sonrası — Umami, site haritası bildirimi, bulgu kapanışları, bırakılan parite kayıtları |
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -113,7 +114,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok · 19 task yazıldı, sıradaki adım `/devflow:verify-plan`; ilk task TASK-4.01
+**Aktif Task:** `tasks/TASK-4.01.md` ⬜ (plan doğrulandı, çalıştırılabilir); son kapanan `tasks/archive/TASK-3.27.md` ✅
 **Aktif Faz:** `phases/PHASE-4.md` 🔄 (Alan adı geçişi; araştırma: `PHASE-4-ARASTIRMA.md`) · son kapanan: `phases/PHASE-3.md` ✅ (kapsam: `PHASE-3-KAPSAM.md` · araştırma: `PHASE-3-ARASTIRMA.md` · UAT: `PHASE-3-UAT.md` · retrospektif ve kalite: `PHASE-3-RETROSPEKTIF.md`)
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

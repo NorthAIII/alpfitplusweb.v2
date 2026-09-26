@@ -133,7 +133,7 @@ Gerekçeler ve ölçümler → çocuk → Dikkat Edilecekler.
 
 ## Task Listesi
 
-> `/devflow:plan-phase` oturumunda yazıldı (2026-09-26). **Tablo sırası = çalıştırma sırasıdır** (TASKS-README → Lineer Çalıştırma).
+> `/devflow:plan-phase` oturumunda yazıldı, `/devflow:verify-plan` ile doğrulandı (2026-09-26 — task sayısı ve sırası değişmedi; 4.08 ve 4.19'un kapsamı kullanıcı onayıyla genişledi). **Tablo sırası = çalıştırma sırasıdır** (TASKS-README → Lineer Çalıştırma).
 
 <!-- KURAL: Task Listesi yalnızca özet tablodur (#, Task, Durum, kısa açıklama). Task'ın icra detayı / oturum kaydı / çalışma notu buraya değil `tasks/TASK-N.md`'ye yazılır — bu bölüme sızan detay şişmedir, temizlenir (bölme değil). -->
 
@@ -148,7 +148,7 @@ Yedi küme, sırayla: **yayın düzeni** (sonraki her commit çalışma dalına 
 | 4.05 | TASK-4.05 | ⬜ Bekliyor | İkon teslimi — `/favicon.ico`, `/favicon.svg`, `/apple-touch-icon.png` betikten |
 | 4.06 | TASK-4.06 | ⬜ Bekliyor | Sayfa başına paylaşım kartı (1/2) — `pageMeta` yardımcısı, ana sayfa ve `/fiyat` |
 | 4.07 | TASK-4.07 | ⬜ Bekliyor | Sayfa başına paylaşım kartı (2/2) — kalan 13 sayfa + süpürme kapısı |
-| 4.08 | TASK-4.08 | ⬜ Bekliyor | JSON-LD'de v1'de olup düşen alanlar — telefon, e-posta, `sameAs`, `url`, KDV hariç fiyat tanımı |
+| 4.08 | TASK-4.08 | ⬜ Bekliyor | JSON-LD'de v1'de olup düşen alanlar — telefon, e-posta, `sameAs`, `url`, KDV hariç fiyat tanımı; hata ekranının WhatsApp adresi tek kaynağa |
 | 4.09 | TASK-4.09 | ⬜ Bekliyor | B-065 (1/3) — JavaScript'siz gönderimin iki sonuç sayfası (`noindex`, adreste kişisel veri yok) |
 | 4.10 | TASK-4.10 | ⬜ Bekliyor | B-065 (2/3) — uç form kodlamasını kabul eder, köken denetimi, 303; JSON yolu değişmez |
 | 4.11 | TASK-4.11 | ⬜ Bekliyor | B-065 (3/3) — form `method`/`action` taşır; hidrasyonsuz üç hâl ölçülür |
@@ -159,7 +159,7 @@ Yedi küme, sırayla: **yayın düzeni** (sonraki her commit çalışma dalına 
 | 4.16 | TASK-4.16 | ⬜ Bekliyor | Vercel ücretli plana geçiş (ödeme kullanıcıda; öncesi/sonrası ölçüm) |
 | 4.17 | TASK-4.17 | ⬜ Bekliyor | Geçiş provası — dal önizlemesinde tam ölçüm, Search Console + Umami kesişimi, canlı değerlerin kaynaklarına erişim |
 | 4.18 | TASK-4.18 | ⬜ Bekliyor | Geçiş anı — yayın → üç canlı değer → taşıma → yeniden derleme → canlı ölçüm → işaretli test talebi |
-| 4.19 | TASK-4.19 | ⬜ Bekliyor | Geçiş sonrası — Umami v1 kaydında sayım, site haritası bildirimi, bulgu kapanışları |
+| 4.19 | TASK-4.19 | ⬜ Bekliyor | Geçiş sonrası — Umami v1 kaydında sayım, site haritası bildirimi, bulgu kapanışları, bilinçle bırakılan parite kalemlerinin kaydı |
 
 **Durum simgeleri:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 

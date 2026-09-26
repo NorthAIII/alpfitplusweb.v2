@@ -71,7 +71,7 @@ src/content/demo-sonuc.ts     # mesajlar tek evdeyse (TASK-4.09'un dosyası)
 - `lead.env` (aşama) ve `lead.ua` iki yolda aynı üretilir; `notify_*` geri yazımı aynı.
 - Onay e-postası tavanı adres başına 24 saatte 3 — bataryada her senaryo **ayrı adres** (memory).
 - Elle deneme geliştirme sunucusunda (3000) **yapılmaz**: `.env` üzerinden gerçek önizleme deposuna bağlıdır. Yerel deneme 3100'e (hedefsiz) ya da bataryaya.
-- `npm test` tabanı 209 geçti + 2 atlandı (TASK-4.04+ ile artmış olabilir — son task'ın kaydındaki sayı esas).
+- `npm test` tabanı Faz 3 sonunda 219 geçti + 2 atlandı (`tasks/archive/TASK-3.27.md`; TASK-4.04+ ile artmış olabilir — son task'ın kaydındaki sayı esas).
 
 ---
 
