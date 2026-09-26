@@ -1,8 +1,8 @@
 # B-063: Kontrast ölçümü yapışkan ve sabit katmanları atlıyor — menü bağlantıları hiç ölçülmüyor
 
 **Önem:** 🟡 | **Tip:** test-kapsamı / sahte yeşil | **Alan:** M6 — Kalite kapıları (M2 F2.3 ortak yerleşim yüzeyi)
-**Kaynak:** research-phase (Faz 3) + verify-plan kararı | **Tarih:** 2026-09-23
-**Durum:** Açık — **bilinçle ertelendi** (kullanıcı kararı, verify-plan 2026-09-23) → "Kalite kapıları otomatik" fazı
+**Kaynak:** research-phase (Faz 3) + verify-plan kararı | **Tarih:** 2026-09-23 · ikinci yüzü ölçüldü 2026-09-26 (TASK-3.26)
+**Durum:** **Açık** — iki kez ve iki ayrı kullanıcı kararıyla ertelendi, ikisi de "Kalite kapıları otomatik" fazına: **2026-09-23** (verify-plan — ölçüm bu fazda kurulmaz) ve **2026-09-26** (TASK-3.26 — borcun ikinci yüzü `a11y`'yi sahte kırmızıya düşürdü, kapı **1 kalemle kapandı**, betiğe dokunulmadı). **Sayfa tarafı bu fazda ölçüldü ve temiz; kalan iş ölçüm betiğinin kendisi.**
 
 ## Gözlem
 
@@ -71,6 +71,14 @@ Kardeş bulgular aynı kök nedeni gösteriyor — ölçüm sonucunun hangi kaps
 
 ## Çözüm Kaydı
 
-—
+— **Çözülmedi ve kapanmadı.** Aşağıdaki iki erteleme kaydı birlikte okunur.
 
-**Erteleme kaydı (verify-plan, 2026-09-23):** Faz 3 planı gözden geçirilirken borç kullanıcıya getirildi. Karar: **bu fazda ölçüm kurulmaz**, borç kanvasta açık durur ve "Kalite kapıları otomatik" fazında kapanır. Gerekçe: fazın hedef cümlesi bu sınıf için yalnız *"ölçemediğini sayıyor"* diyor ve Faz 3 onu karşılıyor; ikinci turu eklemek fazın zaten en büyük task'ı olan TASK-3.04'ü kendi task'ına bölmeyi gerektirirdi. Bu bir "bilinçli tercih" değil **erteleme**dir — kapanmadan kapandı sayılmaz.
+**İkinci erteleme kaydı (TASK-3.26, 2026-09-26) — borcun bedeli artık SAYISAL:** Bu turda borcun ikinci yüzü (maske sızıntısı) `a11y` kapısını **ilk kez sahte kırmızıya** düşürdü. Sayfa tarafı ölçülerek temizlendi — `/gecis`'in beş gerçek kontrast kalemi kapandı, kapı **6 → 1** — ve kalan 1 kalemin **sayfa kusuru olmadığı** üç ölçümle gösterildi (yukarı bak). Kestirme onarım koşuldu ve **yetmedi** (6→5 ama gradyan tabanı 19→18, 8 eleman ölçüm dışı), yani iki turlu çarenin zorunluluğu doğrulandı.
+
+Karar kullanıcıya götürüldü ve **seçenek B** alındı, birebir:
+
+> **(B) Kapı 1 kalemle kapanır.** Sayfada düzeltilecek bir şey olmadığı ölçüldüğü için kalem, ölçülmüş hâliyle açık bir kayıt olarak durur (B-063) ve faz kapanış değerlendirmesinde "beş ölçümün beşi yeşil" hedefi bu bir kalemle birlikte hükme bağlanır. Faz doğrudan UAT'a döner.
+
+Yani `a11y` Faz 3'ü **`1 · çıkış 1`** ile kapatır ve bu bir eksik değil **kayıtlı bir karardır**; hüküm `review-phase` Adım 2'ye ait. Bu bulgu **açık kalır, arşivlenmez** — kapanmadan kapandı sayılmaz. Döküm: `tasks/archive/TASK-3.26.md` → Kapanış Gerekçesi.
+
+**İlk erteleme kaydı (verify-plan, 2026-09-23):** Faz 3 planı gözden geçirilirken borç kullanıcıya getirildi. Karar: **bu fazda ölçüm kurulmaz**, borç kanvasta açık durur ve "Kalite kapıları otomatik" fazında kapanır. Gerekçe: fazın hedef cümlesi bu sınıf için yalnız *"ölçemediğini sayıyor"* diyor ve Faz 3 onu karşılıyor; ikinci turu eklemek fazın zaten en büyük task'ı olan TASK-3.04'ü kendi task'ına bölmeyi gerektirirdi. Bu bir "bilinçli tercih" değil **erteleme**dir — kapanmadan kapandı sayılmaz.

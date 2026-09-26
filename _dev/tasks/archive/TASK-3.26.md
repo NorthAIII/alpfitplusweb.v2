@@ -1,6 +1,6 @@
 # TASK-3.26: `/gecis`'in altı kontrast kalemi — kontrast kapısı yeşile döner
 
-**Durum:** 🔄 Devam ediyor — **beş kalem kapandı, altıncısı sayfanın değil ÖLÇÜMÜN kusuru çıktı ve kullanıcı kararı bekliyor** (aşağıda Oturum Kaydı 2026-09-26)
+**Durum:** ✅ Tamamlandı — **beş kalem ölçülerek kapandı; altıncısı sayfa kusuru değil ÖLÇÜM BETİĞİNİN kör noktası olarak ölçüldü ve kullanıcı kararıyla B-063'ün açık kaydına bırakıldı** (karar 2026-09-26, seçenek B; tam metin → Kapanış Gerekçesi)
 
 <!-- KURAL: Durum alanı tek değer taşır ve değer kümesinin TEK KAYNAĞI TASKS-README → Durum Kodları'dır (⬜ Bekliyor · 🔄 Devam ediyor · ⏸️ Duraklatıldı · ✅ Tamamlandı · 🔴 Bloke · ❌ İptal). Buraya kısaltılmış bir menü kopyalama: kopya bir kez eksik yazıldı (⏸️/🔴/❌ düşmüştü) ve iki ev sessizce ayrıştı. -->
 **Modül:** M2 — Sayfalar ve Bölümler (`modules/M2-Sayfalar-ve-Bolumler.md`)
@@ -49,7 +49,7 @@ Faz 3'ün kayıtlı kullanıcı kararı şudur: *"Kontrast ihlallerinin tamamı 
   - Renge **dokunma**: `sage-wash-2` canvas üstünde 1,17 ve kompozisyon payı ihmal edilebilir; yükseltmek görünüşü bozar (STYLE-GUIDE'da ölçülü)
   - Bilgi kaybı olmadığını doğrula: adımın kendi başlığı (`f.q`, `h3`) sırayı zaten söylüyor mu?
 
-- [ ] **2. "Elle tutulan kayıtlar için birlikte bir öncelik…" paragrafını AA'ya çıkar** ⚠️ **AÇIK — ve bu alt görevin ÖNCÜLÜ ÖLÇÜLEREK ÇÜRÜTÜLDÜ:** paragraf kompozisyonlu bir zeminde durmuyor, zemini saf beyaz ve gerçek değeri **7,05**. Yapılacak bir mürekkep düzeltmesi yok; kalan kırmızı `a11y.mjs`'in maske sızıntısıdır (B-063) ve çaresi bu task'ın kapsamı dışında
+- [x] **2. "Elle tutulan kayıtlar için birlikte bir öncelik…" paragrafını AA'ya çıkar** ⚠️ **KONUSUZ ÇIKTI — bu alt görevin ÖNCÜLÜ ÖLÇÜLEREK ÇÜRÜTÜLDÜ:** paragraf kompozisyonlu bir zeminde durmuyor, zemini saf beyaz ve gerçek değeri **7,05** (yani AA'nın zaten çok üstünde). Yapılacak bir mürekkep düzeltmesi **yoktu**; kalan kırmızı `a11y.mjs`'in maske sızıntısıdır (B-063) ve **kullanıcı kararıyla** o borcun açık kaydına bırakıldı (2026-09-26, seçenek B). Sayfada **hiçbir şey değiştirilmedi** — yanlış şeyi düzeltmemek bu alt görevin sonucudur
   - Ölçülen: `p02` **3,25** · min 3,21 · **med 7,05** · 15px/400 · glif 2955px. `med`in yüksekliği metnin **kompozisyonlu** bir zeminde (desen ya da gradyan) durduğunu söylüyor
   - Önce zemini teşhis et, sonra STYLE-GUIDE'ın kuralını uygula: kompozisyonlu zeminde `faint` kullanılmaz, bir tık koyu `muted` kullanılır
   - `grep -n` ile yeniden konumla — satır numaraları faz boyunca kaydı
@@ -90,7 +90,7 @@ src/app/
 
 ## Test Kriterleri
 
-- [ ] `docker compose --profile research run --rm research node scripts/a11y.mjs` → 16 rotada **TOPLAM SORUN: 0 · çıkış 0** — **ULAŞILMADI: 6 → 1.** Kalan 1 sayfanın değil kapının kusuru (B-063 maske sızıntısı); kapatılması bu task'ın kapsamı dışında, karar bekliyor
+- [x] `docker compose --profile research run --rm research node scripts/a11y.mjs` → 16 rotada **TOPLAM SORUN: 0 · çıkış 0** — **ÖLÇÜT KULLANICI KARARIYLA YENİDEN TANIMLANDI (2026-09-26, seçenek B): sayfa tarafında ölçülmüş kontrast ihlali kalmadı; kapı 6 → 1 ve kalan 1 kalem ölçüm betiğinin kendi kör noktası (B-063), açık kayıt olarak duruyor.** Ölçülen: **1 · çıkış 1** (yani kapı hâlâ kırmızı ve bu **bilinçli**; gerekçe → Kapanış Gerekçesi)
 - [x] Aynı koşumda **kapsam tabanlarının hiçbiri oynamadı**: 16 rota ✓ · 105 ekran adımı ✓ · **1834 → 1831 eleman** (bilinçli: üç dev rakam `aria-hidden` ile kapsamdan çıktı, taban değil ölçüm sayısıdır) · gradyan metin **19 (taban 19) / 0** ✓ · başlık **316 (taban 316) / 0 atlama** ✓ — **`aria-hidden` hiçbir başlığı düşürmedi** · `alt`sız img 0 ✓ · ölçülemeyen **kalan: 0** ✓ · yapışkan 151 ✓ · görünmez 43 ✓
 - [x] Altı kalemin her biri **320 · 390 · 1440 px**'te ayrıca ölçüldü (eşik 14px/800 için **4,5**, 3,0 değil — uygulandı)
 - [x] `mobile-audit.mjs` yeşil kaldı: **TOPLAM SORUN 0 · çıkış 0 · ✓ KAPI YEŞİL**, altı kapsam tabanının hiçbiri oynamadı
@@ -115,11 +115,11 @@ src/app/
 
 ## Tamamlanma Kriterleri
 
-- [ ] Tüm alt görevler tamamlandı
-- [ ] Tüm test kriterleri karşılandı
-- [ ] Git commit & push yapıldı (conventional commits formatı)
-- [ ] Bu doküman güncellendi (oturum kaydı)
-- [ ] DURUM.md güncellendi
+- [x] Tüm alt görevler tamamlandı (2. alt görev **konusuz** çıktı — öncülü ölçülerek çürütüldü, sayfada yapılacak iş yoktu)
+- [x] Tüm test kriterleri karşılandı — ilki **kullanıcının kendi tanımıyla** (2026-09-26, seçenek B): sayfa tarafında ölçülmüş kontrast ihlali kalmadı, kapı `1 · çıkış 1` ile kapandı ve kalan kalem B-063'ün açık kaydında
+- [x] Git commit & push yapıldı (iki commit: kod+doküman, sonra karar kapanışı)
+- [x] Bu doküman güncellendi (iki oturum kaydı + Kapanış Gerekçesi + Sonuç Özeti)
+- [x] DURUM.md güncellendi
 
 ---
 
@@ -177,6 +177,72 @@ Kullanıcı (A) derse: `plan-phase` revizyon modunda B-063'ün iki turlu çaresi
 - **Koşulmayan:** `/gecis` `perf.mjs`'in dört rotasında değil, yani bu sayfanın kendi ağırlığı ölçülmedi (değişiklik tek CSS kuralı + bir nitelik, bayt etkisi yok). Ekran okuyucu ile **gerçek** duyurum ölçülmedi — projede o kanal yok (`kanal: UAT`).
 
 ---
+
+### Oturum — 2026-09-26 (ikinci kol: kullanıcı kararı ve kapanış)
+
+**Durum:** ✅ Tamamlandı
+
+**Yapılanlar:**
+- Açık bırakılan tek karar kullanıcıya soruldu ve **seçenek B** alındı (aşağıda tam metin). Karar gereği **ölçüm betiğine dokunulmadı, yeni task yazılmadı, `plan-phase`'e dönülmedi.**
+- **Kod değişmedi** → 3100 tazelenmedi; *"gerekmedi"* ölçüldü: `git diff HEAD -- src/ public/` **boş**, `lastmod` **2026-09-26T11:22:05.415Z** (ilk kolun ikinci derlemesi), pozitif kontrol gizlenmiş dev rakam ×1 + `/` `-sm.webp` ×**68**, negatif kontrol eski rozet sınıfı ×**0** + olmayan varlık ×**0**.
+- **Mobil kapı aynı imaja karşı yeniden koşuldu** — ilk kolda yorum-öncesi imaja koşmuştu; iki kapının rakamı artık **tek imajdan** geliyor.
+- Doküman: bu task kapatıldı ve arşive taşındı · `bulgular/B-063-*.md` + `BULGULAR.md` kancası kararla tazelendi (atom **açık kaldı**, arşivlenmedi) · `DURUM.md` ve `phases/PHASE-3.md` güncellendi.
+
+**Kararlar:**
+- **Kapanış ölçütü kullanıcının kendi tanımıyla karşılandı** (aşağıda Kapanış Gerekçesi). Kapı sayısal olarak 0 değil **1**; bu bir eksik değil **kayıtlı bir karardır**.
+- docs/DECISIONS.md'ye eklendi: **Hayır.** Ölçü işin büyüklüğü değil geri dönüşün maliyeti: burada ne bir ad/şema/API sözleşmesi doğdu ne de biriken verinin yorumu değişti; karar bir **erteleme teyididir** ve evi zaten B-063'ün Erteleme Kaydı + bu task dokümanı. (Kapının ikinci turu gerçekten kurulduğunda doğacak yöntem kararı DECISIONS'a aittir — o iş "Kalite kapıları otomatik" fazında.)
+
+**Kalan İşler:** yok. Sıradaki iş **TASK-3.27** (⬜, konusu ayrı: hareket azaltma açıkken çapa kaydırması) — bu karardan etkilenmedi.
+
+**Dosya Değişiklikleri:** (bu kolda kod değişmedi)
+- `_dev/bulgular/B-063-*.md` → Durum satırı ve Çözüm Kaydı kararla tazelendi (iki tarih birlikte: 2026-09-23 erteleme + 2026-09-26 karar) · `_dev/BULGULAR.md` → kanca + Son Güncelleme · `_dev/DURUM.md` · `_dev/phases/PHASE-3.md` · bu dosya → `tasks/archive/`.
+
+**Test Sonuçları:**
+- **İki kapı da AYNI imaja karşı (3100, `lastmod` 11:22:05.415Z):** `a11y` **1 sorun · çıkış 1** — 16 rota · 105 ekran adımı · **1831 eleman** · gradyan **19 (taban 19) / 0** · başlık **316 (taban 316) / 0 atlama** · `alt`sız img 0 · kovalar yapışkan **151** / görünmez **43** / ekran dışı **0** / **kalan 0**. `mobile-audit` **TOPLAM SORUN 0 · çıkış 0 · ✓ KAPI YEŞİL** — 2 genişlik × 16 rota; altı kapsam tabanı birebir: eleman **6253** · metin elemanı **2054** (taban 2054) · kritik hedef **305 / 0 / 0 benzersiz** (taban 305) · kaydırılabilir kap **5** (taban 5) · dokunma hedefi **638** · gezinme **333 / 261** (raporlanır, düşürmez) · kırpma **0** · şerit **0**.
+- **Kapı belirlenimli:** `a11y` bu tur dâhil üç koşumda aynı yedi rakamı verdi; kalan kalemin dört rakamı (3,25 / 3,21 / 7,05 / 2955 px) her koşumda birebir.
+- Bu kolda yeni kod olmadığı için batarya/`tsc`/`lint` yeniden koşulmadı — ilk kolun değerleri geçerli (**219 + 2** · **0** · **30**, değişen dosyada 0 kalem).
+
+---
+
+## Kapanış Gerekçesi — kapı neden 1'de kaldı
+
+<!-- Bu bölüm bilerek burada: kaydı okuyanın sonradan "kapı neden 0 değil" diye sormasına gerek kalmasın. -->
+
+**Sayfa tarafı temiz, kalan iş ölçüm betiğinin kendisi.** UAT'ın `/gecis` için saydığı altı kalemin **beşi gerçek sayfa kusuruydu ve kapandı**; altıncısı ölçülerek **sayfa kusuru olmadığı** gösterildi.
+
+**Altıncı kalem — ne olduğu:** `/gecis`'in *"Elle tutulan kayıtlar için birlikte bir öncelik…"* paragrafı. Kapı `p02` **3,25** (gereken 4,5) basıyor. Paragrafın kendi kontrastı **7,05**: `text-muted` ve zemini saf beyaz. Kırmızıyı üreten şey, kontrast maskesinin **glifin kime ait olduğunu bilememesi**: yapışkan başlık (`bg-canvas/88 backdrop-blur-xl`, 68 px) ekran-ekran gezmenin bir adımında paragrafın ilk satırını örtüyor ve **başlığın kendi çağrı düğmesinin etiketi** paragrafın maskesine giriyor; kapı da paragrafın mürekkebini o düğmenin sage zeminiyle eşleştiriyor. Ekranda var olmayan bir çift.
+
+**Üç ölçüm, hepsi yayın kopyasına (3100) karşı:**
+1. **İzolasyon A:** `header{display:none}` → `p02` 3,25 → **7,05**, zemin `rgb(255,255,255)` ×6175 (tek renk).
+2. **İzolasyon B (tek değişkenli):** başlığın geometrisi, bulanıklığı ve düğme zemini **aynen yerinde**, yalnız başlığın **kendi metni** iki karede de şeffaf → maske **2955 → 1861 px**, `p02` → **6,98**. Düşen 1094 piksel düğmenin etiketi.
+3. **Genişlik kontrolü:** aynı paragraf 390 px'te **7,05**, 320 px'te **6,80** — kalem tek genişlikte, tek kaydırma adımında ve yalnız adım ızgarası satırı düğmenin altına denk getirdiği için var.
+
+**Kestirme yol denendi ve ÖLÇÜLEREK reddedildi.** *"Örtülü adımda o elemanı ölçme"* yaması kaynağa dokunulmadan (scratchpad kopyasıyla) 16 rotada koşuldu: `TOPLAM SORUN` 6 → **5** (artefakt düşüyor, beş gerçek kalem rakamıyla duruyor) **ama** gradyanla boyanmış metin **19 → 18** (kendi kapsam tabanının altı → kapı *başka* bir sebeple kırmızı) ve *"ekran dışı"* **0 → 8** (o sekiz eleman hiçbir adımda başlığın altından çıkmıyor, yani hiç ölçülmez oluyor); 171 (eleman, adım) çifti atlandı. Yani tek parçalı onarım bir yanlış alarmı kapatıp iki yeni boşluk açıyor — B-063'ün kendi Koruma Önerisi'nin neden **iki turlu** olduğu böylece ölçülerek doğrulandı.
+
+**Neden bu task onarmadı:** bu kör nokta **B-063**'tür ve **2026-09-23'te kullanıcı kararıyla bilinçle ertelenmiştir** (verify-plan: *"bu fazda ölçüm kurulmaz, borç kanvasta açık durur ve 'Kalite kapıları otomatik' fazında kapanır"*). Kayıtlı bir kullanıcı kararının üstüne otonom yazılmadı; karar, ölçümler ve reddedilen kestirme yol birlikte kullanıcıya götürüldü.
+
+**Kullanıcı kararı (2026-09-26) — birebir:**
+
+> **(B) Kapı 1 kalemle kapanır.** Sayfada düzeltilecek bir şey olmadığı ölçüldüğü için kalem, ölçülmüş hâliyle açık bir kayıt olarak durur (B-063) ve faz kapanış değerlendirmesinde "beş ölçümün beşi yeşil" hedefi bu bir kalemle birlikte hükme bağlanır. Faz doğrudan UAT'a döner.
+
+**Sonuç:** 23 Eylül'deki erteleme **bozulmadı**; ölçüm betiğine dokunulmadı; yeni task yazılmadı. Kapı `1 · çıkış 1` ile kapandı ve bu **bir eksik değil kayıtlı bir karardır**. Hüküm `review-phase` Adım 2'ye ait; orada *"beş ölçüm yeşil"* kriteri bu kalemle birlikte değerlendirilecek.
+
+---
+
+## Sonuç Özeti
+
+**Tamamlanma Tarihi:** 2026-09-26
+
+**Ne Yapıldı:**
+- `/gecis`'in **beş** ölçülmüş kontrast kalemi kapandı ve `a11y` kapısı **6 → 1**'e indi: üç dev adım rakamı dekoratif ilan edildi (`aria-hidden`, renge dokunulmadı), iki küçük adım rakamı ise **renkle değil rozetin zemini opaklaştırılarak** `p02` 3,49/4,23 → **8,81**'e çıktı (beş rakam birden, üç genişlikte tek zemin).
+- Altıncı kalem **sayfa kusuru değil ölçüm betiğinin kör noktası** olarak ölçüldü (üç ölçüm + reddedilen kestirme yol) ve kullanıcı kararıyla **B-063'ün açık kaydına** bırakıldı. Sayfada o kalem için hiçbir şey değiştirilmedi.
+- Değişen tek kod dosyası `src/app/gecis/page.tsx`; `globals.css`'e dokunulmadı (token değişimi gerekmedi — düzeltme kullanım sınıfına indi).
+
+**Öğrenilenler:**
+- **Sıra numarası her zaman dekoratif değildir.** Ayırt eden şey rakamın iriliği değil, **sıranın başka bir yerde yazılı olup olmadığı.** Kartlarda başlık sorunun tam metnini taşıyordu (dekoratif); geçiş haftası şeridinde başlık günün *adını* söylüyordu ve sırayı yalnız rakam yazıyordu (bilgi). `<ol>`'un kendi sıra semantiğine dayanmak da reddedildi: `list-style: none` altında bazı ekran okuyucuları liste rolünü düşürüyor ve **bu projede o kanal ölçülemiyor** — ölçemediğin bir şey tercihin dayanağı olamaz.
+- **Kontrast düzeltmesi metnin renginde olmak zorunda değil.** Yarı saydam bir kap metin taşıyorsa, arkasından geçen her dekoratif katman o metnin kontrast **tavanını** belirler; düzeltme kapta yapılır. Burada rakamı eşiğe taşımak onu neredeyse beyaz yapardı (gereken metin ışığı 0,70, bugünkü 0,53), kabı opaklaştırmak ise rengi hiç değiştirmeden beş rakamı birden kurtardı.
+- **`p02` düşük + `med` yüksek tek başına "kompozisyonlu zemin" demez.** Aynı imza, ölçüme yabancı bir katmanın gliflerinin sızmasından da doğar; mürekkebi koyulaştırmadan önce ihlal veren pikselin **zemin rengini ve konumunu** yazdır. Bu tur, projenin dört ayrı kaydındaki *"katman kontrastı yiyor"* okumasını da düzeltti — opak bir katman altındaki metin hiç boyanmaz, kaybedilen okunabilirlik değil **ölçümün doğruluğu**.
+- **Bir kapıyı onarmanın bedeli de ölçülür.** Tek parçalı onarım bir yanlış alarmı kapatıp kapının başka bir kapsam eşiğini deliyordu; "kapı kırmızı" ile "kapı yanlış yerden kırmızı" arasındaki farkı ancak yamayı koşturup rakamlarını okumak gösterdi.
 
 ---
 
