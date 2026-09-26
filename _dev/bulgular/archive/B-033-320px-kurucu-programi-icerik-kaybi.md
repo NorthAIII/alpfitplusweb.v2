@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / erişilebilirlik-düzen | **Alan:** M2 — Sayfalar ve bölümler (`ui/Button` tabanlı)
 **Kaynak:** audit-product (Gelen Kutusu `[TASK-1.07]` notunun mezuniyeti) | **Tarih:** 2026-09-12
-**Durum:** → Faz 3
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -86,4 +86,11 @@ Yani `min-w-0` tabanın *geçişini* kesiyor, `nowrap`'in kalkması *tabanın ke
 
 **Tavan `100%` değil `100% - 3rem` seçildi** (iki aday 2 rota × 7 genişlikte yan yana koşuldu): tam tavan kapıyı yeşile çevirir ama ilk kart görünür alanı tamamen doldurur ve kalan üç sekmenin varlığına dair hiçbir ipucu kalmaz. Seçilen pay her dar genişlikte **40 px'lik bir sonraki-kart payı** bırakır; bedeli 412 px'te kartın 360 → 324'e inmesidir (orada ihlal yoktu). Dikey yerleşim hiçbir genişlikte kaymadı (şerit yüksekliği 118, bölüm ve sayfa yüksekliği üç adayda da birebir) ve görünüş farkı **≥ 640 px'te 6 kombinde 0 piksel**, < 640 px'te tek bir 118 px'lik banda kapalı.
 
-**Atom hâlâ arşive taşınmadı:** iki kalemin de düzeltmesi ölçüldü ama çözüm teyidinin evi `verify-phase` Adım 6'dır.
+**ÇÖZÜM TEYİT EDİLDİ — `verify-phase` 2026-09-26 (UAT senaryo 6 ve 7), yayın kopyası 3100.** İki kalemin ikisi de bağımsız olarak yeniden ölçüldü, 2 genişlik × 16 rota:
+
+- **Kırpılmış taşma: 0 gerçek · en ağır 0 px**, hem 320 hem 390 px'te (muafiyetler ayrı sayıldı: hareketli şerit 19/18 · kaydırılabilir 38 · görsel gizli 0 · dikey 0).
+- **Şerit ihlali: 0**, iki genişlikte; **5 kaydırılabilir kap (taban 5)** — şerit `overflow-x-auto` kaldığı için taban sabit, yani düzeltme şeridi öldürerek kapıyı geçmedi.
+- Kapının kendisi **TOPLAM SORUN 0 · çıkış 0 (`✓ KAPI YEŞİL`)**; kapsam tabanlarının hiçbiri oynamadı (16 rota · 6253 eleman · **2054 metin elemanı, taban 2054**).
+- `kontrol:` aynı betik ölü hedefe (`BASE=http://localhost:3457`) yöneltildiğinde cümleyle durup **çıkış 1** veriyor — yani bu yeşil, "hiçbir şey ölçmedim" yeşili değil.
+
+**Kapanış kapsamı:** atom **320 px'te içerik ve işlev kaybını** kapsıyordu ve o kapandı. **Kapsanmayan iki yüzey yaşayan evlerine yazıldı ve arşivde bırakılmadı:** (a) aynı butonun WhatsApp ikonu 320 px'te hâlâ **16,31 px** çiziliyor (doğal boy 18; `shrink-0` yok, flex 1,69 px sıkıştırıyor) — metin kaybı ya da işlev kaybı değil, kutu 224×52 ile kapıdan geçiyor; kayıt `BULGULAR.md` → Gelen Kutusu `[TASK-3.14]` ve verify-phase 2026-09-26'da yeniden ölçüldü. (b) `Button`'ın `sm:whitespace-nowrap` tuzağı **≥ 640 px'te yaşıyor ve onu ölçen kapı yok** (atomun kendi bedeli, `docs/STYLE-GUIDE.md` → Düzen Tuzakları'nda yazılı).

@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / erişilebilirlik | **Alan:** M2 — Sayfalar ve bölümler
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** → Faz 3
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -55,4 +55,18 @@ Beşinci kalem ayrı: 404 dekoratif bir tipografi jesti, ama ne `aria-hidden` al
 
 ## Çözüm Kaydı
 
-—
+**Beş kalemin beşi de kapandı — Faz 3, TASK-3.09 · 3.10 · 3.11 · 3.12 · 3.13; çözüm teyidi `verify-phase` 2026-09-26 (UAT senaryo 4).**
+
+| # | Yüzey | Kapatan task | Ölçülen sonuç |
+|---|---|---|---|
+| 1 | Ürün turu soluk adım kartları (2,54-2,99) | TASK-3.09 | Kapı **57 → 46**; kartın etiketi · başlığı · gövdesi AA'ya çıktı |
+| 2 | Kapanış çağrısı paragrafı (`text-ink-deep/75`) | TASK-3.10 | Kapı **46 → 26**; kayıtta *"5 sayfa"* yazıyordu, gerçek **10 sayfa** ölçüldü (`FinalCta` `lead` prop'uyla üç ayrı metin taşıyor) ve aynı düzeltme hepsini kapsadı. Aynı `<p>`'deki üçüncü satır ("Kredi kartı istemiyoruz", 320 px'te 4,45-4,49) da kapsandı → 5,52-5,63 |
+| 3 | Gradyan metin `.text-gradient-sage` | TASK-3.11 | Kapı **26 → 9**; kayıtta *"5 yer"* yazıyordu, ölçülen küme **19 eleman / 17 benzersiz metin**. Düzeltme **token'a değil sınıfa** yapıldı — `sage-br` otuzu aşkın yerde koyu zeminde kullanılıyor ve orada parlaklığı doğru |
+| 4 | `faint` desenli zemin üzerinde (`Chaos`) | TASK-3.12 | Kapı **9 → 8**; tavanı desen değil **gölge** belirliyordu (opaklık 0,50 → 0,12'de değer 4,47'de kaldı), çare `faint` → `muted` |
+| 5 | 404'teki dev "404" rakamı (1,12-1,17) | TASK-3.13 | Kapı **8 → 6**; kullanıcı kararıyla **dekoratif** ilan edildi (`aria-hidden`), renge dokunulmadı. `global-error.tsx`'teki "Hata" da aynı kararı aldı |
+
+**Kapanış kapsamı — atomun kendi kapsamıyla kapandı, sınıfın tamamıyla değil.** Atomun başlığı ve tablosu *"ana sayfada ve segment sayfalarında"* diyor (+ 404/çöküş); o yüzeylerin hepsi ölçülerek yeşile döndü: `verify-phase` 2026-09-26'da `a11y.mjs` 16 rotada koştu ve **15 rotada kontrast ihlali 0**, gradyan metin dalı **19 durak ölçüldü (taban 19) / 0 eşik altı**.
+
+⚠️ **KAPSANMAYAN YÜZEY — aynı sınıf, başka rota: `/gecis`'in altı kalemi.** Kapı 16 rotaya çıktığında (TASK-3.03) `/gecis` ilk kez ölçüldü ve bu atomun sınıfından altı kalem çıktı: `01`/`02`/`03` dev adım rakamları **p02 1,21** (kalem 5 ile **aynı sınıf ve aynı renk**), "Elle tutulan kayıtlar için birlikte bir öncelik…" **3,25**, küçük adım rakamları `1` **3,49** ve `2` **4,23**. Bu atom yazıldığında `/gecis` hiçbir kapının listesinde olmadığı için tabloya girmediler. **Evi: TASK-3.26** (verify-phase Adım 7, 2026-09-26) — kapının bugünkü tek kırmızısı odur.
+
+**Koruma Önerisi'nin kalıcı ayağı gerçekleşti:** B-031 aynı fazda kapandı (piksel ölçümü + ata opaklığı + gradyan dalı + başlık hiyerarşisi) ve `a11y.mjs` artık eşik altında **çıkış 1** döndürüyor — yani bu beş kalem bir sonraki değişiklikte sessizce geri gelemez. Atomun *"düzeltme sonrası 390 ve 320 px'te de ölçülmeli"* uyarısına uyuldu; o ölçümler dar genişlikte **yeni** bir sınıf açığa çıkardı (üst üste binme / yapışkan katman) ve kendi evlerine yazıldı: B-063 · B-064 + `BULGULAR.md` → Gelen Kutusu'nun on bir kalemi.

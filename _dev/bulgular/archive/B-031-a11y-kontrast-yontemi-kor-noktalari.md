@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** test-kapsamı / sahte yeşil | **Alan:** M6 — Kalite kapıları
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** → Faz 3
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -63,4 +63,17 @@ Daha derin katman [B-012](B-012-olcum-betikleri-rota-kapsami-eksik.md) ve [B-015
 
 ## Çözüm Kaydı
 
-—
+**Dört kalemin dördü de kapandı — Faz 3, TASK-3.03 · 3.04 · 3.05 · 3.06; çözüm teyidi `verify-phase` 2026-09-26 (UAT senaryo 1 · 2 · 5), yayın kopyası 3100.**
+
+| # | Kör nokta | Kapatan task | Bugünkü hâl (ölçüldü) |
+|---|---|---|---|
+| 1 | Kökteki tek `background-image` sayfayı ölçüm dışına atıyor; `skipped` hiçbir eşiğe bağlı değil | TASK-3.04 + TASK-3.03 | Kontrast **piksel yöntemiyle** ölçülüyor: iki karenin farkından glif maskesi, metin rengi CSS'ten, **zemin maskenin altındaki gerçek pikselden** — gradyan, fotoğraf ve saydam katman artık ölçülüyor. Ölçülemeyen ayrıca sayılıyor ve **`kalan: 0`** (yapışkan katman 151 → B-063, bilinçle faz dışı; görünmez 43) |
+| 2 | Ata zincirinin opaklığı renge uygulanmıyor (`lg:opacity-45`) | TASK-3.04 | Opaklık çarpımı renge uygulanıyor; B-032'nin birinci kalemi kapıya göründü ve TASK-3.09 ile kapandı |
+| 3 | Gradyanla boyanmış metin hiç ölçülmüyor | TASK-3.05 | Kendi **dalı** oldu (en açık duraktan okunup zemine karşı sınanıyor): **19 durak ölçüldü (taban 19) / 0 eşik altı**. Küme kayıtta *"5 yer"*, araştırmada *"11 benzersiz"* yazıyordu; ölçülen **19 eleman / 17 benzersiz metin** ve tek kaynaklı da değil (17'si `.text-gradient-sage`, 2'si ayrı bir Tailwind yazımı) |
+| 4 | Başlık hiyerarşisi hiç kontrol edilmiyor | TASK-3.06 + TASK-3.13 | Kontrol kapıda: **316 görünür başlık (taban 316) · 0 sayfada 0 atlama**, her rotada `h1:1`. Atomun tespit ettiği kök (`Footer`'ın sahipsiz `h3` kolon başlıkları) 16 sayfayı birden düzeltecek biçimde çözüldü — başlıklar `h2` oldu, görünüş etkisi **0 farklı piksel** |
+
+**Atomun "aynı turda yapılmalı" uyarısına uyuldu:** B-030'un a11y/mobil ayağı aynı fazda kuruldu (TASK-3.03) — `a11y.mjs` artık eşik altında **çıkış 1** döndürüyor ve **kapsam eşikleri** taşıyor. `verify-phase` 2026-09-26'da iki yönlü ölçüldü: 6 gerçek ihlalle **çıkış 1**; `kontrol:` ölü hedefte (`BASE=http://localhost:3457`) cümleyle durup **çıkış 1** (yığın izi basmıyor). Yani yöntem düzeltildi **ve** kapı kırmızıya dönebiliyor — atomun korktuğu *"ihlaller görünür olur ama kapı yine yeşil kalır"* hâli doğmadı.
+
+⚠️ **Atomun devralınabilir kod iddiası ÇÜRÜDÜ ve plan buna göre boyutlandı:** *"çalışan uygulama scratchpad'de bırakıldı (`rotalar-6-kontrast-v3.mjs`), oradan devralınabilir"* — `research-phase` (2026-09-23) adı geçen altı betiğin **hiçbirinin makinede olmadığını** ölçtü; ikisi de sıfırdan yazıldı ve task planı *"devralınan kodu uyarla"* değil **"yaz"** olarak kuruldu. Ölçüm aynı turda B-032'nin kayıtlı rakamlarını birebir yeniden üretti, yani yöntem doğrulandı.
+
+**Kapanış kapsamı — bu dört kör nokta kapandı, `a11y.mjs`'in kör noktalarının tamamı kapanmadı.** Kalanlar adıyla ve yaşayan evleriyle: **yapışkan/sabit katmanlar** ölçülmüyor (151 kalem — B-063, bilinçle faz dışı) · **açılan katmanlar** (sekme, akordeon, asistan paneli) ölçülmüyor (B-015) · kapı **yalnız 1440 px**'te koşuyor, yani `lg:` altında çizilen metin kapsam dışı (Gelen Kutusu `[TASK-3.16]`) · **üst üste binme** (metin çakışması) sınıfını hiçbir kapı görmüyor (B-063 · B-064 + Gelen Kutusu'nun on bir kalemi) · **hata kutusu** hiçbir kapının kapsamında değil (yalnız form 503 verdiğinde çizilir) · `forced-colors` ekseni ölçülmüyor (Gelen Kutusu `[TASK-3.17]`).

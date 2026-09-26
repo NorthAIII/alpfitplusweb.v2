@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** öneri-ui-ux / dönüşüm | **Alan:** M2 — Sayfalar ve bölümler (`Header.tsx`, `Assistant.tsx`)
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** → Faz 3
+**Durum:** ✅ Çözüldü
 
 ## Gözlem
 
@@ -54,4 +54,25 @@ Header masaüstü için tasarlanmış, mobilde yer kazanmak için CTA gizlenmiş
 
 ## Çözüm Kaydı
 
-—
+**Kapandı — Faz 3, TASK-3.16 (ana kalem) + TASK-3.25 (ikincil öneri); çözüm teyidi `verify-phase` 2026-09-26 (UAT senaryo 11 ve 25/26).**
+
+**Ana kalem — Koruma Önerisi'nin "en hafiften ağıra" listesinin ilk iki maddesi uygulandı, üçüncüsü (mobil alt yapışkan CTA çubuğu) kullanıcı kararıyla **istenmedi**:** hamburger'in yanına `lg:` altında görünen sade bir **"Demo"** bağlantısı kondu (etiket "Demo İste" **değil** "Demo" — 320 px'te başlıktaki kap 280 px, logo 132,41 + hamburger 44 alıyor; "Demo İste" satırı taşırdı, "Demo" 11,6 px payla sığıyor) ve yüzen düğmenin görünme eşiği düşürüldü.
+
+**Teyit ölçümü (yayın kopyası 3100, 2026-09-26) — dokuz eksende 16/16, boş ekran 0:**
+
+| Eksen | Boş ekran |
+|---|---|
+| 320×568 · 390×844 · 412×915 · 768×1024 | 0/16 · 0/16 · 0/16 · 0/16 |
+| %200 büyütme 640×512 · %400 büyütme 320×256 | 0/16 · 0/16 |
+| yatay 844×390 · yatay 915×412 | 0/16 · 0/16 |
+| 1440×900 | 0/16 |
+
+Kullanılabilirlik ölçütü çıplak varlık değil: render edilmiş (`getClientRects()`) · `visibility` görünür · **etkin (ata zinciri çarpımı) opaklık > 0** · `pointer-events` açık · kutusu ilk görüntü penceresini kesiyor. `kontrol:` eksen başına **174 dönüşüm bağlantısı** tarandı — sonda bulamayan bir seçici yüzünden yeşil kalmadı.
+
+⚠️ **Atomun tablosu eksikti ve bu ölçülerek düzeltildi:** kayıt 390 px'te 4 sayfa + 3 yasal sayfa sayıyordu; TASK-3.01'in turu **320 px'te 16 sayfanın 13'ünde** boşluk buldu ve boşluk **412 px'te 6/16, 768 px'te 5/16** olarak da sürüyordu. Düzeltme hepsini birden kapsadı çünkü Header'ın mobil kolu `lg:` altındaki **her** genişlikte görünür.
+
+**İkincil öneri de kapandı — TASK-3.25.** Atom *"hata anındaki WhatsApp bağlantısı kullanıcının yazdıklarını taşımıyor, `wa.me` adresleri `?text=` kullanmıyor"* diyordu. `site.ts`'e `whatsappDraftHref()` eklendi: ad · kulüp · telefon taşınır, `encodeURIComponent`, alan başına 120 karakter tavanı; **taban `CONTACT.whatsapp.href` değişmedi** (ölçüldü: `CONTACT.whatsapp` 12 dosyada 23 kez geçiyor, 15'i `.href` — tabana `?text=` koymak sitedeki her WhatsApp bağlantısına yanlış bir ön-doldurma taşırdı), ön-doldurma **çağrı yerinde** kurulur ve **yalnız 503 `no-sink`** dalında. Kapı `tests/whatsapp-draft.test.ts` (9 test) ve davranıştan ölçer, sabit listeden değil.
+
+⚠️ **Kapsanmayan yüzey — ikincil önerinin açtığı yasal kalem:** ön-doldurulan kişisel veri tıklama anında bir Meta yönlendiricisine (`wa.me`) gidiyor ama `legal.ts` → KVKK → Aktarım **dört tedarikçi** sayıyor (Vercel · Hetzner · Resend · Google Workspace) ve üstündeki cümle koşulsuz olumsuz. Metne **dokunulmadı** (hukuki nitelendirme hukukçunun — B-008). **Kullanıcı kararı bekliyor**, üç seçenek `BULGULAR.md` → Gelen Kutusu `[TASK-3.25 SORU]`'da; site `noindex` önizlemede olduğu için yayını bloke etmiyor ama **yayından önce kapanmalı**.
+
+**Koruma Önerisi'nin kalıcı ayağı GERÇEKLEŞMEDİ ve bu bilinçli:** *"mobil kapısı 'her sayfada ilk ekranda en az bir dönüşüm yüzeyi var mı' kontrolünü alır"* — fazın kapı işi kontrast + kırpma + dokunma hedefiyle sınırlı tutuldu (kapsam kararı), yani bu ölçüm **tek seferliktir** ve kalıcı kapı ayrı bir karardır (evi "Kalite kapıları otomatik" fazı). Kriterin bugünkü hâli `modules/M2-Sayfalar-ve-Bolumler.md` → F2.3'te yazılı.
