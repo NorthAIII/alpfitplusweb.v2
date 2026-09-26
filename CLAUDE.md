@@ -1,6 +1,6 @@
 # Alpfit Plus Web Sitesi v2 — Claude Code Talimatları
 
-**Proje:** `alpfitplus.com` için sıfırdan yazılan tanıtım sitesi (Next.js 16 + Tailwind 4); canlı v1 sitesinden **bağımsız** repo, Vercel'de ayrı proje olacak
+**Proje:** `alpfitplus.com` için sıfırdan yazılan tanıtım sitesi (Next.js 16 + Tailwind 4); canlı v1 sitesinden **bağımsız** repo, Vercel'de ayrı proje
 **Repo:** `/home/kivanc/projects/Alpfitplus website.v2` → github.com/NorthAIII/alpfitplusweb.v2 (özel)
 **DevFlow Dokümanları:** `/home/kivanc/projects/Alpfitplus website.v2/_dev/`
 
@@ -125,20 +125,24 @@ DevFlow dokümanları yaşayan dokümanlardır ve bu bölüm altı alt-başlık 
 
 ### Oturum Kapanışı:
 
-<!-- KURAL: `### Oturum Kapanışı:` gövdesi motorun güncel şablonundan ESKİDİR ve göçü 2026-09-22 audit-docs turunda ÖLÇÜLEREK ertelendi (bilinçli). Ölçüm: dolgu +13.353 karakter ≈ +7.901 token; parent 12.928 → ~22,9k token, yani kırmızı çizginin (20k) ÜSTÜNE çıkıyor. Kanonun bu hâl için adıyla verdiği çare "önce bölme"dir (lib/claude-md-bolme.md → Dolgu sırası — önce bölme) ama bu projede bölme kanalı TÜKENMİŞTİR: proje tam bölünmüş (dört çocuk + @import), kesim motorda sabit ve `Oturum Disiplini`'nin doktrin çocuğu yok — motorun kendi parent template'i de 20.114 token, yani kök neden motor düzeyindedir ve rotası DevFlow'un kendi deposudur. Aynı gerekçeyle ertelenen iki bağımlı kalem: _dev/claude/CALISMA-PRENSIPLERI.md #10 adım 4 («Açık kalemler» satırına atıf) ve #12'nin «Ön-hazırlık» atfı. Açık kayıt: _dev/BULGULAR.md → Gelen Kutusu. -->
+<!-- KURAL: `### Oturum Kapanışı:` motorun güncel şablonuna KISMEN göç ettirildi (kullanıcı kararı, audit-docs 2026-09-26 — bilinçli). ALINDI: blok biçimi (4 satır · «Açık kalemler» etiketi · `engel:`/`önerilir:` önekleri · üç durumlu amblem · terfi kuralının özü) ve kimlik argümanı istisnası. ALINMADI: şablonun ayrıntılı gövdesi (terfi kuralının alt maddeleri · Ön-hazırlık · blok üretmeyen komutlar · duraklatma kapısı · `Adım` ayıklama kuralı · dört özel durum) — tam metni .claude/commands/devflow/templates/CLAUDE-MD.md → Oturum Kapanışı'ndadır, komutlar kendi kapanış şablonlarını ayrıca taşır; audit bu farkı yeniden açmaz. Gerekçe (ölçüldü 2026-09-26): tam göç parent'ı ~16,7k → ~23,9k token yapıp kırmızı çizgiyi (20k) aşırıyordu ve kanonun çaresi olan "önce bölme" (.claude/commands/devflow/lib/claude-md-bolme.md → Dolgu sırası) bu projede tükenmiş: proje tam bölünmüş, `Oturum Disiplini`'nin doktrin çocuğu yok, motorun kendi parent template'i de 20.114 token — kök neden motor düzeyinde, rotası DevFlow'un kendi deposu. Bağımlı iki çocuk kalemi (_dev/claude/CALISMA-PRENSIPLERI.md #10 adım 4 «Açık kalemler» atfı · #12 «Ön-hazırlık» atfı) o çocuğun kendi denetim turunda ele alınır. -->
 
-Her oturumun **son çıktısı** şu bloktur — komutun kendi kapanış şablonunda görünmese bile yazılır:
+Her oturumun **son çıktısı** şu bloktur — komutun kendi kapanış şablonunda görünmese bile yazılır. **Nihai blok oturumun son sözüdür:** altına başka satır gelmez, yeni iş başlatılmaz. Oturum `double-check` / `pause` / `prd-save` ile kapanıyorsa nihai blok onlarındır.
 
 ```
+<✅|⚠️|⏸️> [oturumun sonucu — tek cümle]
 📋 Sıradaki adım: /devflow:[komut]
-<⚠️|✅> Sıradaki oturumdan önce: [iş — kim yapacak — nasıl: komut/hamle] | yok
+   → [gerekçe — tek satır]
+<⚠️|💡|✅> Açık kalemler: [önek: kalem] | yok
 ```
 
-- **«Sıradaki oturumdan önce» satırı atlanmaz** — iş yoksa açıkça `yok` yazılır. **Amblem satırın adı değil durumudur:** satırda bir iş varsa `⚠️`, yalnız `yok` yazıyorsa `✅` — iş yokken yeşil ışık yanar, yanlış alarm kurulmaz. Evi kullanıcı-tarafı ve taze-oturum işleridir (onay, deploy/go-live, fresh oturumda audit önerisi); zorunlu olmayan hatırlatma `önerilir:` önekiyle girer. Oturum içinde laf arasında dile getirilen "şu yapılmalı" türü işler burada görünür olur — hızlı bakan kullanıcı yalnız bu bloğa bakar. **Yazım kendi kendine yetmeli** — sonraki oturum satırı okuyup başlayabilsin; ayrıntı başka dosyadaysa onu da an.
+- İlk üç satırın metnini komutun kendi kapanış şablonu belirler. **«Açık kalemler» satırı her komutta atlanmaz** — iş yoksa açıkça `yok` yazılır.
+- **Kalem öneki kapalı kümedir ve zamanlamayı o söyler:** `engel:` (sıradaki adım bu iş bitmeden çalıştırılmaz) · `önerilir:` (sıradaki adımı engellemez — paralel ya da sonra yapılabilir). Öneksiz kalem yazılmaz; birden çok kalem ` · ` ile ayrılır. **Engelleyen iş `📋` satırına terfi eder:** işin bir DevFlow komutu varsa `📋 Sıradaki adım` odur ve iş son satırda tekrarlanmaz; iş DevFlow-dışıysa (kullanıcının kendi hamlesi) `📋 Sıradaki adım: yok — [bekleme koşulu]` yazılır ve iş `engel:` önekiyle kalır.
+- **Amblem satırın adı değil durumudur:** `engel:` kalemi varsa `⚠️` · yalnız `önerilir:` kalemi varsa `💡` · satır `yok` ise `✅` — kırmızı ışık yalnız gerçekten bekleyen bir şey varken yanar. Satırın evi kullanıcı-tarafı ve taze-oturum işleridir (onay, deploy/go-live, fresh oturumda audit önerisi); oturum içinde laf arasında dile getirilen "şu yapılmalı" türü işler burada görünür olur — hızlı bakan kullanıcı yalnız bu bloğa bakar. **Yazım kendi kendine yetmeli** — sonraki oturum satırı okuyup başlayabilsin; ayrıntı başka dosyadaysa onu da an.
 - **Kendi yapabileceğin oturum-içi işi satıra yazma — yap, sonra bloğu yaz**; onayına bağlıysa yazıp bırakma, **sor** ("şimdi yapayım mı?"). Blok ancak oturumun kendi yükümlülükleri bitince yazılabilir.
-- Blok, DURUM'a az önce yazılan durumun insan-okur yankısıdır; çelişirse DURUM kazanır. Satırın kendisi bir kayıt yeri değildir — bloklayan iş kalıcı evine de yazılır (Duraklatma Notu, BULGULAR, state alanları); bu satır yalnız son-görünür özettir.
-- **Komut önerisine argüman/faz numarası yazılmaz** — komutlar konumu DURUM'dan alır (`/devflow:verify-phase 41` değil `/devflow:verify-phase`).
-- Net sıradaki komut yoksa: `📋 Sıradaki adım: yok — [bekleme koşulu]`. Döngü-dışı oturumlarda (quick, audit-docs, audit-product, progress, prd-note) varsayılan öneri, faz döngüsünün **DURUM'un `Adım` alanından türeyen** komutudur (`discuss` → `discuss-phase` · `research` → `research-phase` · `plan` → `plan-phase` · `verify-plan` → `verify-plan` · `task` → `run-task` · `verify` → `verify-phase` · `review` → `review-phase`); alan boş ya da tanımadığın bir değerdeyse komut uydurma, `yok — [bekleme koşulu]` yaz.
+- Blok, DURUM'a az önce yazılan durumun insan-okur yankısıdır; çelişirse DURUM kazanır. Satırın kendisi bir kayıt yeri değildir — bloklayan iş kalıcı evine de yazılır (Duraklatma Notu, BULGULAR, QUICK kaydı, state alanları); bu satır yalnız son-görünür özettir.
+- **Komut önerisine konum argümanı yazılmaz** — komutlar konumu DURUM'dan alır (`/devflow:verify-phase 41` değil `/devflow:verify-phase`). **İstisna — kimlik argümanı:** iş DURUM'da konum tutmuyorsa ve aynı anda birden çok açık kaydı olabiliyorsa komut hangi kaydın çalıştırılacağını taşır: `/devflow:quick QUICK-135`.
+- Net sıradaki komut yoksa: `📋 Sıradaki adım: yok — [bekleme koşulu]`. Döngü-dışı oturumlarda (quick, audit-docs, audit-product, progress, prd-note) varsayılan öneri, faz döngüsünün **DURUM'un `Adım` alanından türeyen** komutudur (`discuss` → `discuss-phase` · `research` → `research-phase` · `plan` → `plan-phase` · `verify-plan` → `verify-plan` · `task` → `run-task` · `verify` → `verify-phase` · `review` → `review-phase`) — ama `_dev/tasks/quick/`'te Durum'u ⬜/🔄 bir kayıt varsa sıradaki komut onu çalıştıran komuttur (bloğu yazmadan önce tek `grep`); alan boş ya da tanımadığın bir değerdeyse komut uydurma, `yok — [bekleme koşulu]` yaz.
 
 ---
 
@@ -249,7 +253,7 @@ docker compose exec web npm test                       # Vitest — web konteyne
 | Betik | Ne ölçer | Geçme şartı |
 |---|---|---|
 | `a11y.mjs` | Kontrast, h1, alt metni, adsız link/buton (16 rota, yayın kopyasına karşı) | `✓ KAPI YEŞİL — 16 sayfada 0` **ve çıkış kodu 0** |
-| `mobile-audit.mjs` | Yatay kaydırma, taşan eleman, dokunma hedefi (16 rota, yayın kopyasına karşı) | `✓ KAPI YEŞİL — 16 sayfada 0` **ve çıkış kodu 0** |
+| `mobile-audit.mjs` | Yatay kaydırma, taşan eleman, dokunma hedefi (16 rota, yayın kopyasına karşı) | `✓ KAPI YEŞİL — 320/390 px'te 0` **ve çıkış kodu 0** |
 | `font-guard.mjs` | Font kapsaması **iki dalda** — dal 1 *site metni ⊆ küme*, dal 2 *küme ⊆ woff2 glifleri* (üretim konteynerine karşı) | **ikisi de geçer:** kümede olmayan karakter yok **ve** muaf olmayan eksik glif yok (muaf 10: `₺` + dört ok, Sora'nın iki yüzünde) |
 | `perf.mjs` | TTFB, FCP, LCP, CLS, sayfa ağırlığı | üretim konteyneri (3100) ayakta olmalı |
 | `scan.mjs <yol> <etiket> <en> <boy>` | Sayfayı ekran ekran gezer, konsol hatası toplar | konsol temiz |
@@ -262,9 +266,9 @@ Başlangıç çizgisi (regresyon eşiği) `_dev/modules/M6-Kalite-Kapilari.md` �
 - **Ürün görselleri elle konmaz.** `render-product.mjs` üretir; eski marka, gerçek sporcu adı ve karşılanmayan iddiayı temizler, sızıntı kalırsa **üretim durur**.
 - **Fotoğraflar** Pexels lisanslı; kaynak listesi `research/FOTOGRAF-KAYNAKLARI.txt` — önce listeye yaz, sonra `photos-build.mjs`.
 - **Fontlar** siteye özel daraltıldı (153 karakter, 5 dosya, 95 KB). Yeni karakter girerse `font-guard.mjs` yakalar; küme `research/FONT-KARAKTER-KUMESI.txt` + `font-subset.mjs` ile genişletilir.
-- **Bataryada env kapılı İKİ dal var ve ikisi de varsayılan koşumda atlanır** — `docker compose exec web npm test` bu yüzden **209 geçti + 2 atlandı** gösterir; bu arıza değil, iki kapının kapalı olmasıdır.
+- **Bataryada env kapılı İKİ dal var ve ikisi de varsayılan koşumda atlanır** — `docker compose exec web npm test` bu yüzden **219 geçti + 2 atlandı** gösterir; bu arıza değil, iki kapının kapalı olmasıdır.
   - **Depo sözleşme paketi** (`tests/lead-store.contract.test.ts`, TASK-1.13) sitenin canlı `LEAD_STORE_*` anahtarlarından ayrı bir env kapısı taşır — `LEAD_CONTRACT_URL` tanımsızken atlanır. Tanımlıyken host yerel değilse (`lead-store`/`localhost`/`127.0.0.1` dışı) istek atmadan hata verir. Yerel `lead-store`'a karşı tam koşum komutu (geçici superuser dahil) dosyanın başlık yorumunda.
-  - **Yasal beyan kapısının çapraz-depo dalı** (`tests/legal-consistency.test.ts` → dal 9, TASK-2.19) `LEGAL_CONTRACT_HOOKS_DIR` ile açılır; değer bir dizin yoludur, sır değil. Tam koşum: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **216 geçti + 1 atlandı**. ⚠️ Bağlama `docker compose restart web` ile **gelmez**, `up -d web` gerekir.
+  - **Yasal beyan kapısının çapraz-depo dalı** (`tests/legal-consistency.test.ts` → dal 9, TASK-2.19) `LEGAL_CONTRACT_HOOKS_DIR` ile açılır; değer bir dizin yoludur, sır değil. Tam koşum: `docker compose exec -e LEGAL_CONTRACT_HOOKS_DIR=/opt/v1-pb-hooks web npm test` → **226 geçti + 1 atlandı**. ⚠️ Bağlama `docker compose restart web` ile **gelmez**, `up -d web` gerekir.
 
 ### Kod kuralları
 

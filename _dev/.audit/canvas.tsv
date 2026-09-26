@@ -1,7 +1,7 @@
 # DevFlow audit canvas — otomatik üretildi (kaynak: canvas.db). Elle düzenleme.
 # meta: current_convention_version=2; schema_version=2
 id	path	status	status_reason	checked_version	last_checked	content_hash	exclude	added_at	size_accepted
-1	CLAUDE.md	pending					0	2026-09-12	
+1	CLAUDE.md	conformant		2	2026-09-26	b89048d14aa79fc9a968135b11953b4735395296f00a1c1376fa1b1c90878126	0	2026-09-12	
 2	_dev/BULGULAR.md	urgent	urgent:token-hard				0	2026-09-12	
 3	_dev/DURUM.md	conformant		2	2026-09-22	5dfef07ace9bcd1dff6fa24e355592bddf950492d0e528e3eb3b5b132f9db3e5	0	2026-09-12	
 4	_dev/GIT-STRATEJI.md	pending					0	2026-09-12	
