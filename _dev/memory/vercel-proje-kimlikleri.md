@@ -2,15 +2,15 @@
 
 **Vercel CLI kurulu ve oturum açık** — `/home/kivanc/.local/bin/vercel` (sürüm 59.15.1), hesap `northaiii`. `vercel login` tarayıcı doğrulaması istediği için ajan tarafından yapılamaz; oturum düşerse kullanıcı kendi terminalinde yeniler.
 
-⚠️ **Kimlik dosyası snap sürümüne çivilidir, `$XDG_DATA_HOME` ise sürümle birlikte kayar** (ölçüldü 2026-09-23, TASK-2.07). `auth.json` bugün `/home/kivanc/snap/code/263/.local/share/com.vercel.cli/` altında duruyor ama kabuğun `XDG_DATA_HOME`'u `…/snap/code/264/…`'ü gösteriyor (VS Code snap'i güncellendi). Sonucu sessiz değil ama **asıcıdır**: düzeltmesiz her `vercel` çağrısı *"No existing credentials found. Starting login flow…"* deyip cihaz-giriş kodu basar ve **süresiz bekler** (bir koşumda yaşandı, komut durduruldu). Her `vercel` çağrısına açıkça ver:
+⚠️ **Kimlik dosyası snap sürümüne çivilidir ve sürüm kayar** (VS Code snap'i her güncellemede yeni bir `…/snap/code/<rev>/` açar). Sonucu sessiz değil ama **asıcıdır**: yanlış yolla her `vercel` çağrısı *"No existing credentials found. Starting login flow…"* deyip cihaz-giriş kodu basar ve **süresiz bekler**. Eski revizyondaki dosya da kalabilir ama token'ı geçersizdir (ölçüldü 2026-09-26: `264` → *"The specified token is not valid"*, `266` → `northaiii`; kabuğun `XDG_DATA_HOME`'u o oturumda boştu). Bugün çalışan:
 
 ```bash
-XDG_DATA_HOME=/home/kivanc/snap/code/263/.local/share vercel <komut>
+XDG_DATA_HOME=/home/kivanc/snap/code/266/.local/share vercel <komut>
 ```
 
-Sayı snap revizyonudur ve yeni güncellemede yine değişebilir; şüphede `find /home/kivanc -maxdepth 7 -name auth.json -path '*vercel*'` ile bulunur.
+Sayı yine değişebilir: `find /home/kivanc -maxdepth 7 -name auth.json -path '*vercel*'` ile adayları bul, her birini `timeout 25 vercel whoami </dev/null` ile dene (timeout + boş stdin, asılmayı keser), `northaiii` döneni kullan.
 
-CLI'ın kapsamadığı proje ayarları için REST API kullanılır; token yukarıdaki `auth.json` içindedir ve **ekrana yazılmaz**.
+CLI'ın kapsamadığı proje ayarları için REST API kullanılır — **en kısa yol `vercel api <yol>`** (CLI 59.26.0, beta): kimliği kendisi taşır, token'ı elle okumaya gerek kalmaz (`vercel api list` uçları listeler; ölçüldü 2026-09-26: proje ayarı, takım üyeleri, dağıtımlar, proje alan adları okundu). Çıktının başında CLI başlık satırı olur — JSON'u ilk `{`'dan itibaren ayrıştır. ⚠️ Proje okuması `env` dizisini de döndürür; yalnız `key`/`target`/`type` yazdır, değer alanını basma.
 
 **`vercel env pull` `--sensitive` anahtarları maskeli döndürür** (ölçüldü 2026-09-23): `RESEND_API_KEY`, `LEAD_STORE_TOKEN`, `IP_HASH_SALT` çekilen dosyada gerçek değerle değil bir yer tutucuyla gelir (`re_` öneki yok); `DEMO_TO`/`DEMO_FROM`/`LEAD_STORE_URL` gibi hassas işaretlenmemişler okunabilir. Yerelde **gerçek gönderim** gereken bir ölçüm bu yüzden Vercel'den anahtar çekemez — yol, kasadan dar yetkili geçici anahtar üretip iş bitince silmektir ([Anahtar kasası](anahtar-kasasi-config-alpfit.md)).
 

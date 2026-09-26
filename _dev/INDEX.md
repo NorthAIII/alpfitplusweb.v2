@@ -72,6 +72,7 @@ Bu projede PRD yok (kullanıcı kararı, kickoff 2026-09-11). Feature davranış
 | `docs/DECISIONS.md` | Karar günlüğü — **giriş noktası**: aktif karar serisi (2026-09-14'ten bugüne) + kapanan aralıkların pointer listesi. Kararı ararken önce burası okunur |
 | `docs/DECISIONS-2026-09-10..2026-09-13.md` | Kapanan karar aralığı (22 kayıt) — tek dil, fiyat sunumu, fotoğraf ve görsel ton, chatbot sırası, modül yapısı, rakip adsızlığı, faz sırası, Vercel ortam modeli, analitik, lead hedefinin ilk iki turu, Vitest |
 | `docs/DECISIONS-2026-09-14..2026-09-22.md` | Kapanan karar aralığı (12 kayıt) — lead hedefinin son turu ve depo sözleşmesinin sınanması, Umami site kaydı, `notify_*` ve onu geçersiz kılan onay e-postası kararı, anahtar kasası, analitik olay adları, `.env` sızıntısının ölçülen kapsamı ve döndürmenin düşmesi, ölçüm sunucusunun ham IP gerçeği, yetenek iddialarının tek listeden türemesi |
+| `docs/DECISIONS-2026-09-23..2026-09-23.md` | Kapanan karar aralığı (7 kayıt) — Faz 2'nin kapanış günü: `CAPABILITIES` tek kaynağı, sürüm etiketinin çapası, yayınlanan kalemin eski cümleyi derleme hatasına çevirmesi, sözlükte rakip adı tutulmaması, devralınan ölçüm özetinin riski, yasal aktarımın olgu olarak yazılması, onay e-postası tavanı |
 | `../README.md` (repo kökü) | Yığın, çalıştırma komutları, araştırma konteyneri, ürün görseli hattı — ayrı TECH-STACK yazılmadı |
 | `../CLAUDE.md` (repo kökü) | DevFlow parent (doktrin çocukları `claude/` altından `@import` edilir); ölçüm betikleri tablosu ve geçme şartları, Docker uyarıları, dokunulmazlar, kod kuralları |
 
@@ -216,7 +217,7 @@ proje-repo/
 
 ---
 
-**Son Güncelleme:** 2026-09-23 — review-phase (Faz 2 kapanışı): `docs/DECISIONS.md` yeniden kırmızı çizgiyi aştığı için kapanan 2026-09-14..2026-09-22 aralığı ikinci arşiv çocuğuna mezun edildi (28.492 → 11.601 token) ve Bilgi Havuzu tablosuna işlendi.
+**Son Güncelleme:** 2026-09-26 — research-phase (Faz 4): `docs/DECISIONS.md` yeniden kırmızı çizgiyi aştığı için (23.039 token) aktif serinin en eski kapanan aralığı — Faz 2'nin 7 kaydı — üçüncü arşiv çocuğuna mezun edildi (parent 15.252, çocuk 10.959 token) ve Bilgi Havuzu tablosuna işlendi.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 <!-- KURAL: Tamamlanmış fazların task arşiv listesini INDEX'e ekleme — `ls _dev/tasks/archive/` zaten görür. INDEX yalnızca aktif klasör konumlarını gösterir; statik liste dokümanı değildir. -->

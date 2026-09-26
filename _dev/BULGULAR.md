@@ -6,7 +6,7 @@
 > `_dev/bulgular/B-NNN-<slug>.md` atomlarında yaşar; buradaki her satır o atomlara
 > pointer'dır (MEMORY index↔atom deseni: ince index hep okunur, detay gerekince lazy-load).
 
-**Son Güncelleme:** 2026-09-26 — discuss-phase (Faz 4): yedi bulgu faza alındı, index satırı ve atom durumu birlikte işaretlendi (B-011 · B-043 · B-016 · B-065 · B-059 kalem 3 · B-042 yalnız kalem 3 · B-027 canlı alan adındaki yüzey); `[TASK-3.25 SORU]` cevaplandı (seçenek a — metne WhatsApp aktarımı yazılır); Bilinçli Tercihler'deki Hobby satırı plan kararıyla güncellendi. Açık bulgu **41** (değişmedi). ⚠️ Kanvas ~38,9k token ile kırmızı çizginin üstünde ve tek okumaya sığmıyor — teşhis şişme (Gelen Kutusu satırlarının çoğu kanca değil kanıt gövdesi taşıyor), kanvas bölünmez, çare triyajdır (`/devflow:audit-product` uzlaştırması).
+**Son Güncelleme:** 2026-09-26 — research-phase (Faz 4): Gelen Kutusu'na tek satır (`public/`'teki create-next-app artığı beş SVG yayında, kullanımı 0). Faza alınmış bulguların atomlarına dokunulmadı; araştırmanın onlara dair ölçümleri (B-043'ün adres kümesi 45 kalem, B-059 kalem 3'ün bayatlığı, B-065'in sınıfı "hidrasyonsuz gönderim", B-042 kalem 1'in faza alınması) `phases/PHASE-4.md` → Araştırma Bulguları'nda — atomlar kapanışlarında o kayda göre güncellenir.
 
 <!-- KURAL: Bu satır her güncellemede ÜZERİNE YAZILIR. "Önceki:" prefix ile kümülatif yığma YASAK (CLAUDE.md → Doküman Disiplini). -->
 
@@ -110,6 +110,7 @@
 - [PHASE-3] **Onay e-postasının gelen kutusuna mı istenmeyen klasöre mi düştüğü hiç doğrulanmadı** (Faz 1'den devredildi, üçüncü UAT turunda da ölçülemedi). Ürün tarafı ölçülü (gönderim ucu ve şablon), eksik olan yalnız **teslim edilen kutunun gözle görülmesi** — alt ajanın erişemeyeceği bir kanal
 - [PHASE-3] **`DEMO_TO`'ya giden bildirim e-postasının yerleşimi hiç gözle görülmedi** (Faz 1'den devredildi). İçeriği testlerle çivili, ama *"okunur görünüyor mu"* sorusunun kanalı kullanıcının posta kutusu
 - [PHASE-3] **Umami panelinin ARAYÜZÜNDE v2 kaydının göründüğü hiç doğrulanmadı** (Faz 1'den devredildi). Ürün tarafı kurulumun kendi okuma API'siyle ölçülmüştü (olay · yüzey · ortam-etiketi kırılımı); açık olan yalnız panelin kendi ekranı — kullanıcı panele bakabildiğinde kapanır (`memory/kendi-sunucu-n8n-bunker-umami.md`)
+- [PHASE-4 research] **`public/` altında create-next-app'ten kalma beş SVG yayında** (`file.svg` · `globe.svg` · `next.svg` · `vercel.svg` · `window.svg`): `src/` ve `research/scripts/` içinde kullanımı 0, önizlemede `/next.svg` → 200 (ölçüldü 2026-09-26). Zararsız ama geçişle canlı alan adında çerçevenin kendi varlıkları servis edilir; silmek `public/` dokunulmazlığının dışında (yalnız `product/` ve `fonts/` betik çıktısı) — kapsam kararı bekliyor
 
 ## Açık Bulgular
 

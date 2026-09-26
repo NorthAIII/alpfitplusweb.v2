@@ -55,7 +55,7 @@
 
 **Edge Case'ler:**
 - Vercel'de kalıcı disk yok → `LEAD_FILE_PATH` çalışmaz; M3 F3.2 birincil hedef olarak **depoyu** (`LEAD_STORE_URL`) ister
-- Önizleme adresi arama motoruna açılmamalı — **karar: açık adres + üç katmanlı `noindex`** (başlık + `robots.txt` + meta, hepsi `deployStage`'den), Vercel koruması kullanılmaz (`phases/PHASE-1-KAPSAM.md`)
+- Önizleme adresi arama motoruna açılmamalı — **karar: açık adres + üç katmanlı `noindex`** (başlık + `robots.txt` + meta, hepsi `deployStage`'den), Vercel koruması kullanılmaz (`phases/PHASE-1-KAPSAM.md`). ⚠️ **Dal önizlemesi için geçersiz (2026-09-26, kullanıcı):** iki dala geçildiğinde önizleme dal adresinde yaşar ve **Vercel girişli** kalır (projenin koruması `all_except_custom_domains`, ölçüldü: dal adresleri 302 → giriş); açık tek adres olan üretim `.vercel.app`'i geçişte apex'e yönlenir. Otomatik ölçüm için otomasyon atlatma anahtarı. Gerekçe `docs/DECISIONS.md` 2026-09-26
 
 ---
 
@@ -81,7 +81,7 @@
 **Açıklama:** `alpfitplus.com` v2'ye bağlanır; v1'in 20 adresi (10 TR + 10 `/en/*`) 301 ile karşılığına gider; v1 projesi arşivde, silinmez; sitemap ve canonical tutarlı. "Alan adı geçişi" faz konusu, v2.0'ın sonu.
 
 **Kabul Kriterleri:**
-- 20 adresin hepsi ölçülerek 301 döner ve hedefi 200'dür (tablo faz dokümanına)
+- 20 adresin hepsi ölçülerek 301 döner ve hedefi 200'dür (tablo faz dokümanına). ⚠️ **20 adres tam küme değil** (araştırma, 2026-09-26): canlıdan ölçülen küme 45 ayrık kalem + her sayfanın eğik çizgili ve `/index.html` biçimi, hepsi **tek atlamada** 301; `/404` · `/en/404` · `/404.html` 404 döner. Tablo `phases/PHASE-4.md` → Araştırma Bulguları
 - `/en/*` → Türkçe karşılığı: `/en/`→`/`, `/en/features`→`/ozellikler`, `/en/pricing`→`/fiyat`, `/en/segments`→`/segmentler`, `/en/demo`→`/demo`, `/en/support`→`/destek`, `/en/kvkk`→`/kvkk`, `/en/privacy`→`/gizlilik`, `/en/terms`→`/kullanim-kosullari`, `/en/404`→404
 - Canonical `https://alpfitplus.com/...`, sitemap aynı alan adı
 - `DEMO_FROM` alan adı e-posta sağlayıcısında doğrulanmış
@@ -92,7 +92,7 @@
 **Edge Case'ler:**
 - **Apex'te MX kaydı yok — KVKK başvuru adresi posta almıyor** (B-011; Faz 2'nin kapsam kararıyla 2026-09-23'te bu faza taşındı). Yasal metin `destek@alpfitplus.com`'a otuz gün taahhüdü veriyor (`legal.ts:230` başvuru + `:316` silme, ikisi de `CONTACT.support` üzerinden) ve taahhüt **tam da bu fazda** gerçek olur: site alan adına bağlandığı anda metin ziyaretçiye görünür hâle gelir. İki adım kullanıcıdadır (Squarespace'te beş MX kaydı + Google'da kutunun/takma adın var olması); kaynağından doğrulanmış yönerge, TXT/NS/SOA bozulmama tabanı, bugünkü başarısızlık biçimi (örtük MX) ve kapanış ölçümünün sırası `bulgular/B-011-apex-mx-kaydi-yok.md` → Çözüm Yolu'nda hazır — bu faz sıfırdan başlamaz. ⚠️ Yukarıdaki `DEMO_FROM` kriteriyle **karıştırma**: giden posta bugün zaten çalışıyor (SPF + iki DKIM yayında, lead bildirimi `delivered`), eksik olan yalnız **gelen** postadır
 - TR adresler v2'de aynı yolda (`/demo`, `/fiyat`…) — 301 gerekmez ama ölçülür
-- Geri dönüş: DNS'i v1 projesine geri çevirmek; `GIT-STRATEJI.md` (kickoff-verify'da doğar) geri dönüş yönünü yazar
+- Geri dönüş: alan adını v1 projesine geri **taşımak** — DNS değişmez (apex zaten Vercel'e bakıyor, B-043), Vercel'in taşıma ucuyla tek çağrı; `GIT-STRATEJI.md` geri dönüş yönünü yazar
 - **Env taşıma — Production'da üç değer değişir** (bugün önizlemeye göre kurulu):
   - `LEAD_STORE_TOKEN` → canlı depodaki üretim token'ı. Unutulursa geçişten sonra gerçek talepler `leads_preview`'a düşer ve API bunu söylemez (`201` iki koleksiyonda aynı).
   - `IP_HASH_SALT` → v1'in değeri, `ip_hash` sürekliliği için (TASK-1.18 Karar Noktası).

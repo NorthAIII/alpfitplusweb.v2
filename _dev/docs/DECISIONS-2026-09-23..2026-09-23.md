@@ -1,0 +1,159 @@
+# DECISIONS — Karar Günlüğü · 2026-09-23 .. 2026-09-23
+
+← `DECISIONS.md` · kapanan karar aralığı
+
+**Amaç:** `DECISIONS.md`'nin kapanmış karar aralığı — Faz 2'nin kapanış günü (2026-09-23) alınan **7 karar**. Kayıtlar taşınırken değiştirilmedi; sıra (en yeni en üstte) korundu. Aynı gün tarihli Faz 3 araştırma kararı (*"Kontrast ve mobil kapılarının ölçüm sözleşmesi yeniden kuruluyor"*) Faz 3'e ait olduğu için aktif seride kaldı.
+**Giriş noktası:** `DECISIONS.md` — aktif seri ve kapanan aralıkların pointer listesi oradadır.
+
+<!-- KURAL: Bu günlük append-only'dir — yazılmış bir karar silinmez, düzeltilmez. Geçersizleşen karar YENİ bir kararla geçersiz kılınır. -->
+<!-- KURAL: Bu dosya KAPANMIŞ bir aralıktır — buraya yeni karar EKLENMEZ. Yeni kararın evi parent `DECISIONS.md`'dir. -->
+
+---
+
+### 2026-09-23 — Onay e-postasının alıcısı doğrulanmıyor: adres başına tavan + selamlamadaki serbest metnin kaldırılması
+
+**Bağlam:** TASK-2.07 (B-059) talep sahibine onay e-postasını açtı. Faz 2'nin kabul testi (senaryo 26, 2026-09-23) uçta şunu ölçtü: e-posta, **istek gövdesinde yazan her biçimsel geçerli adrese** gidiyor, doğrulanmış `alpfitplus.com` göndericisinden çıkıyor ve selamlamada istek sahibinin 120 karakterine kadar metnini taşıyor. Sınırlayan kapılar ölçüldü — IP başına 10 dk / 5 istek (6. istek `429`), bal küpü, onay kutusu — ama **adresin sahipliğini gösteren kapı yok**. Zarar içerik değil, gönderici itibarı ve istenmeyen posta. `isValidEmail`'i sıkılaştırmak çözüm değil: gevşekliği bilinçli (B-021/TASK-1.12) ve sorun biçim değil sahiplik.
+
+**Seçenekler:**
+1. **Adres başına tavan** — aynı alıcıya belirli bir pencerede en fazla N onay. Akışa dokunmaz; hacmi kırpar, kapatmaz.
+2. **Selamlamadaki serbest metni kaldır** — istek sahibinin yazdığı metin alıcıya hiç ulaşmaz; e-posta yine gider. Kötüye kullanımı **içeriksiz** bırakır.
+3. **Onayı ikinci adıma bağla** (çift katılım) — e-posta yalnız doğrulama bağlantısına tıklanınca gider. En sağlamı; yeni durum, saklanan jeton ve yasal metin revizyonu getirir, dönüşüm yoluna dokunur.
+
+**Karar:** **1 + 2 birlikte; 3 reddedildi.** Tavan **24 saatte 3** onay e-postası, anahtar `email.trim().toLowerCase()` (`api/demo/route.ts` → `confirmCapped`). Onay metni artık **parametre almaz** (`content/mail.ts` → `text` sabit bir dizge, `Merhaba ${name},` → `Merhaba,`). Tavana takılan gönderim kayda `skipped` yazar — `notify_lead` kümesi **büyütülmez** (alan adı geçişinde v1 ile aynı koleksiyon okunacak). Ziyaretçinin gördüğü yanıt, kayıt ve ekip bildirimi **hiç değişmez**.
+
+**Gerekçe:**
+- **Tek başına hiçbiri bulguyu kapatmıyordu.** 1 tek başına saldırganın **kendi yazdığı metni** üçüncü bir adrese tavan kadar göndermesine izin verirdi; 2 tek başına gönderici itibarını yiyen hacmi hiç kırpmazdı. Bedeli üç dosya ve **sıfır akış değişikliği**, yani ikisini birden almamak için bir gerekçe yok.
+- **3 ILKELER'in 1. ekseniyle (Dönüşüm) doğrudan çatışıyor.** Saklanan jeton yeni bir kişisel veri alanıdır ve M3 F3.2'nin kalıcı koruma kriterini (aynı turda yasal metin revizyonu) ateşler; pilot aşamadaki bir tanıtım sitesinin bugünkü hacmiyle orantısız. Kapanmayan artık — adres sahipliğinin **gerçekten** doğrulanması — bu seçenekte durur ve ihtiyaç doğarsa kendi bulgusuyla açılır.
+- **Metnin parametresiz olması biçimsel bir kapıdır.** Parametre yoksa enjekte edilecek yer de yoktur; kişiselleştirmeyi geri isteyen her değişiklik aynı soruyu yeniden açar ve bunu kod yorumunda yazılı bulur.
+- **Sayaç `HITS`'in ölçülmüş kusurlarını tekrarlamaz** (B-037 k.2): reddedilen deneme sayaca yazılmaz, harita dolduğunda `clear()` ile herkesin sayacı silinmez. **Bilinen sınırlar, bilinçle:** sayaç bellek içi ve örnek başınadır (`HITS` ile aynı tercih) ve alt-adresleme (`ad+etiket@…`) normalleştirilmez — o normalleştirme farklı iki **gerçek** adresi aynı sayaca koyup meşru bir onayı düşürebilirdi; kalan yüzey 2 sayesinde içeriksizdir.
+- **Yasal metin değişmedi ve gerekçesi yazıldı** (M3 F3.2): yeni hedef, kayda yeni alan ve yeni sağlayıcı yok; adres yalnız sunucunun geçici belleğinde tutuluyor. Metnin IP paragrafının öznesi *"IP adresiniz"*dir, İşleme amaçları listesi zaten *"aynı adresten gelen talep sayısını sınırlamak"* diyor — hiçbir yaşayan cümle yanlışlaşmıyor.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.21 (`tasks/archive/TASK-2.21.md`), UAT senaryo 26 (`phases/PHASE-2-UAT.md`)
+
+---
+
+### 2026-09-23 — Yasal metin aktarımı olgu olarak yazar: dört tedarikçinin ülkesi sayılır, hukuki dayanak hukukçuya bırakılır
+
+**Bağlam:** 2026-09-22 «Ölçüm sunucusu ham IP tutuyor…» kararı metnin ne diyemeyeceğini sabitlemişti; ne **diyeceği** TASK-2.17'ye kalmıştı. Aynı turda aktarım maddesinin olgu tarafı da yazıldı. Ölçüm dört tedarikçinin dördü için de kaynağından yapıldı (döküm: `tasks/archive/TASK-2.17.md`).
+
+**Karar:** Metin aktarımı **koşullu ihtimal olarak değil olgu olarak** anlatır (`aktarılabilir` → `aktarılır`) ve tedarikçi listesi her kalemin **rolünü ve verinin işlendiği ülkeyi** söyler; liste 3 → 4 kaleme çıkar (ekip posta kutusu eklenir). Ölçüm beyanlarında *"IP tutulmaz"* sınıfı iddia kullanılmaz ve **hiçbir saklama süresi yazılmaz** — bunun yerine dokümanın yerleşik deyimi tekrarlanır: *"bugün için otomatik bir silme süresi işletmiyoruz."* Yurt dışı aktarımın **hukuki dayanağı (KVKK m.9) yazılmaz**; o B-008'de hukukçunundur.
+
+**Gerekçe:**
+- **Ölçülen yazılır, ölçülmeyen yazılmaz — ve ikisi aynı cümlede karışmaz.** Vercel için *nerede işlediği* ölçüldü (`x-vercel-id` üç koşumda `iad1`, repoda `vercel.json`/`preferredRegion` yok), Google için yalnız *şirketin nerede olduğu* biliniyor (MX Google'da; Workspace veri bölgesi ölçülmedi) — metin birincisini bölge adıyla, ikincisini yalnız "ABD merkezli" diye yazar.
+- **Gönderim bölgesi ile saklama yeri ayrı cümlelerde durur.** Resend `eu-west-1`'den gönderiyor ama kendi DPA'sında *"primary processing operations take place in the United States"* diyor. v1 bu ikisini bir kez birleştirip yanlış sonuca varmıştı (`bunker-ortami.md`); tekrarlanmaması için ayrım metne yerleştirildi.
+- **Süre vaadi vermemek, uydurma süre yazmaktan dürüsttür** (2026-09-22 kararının devamı). Rotasyon `altyapi/vps` tarafında düzeltilirse ≈ 30 günlük pencere doğar ve metin o gün bir süre yazabilir; bu yüzden metne *"Bir silme süresi işletmeye başladığımızda bu metne yazılacaktır"* çapası kondu.
+- **v1'den gerileme yok** (B-059 k.3): v1'in `RECIPIENTS` listesindeki beş kalemin beşi de karşılandı, `TRANSFER_FACT` karşılığı yazıldı; v2 iki yerde daha ileride (fonksiyon bölgesi adıyla; erişim kaydının kendisi v1'in metninde yok).
+
+**Bedel, bilerek kabul:** Metin yurt dışı aktarımı olgu olarak duyurur ama dayanağını kurmaz — bu boşluk **görünür** kalır ve hukukçu incelemesinde kapanır (B-008). Uydurma bir madde numarası yazmak bu boşluğu gizlerdi.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.17 (`tasks/archive/TASK-2.17.md`), B-024 kapanışı
+
+---
+
+### 2026-09-23 — Devralınan ölçüm ÖZETİ, devralınan iddia kadar risklidir: yasal cümle özetten değil ölçümün kendisinden yazılır
+
+**Bağlam:** TASK-2.17, Umami'nin veritabanı hakkında bir cümle yazacaktı. Elde TASK-2.01'in bir gün önceki özeti vardı: *"`session` yalnız türetilmiş ülke/bölge/şehir tutuyor."* Özet kullanılmadı, `information_schema` yeniden sorgulandı.
+
+**Karar:** Yasal metne giren her olgu, ondan üretilmiş bir **özetten değil ölçümün kendisinden** yazılır — özet aynı projenin bir gün önceki task'ından gelse bile. Ölçüm tekrarı pahalıysa cümle o kalemde yazılmaz.
+
+**Gerekçe:** Yeniden ölçüm özetin **eksik** olduğunu gösterdi: IP sütunu gerçekten yok, ama `session` ayrıca `browser, os, device, screen, language` tutuyor. Özet **yanlış değil, tam değildi** — ve yasal metin tam olmayan bir listeyle yazılsaydı tam olarak B-024'ün kapattığı sınıfta yeni bir eksik beyan doğardı. Maliyet tek bir `SELECT`'ti; bedeli yayındaki bir taahhütte eksik kalem olurdu. Bu, memory'deki *"yerine yazdığın cümle de bir iddiadır"* disiplininin bir basamak yukarısıdır: iddia kadar **iddianın kaynağı da** doğrulanır.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.17 (`tasks/archive/TASK-2.17.md`)
+
+---
+
+### 2026-09-23 — Yasaklı iddia sözlüğünde rakip adı tutulmaz: ne düz metin ne hash; slot beyan edilir, mekanizma F6.4'e bırakılır
+
+**Bağlam:** TASK-2.15 görsel denetime iddia dalı ekledi ve sözlüğü `research/lib/claim-leak.mjs`'te tek kaynak olarak kurdu. Sözlüğün dayanağı `CLAIMS.md`'nin "Söylenemez" sütunu; o sütunun bir satırı **rakip adı**. Ama aynı sınır depoya da uzanıyor: M6 F6.4'ün edge case'i *"rakip adı repoda geçerse kendisi sızıntıdır"* diyor. Task dokümanı bu yüzden bir karar noktası bırakmıştı: düz metin mi, kalıp/hash mı.
+
+**Ölçüm (2026-09-23):** satış dosyasının (`../alpfit-plus-satis/rekabet/`, salt okunur) başlıklarından çıkan **18 gerçek rakip ürün adının 0 tanesi** demo kaynağında (`../Alpfit.v1/demo/*.html`) geçiyor — bu hattın girdisi kendi ürünümüzün demosu, yani sınıfın bu hatta **hiç girdisi yok**. Aynı tarama v2 `src/` içinde bir "rakip adı" bildirdi; bakıldı ve sıradan bir Türkçe sözcük çıktı (kaba ad listesinin yanlış alarmı).
+
+**Seçenekler:**
+1. Adları düz metin olarak sözlüğe yaz — F6.4'ün edge case'inin adıyla yasakladığı şey; deponun kendisi sızıntı olur.
+2. Adların SHA-256 özetlerini tut, jetonları hash'leyerek karşılaştır — düz metin sızdırmaz ama bugün **girdisi olmayan** bir sınıf için mekanizma kurar; ayrıca jeton sınırı (ad kaç sözcük?) ölçülmeden seçilemez.
+3. Slotu sözlükte **adıyla ve gerekçesiyle** beyan et, kalıp/hash mekanizmasını girdinin gerçekten olduğu yere (F6.4 → `src/` metin denetimi) bırak.
+
+**Karar:** 3. `claim-leak.mjs` başlığı slotu ve ölçümü yazılı tutar; dosyada ne ad ne hash durur.
+
+**Gerekçe:**
+- **Bugün koruduğu bir şey yok.** Görsel hattın girdisi kendi demomuz; ölçülen vuruş 0. Girdisi olmayan bir dal, kapının kapsamını büyütmeden bakım borcu üretir.
+- **Yanlış alarm ölçüldü.** Kaba ad eşlemesi bir Türkçe sözcüğü rakip adı sandı. Doğru jeton sınırını seçmek, sınıfın gerçek girdisine (site metni) bakmayı gerektirir — o da F6.4'ün işi.
+- **Tek kaynak korunur.** Sözlük zaten F6.4'ün devralacağı dosya; mekanizma oraya eklendiğinde aynı dosyaya girer, ikinci bir ev açılmaz.
+- **Bedel, bilerek kabul:** görsel hat bugün bir rakip adını göremez. Kaynak salt okunur bir demo olduğu için bu ancak ürün demosuna rakip adı girerse anlam kazanır; o gün F6.4 mekanizması zaten kurulmuş olur.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.15 (`tasks/archive/TASK-2.15.md`), M6 F6.4'ün girdisi
+
+---
+
+### 2026-09-23 — Yayınlanan yetenek kalemi, onu "henüz yok" diye anan cümleyi derleme hatasına çevirir
+
+**Bağlam:** TASK-2.11 yol haritasının son dört evini `CAPABILITIES`'e bağlarken şu sınıf ortaya çıktı: yedi düzyazı cümle kalemi **adıyla** anıyor ve o adın **henüz olmadığını** söylüyor ("QR ve turnike ile giriş **yol haritamızda**", "kartla online ödeme **bugünkü sürümde yok**"). Adı sabitten almak **adı** hizalar; kalem yayınlandığı gün ad doğru kalır, **cümle sessizce yanlış olur** — B-040'ın ölçtüğü ayrışmanın ters yönü.
+
+**Seçenekler:**
+1. Yalnız adı türet, sınırı kod yorumuna yaz (task dokümanının önerisi).
+2. Adı türet + kademeyi de türet, ama `simdi` kademesinde sessizce "bugün var" bas.
+3. Adı türet + kalem `simdi`'ye geçtiğinde **hata fırlat** (fail-closed).
+
+**Karar:** 3. `product.ts` → `upcomingCapability(id)` kalemi döndürür, `stageNote(id)` cümle-içi kademe ekini (`yolda` · `yol haritasında`) `STAGE_LABEL`'dan türetir; ikisi de kalem `simdi` kademesindeyse `Error` atar.
+
+**Gerekçe:**
+- **Kod yorumu bir kapı değildir** — bu projede tam olarak bu ölçüldü: ürünün kendi "v1.5 / ertelendi" yorumları bayatlamıştı (2026-09-23 sürüm etiketi kararı). Sınırı yorumda bırakmak onu bayatlamaya açık bırakırdı.
+- **Sessiz "bugün var" en kötü hâl:** 2. seçenek "pakete dâhil değil" listesinde *"Online kart ile tahsilat (bugün var)"* gibi anlamsız ve yanlış bir satır üretirdi.
+- **Fail-closed ucuz ve gürültülü:** fonksiyonlar modül düzeyinde çağrıldığı için hata **import anında** doğuyor. Sondada ölçüldü: `qr-turnike` `simdi`'ye taşındığında test suite yüklenemedi ve dev sunucusunda `/`, `/fiyat`, `/yazilim-secerken` **500** döndü. Bir kalemi yayına almanın bedeli, onu anan cümleleri elden geçirmektir — bu bilinçli bir maliyettir.
+
+**Bedel, bilerek kabul:** `CAPABILITIES`'te bir kalemi `yolda`/`sonra` → `simdi` taşımak **tek satırlık bir iş değildir**; derleme durur ve ilgili cümleler düzeltilene kadar site ayağa kalkmaz. Ters yön (yeni kalem eklemek, `sonra` → `yolda` taşımak) etkilenmez — `stageNote` kendiliğinden hizalanır. Bu sınır DURUM'un aktif task notunda da duruyor ki sıradaki tur şaşırmasın.
+
+**Kapsam notu:** SSS'nin *"Online ödeme alabiliyor muyum?"* **sorusu** bu kapıyı taşımaz (`capability()` kullanır) — kalem yayınlandığında soru geçerli kalır, değişen yalnız cevaptır. Kapı cevabın son cümlesindedir.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.11 (`tasks/archive/TASK-2.11.md`)
+
+---
+
+### 2026-09-23 — Site sürüm etiketi ürünün sürüm haritasına çapalanır; `nextVersion` açılmaz (aynı günün 7. kararı geçersiz)
+
+**Bağlam:** TASK-2.10 `FounderProgram`'ın üç durum satırını sabite bağlarken orta satırın başlığını (`"v1.5 yolda"`) `PRODUCT_STATUS.nextVersion`'a taşıyacaktı — aynı günün bir önceki kararının 7. maddesi bunu açıkça devrediyordu. Bağlamadan önce ölçüldü.
+
+**Ölçüm** (`../Alpfit.v1/_dev/PRD/VERSIONS.md`, dosyanın kendi beyanı *"Bu dosya source of truth"*):
+
+| Ürünün sürüm haritası | Sitedeki karşılığı |
+|---|---|
+| **v1.5** = kampanya derinleşmesi · gelişmiş raporlama/Excel · bekleme listesi otomasyonu · churn paneli olgunlaşması | `CAPABILITIES.yolda`'nın **ilk üçü** |
+| **v2** = online ödeme · QR/turnike · Apple Health/Google Fit · AI gelişim/beslenme analizi · kurumsal üyelik | `CAPABILITIES.sonra`'nın **beşi de, birebir** |
+| — (haritada **hiç geçmiyor**) | `yolda`'ya TASK-2.08'in taşıdığı **dört B-029 kalemi**: Üye 360 tam fazı · iptal eşiği ayarı · üyelik bitişi bildirimi · tek-yetki revoke |
+
+**Karar:** `"yolda"` kademesi bir **sürümün kapsamı değildir** — yedisine birden "v1.5" demek, B-029'un tam olarak ölçtüğü çapasız iddia sınıfına girer. Bu yüzden:
+
+1. **`nextVersion` açılmadı.** Aynı günün 7. kararı (*"alanı tüketicisini bağlayan task açar — TASK-2.10"*) bu ölçümle **geçersizdir**: alanın tüketicisi doğmadı, çünkü doğru cümle sürüm numarası taşımıyor. Alan ancak **kalem düzeyinde** sürüm bilgisi doğarsa anlamlı olur.
+2. **Alt iki satırın başlığı `STAGE_LABEL`'dan okunur** ("Yolda" · "Yol haritasında") — `/ozellikler`'in kolon başlıklarıyla artık birebir aynı sözlük.
+3. **`version` ("v1") bağlandı** ve çapası ölçüldü: aynı dosya v1 içeriğini tamamlanmış sayıyor (*"v1 içerik tamamlandı, Faz 8–22 ✅"*). 6. karar yerinde duruyor.
+4. **Yeni kural:** sitede bir **sürüm numarası** iddiası yazılacaksa çapası ürünün kod yorumu değil `VERSIONS.md`'dir. Kod yorumundaki *"v1.5 adayı / ertelendi"* bir **kapsam taahhüdü değildir** ve bayatlar — ürünün kendi deposunda bunu kovalayan bir test bile var (`web/src/groups/GroupSessionsPanel.test.tsx:817`, *"bileşen kaynağında 'v1.5' ibaresi kalmadı"*).
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.10 (`tasks/archive/TASK-2.10.md`)
+
+---
+
+### 2026-09-23 — Yetenek/yol haritası tek kaynağı `CAPABILITIES`; `PRODUCT_STATUS.short` silinir, `version` kalır
+
+**Bağlam:** "Bugün var / yolda / yol haritasında" ayrımı beş evde elle yazılıydı ve üçü birbirinden farklıydı (B-040); ayrıca beş yetenek cümlesinin ürün kodunda karşılığı yoktu (B-029). `PRODUCT_STATUS.short` ve `.version` alanlarının ise hiç tüketicisi yoktu (B-047).
+
+**Kararlar ve gerekçeleri:**
+
+1. **Sabitin adı `CAPABILITIES`, kademeler `simdi` / `yolda` / `sonra`.** B-040 `ROADMAP = { simdi, yolda, sonra }` önermişti; "roadmap" adı ilk kademeyi ("bugün var") yanlış çatı altına alıyor — bugün var olan şey yol haritası değil. Kademe anahtarları önerildiği gibi bırakıldı.
+
+2. **Kalem `{ id, label, modul? }` — düz dizi değil.** Beş düzyazı cümle yol haritasındaki tek bir kalemi adıyla anıyor ("QR ve turnike", "Online ödeme"); düz dizide çağrı yeri kalemi indeksle aramak zorunda kalırdı. `capability(id)` bilinmeyen id'de sessizce boş dönmek yerine hata veriyor.
+
+3. **Etiketler cümle-içi biçimde saklanır, başlık türetilir.** Ters yön (başlıktan küçültme) "QR" ve "Apple Health"i bozardı — yalnız büyütme kayıpsızdır. Büyütme Türkçe locale ile yapılır: `iptal` → `İptal` (locale verilmezse `Iptal` olurdu).
+
+4. **`capabilityProse` "simdi" kademesini tip düzeyinde kabul etmez.** Ölçüldü: o kademenin etiketleri kendi içlerinde virgül taşıyor ("takvim, rezervasyon ve bekleme listesi") ve virgülle bağlandıklarında cümle okunamaz hale geliyor. O kademenin düzyazı evi `moduleProse()`; kademeyi liste olarak gösteren `CAPABILITIES.simdi` + `capabilityTitle()` kullanır.
+
+5. **`PRODUCT_STATUS.modules` artık türetiliyor** — "simdi" kademesinin modül düzeyli kalemlerinden. Üretilen cümle bugünkünden **bir kalem farklı**: "antrenör performansı" eklendi (eskisi ürünün on modülünün sekizini sayıyordu). Karşılığı ölçüldü: `../Alpfit.v1` → `backend/src/routes/finance-trainer-performance.ts` (server.ts:427'de kayıtlı), `services/trainer-performance.service.ts`, `web/src/pages/TrainerPerformancePage.tsx`. **"Üye 360" bilinçle dışarıda:** ekran var ama ölçüm grafiği ve diyetisyen notu ürünün kendi "Yakında" kutusunda (B-029, W8) — o kalem "yolda" kademesinde.
+
+6. **`PRODUCT_STATUS.short` ("Pilot aşamada") silindi.** Sıfır tüketici, sıfır planlı tüketici; sitede hiçbir yer bu ifadeyi elle de yazmıyor (ölçüldü). Pilot iddiasını `sentence` taşıyor, yani CLAIMS'in tek-kaynak disiplini zayıflamıyor. **`version` ("v1") kaldı** — "v1 hazır" bugün üç yerde elle yazılı (`chat.ts:126`, `faq.ts:48`, `FounderProgram.tsx:83`) ve TASK-2.10/2.11 onları buraya bağlayacak. Ölçüt alanın büyüklüğü değil tüketicisinin var olup olmadığıydı.
+
+7. **`nextVersion` ("v1.5") AÇILMADI.** `FounderProgram.tsx:88` "v1.5 yolda" başlığını elle yazıyor ve kardeşi bağlanırken o da bağlanmalı — ama tüketicisi doğmadan alan açmak `short`'u ölü borç yapan hatanın ta kendisi. Alanı **tüketicisini bağlayan task açar** (TASK-2.10).
+
+**Kapsam dışı (bilinçle):** Tüketicilerin bağlanması TASK-2.10/2.11'de, karşılıksız cümlelerin düzeltilmesi TASK-2.09'da. Bu task'tan sonra beş ev hâlâ kendi metnini yazıyor — ölçüldü: sabiti atlayan **17 çağrı satırı / 6 dosya** (`ozellikler/page.tsx` 6 · `faq.ts` 3 · `karsilastirma.ts` 2 · `chat.ts` 2 · `FounderProgram.tsx` 2 · `fiyat/page.tsx` 2). Bu sayı TASK-2.10 + 2.11'in kapanış ölçütüdür.
+
+**İlgili Task/Faz:** Faz 2 — TASK-2.08 (`tasks/archive/TASK-2.08.md`)
+
+---
