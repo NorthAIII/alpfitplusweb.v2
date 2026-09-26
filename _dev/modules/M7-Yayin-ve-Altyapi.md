@@ -81,7 +81,7 @@
 **Açıklama:** `alpfitplus.com` v2'ye bağlanır; v1'in 20 adresi (10 TR + 10 `/en/*`) 301 ile karşılığına gider; v1 projesi arşivde, silinmez; sitemap ve canonical tutarlı. "Alan adı geçişi" faz konusu, v2.0'ın sonu.
 
 **Kabul Kriterleri:**
-- 20 adresin hepsi ölçülerek 301 döner ve hedefi 200'dür (tablo faz dokümanına). ⚠️ **20 adres tam küme değil** (araştırma, 2026-09-26): canlıdan ölçülen küme 45 ayrık kalem + her sayfanın eğik çizgili ve `/index.html` biçimi, hepsi **tek atlamada** 301; `/404` · `/en/404` · `/404.html` 404 döner. Tablo `phases/PHASE-4.md` → Araştırma Bulguları
+- 20 adresin hepsi ölçülerek 301 döner ve hedefi 200'dür (tablo faz dokümanına). ⚠️ **20 adres tam küme değil** (araştırma, 2026-09-26): canlıdan ölçülen küme 45 ayrık kalem + her sayfanın eğik çizgili ve `/index.html` biçimi, hepsi **tek atlamada** 301; `/404` · `/en/404` · `/404.html` 404 döner. Tablo `phases/PHASE-4-ARASTIRMA.md` → Dikkat Edilecekler
 - `/en/*` → Türkçe karşılığı: `/en/`→`/`, `/en/features`→`/ozellikler`, `/en/pricing`→`/fiyat`, `/en/segments`→`/segmentler`, `/en/demo`→`/demo`, `/en/support`→`/destek`, `/en/kvkk`→`/kvkk`, `/en/privacy`→`/gizlilik`, `/en/terms`→`/kullanim-kosullari`, `/en/404`→404
 - Canonical `https://alpfitplus.com/...`, sitemap aynı alan adı
 - `DEMO_FROM` alan adı e-posta sağlayıcısında doğrulanmış
