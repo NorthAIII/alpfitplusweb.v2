@@ -76,7 +76,7 @@
 
 ---
 
-### F7.5: Alan adı geçişi ve 301 haritası → Phase —
+### F7.5: Alan adı geçişi ve 301 haritası → Phase 4
 
 **Açıklama:** `alpfitplus.com` v2'ye bağlanır; v1'in 20 adresi (10 TR + 10 `/en/*`) 301 ile karşılığına gider; v1 projesi arşivde, silinmez; sitemap ve canonical tutarlı. "Alan adı geçişi" faz konusu, v2.0'ın sonu.
 
@@ -87,7 +87,7 @@
 - `DEMO_FROM` alan adı e-posta sağlayıcısında doğrulanmış
 - v1 Vercel projesi alan adından ayrıldı ama proje duruyor
 
-**Bağımlılık:** F7.3, F7.4, M6 F6.3 yeşil, M3 F3.2–F3.3 çalışıyor
+**Bağımlılık:** F7.3, F7.4, M3 F3.2–F3.3 çalışıyor; **yayın kapısı olarak** beş ölçüm + test paketi + tip kontrolü yayın kopyasına karşı elle yeşil (`a11y`'nin kayıtlı B-063 kalemi hariç). *"M6 F6.3 yeşil"* şartının yerine geçti — CI sıra değişimiyle geçişten sonraya kaldı (kapsam kararı: `phases/PHASE-4.md` → Kapsam Tartışması, 2026-09-26)
 
 **Edge Case'ler:**
 - **Apex'te MX kaydı yok — KVKK başvuru adresi posta almıyor** (B-011; Faz 2'nin kapsam kararıyla 2026-09-23'te bu faza taşındı). Yasal metin `destek@alpfitplus.com`'a otuz gün taahhüdü veriyor (`legal.ts:230` başvuru + `:316` silme, ikisi de `CONTACT.support` üzerinden) ve taahhüt **tam da bu fazda** gerçek olur: site alan adına bağlandığı anda metin ziyaretçiye görünür hâle gelir. İki adım kullanıcıdadır (Squarespace'te beş MX kaydı + Google'da kutunun/takma adın var olması); kaynağından doğrulanmış yönerge, TXT/NS/SOA bozulmama tabanı, bugünkü başarısızlık biçimi (örtük MX) ve kapanış ölçümünün sırası `bulgular/B-011-apex-mx-kaydi-yok.md` → Çözüm Yolu'nda hazır — bu faz sıfırdan başlamaz. ⚠️ Yukarıdaki `DEMO_FROM` kriteriyle **karıştırma**: giden posta bugün zaten çalışıyor (SPF + iki DKIM yayında, lead bildirimi `delivered`), eksik olan yalnız **gelen** postadır

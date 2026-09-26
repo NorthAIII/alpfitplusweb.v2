@@ -41,7 +41,7 @@ Alpfit Plus Web Sitesi v2
     ├── F7.2: Güvenlik başlıkları, sitemap, robots    → Phase —
     ├── F7.3: Vercel'de ayrı proje ve önizleme yayını → Phase 1
     ├── F7.4: Analitik olay sayımı                    → Phase 1
-    └── F7.5: Alan adı geçişi ve 301 haritası         → Phase —
+    └── F7.5: Alan adı geçişi ve 301 haritası         → Phase 4
 ```
 
 ---
@@ -106,7 +106,7 @@ M6 ═══ hepsini kapılar
 | F7.2: Güvenlik başlıkları, sitemap, robots | M7 | v2.0 | — | ✅ |
 | F7.3: Vercel'de ayrı proje ve önizleme yayını | M7 | v2.0 | 1 | ✅ |
 | F7.4: Analitik olay sayımı | M7 | v2.0 | 1 | ✅ |
-| F7.5: Alan adı geçişi ve 301 haritası | M7 | v2.0 | — | ⬜ |
+| F7.5: Alan adı geçişi ve 301 haritası | M7 | v2.0 | 4 | 🔄 |
 
 **Durum simgeleri:**
 - ⬜ **Bekliyor** — Fazı henüz başlamadı
@@ -116,5 +116,6 @@ M6 ═══ hepsini kapılar
 
 > ✅ işaretli feature'ların çoğu **kickoff öncesi, DevFlow dışında** tamamlandı (2026-09-09 → 09-11); kanıt git log + başlangıç ölçümü (`modules/M6-Kalite-Kapilari.md` → Teknik Notlar). **Faz 1'in dört feature'ı (F3.2, F3.3, F7.3, F7.4) 2026-09-22'de review-phase ile ✅ oldu** — kabul kriterleri `phases/PHASE-1-UAT.md`'de senaryo senaryo ölçülü; iki senaryonun (#10 e-posta yerleşimi, #16 panel arayüzü) doğrulama kanalı kullanıcı gözüdür, kriterin ürün tarafı ölçüldü.
 > **Faz 2 ("Yayın öncesi düzeltmeler") ve Faz 3 ("Görsel ve mobil iyileştirme") bu matrisi değiştirmez** — ikisi de bulgu fazıdır: yeni yetenek getirmez, tamamlanmış feature'ların ziyaretçiye yanlış görünen ya da hiç görünmeyen yerlerini düzeltir (Faz 1'in destek-işi deseninin aynısı). Hangi feature'a hangi bulguyla dokunulduğu `phases/PHASE-2.md` ve `phases/PHASE-3.md` → Feature Listesi'nde; Faz sütununa yazılmaz ve ✅ durumları 🔄'ya çevrilmez. Eksik atama değildir. ⚠️ Faz 3 iki feature'ın **kabul kriterini genişletti** (gövde hizalaması, durum değil): F2.3'e ilk-ekran dönüşüm yüzeyi · dokunma hedefi kademesi · hareket azaltmanın iki ayağı, F2.1/F2.2'ye dekoratif görselin boş alt ölçütü ve 404/çöküş yüzeyinin kapı kapsamı, F5.3'e `font-guard`'ın ikinci dalı, F6.1'e kapsam eşiği.
+> **Faz 4 ("Alan adı geçişi") matriste yalnız F7.5'i taşır.** v1 paritesi ve yayın hazırlığıyla dokunduğu ✅ feature'lar (F1.1 · F2.3 · F3.1 · F3.2 · F3.3 · F5.4 · F7.2 · F7.3 · F7.4) aynı emsalle 🔄'ya çevrilmez; hangisine hangi bulguyla dokunulduğu `phases/PHASE-4.md` → Feature Listesi'nde.
 > Modül detayları (sorumluluk, feature kabul kriterleri, edge case'ler) → `modules/MX-ModulAdi.md`
 > Versiyon sütunu PRD'den değil, kickoff versiyon planından (v2.0 = alan adı geçişiyle biter; v2.1 = asistan) aktarıldı — `docs/DECISIONS.md` 2026-09-11. Faz sütunu sadece planlanmış fazlar için doldurulur, henüz planlanmamış feature'lar "—" kalır.

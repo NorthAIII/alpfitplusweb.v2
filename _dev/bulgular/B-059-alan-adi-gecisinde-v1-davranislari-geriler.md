@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** tutarsızlık / gerileme | **Alan:** M7 — F7.5 Alan adı geçişi / M3 — Lead hattı / M1 — Yasal metin
 **Kaynak:** audit-product (Gelen Kutusu mezuniyeti: `[PHASE-1 plan revizyonu]` + `[TASK-1.15]`) | **Tarih:** 2026-09-22
-**Durum:** Kısmen çözüldü — (1) ve (2) Faz 2'de kapandı (TASK-2.07, 2026-09-23); **(3) açık**, alan adı geçişi fazının parite listesinde
+**Durum:** Kısmen çözüldü — (1) ve (2) Faz 2'de kapandı (TASK-2.07, 2026-09-23); **(3) → Faz 4** (v1 parite listesi)
 
 ## Gözlem
 

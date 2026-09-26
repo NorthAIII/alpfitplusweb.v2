@@ -2,7 +2,7 @@
 
 **Önem:** 🔴 | **Tip:** hata / lead kaybı + kişisel veri | **Alan:** M3 — Lead hattı (`src/components/sections/DemoForm.tsx`)
 **Kaynak:** TASK-3.02 (JavaScript kapalı ekseni) | **Tarih:** 2026-09-24
-**Durum:** Açık
+**Durum:** → Faz 4
 
 ## Gözlem
 

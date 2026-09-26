@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** eksik / altyapı | **Alan:** M7 — Yayın ve altyapı (F7.5)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → Faz 4
 
 ## Gözlem
 

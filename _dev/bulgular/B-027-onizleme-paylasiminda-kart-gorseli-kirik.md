@@ -2,7 +2,7 @@
 
 **Önem:** 🟢 | **Tip:** hata / yayın yüzeyi | **Alan:** M7 — Yayın ve altyapı
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → Faz 4 (canlı alan adındaki kart görseli, `canonical` ve site haritası geçişle ölçülerek teyit edilir; önizleme yüzeyinin kartı açık)
 
 ## Gözlem
 

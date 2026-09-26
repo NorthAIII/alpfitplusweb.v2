@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** güvenlik / gerileme | **Alan:** M7 — Yayın ve altyapı
 **Kaynak:** audit-product | **Tarih:** 2026-09-11
-**Durum:** Açık
+**Durum:** → Faz 4
 
 ## Gözlem
 

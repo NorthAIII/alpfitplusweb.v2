@@ -1,6 +1,6 @@
 # DURUM — Proje Dashboard
 
-**Son Güncelleme:** 2026-09-26 — **review-phase: FAZ 3 ✅ KAPANDI, milestone KISMEN.** Retrospektif + on eksenlik kalite kontrol yazıldı ve doküman boyut kapısında bölündü (`PHASE-3-RETROSPEKTIF.md`; bölünmemiş parent ~42,9k token olurdu, ikisi de çizginin altında). Dokuz eksen ✅, biri ⚠️ (Erişilebilirlik — kapı kayıtlı kararla `1` ile kapanıyor, kör noktaları kapsam kararıyla açık). Faz penceresi `6f4eca9..HEAD` = 37 commit / **103 dosya / +9.786−429**, güvenlik merceğinde **somut bulgu yok**. Araştırma ↔ sonuç kıyası **27 kalem** düzeltti (19 rakam · 4 nesne tarifi · 4 teşhis). **Milestone'un üç ayağı açık ve hiçbiri ürün kusuru değil:** *"beş ölçüm yeşil"* (kayıtlı kullanıcı kararı) · Roller'in diyetisyen ayağı (TASK-3.24 ❌ İptal) · gerçek telefon turu (`kanal: UAT`). **Düzeltme task'ı doğmadı; sıradaki faz `discuss`.**
+**Son Güncelleme:** 2026-09-26 — **discuss-phase: FAZ 4 "Alan adı geçişi" 🔄 AÇILDI.** Kapsam geçiş + v1 paritesi + B-065 (JS kapalı form); yayın iki dala ayrılıyor ve yayın kapısı elle koşulan tam kontrol seti; Vercel ücretli plana ve Frankfurt'a geçiyor; geçişi Claude kullanıcının tetiğiyle yürütüyor; yedi bulgu faza alındı ve `[TASK-3.25 SORU]` cevaplandı. **Sıradaki adım `research`.**
 
 <!-- KURAL: Bu satır her oturum sonunda ÜZERİNE YAZILIR — tek satır, tek cümle. "Önceki:" / "Eski:" prefix ile kümülatif yığma YASAK; HTML comment'e sarma da yasak (CLAUDE.md → Doküman Disiplini). Tarih + kısa özet yeterli; detay için git log + ilgili PHASE/TASK dokümanları. Alan **yalnız burada, dokümanın başında** durur — dosyanın sonuna ikinci bir kopya açma (tek-değerli alan tek yerde; CLAUDE.md → Dokümantasyon İlkeleri). -->
 
@@ -8,11 +8,11 @@
 
 ## Aktif Faz
 
-**Faz:** Phase 4 — Alan adı geçişi *(geçici ad, Sıradaki Fazlar'ın ilk maddesinden; numarayı ve satırı `discuss-phase` damgalar)*
-**Milestone:** Henüz yazılmadı — kapsam tartışmasında belirlenir. Konu özeti ve devralınan kalemler: `PHASES.md` → Sıradaki Fazlar.
-**Adım:** discuss
-**İlerleme:** Faz henüz açılmadı. **Devralınan dört kalem** (Faz 2 retrosunun kaydı): Faz 1'in üç env değeri (`LEAD_STORE_TOKEN` · `IP_HASH_SALT` · `NEXT_PUBLIC_UMAMI_WEBSITE_ID`) + **B-011** (apex'te MX kaydı yok, yasal metnin otuz gün taahhüdü tam o gün gerçek olur) — dördü de o fazın UAT senaryosu olmalı; B-059'un kalan parite ayağı ve B-043'ün geçiş yüzeyi de orada. ⚠️ **Faz 3'ten devreden ve alan adı geçişinden ÖNCE kapanması gereken tek kalem:** ön-doldurulan kişisel verinin yasal metinde karşılığı yok (`BULGULAR.md` → Gelen Kutusu `[TASK-3.25 SORU]`, üç seçenek hazır) — site `noindex` olduğu için bugün yayını bloke etmiyor.
-**Faz Dokümanı:** — yok (discuss-phase doğurur) · son kapanan: `phases/PHASE-3.md` ✅ (çocukları: `PHASE-3-KAPSAM.md` · `PHASE-3-ARASTIRMA.md` · `PHASE-3-UAT.md` · `PHASE-3-RETROSPEKTIF.md`)
+**Faz:** Phase 4 — Alan adı geçişi
+**Milestone:** `alpfitplus.com` + `www` v2'ye bakıyor ve site dizine açık; v1'in canlı adres kümesi (bugün 27) ölçülerek 301 → 200; canlı kayıt işaretli tek testle kanıtlandı, ölçüm v1'in Umami kaydında; v1 paritesi kapandı ve yasal metin WhatsApp aktarımını söylüyor; `destek@` posta alıyor; JS kapalı form veri sızdırmıyor; yayın iki dallı ve kapılı; ücretli plan + Frankfurt; v1 projesi duruyor. Tam cümle `PHASES.md` → Faz Durumu ve `phases/PHASE-4.md`.
+**Adım:** research
+**İlerleme:** Kapsam tartışması tamamlandı (2026-09-26) — kararlar `phases/PHASE-4.md` → Kapsam Tartışması. Araştırmanın ilk işleri kararlarda adıyla yazılı: v1 paritesinin **canlıya karşı** yeniden çıkarılması (liste tamlığı iddia edilmedi), v1 projesine komut satırı erişimi, ücretli planın güncel bedeli, dal önizlemesinin koruma durumu. ⚠️ **Sıra şartı:** iki dal ayrımı alan adı bağlanmadan **önce** kurulur; B-011'in iki kullanıcı adımı da geçişten önce.
+**Faz Dokümanı:** `phases/PHASE-4.md` · son kapanan: `phases/PHASE-3.md` ✅ (çocukları: `PHASE-3-KAPSAM.md` · `PHASE-3-ARASTIRMA.md` · `PHASE-3-UAT.md` · `PHASE-3-RETROSPEKTIF.md`)
 
 ---
 
@@ -35,12 +35,12 @@
 
 ## Aktif Task
 
-**Task:** — yok (Faz 3 ✅ kapandı; sıradaki faz henüz açılmadı)
-**Durum:** Faz 3'ün 27 task'ı sonuçlandı (26 ✅ · 1 ❌ İptal) ve review tamamlandı. Sıradaki adım **`/devflow:discuss-phase`**
-**İlerleme:** — yok (yeni fazın task'ları kapsam tartışmasından sonra yazılır)
+**Task:** — yok (Faz 4 açıldı; task'lar `plan-phase`'de yazılır)
+**Durum:** Faz 4'ün kapsam tartışması tamamlandı. Sıradaki adım **`/devflow:research-phase`**
+**İlerleme:** — yok
 **Not:**
 - ⚠️⚠️ **`a11y` kapısı bugün `1 · çıkış 1` veriyor ve bu bir eksik DEĞİL, kayıtlı bir kullanıcı kararıdır** (2026-09-26, seçenek B). Kalan tek kalem `/gecis`'in *"Elle tutulan kayıtlar…"* paragrafı ve **sayfanın değil ölçüm betiğinin kusuru** — paragrafın gerçek kontrastı **7,05**, kırmızıyı yapışkan başlığın kendi düğme etiketinin ölçüm maskesine sızması üretiyor (B-063'ün maske sızıntısı yüzü, iki izolasyonla gösterildi). **Sonraki turlar bunu "kapı kırmızı, düzeltilmeli" diye okumasın** ve bir regresyon aranırken bu kalem **hariç** okunsun. Eşik ve kapsam tablosu: `modules/M6-Kalite-Kapilari.md` → Teknik Notlar; mekanizma `bulgular/B-063-*.md`; kararın tam metni `tasks/archive/TASK-3.26.md` → Kapanış Gerekçesi.
-- ⚠️ **Yayın öncesi kapanması gereken tek kalem kullanıcı kararı bekliyor:** 503 kurtarma bağlantısı kişisel veriyi (ad · kulüp · telefon) WhatsApp'a taşıyor ama yasal metnin aktarım listesinde WhatsApp yok (`legal.ts`'te dize **0 kez**, KVKK → Aktarım dört tedarikçi sayıyor). Site `noindex` önizlemede olduğu için **bugün yayını bloke etmiyor**; üç seçenek ve ölçüm `BULGULAR.md` → Gelen Kutusu `[TASK-3.25 SORU]`.
+- ⚠️ **Yayın öncesi kalemin kararı verildi, uygulaması Faz 4'te:** 503 kurtarma bağlantısının WhatsApp'a taşıdığı kişisel veri yasal metne yazılacak (kullanıcı, 2026-09-26, seçenek a; v1'in alıcı/ülke dökümü aynı işte). Metin değişene dek site **alan adına bağlanmaz** — geçiş task'ı bunun arkasında durur.
 - ⚠️ **`_dev/` dokümanları Tailwind taramasına dahil — doküman metnine yazılan bir sınıf adı üretim CSS'ine gerçek kural ekliyor** (TASK-3.27'de kazara ölçüldü: 85.312 → 85.350 bayt; dize çıkarılınca md5 birebir döndü). Bugünkü çözüm yalnız bir yazım kuralı (`docs/STYLE-GUIDE.md` → sınıf adını bölerek yaz); kalıcı çare üç seçenekli bir karar ve Gelen Kutusu'nda. ⚠️ `perf.mjs` KB cinsinden ölçtüğü için bu sızıntıyı yuvarlayıp gizler — `_dev/` yazan tur CSS'i bayt + md5 ile sınamalı.
 
 > Faz 3'ün kapanış hâli, kapı rakamları, 27 task'ın izi ve on eksenlik kalite kontrolü `phases/PHASE-3.md` + `phases/PHASE-3-RETROSPEKTIF.md`'dedir; açık bulgular ve kullanıcıya bağlı işler `BULGULAR.md`'de. Bu blok yalnız **sıradaki oturumun bilmesi gereken** üç kalemi taşır.
@@ -49,7 +49,7 @@
 
 ## Task Durumu (Aktif Faz)
 
-**Task:** — yok. Yeni fazın task listesi `plan-phase`'de yazılır; tablo o zaman dolar.
+**Task:** — yok. Faz 4'ün task listesi `plan-phase`'de yazılır; tablo o zaman dolar.
 
 **Durum Kodları:** ⬜ Bekliyor | 🔄 Devam ediyor | ⏸️ Duraklatıldı | ✅ Tamamlandı | 🔴 Bloke | ❌ İptal
 
@@ -88,7 +88,7 @@
 
 ## Hızlı Erişim
 
-**Aktif Task:** — yok · Faz 3 ✅ kapandı (27 task sonuçlandı, review tamamlandı), sıradaki adım `/devflow:discuss-phase`
-**Aktif Faz:** — yok (Phase 4 "Alan adı geçişi" henüz açılmadı; `discuss-phase` doğurur) · son kapanan: `phases/PHASE-3.md` ✅ (kapsam: `PHASE-3-KAPSAM.md` · araştırma: `PHASE-3-ARASTIRMA.md` · UAT: `PHASE-3-UAT.md` · retrospektif ve kalite: `PHASE-3-RETROSPEKTIF.md`)
+**Aktif Task:** — yok · Faz 4 kapsam tartışması tamamlandı, sıradaki adım `/devflow:research-phase`
+**Aktif Faz:** `phases/PHASE-4.md` 🔄 (Alan adı geçişi) · son kapanan: `phases/PHASE-3.md` ✅ (kapsam: `PHASE-3-KAPSAM.md` · araştırma: `PHASE-3-ARASTIRMA.md` · UAT: `PHASE-3-UAT.md` · retrospektif ve kalite: `PHASE-3-RETROSPEKTIF.md`)
 **Task Sistemi:** `tasks/TASKS-README.md`
 **Açık bulgular ve kullanıcıya bağlı işler:** `BULGULAR.md`

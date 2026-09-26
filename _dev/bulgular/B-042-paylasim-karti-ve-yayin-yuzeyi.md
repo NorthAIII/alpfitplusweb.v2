@@ -2,7 +2,7 @@
 
 **Önem:** 🟡 | **Tip:** hata / dönüşüm-altyapı | **Alan:** M7 — Yayın ve altyapı (M2 metadata)
 **Kaynak:** audit-product | **Tarih:** 2026-09-12
-**Durum:** Açık
+**Durum:** → Faz 4 (yalnız kalem 3 — JSON-LD paritesi; kalan kalemler açık)
 
 ## Gözlem
 
