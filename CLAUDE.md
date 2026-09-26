@@ -250,7 +250,7 @@ docker compose exec web npm test                       # Vitest — web konteyne
 |---|---|---|
 | `a11y.mjs` | Kontrast, h1, alt metni, adsız link/buton (16 rota, yayın kopyasına karşı) | `✓ KAPI YEŞİL — 16 sayfada 0` **ve çıkış kodu 0** |
 | `mobile-audit.mjs` | Yatay kaydırma, taşan eleman, dokunma hedefi (16 rota, yayın kopyasına karşı) | `✓ KAPI YEŞİL — 16 sayfada 0` **ve çıkış kodu 0** |
-| `font-guard.mjs` | Font kapsaması (üretim konteynerine karşı) | kümede olmayan karakter yok |
+| `font-guard.mjs` | Font kapsaması **iki dalda** — dal 1 *site metni ⊆ küme*, dal 2 *küme ⊆ woff2 glifleri* (üretim konteynerine karşı) | **ikisi de geçer:** kümede olmayan karakter yok **ve** muaf olmayan eksik glif yok (muaf 10: `₺` + dört ok, Sora'nın iki yüzünde) |
 | `perf.mjs` | TTFB, FCP, LCP, CLS, sayfa ağırlığı | üretim konteyneri (3100) ayakta olmalı |
 | `scan.mjs <yol> <etiket> <en> <boy>` | Sayfayı ekran ekran gezer, konsol hatası toplar | konsol temiz |
 | `render-product.mjs` | Ürün ekran görüntülerini üretir | denetim: sızıntı yok |

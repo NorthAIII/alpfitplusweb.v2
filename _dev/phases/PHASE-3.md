@@ -1,6 +1,6 @@
 # Phase 3: Görsel ve mobil iyileştirme
 
-**Durum:** 🔄 Devam ediyor
+**Durum:** ✅ Tamamlandı
 
 <!-- KURAL: Yukarıdaki **Durum:** alanı tek değer taşır (menüden biri) ve PHASES.md'deki faz durumuyla AYNI olmalıdır. Yazan üç komut vardır: doğuşta discuss-phase (`🔄 Devam ediyor`), kapanışta — ikisi de son meşru anda — review-phase Adım 6 (`✅ Tamamlandı`, PHASES ✅ ile aynı anda) ve prd-review erken-sonlandırma arşivlemesi (`⚠️ Erken sonlandırıldı`). Faz ✅/⚠️ damgalandıktan sonra doküman tarihseldir — alan bir daha düzeltilemez, bu yüzden atlanamaz. -->
 <!-- KURAL: Bu doküman tek-okunabilir kalmalı (CLAUDE.md → Boyut ve Bölünme). Doküman kırmızı çizgiyi (~20k token) **AŞARSA** (ölçüm dosya bazlıdır: `doc-scan.sh _dev/phases/PHASE-3.md`) faz HÂLÂ AKTİFKEN `PHASE-3-<EK>.md`'ye bölünür (**ek BÜYÜK — parent'ın casing'ini izler**; geri-linkteki `<tip>` küçük harf kalır) — parent'ta self-yeten özet + pointer kalır, çocuğun başına `← PHASE-3 · <tip>` geri-linki konur, içerik taşınıp silinir, parent o fazın mini-index'i olur. Kapanış damgasından sonra bölme yasaktır; research-phase, verify-phase ve review-phase faz hâlâ aktifken boyutu kontrol eder. -->
@@ -13,6 +13,8 @@
 **Amaç:** Siteyi ziyaretçinin gerçekten gördüğü koşullarda — dar telefon, büyütülmüş yazı, yavaş bağlantı, gerçek cihaz — bölüm bölüm incelemek ve ölçülmüş erişilebilirlik ile mobil kusurlarını kapatmak. Aynı fazda kontrast ve mobil kapıları **ölçtüğünü gerçekten ölçen ve eşik altında kırmızıya dönebilen** hâle getirilir; yoksa bu fazın düzeltmeleri bir sonraki değişiklikte sessizce geri gelir. Faz, alan adı geçişinden önce gelir: ölçülmüş AA ihlallerinin canlıya çıkmaması `ILKELER.md`'nin pazarlıksız maddesidir.
 
 **Milestone:** Site 320 / 390 / 412 / 768 / 1440 px'te, %200 ve %400 büyütmede, hareket azaltma açıkken, JavaScript kapalıyken ve yatay tutuşta bölüm bölüm gezildi; gerçek telefonda uçtan uca tur koşuldu ve çıkan bulgular kanvasa düşüp triyaj edildi. Ölçülmüş beş kontrast ihlali kalmadı ve 320 px'te kesilen metin ya da işlev yok. Telefonda her sayfanın ilk ekranında demoya çıkan bir yol var ve dönüşüme dokunan her hedef en az 44 px. Kontrast ve mobil kapıları 16 sayfanın hepsini geziyor, **boyanan gerçek rengi** ölçüyor, ölçemediğini sayıyor ve eşik altında sıfır-olmayan çıkış kodu veriyor. Ana sayfanın iki kart ızgarası reddedilen kalıptan çıktı; Roller sekmeleri doğru ekranı gösteriyor; yazı tipi kümesindeki her karakterin dosyada gerçekten bulunduğu doğrulandı. Beş ölçüm yeşil.
+
+**Kapanış notu (review-phase 2026-09-26) — milestone KISMEN:** dokuz kriterin sekizi ölçülerek karşılandı; **üç ayak açık ve hiçbiri ürün kusuru değil.** (1) *"Beş ölçüm yeşil"* **bilinçli olarak karşılanmadı** — `a11y` `1 · çıkış 1` ile kapanır (kullanıcı kararı 2026-09-26, seçenek B: kalan kalem sayfanın değil ölçüm betiğinin kusuru, paragrafın gerçek değeri **7,05** iki izolasyonla ölçüldü) ve `scan`in yeşili yayın kopyasını hiç ölçmüyor (betikte 3000 sabit); kalanın evi **B-063** + Gelen Kutusu `[TASK-3.21]` → "Kalite kapıları otomatik" fazı. (2) *"Roller sekmeleri doğru ekranı gösteriyor"* kriterinin **diyetisyen ayağı açık** — TASK-3.24 ❌ İptal (kullanıcı kararı 2026-09-25; ön koşul ölçüldü ve kalıcı olarak sağlanmadı), evi **B-046** kanvasta açık, rota ayrı bir quick turu. (3) *"Gerçek telefonda uçtan uca tur"* **doğrulanamadı** — `kanal: UAT`, kullanıcı cihazı gerekiyor (ILKELER: kullanıcı-tarafı iş fazın bitişini kilitlemez), evi Gelen Kutusu `[TASK-1.06]`. Üçü de bilinçli daralma ya da doğrulama-kanalı yokluğudur; kusur yok, faz ✅ kapanır.
 
 **Not (verify-plan 2026-09-23):** *"Roller sekmeleri doğru ekranı gösteriyor"* iki ayaklıdır ve yalnız biri koşulsuzdur. **Eşleme düzeltmesi koşulsuz** (TASK-3.15: antrenör sekmesi bugün rezervasyon takvimini gösteriyor, doğru içerik üretilen kümede var). **Diyetisyen sekmesinin kendi ekranı ise ürün deposuna iki ekranın eklenmesine bağlıdır** (TASK-3.24, koşullu — kapsam kararı: *"faz bu adıma kilitlenmez"*). Ekranlar gelmezse sekme ödünç görselle kalır; kriterin o ayağı **açık** sayılır, B-046 kanvasta durur ve "bilinçli tercih" kaydı yazılmaz.
 
@@ -195,29 +197,23 @@ Dört küme, sırayla: **keşif** (tur önce koşar, düzeltme listesini eksiksi
 
 ## Retrospektif
 
-> Bu bölüm `/devflow:review-phase` oturumunda doldurulur.
+> `/devflow:review-phase` oturumunda dolduruldu (2026-09-26).
+>
+> **Bölme çocuğu:** `PHASE-3-RETROSPEKTIF.md` — retrospektifin tam metni ve on eksenlik kalite kontrol tablosu (retrospektif-ve-kalite).
 
-### Ne İyi Gitti?
+**Özet — bu fazın üç cümlesi.** (1) **Kapı düzeltmelerden önce kuruldu** ve bu sıra 19 düzeltmenin hepsinin kendi kanıtını üretmesini sağladı: `a11y` 57 → 46 → 26 → 9 → 8 → 6 → **1**, `mobile-audit` 585 → 285 → 266 → 250 → **0**. (2) **Devralınan rakamların çoğu bayattı** — araştırma ↔ sonuç kıyası **27 kalem** düzeltti (19 rakam · 4 nesne tarifi · 4 teşhis) ve asıl maliyet rakamların kendisi değil, her düzeltme turunun kapsamını sıfırdan ölçmek zorunda kalmasıydı. (3) **Plan bir halkayı atladı** (`/gecis`'in kontrast kalemleri) ve UAT onu bulmak zorunda kaldı; üstüne yanlış bir *"bilinçli kapsam kararı"* etiketi on beş tur boyunca boşluğu görünmez kıldı.
 
-### Ne Kötü Gitti?
-
-### Sonraki Faz İçin Öneriler
-
-<!-- Alınan dersler ve tavsiyeler. Memory'den MEZUN EDİLEN öğrenimlerin çapalı tek satırlık kaydı da buraya düşer ("<öğrenim> artık <test/lint/CI/validator/guard> tarafından yakalanıyor — memory'den mezun edildi") — kanon: .claude/commands/devflow/lib/memory-sistemi.md → Supaplar. Kayıt faz ✅ damgalanmadan ÖNCE yazılır. -->
-
-### Task-Spesifik Teknik Öğrenimler
-
-<!-- OPSİYONEL: Bu fazdaki task'larda öğrenilen ama proje genelinde geçerli olmayan teknik nüanslar (araç davranışı, framework bug'ı, vb.). MEMORY.md'nin değil, faz retrosunun evidir. Bu fazda böyle bir nüans çıkmadıysa bu alt bölümü tamamen sil. -->
-
-### DevFlow'a Öneri
-
-<!-- OPSİYONEL: Bu fazda fark edilen, DevFlow yönteminin geneline dair (proje-özel OLMAYAN) iyileştirmeler — aracın kendisinin nasıl çalışması gerektiği. Buraya yazılır + kullanıcıya bildirilir; DevFlow'a ayrı oturumda taşınır. Disiplin çıkmadıysa bu alt bölümü tamamen sil. -->
+**Kapıların kapanış hâli** (yayın kopyası 3100, `lastmod` 13:17:16 — fazın son commit'inin imajı): `a11y` **1 / çıkış 1** (kayıtlı karar) · `mobile-audit` **0 / çıkış 0 ✓ YEŞİL** · `font-guard` iki dal ✓ (85.129 karakter · 765/765 kesin · 0 sonuçsuz) · `perf` `/` **111 KB**, 16 ölçümde **CLS 0** · `scan` temiz (3000) · batarya **219 + 2** · `tsc` 0 · `lint` 30 (devralınan taban) · `npm audit` 0 · Vercel 20/20 Ready · CI yok.
 
 ---
 
 ## Kalite Kontrol Sonuçları
 
-> Bu bölüm `/devflow:review-phase` oturumunda doldurulur.
+> `/devflow:review-phase` oturumunda dolduruldu (2026-09-26). **Tam tablo (on eksen, ölçümleriyle) → `PHASE-3-RETROSPEKTIF.md`.**
+
+**Hüküm özeti:** dokuz eksen **✅**, biri **⚠️** — *Güvenlik* değil **Erişilebilirlik**: fazın çekirdek ekseni en çok kazanan ama tek uyarı taşıyan eksen, çünkü kapı kayıtlı bir kullanıcı kararıyla `1` ile kapanıyor ve kapının kör noktaları (yalnız 1440 px · üst üste binme · `forced-colors` · açılan katmanlar) kapsam kararıyla açık bırakıldı.
+
+**Güvenlik ekseni — faz penceresi `6f4eca9..HEAD`** (37 commit · **103 dosya · +9.786 / −429**): eklenen satırlarda `dangerouslySetInnerHTML` / `eval` / `new Function` / `innerHTML` / `child_process` **0 eşleşme** (iki `exec(` isabeti `RegExp.prototype.exec`), sır deseni **0**, `src/` altında yeni `console.*` **0**, yeni `process.env` **0**. **Somut bulgu yok.** **UAT tazeliği:** son `docs(phase-3): UAT` commit'i **HEAD'in kendisidir** (`1b827fd`), yani tablodaki ✅'ler bugünkü kodun üstünde ölçüldü ve araya ürün kodu girmedi.
 
 ---
 

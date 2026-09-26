@@ -22,7 +22,7 @@
 **Bağımlılık:** M1 F1.1, M5 F5.1–F5.3
 
 **Edge Case'ler:**
-- Mobilde sayfa ~26.000 px; kısaltma kararı kullanıcıda — `BULGULAR.md` Gelen Kutusu
+- **Mobil uzunluk kararı VERİLDİ: kısaltma yok, ritim düzeltilir** (kullanıcı, discuss-phase 2026-09-23 — uzunluğun kendisi ölçülmüş bir sorun değil, referans rakip de benzer). Faz 3 bunu iki bölümün yeniden tasarımıyla uyguladı ve boy yan kazanç olarak düştü: @390 **26.723 → 25.872 px**, @320 28.930 → 28.062 (TASK-3.18 + TASK-3.19). Bölüm silinmedi
 - Hesaplayıcıda şube sayısı 0 veya negatif girilirse `monthlyFor()` 1'e sabitler
 
 ---
@@ -56,7 +56,7 @@
 - **Alt bilgi kolon başlıkları `h2`dir, `h3` değil** (TASK-3.13): `Footer` 16 rotanın hepsinde çizildiği için başlık dizisinin doğruluğu sayfa gövdesinde `h2` bulunmasına **bağımlı olamaz** — `h3` iken gövdesinde `h2` olmayan tek sayfada (404) dizi `h1 → h3` atlamasına dönüyordu. Görünüş etkisi yok: `globals.css` `h1,h2,h3,h4`'ü aynı kurala bağlar, ölçü/ağırlık/harf aralığı yardımcı sınıflardan gelir (ölçüldü: 6 kombinde 0 farklı piksel)
 - **Her sayfanın ilk ekranında en az bir dönüşüm yüzeyi vardır** (TASK-3.16, B-022): sayfa açıldığı anda — yani kaydırma sıfırken — görünen alanda `/demo` ya da `wa.me` hedefli, **gerçekten kullanılabilir** (render edilmiş · `visibility:visible` · etkin opaklık > 0 · `pointer-events` açık) en az bir bağlantı bulunur. Taşıyıcısı `Header`'ın `lg:` altında görünen "Demo" bağlantısıdır; 1024 px ve üstünde aynı işi masaüstü "Demo İste" düğmesi yapar. **Kriter kapıya girmedi** — fazın kapı işi kontrast + kırpma + dokunma hedefiyle sınırlı tutuldu (kapsam kararı, PHASE-3), bu ölçüm tek seferliktir; kalıcı kapı ayrı bir karardır. Ölçülen kapsam 320×568 · 390×844 · 412×915 · 768×1024 · %200 büyütme (640×512) · %400 büyütme (320×256) · yatay 844×390 ve 915×412 — **dokuzunda da 16/16**
 - **Yüzen düğme kümesi 120 px kaydırmadan sonra görünür** (TASK-3.16): eşik sıfır değildir, çünkü sayfanın tepesinin temiz kalması bilinçli bir tercihtir (B-022 → Kök Neden Yönü) ve sıfır eşik yüzen katmanı her sayfanın **ilk ekranındaki** metnin üstüne koyardı; ilk ekranın dönüşüm yolunu başlıktaki bağlantı taşır, yüzen düğme değil
-- Reveal animasyonu `prefers-reduced-motion` ile devre dışı kalır
+- **`prefers-reduced-motion: reduce` iki ayağı birden kapsar ve ikisi de ölçüldü** (TASK-3.02 ilk ayağı, TASK-3.27 ikincisini): (a) **Reveal animasyonu devre dışı kalır** — `reduce` altında `.reveal` 0 · geçiş-ortası opaklık 0 · koşan animasyon 0, kontrol grubunda (`no-preference`) 39 reveal / 41 oynayan; (b) **çapa ve programatik kaydırma animasyonsuz olur** — `reduce` bağlamında `scroll-behavior != auto` eleman 16 rota × 2 genişlikte (15.874 eleman) **0**, `no-preference`ta 32 (birebir korundu). ⚠️ İkinci ayağın iki mekanik kuralı vardır: seçici `html` değil `*`, çünkü `scroll-behavior` **kalıtılmaz**; ve **`behavior`ı JS'te açıkça veren çağrıyı CSS kapatmaz** — böyle her çağrı tercihi `matchMedia` ile kendisi okur (bugün tek örnek `Assistant.tsx`, ölçüldü: kural enjekteyken de 39 kare / 633 ms kayıyordu). Kalıcı kapı **yok** ve bilinçle kapsam dışı (evi "Kalite kapıları otomatik" fazı); kurallar `docs/STYLE-GUIDE.md` → Hareket azaltma
 
 **Bağımlılık:** Yok
 
