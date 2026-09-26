@@ -328,5 +328,23 @@
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
+    /* Capa ve programatik kaydirma da tercihi dinler (TASK-3.27).
+       `:203`teki `html { scroll-behavior: smooth }` YERINDE KALIR — tercih
+       `no-preference` iken bugunku davranis birebir korunur.
+       Secici `html` degil `*`: scroll-behavior KALITILMAZ, yani html'e
+       verilen deger kaydirilabilir kaplara gecmez (sayfada 4-5 kap var).
+       Iki aday enjekte edilerek olculdu (3100, @390) ve BUGUN BIREBIR AYNI —
+       kaplarin 4'unde de deger zaten `auto`; `*` secildi cunku bir kaba
+       Tailwind'in yumusak-kaydirma yardimcisi bir kaba verildigi gun onu da
+       kapsar, ve bu kalemi goren kapi YOK. (Yardimcinin ADI bu yoruma
+       YAZILAMAZ: Tailwind 4 kaynak taramasi yorumdaki dizeyi de aday sayar
+       ve gercek bir sinif uretir — olculdu, servis edilen CSS 38 bayt buyudu.)
+       Olculen kazanc: asistanin `/#nasil-calisir` capasi (300 -> 16.444 px)
+       90 kare / 1.483 ms -> 1 kare; `/demo` sonuc kutusunun scrollIntoView'i
+       20 kare / 316 ms -> 2 ornek / 16,5 ms (tek kare araligi).
+       ⚠️ JS'te ACIKCA `behavior: "smooth"` verilen cagriyi bu kural KAPATMAZ
+       (olculdu: asistan akisi bu kural acikken de 39 kare / 633 ms) — o cagri
+       tercihi kendisi okur (Assistant.tsx). */
+    scroll-behavior: auto !important;
   }
 }

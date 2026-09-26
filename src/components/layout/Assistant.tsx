@@ -67,8 +67,17 @@ export function Assistant() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Akis her yeni mesajda dibe kayar. `behavior` JS'te ACIKCA verildigi icin
+  // globals.css'in hareket azaltma blogu bu cagriyi KAPATMAZ — olculdu
+  // (TASK-3.27, 3100 @390): `scroll-behavior: auto !important` kurali acikken
+  // de akis 39 karede / 633 ms'de kayiyordu ve kabin kendi hesaplanmis degeri
+  // zaten `auto`ydu, yani yumusaklik tumuyle bu argumandan geliyor. Tercih bu
+  // yuzden burada, cagri aninda okunur (matchMedia — istemci tarafi bilesen).
   useEffect(() => {
-    feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: "smooth" });
+    const feed = feedRef.current;
+    if (!feed) return;
+    const azalt = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    feed.scrollTo({ top: feed.scrollHeight, behavior: azalt ? "auto" : "smooth" });
   }, [msgs, typing]);
 
   function ask(id: string) {

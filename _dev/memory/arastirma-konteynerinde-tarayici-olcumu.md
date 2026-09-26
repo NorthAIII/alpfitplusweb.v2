@@ -351,18 +351,31 @@ Ekran ekran gezen her ölçüm (kontrast, kırpma, ilk-ekran turu) DOM okumasıy
 karesinin **aynı anı** gösterdiğini varsayar. Bu varsayım bu projede iki ayrı yerden
 kırıldı ve ikisi de sessizce "ölçülemedi" üretti, hata vermedi.
 
-**1. `scroll-behavior: smooth` hareket azaltmayla KAPANMAZ.** `globals.css:135`
-`html{scroll-behavior:smooth}` taşıyor; `prefers-reduced-motion: reduce` bloğu
-(`:232`) yalnız `animation-duration`, `animation-iteration-count` ve
-`transition-duration`'ı sıfırlıyor — kaydırmaya dokunmuyor. Yani `reducedMotion:
-'reduce'` bağlamında bile `window.scrollTo(0, y)` bir **animasyon** başlatır;
-kısa bir beklemeden sonra okunan `getBoundingClientRect` ile alınan kare farklı
-konumu gösterir. Ölçüldü: sayfaların altındaki **25 eleman** tek piksel bile
-üretmedi ve "ölçülemedi" diye kırmızıya düştü (`/kullanim-kosullari`'nda 04·05·06
-bölümlerinin tamamı).
+**1. `scroll-behavior: smooth` kaydırmayı ANİMASYONA çevirir — koşma hâlâ şart,
+ama `reduce` bağlamında artık sitenin kendisi kapatıyor.** `globals.css:203`
+`html{scroll-behavior:smooth}` taşır. `window.scrollTo(0, y)` o hâlde bir
+**animasyon** başlatır; kısa bir beklemeden sonra okunan `getBoundingClientRect`
+ile alınan kare farklı konumu gösterir. Ölçüldü (TASK-3.04): sayfaların altındaki
+**25 eleman** tek piksel bile üretmedi ve "ölçülemedi" diye kırmızıya düştü
+(`/kullanim-kosullari`'nda 04·05·06 bölümlerinin tamamı).
+
+⚠️ **Koşmanın geçerlilik sınırı TERCİHE BAĞLI (TASK-3.27, 2026-09-26).** O tarihe
+kadar hareket azaltma bunu kapatmıyordu; artık `reduce` bloğu `scroll-behavior:
+auto !important` taşıyor (`*` seçicisiyle — özellik **kalıtılmaz**, `html`'e
+verilen değer kaplara geçmez). Ölçüldü: `reduce` altında değeri `auto` olmayan
+eleman 16 rota × 2 genişlikte **32 → 0**. Yani `reducedMotion:'reduce'` ile açılan
+bağlamda koşma **gereksiz** (a11y.mjs'inki zararsız savunma katmanı); `no-preference`
+ile açılan her bağlamda **hâlâ şart** — `mobile-audit`, `scan`, `perf` tercihi hiç
+ayarlamıyor.
+
+⚠️ **CSS sıfırlaması, `behavior`ı JS'te AÇIKÇA veren çağrıyı KAPATMAZ** (aynı tur):
+asistan akışının `scrollTo({…, behavior:"smooth"})` çağrısı kural enjekteyken de
+**39 kare / 633 ms** kaydı ve kabın kendi değeri zaten `auto`ydu — yumuşaklık
+tümüyle argümandan geliyordu. Öyle bir çağrı tercihi `matchMedia` ile kendisi
+okumalı; "CSS kapatıyor" varsayan ölçüm turu yanlış yerde arar.
 
 ```js
-await p.addStyleTag({ content: "html{scroll-behavior:auto !important}" });  // kosma
+await p.addStyleTag({ content: "html{scroll-behavior:auto !important}" });  // kosma (no-preference baglamda SART)
 // ve KOSMA TEK BASINA KANIT DEGILDIR — her adimda oturmayi ayrica olc:
 await p.evaluate((y) => window.scrollTo(0, y), hedefY);
 const d = await p.evaluate(() => ({ y: Math.round(window.scrollY),
