@@ -61,4 +61,4 @@
 ## Teknik Notlar
 
 - Karar: önce hazır akış, sonra AI (`docs/DECISIONS.md` 2026-09-10).
-- Model seçimi, anahtar yönetimi ve maliyet tavanı discuss-phase'de kullanıcıya sorulur; `ILKELER.md` → Sır yönetimi.
+- Model seçimi, anahtar yönetimi ve maliyet tavanı discuss-phase'de kullanıcıya sorulur; `ILKELER.md` → Sır ve konfigürasyon yönetimi.
